@@ -1,21 +1,15 @@
 package org.kravbank
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import io.restassured.config.JsonConfig.jsonConfig
-import io.restassured.config.ObjectMapperConfig
-import io.restassured.config.RestAssuredConfig
 import io.restassured.parsing.Parser
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.ProjectKtl
 
 @QuarkusTest
-class GreetingResourceTest {
+class ProjectResourceTest {
 
     @Test
     fun testHelloEndpoint() {
@@ -45,6 +39,9 @@ class GreetingResourceTest {
             .post("/projects")
             .then()
             .statusCode(201) //envt 200
+
+
+       // RestAssured.reset()
         //body(both(startsWith("")).and(not(endsWith("null"))))
 
 
