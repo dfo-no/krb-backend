@@ -1,14 +1,13 @@
 package org.kravbank.api
 
 import org.kravbank.domain.ProductKtl
+import org.kravbank.java.model.Product
 import org.kravbank.service.ProductService
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
+import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 
@@ -43,5 +42,17 @@ class ProductResource (val productService: ProductService){
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
+    }
+
+    @DELETE
+    @Path("product/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    fun deleteProdudctById(@PathParam("id") id: Long): Response {
+        val deleted = productService.deleteProduct(id)
+        return if (deleted) {
+           //println(deleted)
+            Response.noContent().build()
+        } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 }

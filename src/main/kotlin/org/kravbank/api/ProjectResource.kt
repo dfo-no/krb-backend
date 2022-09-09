@@ -5,10 +5,8 @@ import org.kravbank.service.ProjectService
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
+import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 
@@ -41,5 +39,17 @@ class ProjectResource (val projectService: ProjectService){
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
+    }
+
+    @DELETE
+    @Path("project/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    fun deleteProjectById(@PathParam("id") id: Long): Response {
+        val deleted = projectService.deleteProject(id)
+        return if (deleted) {
+            //println(deleted)
+            Response.noContent().build()
+        } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 }

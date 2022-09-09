@@ -13,4 +13,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
     fun createProject(projectKtl: ProjectKtl) = projectRepository.persist(projectKtl)
     fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
 
+    fun deleteProject(id: Long) = projectRepository.deleteById(id)
+
+
 }
