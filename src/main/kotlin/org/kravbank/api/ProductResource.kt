@@ -34,7 +34,7 @@ class ProductResource (val productService: ProductService){
     @Produces("application/json")
     @Path("products/")
     @POST
-    fun createProject(productKtl: ProductKtl): Response {
+    fun createProduct(productKtl: ProductKtl): Response {
 
         //try catch
         productService.createProduct(productKtl)
