@@ -1,7 +1,7 @@
-package org.kravbank.java.api;
+package org.kravbank.api;
 
 
-import org.kravbank.java.model.Need;
+import org.kravbank.domain.Need;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.*;

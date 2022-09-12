@@ -1,16 +1,24 @@
 package org.kravbank.service
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity_.id
-import org.kravbank.domain.ProductKtl
-import org.kravbank.java.model.Product
+import org.kravbank.domain.Product
+import org.kravbank.domain.Publication
 import org.kravbank.repository.ProductRepository
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class ProductService(val productRepository: ProductRepository) {
-    fun listProducts(): MutableList<ProductKtl> = productRepository.listAll()
-    fun getProduct(id: Long): ProductKtl = productRepository.findById(id)
-    fun createProduct(productKtl: ProductKtl) = productRepository.persistAndFlush(productKtl) //persist and flush vs persist
+    fun listProducts(): List<Product> = productRepository.listAll()
+    fun getProduct(id: Long): Optional<Product>? = productRepository.findByIdOptional(id)
+
+    fun createProduct(product: Product) = productRepository.persist(product) //persist and flush vs persist
     fun exists(id: Long): Boolean = productRepository.count("id", id) == 1L
     fun deleteProduct(id: Long) = productRepository.deleteById(id)
+
+    fun updateProduct(id: Long, product: Product) {
+        productRepository.update("title = ?1, description = ?2 where id= ?3",
+            product.title,
+            product.description,
+            id)
+    }
 }

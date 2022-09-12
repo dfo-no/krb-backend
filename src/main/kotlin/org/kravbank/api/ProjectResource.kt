@@ -1,7 +1,9 @@
 package org.kravbank.api
 
-import org.kravbank.domain.ProjectKtl
+import org.kravbank.domain.Product
+import org.kravbank.domain.Project
 import org.kravbank.service.ProjectService
+import java.lang.IllegalArgumentException
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
@@ -11,38 +13,54 @@ import javax.ws.rs.core.Response
 
 
 //@Tags(value = [Tag(name = "Read projects", description = "Read uploaded projects.")])
-@Path("/kt")
+@Path("/projects")
 @RequestScoped
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
-
 class ProjectResource (val projectService: ProjectService){
 
    // @Inject
   //  lateinit var projectRepo : ProjectRepository
 
-    //@Operation(summary = "List all projects")
-    @Produces("application/json")
-    @Path("projects/")
-    @GET
-    fun listProjects():List<ProjectKtl> =
-        projectService.listProjects();
 
-    @Transactional
-    @Produces("application/json")
-    @Path("projects/")
-    @POST
-    fun createProject(projectKtl: ProjectKtl): Response? {
-        projectService.createProject(projectKtl)
-        if (projectKtl.isPersistent){
-            return Response.created(URI.create("/projects" + projectKtl.id)).build();
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("/{id}")
+    fun getProject(@PathParam("id") id : Long): Response {
+        if (projectService.exists(id)){
+            return Response.ok(projectService.getProject(id)).build()
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).build()
+            return Response.status(Response.Status.NOT_FOUND).build()
         }
     }
 
+    //@Operation(summary = "List all projects")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    fun listProjects():List<Project> =
+        projectService.listProjects();
+
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    fun createProject(project: Project): Response? {
+        try {
+
+            projectService.createProject(project)
+            if (project.isPersistent){
+                return Response.created(URI.create("/projects" + project.id)).build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build()
+            }
+        }catch (e: Exception){
+            throw IllegalArgumentException ("FAILED update project. Message: "+e )
+
+        }
+
+    }
+
     @DELETE
-    @Path("project/{id}")
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     fun deleteProjectById(@PathParam("id") id: Long): Response {
@@ -51,5 +69,23 @@ class ProjectResource (val projectService: ProjectService){
             //println(deleted)
             Response.noContent().build()
         } else Response.status(Response.Status.BAD_REQUEST).build()
+    }
+
+    //UPDATE
+    @PUT
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    fun updateProject(@PathParam("id") id: Long, project: Project): Response {
+        if (projectService.exists(id)) {
+            try {
+                projectService.updateProject(id, project)
+                return Response.ok(projectService.getProject(id)).build()
+            } catch(e: Exception) {
+                throw IllegalArgumentException ("FAILED update project. Message: "+e)
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build()
+        }
     }
 }

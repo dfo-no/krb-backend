@@ -1,7 +1,7 @@
 package org.kravbank.api
 
-import org.kravbank.domain.ProductKtl
-import org.kravbank.java.model.Product
+import org.kravbank.domain.Product
+import org.kravbank.domain.Publication
 import org.kravbank.service.ProductService
 import java.net.URI
 import javax.enterprise.context.RequestScoped
@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response
 
 
 //@Tags(value = [Tag(name = "Read products", description = "Read uploaded products.")])
-@Path("/kt")
+@Path("/products")
 @RequestScoped
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
@@ -23,29 +23,44 @@ class ProductResource (val productService: ProductService){
   //  lateinit var projectRepo : ProjectRepository
 
     //@Operation(summary = "List all products")
-    @Produces("application/json")
-    @Path("products/")
+
+    //GET ONE
+    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listProjects():MutableList<ProductKtl> =
+    @Path("/{id}")
+    fun getProject(@PathParam("id") id : Long): Response {
+        if (productService.exists(id)){
+            return Response.ok(productService.getProduct(id)).build()
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build()
+        }
+    }
+
+    //GET ALL
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    fun listProducts():List<Product> =
         productService.listProducts();
 
+
+    //CREATE
     @Transactional
-    @Produces("application/json")
-    @Path("products/")
+    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createProduct(productKtl: ProductKtl): Response {
+    fun createProduct(product: Product): Response {
 
         //try catch
-        productService.createProduct(productKtl)
-        if (productKtl.isPersistent){
-            return Response.created(URI.create("/products" + productKtl.id)).build();
+        productService.createProduct(product)
+        if (product.isPersistent){
+            return Response.created(URI.create("/products" + product.id)).build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build()
         }
     }
 
+    //DELETE
     @DELETE
-    @Path("product/{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     fun deleteProdudctById(@PathParam("id") id: Long): Response {
@@ -55,4 +70,21 @@ class ProductResource (val productService: ProductService){
             Response.noContent().build()
         } else Response.status(Response.Status.BAD_REQUEST).build()
     }
+
+    //UPDATE
+
+    @PUT
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    fun updateProduct(@PathParam("id") id: Long, product: Product): Response {
+        if (productService.exists(id)) {
+            productService.updateProduct(id, product)
+            return Response.ok(productService.getProduct(id)).build()
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build()
+        }
+    }
+
+
 }

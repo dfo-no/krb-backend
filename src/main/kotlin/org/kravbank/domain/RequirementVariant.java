@@ -1,4 +1,4 @@
-package org.kravbank.java.model;
+package org.kravbank.domain;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import javax.persistence.Entity;
@@ -19,11 +19,11 @@ public class RequirementVariant extends PanacheEntity {
 
     public Boolean useQualification;
 
-    @OneToMany
-    public List<Project> products;
+   // @OneToMany
+   // public <Project> products;
 
-    @OneToMany
-    public List <Config> configs;
+   // @OneToMany
+   // public List <Config> configs;
 
 
     //public questions

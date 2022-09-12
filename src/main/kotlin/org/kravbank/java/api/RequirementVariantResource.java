@@ -1,7 +1,7 @@
 package org.kravbank.java.api;
 
 
-import org.kravbank.java.model.RequirementVariant;
+import org.kravbank.domain.RequirementVariant;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

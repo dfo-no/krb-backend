@@ -3,17 +3,11 @@ package org.kravbank
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import io.restassured.module.kotlin.extensions.Given
-import io.restassured.module.kotlin.extensions.Then
-import io.restassured.module.kotlin.extensions.When
 import io.restassured.parsing.Parser
-import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.ProductKtl
-import org.kravbank.domain.ProjectKtl
-import org.hamcrest.Matchers.greaterThan
-import java.util.Date
+import org.kravbank.domain.Product
+import org.kravbank.domain.Project
 import java.util.UUID
 
 @QuarkusTest
@@ -36,13 +30,13 @@ class ProjectResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = "/kt";
 
-        val product = ProductKtl();
+        val product = Product();
         product.title ="Integrasjonstittle produkttittel"
         product.description="Integrasjonstest produktbeskrivelse"
         product.deletedDate="21-02-91"
 
 
-        val project = ProjectKtl()
+        val project = Project()
         project.title = "Integrasjonstest prosjektittel"
         project.description ="Integrasjonstest prosjektbeskrivelse"
         project.projectId = UUID.randomUUID().toString()
