@@ -15,7 +15,6 @@ class Product: PanacheEntity() {
 
     lateinit var deletedDate: String
 
-
     //public String type;
     //public children
     //public parent
