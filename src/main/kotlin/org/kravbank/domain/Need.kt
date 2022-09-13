@@ -6,14 +6,15 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity
-public class Need extends PanacheEntity {
+class Need:  PanacheEntity() {
 
-    public String title;
+    lateinit var title: String
 
-    public String description;
+    lateinit var description: String
 
     @OneToMany
-    public List<Requirement> requirements; // fra Requirements
+    var requirements = mutableListOf<Requirement>();
+
 
    // public String type;  //need
     //public parent

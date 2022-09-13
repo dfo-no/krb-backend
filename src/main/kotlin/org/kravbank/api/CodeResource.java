@@ -1,4 +1,4 @@
-package org.kravbank.java.api;
+package org.kravbank.api;
 
 public class CodeResource {
 }

@@ -1,7 +1,6 @@
 package org.kravbank.api
 
 import org.kravbank.domain.Product
-import org.kravbank.domain.Publication
 import org.kravbank.service.ProductService
 import java.net.URI
 import javax.enterprise.context.RequestScoped

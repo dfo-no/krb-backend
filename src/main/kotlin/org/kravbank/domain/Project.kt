@@ -36,34 +36,24 @@ class Project: PanacheEntity() {
     @NotNull
     var deletedDate: String = ""
 
-    //@NotNull
     @OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
-    val products = mutableListOf<Product>()
+    var products = mutableListOf<Product>()
 
     @OneToMany
-    val publications = mutableListOf<Publication>()
-
-
-/*
-    @OneToMany
-    var needs: List<Need>? = null
+    var publications = mutableListOf<Publication>()
 
     @OneToMany
-    var requirements // -> private String requirementVarian; --> private string config -->
-            : List<Requirement>? = null
+    var requirements = mutableListOf<Requirement>()
 
     @OneToMany
-    var products: List<Product>? = null
+    var needs = mutableListOf<Need>()
 
     @OneToMany
-    var codeList //CONFIG
-            : List<Code>? = null
+    var configs = mutableListOf<Config>()
 
+    @OneToMany
+    var codeList = mutableListOf<Code>()
 
     //private String dependency; //vent med bruk
     //private String tags; //vent med bruk
-
-
- */
-    //osv
 }

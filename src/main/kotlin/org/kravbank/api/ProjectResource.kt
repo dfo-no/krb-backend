@@ -1,6 +1,5 @@
 package org.kravbank.api
 
-import org.kravbank.domain.Product
 import org.kravbank.domain.Project
 import org.kravbank.service.ProjectService
 import java.lang.IllegalArgumentException
