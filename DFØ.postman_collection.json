@@ -1,0 +1,1051 @@
+{
+	"info": {
+		"_postman_id": "32cf38b4-eff6-4a77-8edc-7dfca36b8ab4",
+		"name": "DFØ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15262137"
+	},
+	"item": [
+		{
+			"name": "kravbank-backend",
+			"item": [
+				{
+					"name": "Kravbank",
+					"item": [
+						{
+							"name": "project",
+							"item": [
+								{
+									"name": "update project",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"Update prosj\",\r\n    \"description\":\"Beskrivelse av prosjekt\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"21-02-1991\",\r\n    \"projectId\":\"643fgfdg4325-uuid\",\r\n    \"deletedDate\":\"not deleted date\",\r\n    \"products\": [],\r\n   \"publications\":[]\r\n}\r\n\r\n\r\n\r\n    \r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/projects/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create project w/lists",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"En annen tittel\",\r\n    \"description\": \"En ny beskrivelse\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"pub ny dato\",\r\n    \"projectId\":\"14353tewfdgfdggsfasdsfdsgsd \",\r\n    \"deletedDate\":\"slettet dato fdsf\",\r\n    \"publications\":[{\"id\":15}],\r\n    \"products\":[{\"id\": 4}, {\"id\": 5}],\r\n    \"needs\": [{\"id\": 8}],\r\n    \"requirements\":[{\"id\": 7}],\r\n    \"codeList\": [{\"id\": 3}]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/projects",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create project empty lists",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"En tittel\",\r\n    \"description\": \"En beskrivelse\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"pub dato\",\r\n    \"projectId\":\"14353tewfdgfdggsfasdsfdsg\",\r\n    \"deletedDate\":\"slettet dato \",\r\n    \"publications\":[],\r\n    \"needs\": [],\r\n    \"requirements\": [],\r\n    \"products\":[],\r\n    \"codeList\": [{\"id\": 3}]\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/projects",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all projects",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/projects/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one project",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/projects/9",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects",
+												"9"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one by projectid",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/projects/projectid/14353tewfdgfdgg uuid",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects",
+												"projectid",
+												"14353tewfdgfdgg uuid"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete project",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"tittel\",\r\n    \"description\":\"\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"21-02-1991\",\r\n    \"projectId\":\"643fgfdg4325-uuid\",\r\n    \"deletedDate\":\"not deleted date\",\r\n    \"products\": [\r\n         {\r\n        \"id\": 1\r\n\r\n\r\n    }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/projects/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"projects",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "publications",
+							"item": [
+								{
+									"name": "create publication",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"comment\": \"Dette er ENDA annen kommentar\",\r\n    \"date\": \"21-02-1991\",\r\n    \"version\":1,\r\n    \"bankId\":\"fredrik\",\r\n    \"deletedDate\":\"dette skal være delete dato felt\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/publications/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "edit publication",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"comment\": \"fjerde endring\",\r\n    \"date\": \"today\",\r\n    \"version\":3,\r\n    \"bankId\":\"ludvig\",\r\n    \"deletedDate\":\"dette skal være delete dato felt\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/publications/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all publications",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/publications",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one publication",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/publications/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get publications by date",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/publications/publication/21-02-1991",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications",
+												"publication",
+												"21-02-1991"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get publication by bankId",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/publications/bankid/fredrik",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications",
+												"bankid",
+												"fredrik"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete publication",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/publications/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"publications",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "needs",
+							"item": [
+								{
+									"name": "Get one need",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/needs/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"needs",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get all needs",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/needs",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"needs"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create need",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"Et behov med requirements\",\r\n    \"description\":\"behovets beskrivelse\",\r\n    \"requirements\": [{\"id\":7}]\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/needs/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"needs",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get need by title",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"Et behov\",\r\n    \"description\":\"behovets beskrivelse\",\r\n    \"requirements\": [],\r\n    \"type\":\"need\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/needs/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"needs",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete need",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/needs/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"needs",
+												"2"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "codes",
+							"item": [
+								{
+									"name": "Get all codes",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/codes",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codes"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get one code",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/codes/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codes",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create code",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"En kode\",\r\n    \"description\":\"kodens beskrivelse\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/codes/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codes",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get need by title",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"Et behov\",\r\n    \"description\":\"behovets beskrivelse\",\r\n    \"requirements\": [],\r\n    \"type\":\"need\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/needs/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"needs",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete code",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/codes/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codes",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "codelists",
+							"item": [
+								{
+									"name": "Get one codelist",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/codelists/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codelists",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get all codelists",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/codelists",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codelists"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create codelist",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"Kodelist med liste av koder og configs\",\r\n    \"description\":\"kodeliste beskrivelse\",\r\n    \"codes\": [{\"id\":1}, {\"id\": 2}]\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/codelists/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codelists",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get codelist by title",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"Et behov\",\r\n    \"description\":\"behovets beskrivelse\",\r\n    \"requirements\": [],\r\n    \"type\":\"need\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/codelist/tittel",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codelist",
+												"tittel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete codelist",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/codelists/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"codelists",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "products",
+							"item": [
+								{
+									"name": "create product",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Product\",\r\n    \"description\": \"Beskrivelse av produkt 1\",\r\n    \"deletedDate\":\"ikke slettet enda\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/products/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update product",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"endret produkt\",\r\n    \"description\": \"Endret Beskrivelse av produkt 1\",\r\n    \"deletedDate\":\"ikke slettet enda\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/products/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all products",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/products/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one product",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/products/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one product by title",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/products/product/Product1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"product",
+												"Product1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete by id",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/products/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"4"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Request",
+									"request": {
+										"method": "GET",
+										"header": []
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "requirements",
+							"item": [
+								{
+									"name": "create requirement",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Requirement med samme variants \",\r\n    \"description\": \"Beskrivelse av requirement 1\",\r\n    \"needId\":\"unikNeedId kanskje uid\",\r\n    \"requirementvariants\":[{\"id\": 6}]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/requirements/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all requirements",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirements/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one requirement",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirements/6",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												"6"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get requirements by needId",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirements/requirement/unikNeedId kanskje uid",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												"requirement",
+												"unikNeedId kanskje uid"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete by id Copy",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirements/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "requirementVariants",
+							"item": [
+								{
+									"name": "create requirementvariant",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"description\": \"Beskrivelse av requirementvariant med ett product\",\r\n    \"requirementText\":\"requirement tekst\",\r\n    \"instruction\":\"gjør x\",\r\n    \"useProduct\":true,\r\n    \"useSpesification\":true,\r\n    \"useQualification\": true,\r\n    \"products\": [{\"id\":4}],\r\n    \"configs\":[]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/requirementvariants/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirementvariants",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all requirementvariants",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirementvariants/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirementvariants",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get one requirement",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirements/6",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												"6"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get requirements by needId",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/requirements/requirement/unikNeedId kanskje uid",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"requirements",
+												"requirement",
+												"unikNeedId kanskje uid"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
