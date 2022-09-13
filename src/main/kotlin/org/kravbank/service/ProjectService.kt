@@ -8,8 +8,11 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
     fun listProjects(): List<Project> = projectRepository.listAll()
+
     fun getProject(id: Long): Project = projectRepository.findById(id)
-    fun createProject(project: Project) = projectRepository.persist(project)
+
+    fun createProject(project: Project) = projectRepository.persistAndFlush(project)
+
     fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
 
     fun deleteProject(id: Long) = projectRepository.deleteById(id)

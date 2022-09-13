@@ -10,7 +10,7 @@ class PublicationService(val publicationRepository: PublicationRepository) {
 
     fun getPublication(id: Long): Publication = publicationRepository.findById(id)
 
-    fun createPublication(publication: Publication) = publicationRepository.persist(publication)
+    fun createPublication(publication: Publication) = publicationRepository.persistAndFlush(publication)
 
     fun exists(id: Long): Boolean = publicationRepository.count("id", id) == 1L
 

@@ -9,10 +9,13 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProductService(val productRepository: ProductRepository) {
     fun listProducts(): List<Product> = productRepository.listAll()
+
     fun getProduct(id: Long): Optional<Product>? = productRepository.findByIdOptional(id)
 
-    fun createProduct(product: Product) = productRepository.persist(product) //persist and flush vs persist
+    fun createProduct(product: Product) = productRepository.persistAndFlush(product) //persist and flush vs persist
+
     fun exists(id: Long): Boolean = productRepository.count("id", id) == 1L
+
     fun deleteProduct(id: Long) = productRepository.deleteById(id)
 
     fun updateProduct(id: Long, product: Product) {

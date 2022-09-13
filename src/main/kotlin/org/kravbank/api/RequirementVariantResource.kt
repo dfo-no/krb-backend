@@ -1,6 +1,5 @@
 package org.kravbank.api;
 
-
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.service.RequirementVariantService
 import javax.transaction.Transactional;
@@ -13,6 +12,7 @@ import javax.enterprise.context.RequestScoped
 @Path("/requirementvariants")
 @RequestScoped
 class RequirementVariantResource(val requirementVariantService: RequirementVariantService) {
+    //GET REQUIREMENT VARIANT
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
@@ -24,12 +24,14 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         }
     }
 
+    //LIST REQUIREMENT VARIANTS
     //@Operation(summary = "List all requirementvariant")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listRequirementVariant(): MutableList<RequirementVariant> =
+    fun listRequirementVariants(): MutableList<RequirementVariant> =
         requirementVariantService.listRequirementVariants();
 
+    //CREATE REQUIREMENT VARIANT
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
@@ -42,6 +44,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         }
     }
 
+    //DELETE REQUIREMENT VARIANT
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,8 +57,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 
-    //UPDATE
-
+    //UPDATE REQUIREMENT VARIANT
     @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -66,7 +68,6 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
             return Response.ok(requirementVariantService.getRequirementVariant(id)).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
-
         }
     }
 }

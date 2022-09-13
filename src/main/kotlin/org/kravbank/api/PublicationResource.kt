@@ -1,7 +1,5 @@
 package org.kravbank.api;
 
-
-
 import org.kravbank.domain.Publication
 import org.kravbank.service.PublicationService
 import java.net.URI
@@ -11,15 +9,13 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-
 @Path("/publications")
 //@Produces(APPLICATION_JSON)
 //@Consumes(APPLICATION_JSON)
 @RequestScoped
 
  class PublicationResource (val publicationService: PublicationService) {
-
-
+    //GET PUBLICATION
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
@@ -31,12 +27,14 @@ import javax.ws.rs.core.Response
         }
     }
 
+    //LIST PUBLICATIONS
     //@Operation(summary = "List all publications")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listPublication(): List<Publication> =
+    fun listPublications(): List<Publication> =
         publicationService.listPublications();
 
+    //CREATE PUBLICATION
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
@@ -49,6 +47,7 @@ import javax.ws.rs.core.Response
         }
     }
 
+    //DELETE PUBLICATION
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,8 +60,7 @@ import javax.ws.rs.core.Response
         } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 
-    //UPDATE
-
+    //UPDATE PUBLICATION
     @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -182,5 +180,3 @@ import javax.ws.rs.core.Response
     }
 
  */
-
-    //UPDATE

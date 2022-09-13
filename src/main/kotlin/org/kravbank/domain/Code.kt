@@ -4,10 +4,10 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import javax.persistence.Entity;
 
 @Entity
-public class Code extends PanacheEntity {
-    public String title;
+class Code: PanacheEntity() {
+    lateinit var title: String
 
-    public String description;
+    lateinit var description: String
 
    // public String type; //code
 

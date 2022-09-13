@@ -10,18 +10,13 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-
 //@Tags(value = [Tag(name = "Read projects", description = "Read uploaded projects.")])
 @Path("/projects")
 @RequestScoped
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
 class ProjectResource (val projectService: ProjectService){
-
-   // @Inject
-  //  lateinit var projectRepo : ProjectRepository
-
-
+    //GET PROJECT
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
@@ -33,12 +28,14 @@ class ProjectResource (val projectService: ProjectService){
         }
     }
 
+    //LIST PROJECTS
     //@Operation(summary = "List all projects")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     fun listProjects():List<Project> =
         projectService.listProjects();
 
+    //CREATE PROJECT
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
@@ -52,12 +49,10 @@ class ProjectResource (val projectService: ProjectService){
                 return Response.status(Response.Status.BAD_REQUEST).build()
             }
         }catch (e: Exception){
-            throw IllegalArgumentException ("FAILED update project. Message: "+e )
-
+            throw IllegalArgumentException ("Create project FAILED. Message: $e")
         }
-
     }
-
+    //DELETE PROJECT
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +65,7 @@ class ProjectResource (val projectService: ProjectService){
         } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 
-    //UPDATE
+    //UPDATE PROJECT
     @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,7 +76,7 @@ class ProjectResource (val projectService: ProjectService){
                 projectService.updateProject(id, project)
                 return Response.ok(projectService.getProject(id)).build()
             } catch(e: Exception) {
-                throw IllegalArgumentException ("FAILED update project. Message: "+e)
+                throw IllegalArgumentException ("Updating project FAILED. Message: $e")
             }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()

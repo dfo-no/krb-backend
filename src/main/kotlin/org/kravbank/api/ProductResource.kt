@@ -17,13 +17,8 @@ import javax.ws.rs.core.Response
 //@Authenticated
 
 class ProductResource (val productService: ProductService){
-
-   // @Inject
-  //  lateinit var projectRepo : ProjectRepository
-
+    //GET PROJECT
     //@Operation(summary = "List all products")
-
-    //GET ONE
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
@@ -35,14 +30,14 @@ class ProductResource (val productService: ProductService){
         }
     }
 
-    //GET ALL
+    //LIST PRODUCTS
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     fun listProducts():List<Product> =
         productService.listProducts();
 
 
-    //CREATE
+    //CREATE PRODUCT
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
@@ -57,7 +52,7 @@ class ProductResource (val productService: ProductService){
         }
     }
 
-    //DELETE
+    //DELETE PRODUCT
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,8 +65,7 @@ class ProductResource (val productService: ProductService){
         } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 
-    //UPDATE
-
+    //UPDATE PRODUCT
     @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)

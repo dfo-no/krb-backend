@@ -15,6 +15,11 @@ class Product: PanacheEntity() {
 
     lateinit var deletedDate: String
 
+    /*
+    OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
+    var products = mutableListOf<Product>()
+     */
+
     //public String type;
     //public children
     //public parent

@@ -14,7 +14,7 @@ public class Requirement extends PanacheEntity {
     public String needId;
 
    @OneToMany
-   public List<RequirementVariant> variant;
+   public List<RequirementVariant> requirementvariants;
 
     //public String tags;
 

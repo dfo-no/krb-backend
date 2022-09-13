@@ -1,8 +1,8 @@
 package org.kravbank.api;
 
 
-import org.kravbank.domain.Need;
-import org.kravbank.service.NeedService
+import org.kravbank.domain.Code;
+import org.kravbank.service.CodeService
 import java.lang.IllegalArgumentException
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -10,71 +10,72 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-@Path("/needs")
+@Path("/codes")
 //@Produces(APPLICATION_JSON)
 //@Consumes(APPLICATION_JSON)
 
-class NeedResource (val needService: NeedService) {
-    //GET NEED
+class CodeResource (val codeService: CodeService) {
+    //GET CODE
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
-    fun getNeed(@PathParam("id") id : Long): Response {
-        if (needService.exists(id)){
-            return Response.ok(needService.getNeed(id)).build()
+    fun getCode(@PathParam("id") id : Long): Response {
+        if (codeService.exists(id)){
+            return Response.ok(codeService.getCode(id)).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
         }
     }
 
-    //LIST NEEDS
+    //LIST CODE
     //@Operation(summary = "List all needs")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listNeeds(): MutableList<Need> =
-        needService.listNeeds();
+    fun listCode(): MutableList<Code> =
+        codeService.listCodes();
 
-    //CREATE NEED
+    //CREATE CODE
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createNeed(need: Need): Response? {
+    fun createCode(need: Code): Response? {
         try {
-            needService.createNeed(need)
+            codeService.createCode(need)
             if (need.isPersistent){
                 return Response.created(URI.create("/needs" + need.id)).build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).build()
             }
         }catch (e: Exception){
-            throw IllegalArgumentException ("Create need FAILED. Message: $e")
+            throw IllegalArgumentException ("Creating code FAILED. Message: $e")
         }
     }
-    //DELETE NEED
+
+    //DELETE CODE
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun deleteNeedById(@PathParam("id") id: Long): Response {
-        val deleted = needService.deleteNeed(id)
+    fun deleteCodeById(@PathParam("id") id: Long): Response {
+        val deleted = codeService.deleteCode(id)
         return if (deleted) {
             //println(deleted)
             Response.noContent().build()
         } else Response.status(Response.Status.BAD_REQUEST).build()
     }
 
-    //UPDATE NEED
+    //UPDATE CODE
     @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun updateNeed(@PathParam("id") id: Long, need: Need): Response {
-        if (needService.exists(id)) {
+    fun updateCode(@PathParam("id") id: Long, need: Code): Response {
+        if (codeService.exists(id)) {
             try {
-                needService.updateNeed(id, need)
-                return Response.ok(needService.getNeed(id)).build()
+                codeService.updateCode(id, need)
+                return Response.ok(codeService.getCode(id)).build()
             } catch(e: Exception) {
-                throw IllegalArgumentException ("Updating need FAILED. Message: $e")
+                throw IllegalArgumentException ("Updating code FAILED. Message: $e")
             }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()

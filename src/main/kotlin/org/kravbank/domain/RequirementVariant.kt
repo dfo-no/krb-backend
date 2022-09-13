@@ -23,16 +23,9 @@ class RequirementVariant:  PanacheEntity() {
     @OneToMany
     var products = mutableListOf<Product>()
 
-
-   // @OneToMany
-   // public List <Config> configs;
-
+    @OneToMany
+    var configs = mutableListOf<Config>()
 
     //public questions
     // public String type;
-
-
-    //CONFIG
-
-
 }

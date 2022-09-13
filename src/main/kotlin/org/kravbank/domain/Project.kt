@@ -49,10 +49,7 @@ class Project: PanacheEntity() {
     var needs = mutableListOf<Need>()
 
     @OneToMany
-    var configs = mutableListOf<Config>()
-
-    @OneToMany
-    var codeList = mutableListOf<Code>()
+    var codeList = mutableListOf<Codelist>()
 
     //private String dependency; //vent med bruk
     //private String tags; //vent med bruk
