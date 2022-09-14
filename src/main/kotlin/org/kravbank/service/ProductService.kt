@@ -12,7 +12,7 @@ class ProductService(val productRepository: ProductRepository) {
 
     fun getProduct(id: Long): Optional<Product>? = productRepository.findByIdOptional(id)
 
-    fun createProduct(product: Product) = productRepository.persistAndFlush(product) //persist and flush vs persist
+    fun createProduct(product: Product) = productRepository.persist(product) //persist and flush vs persist
 
     fun exists(id: Long): Boolean = productRepository.count("id", id) == 1L
 

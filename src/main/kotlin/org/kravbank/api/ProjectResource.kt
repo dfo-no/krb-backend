@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 //@Tags(value = [Tag(name = "Read projects", description = "Read uploaded projects.")])
-@Path("/projects")
+@Path("/api/v1/projects")
 @RequestScoped
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated

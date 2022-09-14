@@ -2,6 +2,7 @@ package org.kravbank.api;
 
 import org.kravbank.domain.Codelist;
 import org.kravbank.service.CodelistService
+import org.kravbank.service.ProjectService
 import java.lang.IllegalArgumentException
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -9,18 +10,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-@Path("/codelists")
+@Path("/api/v1/projects/{pid}/codelists")
 //@Produces(APPLICATION_JSON)
 //@Consumes(APPLICATION_JSON)
 
-class CodelistResource (val codelistService: CodelistService) {
+class CodelistResource (val codelistService: CodelistService, val projectService: ProjectService) {
     //GET CODELIST
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
-    fun getCodelist(@PathParam("id") id : Long): Response {
-        if (codelistService.exists(id)){
-            return Response.ok(codelistService.getCodelist(id)).build()
+    fun getCodelist(@PathParam("pid") pid : Long, @PathParam("id") id : Long): Response {
+        if (projectService.exists(pid)) {
+            val codelist = projectService.getProject(pid).codeList.find { codelist ->
+                codelist.id == id
+            } ?: return Response.status(Response.Status.NOT_FOUND).build()
+            return Response.ok(codelist).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
         }

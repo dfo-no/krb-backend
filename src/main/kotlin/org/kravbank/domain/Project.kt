@@ -31,12 +31,13 @@ class Project: PanacheEntity() {
     var publishedDate: String  = ""//date
 
     @NotNull
+    //@Column(unique = true)
      var projectId: String = ""
 
     @NotNull
     var deletedDate: String = ""
 
-    @OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
+    @OneToMany //(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
     var products = mutableListOf<Product>()
 
     @OneToMany

@@ -11,7 +11,11 @@ class ProjectService(val projectRepository: ProjectRepository) {
 
     fun getProject(id: Long): Project = projectRepository.findById(id)
 
-    fun createProject(project: Project) = projectRepository.persistAndFlush(project)
+    fun createProject(project: Project){
+
+        projectRepository.persist(project)
+
+    }
 
     fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
 
