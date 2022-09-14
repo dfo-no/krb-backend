@@ -1,6 +1,8 @@
 package org.kravbank.api;
 
+import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist;
+import org.kravbank.form.CodelistForm
 import org.kravbank.service.CodelistService
 import org.kravbank.service.ProjectService
 import java.lang.IllegalArgumentException
@@ -41,16 +43,32 @@ class CodelistResource (val codelistService: CodelistService, val projectService
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createCodelist(codelist: Codelist): Response? {
+    fun createCodelist(@PathParam("pid") pid : Long, codelist: Codelist): Response? {
         try {
-            codelistService.createCodelist(codelist)
-            if (codelist.isPersistent){
+
+            // val createCodelist = Codelist.ModelMapper.from(codelist)
+            if (projectService.exists(pid)) {
+                codelistService.createCodelist(codelist) //codelist.persist
+
+            // legg til project UUID
+
+
+
+            } else {
+                // eventuelt opprett project
+
+
+                return Response.status(Response.Status.NOT_FOUND).build()
+
+            }
+            if (codelist.isPersistent) {
+
                 return Response.created(URI.create("/codelists" + codelist.id)).build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).build()
             }
-        }catch (e: Exception){
-            throw IllegalArgumentException ("Creating codelist FAILED. Message: $e")
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Creating codelist FAILED. Message: $e")
         }
     }
 

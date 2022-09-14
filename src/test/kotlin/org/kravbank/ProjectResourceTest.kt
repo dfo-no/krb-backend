@@ -39,7 +39,7 @@ class ProjectResourceTest {
         val project = Project()
         project.title = "Integrasjonstest prosjektittel"
         project.description ="Integrasjonstest prosjektbeskrivelse"
-        project.projectId = UUID.randomUUID().toString()
+        //project.projectId = UUID.randomUUID().toString()
         project.version="1.0"
         project.publishedDate="Not published"
         project.deletedDate="11-11-11"

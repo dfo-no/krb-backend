@@ -13,6 +13,8 @@ class CodelistService(val codelistRepository: CodelistRepository) {
 
     fun createCodelist(codelist: Codelist) = codelistRepository.persistAndFlush(codelist)
 
+    //ny uuid ?
+    //eksisterende?
     fun exists(id: Long): Boolean = codelistRepository.count("id", id) == 1L
 
     fun deleteCodelist(id: Long) = codelistRepository.deleteById(id)

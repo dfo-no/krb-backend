@@ -1,14 +1,17 @@
 package org.kravbank.domain
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import org.kravbank.form.CodelistForm
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
-class Codelist: PanacheEntity() {
-    lateinit var title: String
 
-    lateinit var description: String
+class Codelist() : PanacheEntity() {
+
+    var title: String = ""
+
+    var description: String = ""
 
     @OneToMany
     var codes = mutableListOf<Code>()
@@ -18,4 +21,6 @@ class Codelist: PanacheEntity() {
 
     // public String type; //code
     //public parent
+
+
 }

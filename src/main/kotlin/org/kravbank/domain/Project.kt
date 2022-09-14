@@ -1,6 +1,8 @@
 package org.kravbank.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.util.UUID
 
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -14,6 +16,7 @@ class Project: PanacheEntity() {
     //@Id
     //@GeneratedValue
     //var id: Long? = null;
+
     @NotNull
     var title: String = ""
 
@@ -31,25 +34,30 @@ class Project: PanacheEntity() {
     var publishedDate: String  = ""//date
 
     @NotNull
-    //@Column(unique = true)
-     var projectId: String = ""
+    @Column(unique = true)
+     var projectRef: String = UUID.randomUUID().toString()
 
     @NotNull
-    var deletedDate: String = ""
+    var deletedDate: String = "" // logic here
 
     @OneToMany //(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    //@JsonIgnore
     var products = mutableListOf<Product>()
 
     @OneToMany
+    //@JsonIgnore
     var publications = mutableListOf<Publication>()
 
     @OneToMany
+    //@JsonIgnore
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany
+    //@JsonIgnore
     var needs = mutableListOf<Need>()
 
     @OneToMany
+    //@JsonIgnore
     var codeList = mutableListOf<Codelist>()
 
     //private String dependency; //vent med bruk
