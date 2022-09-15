@@ -1,6 +1,5 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.UUID
 
@@ -33,9 +32,8 @@ class Project: PanacheEntity() {
 
     var publishedDate: String  = ""//date
 
-    @NotNull
     @Column(unique = true)
-     var projectRef: String = UUID.randomUUID().toString()
+     var ref: String = UUID.randomUUID().toString()
 
     @NotNull
     var deletedDate: String = "" // logic here
@@ -58,7 +56,7 @@ class Project: PanacheEntity() {
 
     @OneToMany
     //@JsonIgnore
-    var codeList = mutableListOf<Codelist>()
+    var codelist = mutableListOf<Codelist>()
 
     //private String dependency; //vent med bruk
     //private String tags; //vent med bruk

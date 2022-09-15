@@ -1,8 +1,6 @@
 package org.kravbank.api;
 
-import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist;
-import org.kravbank.form.CodelistForm
 import org.kravbank.service.CodelistService
 import org.kravbank.service.ProjectService
 import java.lang.IllegalArgumentException
@@ -12,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-@Path("/api/v1/projects/{pid}/codelists")
+@Path("/api/v1/projects/{projectref}/codelists")
 //@Produces(APPLICATION_JSON)
 //@Consumes(APPLICATION_JSON)
 
@@ -20,11 +18,23 @@ class CodelistResource (val codelistService: CodelistService, val projectService
     //GET CODELIST
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("/{id}")
-    fun getCodelist(@PathParam("pid") pid : Long, @PathParam("id") id : Long): Response {
-        if (projectService.exists(pid)) {
-            val codelist = projectService.getProject(pid).codeList.find { codelist ->
-                codelist.id == id
+    @Path("/{codelistref}")
+    fun getCodelist(@PathParam("projectref") projectref : String, @PathParam("codelistref") ref : String): Response {
+        //finn prosjekt med ref
+      /* val foundProject = projectService.listProjects().find{
+                  project -> project.ref == projectref
+        }
+        //prosjektets id
+        val id: Long = foundProject!!.id
+
+       */
+
+        val project = projectService.getProjectByRef(projectref)!!
+
+        //hvis prosjektet eksisterer finn finn kodeliste eller returner HTTP 404 NOT FOUND
+        if (projectService.exists(project.id)) {
+            val codelist = projectService.getProject(project.id).codelist.find { codelist ->
+                codelist.ref == ref
             } ?: return Response.status(Response.Status.NOT_FOUND).build()
             return Response.ok(codelist).build()
         } else {
@@ -43,23 +53,31 @@ class CodelistResource (val codelistService: CodelistService, val projectService
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createCodelist(@PathParam("pid") pid : Long, codelist: Codelist): Response? {
+    fun createCodelist(@PathParam("projectref") pid : Long, codelist: Codelist): Response? {
+
+        /*
+
+        //lager codeliste tilhørende prosjekt
+
+        // legger til i prosjekt med kobling til prosjektet ved opprettelse
+
+         */
         try {
 
             // val createCodelist = Codelist.ModelMapper.from(codelist)
+
             if (projectService.exists(pid)) {
                 codelistService.createCodelist(codelist) //codelist.persist
+/*
+                var project = projectService.getProject(pid)
+                var updateProject = project.codelist.add(codelist)
 
-            // legg til project UUID
-
-
-
+                // legg til project UUID
+                projectService.updateProject(pid, project)
+ */
             } else {
                 // eventuelt opprett project
-
-
                 return Response.status(Response.Status.NOT_FOUND).build()
-
             }
             if (codelist.isPersistent) {
 
