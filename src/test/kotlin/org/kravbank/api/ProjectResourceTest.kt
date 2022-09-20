@@ -1,14 +1,15 @@
-package org.kravbank
+package org.kravbank.api
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
+import io.restassured.http.ContentType
 import io.restassured.parsing.Parser
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Product
 import org.kravbank.domain.Project
-import java.util.UUID
+import java.util.*
 
 @QuarkusTest
 class ProjectResourceTest {
@@ -23,12 +24,17 @@ class ProjectResourceTest {
     }
 
 
+
+    // BEFORE ALL ?
+
+
+
     @Test
     fun createProject() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080";
         //RestAssured.port = 8080;
-        RestAssured.basePath = "/kt";
+        RestAssured.basePath = "/api/v1/";
 
         val product = Product();
         product.title ="Integrasjonstittle produkttittel"
@@ -58,22 +64,40 @@ class ProjectResourceTest {
 
 
     }
+
+    @Test
+    fun getProject() {
+
+    }
+
+   /*     val uuid = UUID.randomUUID().toString()
+        given()
+            .pathParam("uuid", uuid)
+            .`when`().get("http://localhost:8080/api/v1/projects/{uuid}")
+            .then()
+            .statusCode(200)
+            //.body(`is`("hello $uuid"))
+    }
+
+    */
+
+
     @Test
     fun getProjects() {
 
         //val response = RestAssured.get("http://localhost:8080/kt/projects")
        // println(response.statusCode())
             given()
-                .`when`().get("http://localhost:8080/kt/projects")
+                .`when`().get("http://localhost:8080/api/v1/projects")
                 .then()
                 .statusCode(200)
                 //.body(, equalTo("Integrasjonstest prosjektittel"))
 
-        val statusCode = given().get("http://localhost:8080/kt/projects").statusCode
+        //val statusCode = given().get("http://localhost:8080/kt/projects").statusCode
 
-        println(statusCode)
+        //println(statusCode)
 
-        }
+    }
 
     @Test
     fun deleteProject() {
@@ -82,13 +106,17 @@ class ProjectResourceTest {
         //fungerer i postman
 
 
+
         given()
-            .`when`().delete("http://localhost:8080/kt/project/1")
+            .`when`().delete("http://localhost:8080/api/v1/projects/1")
             .then()
             .statusCode(204)
             //.body(`is`("Hello RESTEasy"))
 
     }
+
+
+    //get one project
 
 
 }
