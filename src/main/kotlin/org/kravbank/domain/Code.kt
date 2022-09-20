@@ -5,9 +5,8 @@ import javax.persistence.Entity;
 
 @Entity
 class Code: PanacheEntity() {
-    lateinit var title: String
-
-    lateinit var description: String
+     var title: String = ""
+     var description: String = ""
 
    // public String type; //code
 

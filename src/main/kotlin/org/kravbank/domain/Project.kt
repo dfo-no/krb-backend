@@ -1,6 +1,9 @@
 package org.kravbank.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import java.util.UUID
 
 import javax.persistence.*
@@ -39,23 +42,28 @@ class Project: PanacheEntity() {
     var deletedDate: String = "" // logic here
 
     @OneToMany //(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
-    //@JsonIgnore
+    @JsonIgnore
     var products = mutableListOf<Product>()
 
     @OneToMany
-    //@JsonIgnore
+    @JsonIgnore
     var publications = mutableListOf<Publication>()
 
     @OneToMany
-    //@JsonIgnore
+    @JsonIgnore
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany
-    //@JsonIgnore
+    @JsonIgnore
     var needs = mutableListOf<Need>()
 
-    @OneToMany
-    //@JsonIgnore
+    /***
+     * TODO
+     * Fix delete
+     */
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH], orphanRemoval = true)
+    @JsonIgnore
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     var codelist = mutableListOf<Codelist>()
 
     //private String dependency; //vent med bruk

@@ -1,13 +1,11 @@
 package org.kravbank.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 @Entity
-
 class Codelist() : PanacheEntity() {
 
     var title: String = ""
@@ -18,9 +16,11 @@ class Codelist() : PanacheEntity() {
     var ref : String = UUID.randomUUID().toString()
 
     @OneToMany
+    @JsonIgnore
     var codes = mutableListOf<Code>()
 
     @OneToMany
+    @JsonIgnore
     var configs = mutableListOf<Config>()
 
     // public String type; //code
