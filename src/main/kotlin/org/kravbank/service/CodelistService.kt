@@ -1,15 +1,25 @@
 package org.kravbank.service
 
+import io.quarkus.hibernate.orm.panache.PanacheQuery
+import org.hibernate.jpa.QueryHints
 import org.jboss.resteasy.annotations.Query
+import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
 import org.kravbank.repository.CodelistRepository
 import javax.enterprise.context.ApplicationScoped
+import javax.persistence.EntityManager
 
 
 @ApplicationScoped
 class CodelistService(val codelistRepository: CodelistRepository) {
+
+
     fun listCodelists(): MutableList<Codelist> = codelistRepository.listAll()
+
+    fun listCodelistsByRef(ref: String): MutableList<Codelist> = codelistRepository.listAllRefs(ref)
+
+    fun listCodelistsByProjectId(id: Long) : MutableList<Codelist>? = codelistRepository.listAllByProjectId(id)
 
     fun getCodelist(id: Long): Codelist = codelistRepository.findById(id)
 
@@ -18,6 +28,8 @@ class CodelistService(val codelistRepository: CodelistRepository) {
             codelist.ref == ref
         }
     }
+
+    fun getCodelistByRefCustomRepo (ref: String): Codelist? = codelistRepository.findByRef(ref)
 
 
     fun createCodelist(codelist: Codelist) = codelistRepository.persistAndFlush(codelist)
