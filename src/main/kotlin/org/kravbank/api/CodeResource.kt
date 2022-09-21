@@ -19,8 +19,10 @@ class CodeResource (val codeService: CodeService) {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{id}")
+
     fun getCode(@PathParam("id") id : Long): Response {
         if (codeService.exists(id)){
+
             return Response.ok(codeService.getCode(id)).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
@@ -33,6 +35,8 @@ class CodeResource (val codeService: CodeService) {
     @GET
     fun listCode(): MutableList<Code> =
         codeService.listCodes();
+
+
 
     //CREATE CODE
     @Transactional

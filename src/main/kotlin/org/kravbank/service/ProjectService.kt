@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
     fun listProjects(): List<Project> = projectRepository.listAll()
 
+
     fun getProject(id: Long): Project = projectRepository.findById(id)
 
     fun getProjectByRef(ref: String): Project? {
@@ -16,6 +17,8 @@ class ProjectService(val projectRepository: ProjectRepository) {
             project.ref == ref
         }
     }
+
+    fun getProjectByRefCustomRepo (ref: String): Project? = projectRepository.findByRef(ref)
 
     fun createProject(project: Project){
         projectRepository.persist(project)

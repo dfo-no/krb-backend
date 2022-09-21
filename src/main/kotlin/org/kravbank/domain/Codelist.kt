@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
+import kotlin.collections.ArrayList
 
 @Entity
 class Codelist() : PanacheEntity() {
@@ -22,6 +23,11 @@ class Codelist() : PanacheEntity() {
     @OneToMany
     @JsonIgnore
     var configs = mutableListOf<Config>()
+
+    @ManyToOne
+    @JsonIgnore
+    lateinit var project: Project
+
 
     // public String type; //code
     //public parent
