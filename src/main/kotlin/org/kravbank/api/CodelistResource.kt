@@ -24,35 +24,36 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         @PathParam("codelistref") codelistref: String
     ): Response {
 
-            //val project = projectService.getProjectByRef(projectref)!!
-            //hvis prosjektet eksisterer finn kodeliste i prosjektet
-            // eller returner HTTP 404 NOT FOUND
+        //val project = projectService.getProjectByRef(projectref)!!
+        //hvis prosjektet eksisterer finn kodeliste i prosjektet
+        // eller returner HTTP 404 NOT FOUND
 
-            /**
-             * todo
-             * delete ref exists
-             * backend exception mapper
-             * error 500 og 404
-             * all logikk i service
-             */
-           // var m = CodelistMapper().fromEntity(codelist)
+        /**
+         * todo
+         * delete ref exists
+         * backend exception mapper
+         * error 500 og 404
+         * all logikk i service
+         */
+        // var m = CodelistMapper().fromEntity(codelist)
 
         if (projectService.refExists(projectref)) {
-                val project = projectService.getProjectByRefCustomRepo(projectref)!!
-                val codelist = project.codelist.find { codelist ->
-                    codelist.ref == codelistref
-                } ?: return Response.status(Response.Status.NOT_FOUND).build()
-
-                return Response.ok(codelist).build()
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build()
+            val project = projectService.getProjectByRefCustomRepo(projectref)!!
+            val codelist = project.codelist.find { codelist ->
+                codelist.ref == codelistref
             }
-       /* } catch (e: Exception) {
-            return Response.status(Response.Status.BAD_REQUEST).build()
-            // throw IllegalArgumentException("GET ONE codelist failed")
-        }
+            val codelistMapper = CodelistMapper().fromEntity(codelist!!)
+            
+            return Response.ok(codelistMapper).build()
 
-        */
+        } else return Response.status(Response.Status.NOT_FOUND).build()
+
+        /* } catch (e: Exception) {
+             return Response.status(Response.Status.BAD_REQUEST).build()
+             // throw IllegalArgumentException("GET ONE codelist failed")
+         }
+
+         */
     }
 
     //GET CODELIST
@@ -161,7 +162,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             } else Response.status(Response.Status.BAD_REQUEST).build()
         } catch (e: Exception) {
             Response.status(Response.Status.BAD_REQUEST).build()
-    // throw IllegalArgumentException("Updating codelist FAILED. Message: $e")
+            // throw IllegalArgumentException("Updating codelist FAILED. Message: $e")
         }
     }
 }
