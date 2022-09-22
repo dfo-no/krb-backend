@@ -22,14 +22,15 @@ class ProjectResource (val projectService: ProjectService){
     @Path("/{ref}")
     fun getProject(@PathParam("ref") ref : String): Response {
 
-        //try catch block
-
-        val project = projectService.getProjectByRef(ref)!!
-
-        if (projectService.exists(project.id)){
-            return Response.ok(project).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
+        try {
+            val project = projectService.getProjectByRefCustomRepo(ref)!!
+            return if (projectService.exists(project.id)) {
+                Response.ok(project).build()
+            } else {
+                Response.status(Response.Status.NOT_FOUND).build()
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException ("GET One project FAILED. Message: $e")
         }
     }
 
@@ -46,12 +47,11 @@ class ProjectResource (val projectService: ProjectService){
     @POST
     fun createProject(project: Project): Response? {
         try {
-
             projectService.createProject(project)
-            if (project.isPersistent){
-                return Response.created(URI.create("/projects" + project.id)).build();
+            return if (project.isPersistent){
+                Response.created(URI.create("/projects" + project.id)).build();
             } else {
-                return Response.status(Response.Status.BAD_REQUEST).build()
+                Response.status(Response.Status.BAD_REQUEST).build()
             }
         }catch (e: Exception){
             throw IllegalArgumentException ("Create project FAILED. Message: $e")
@@ -59,27 +59,42 @@ class ProjectResource (val projectService: ProjectService){
     }
     //DELETE PROJECT
     @DELETE
-    @Path("{id}")
+    @Path("{projectref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun deleteProjectById(@PathParam("id") id: Long): Response {
-        val deleted = projectService.deleteProject(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
+    fun deleteProjectById(@PathParam("projectref") projectref: String): Response {
+        try {
+            if (projectService.refExists(projectref)) {
+                val project = projectService.getProjectByRefCustomRepo(projectref)
+                val deleted = projectService.deleteProject(project!!.id)
+                return if (deleted) {
+                    //println(deleted)
+                    Response.noContent().build()
+                } else Response.status(Response.Status.BAD_REQUEST).build()
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build()
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Delete project FAILED. Message: $e")
+        }
     }
 
     //UPDATE PROJECT
     @PUT
-    @Path("{id}")
+    @Path("{projectref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun updateProject(@PathParam("id") id: Long, project: Project): Response {
-        if (projectService.exists(id)) {
+    fun updateProject(@PathParam("projectref") projectref: String, project: Project): Response {
+
+        if (projectService.refExists(projectref)) {
+            val project = projectService.getProjectByRefCustomRepo(projectref)
             try {
-                projectService.updateProject(id, project)
-                return Response.ok(projectService.getProject(id)).build()
+
+                /**
+                 * todo
+                 */
+                projectService.updateProject(project!!.id, project)
+                return Response.ok(projectService.getProjectByRefCustomRepo(projectref)).build()
             } catch(e: Exception) {
                 throw IllegalArgumentException ("Updating project FAILED. Message: $e")
             }

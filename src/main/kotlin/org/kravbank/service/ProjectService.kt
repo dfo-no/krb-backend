@@ -12,17 +12,18 @@ class ProjectService(val projectRepository: ProjectRepository) {
 
     fun getProject(id: Long): Project = projectRepository.findById(id)
 
+
     fun getProjectByRef(ref: String): Project? {
        return listProjects().find { project ->
             project.ref == ref
         }
     }
 
+    fun listProjectsByRef(ref : String) : List<Project> = projectRepository.listAllByProjectRef(ref)
+
     fun getProjectByRefCustomRepo (ref: String): Project? = projectRepository.findByRef(ref)
 
-    fun createProject(project: Project){
-        projectRepository.persist(project)
-    }
+    fun createProject(project: Project) = projectRepository.persist(project)
 
     fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
 

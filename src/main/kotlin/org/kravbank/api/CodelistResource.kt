@@ -18,33 +18,26 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{codelistref}")
-    fun getCodelist(@PathParam("projectref") projectref: String, @PathParam("codelistref") ref: String): Response {
-        //finn prosjekt med ref
-        /* val foundProject = projectService.listProjects().find{
-                    project -> project.ref == projectref
-          }
-          //prosjektets id
-          val id: Long = foundProject!!.id
-
-         */
+    fun getCodelist(
+        @PathParam("projectref") projectref: String,
+        @PathParam("codelistref") codelistref: String
+    ): Response {
         try {
             //val project = projectService.getProjectByRef(projectref)!!
-            val project = projectService.getProjectByRefCustomRepo(projectref)!!
             //hvis prosjektet eksisterer finn kodeliste i prosjektet
             // eller returner HTTP 404 NOT FOUND
-            if (projectService.exists(project.id)) {
+            if (projectService.refExists(projectref)) {
+                val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 val codelist = project.codelist.find { codelist ->
-                    codelist.ref == ref
+                    codelist.ref == codelistref
                 } ?: return Response.status(Response.Status.NOT_FOUND).build()
-
                 return Response.ok(codelist).build()
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
         } catch (e: Exception) {
-
-            throw IllegalArgumentException("GET ONE codelist failed")
-            //return Response.status(Response.Status.NOT_FOUND).build()
+            return Response.status(Response.Status.BAD_REQUEST).build()
+            // throw IllegalArgumentException("GET ONE codelist failed")
         }
     }
 
@@ -53,34 +46,33 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     fun listCodelists(@PathParam("projectref") projectref: String): Response {
-
         try {
             if (projectService.refExists(projectref)) {
-                val project = projectService.getProjectByRef(projectref)!!
+                val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 // list codelist by project ref
                 return Response.ok(project.codelist).build()
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
-        }catch (e: Exception) {
-            throw IllegalArgumentException("GET codelists failed")
+        } catch (e: Exception) {
+            return Response.status(Response.Status.BAD_REQUEST).build()
+            // throw IllegalArgumentException("GET codelists failed")
         }
     }
 
 
-
-//CREATE CODELIST
+    //CREATE CODELIST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
     fun createCodelist(@PathParam("projectref") projectref: String, codelist: Codelist): Response? {
-//lager codeliste tilhørende prosjektet
-// legger til i prosjekt med kobling til prosjektet ved opprettelse
+        //lager codeliste tilhørende prosjektet
+        // legger til i prosjekt med kobling til prosjektet ved opprettelse
         try {
-// val createCodelist = Codelist.ModelMapper.from(codelist)
+            // val createCodelist = Codelist.ModelMapper.from(codelist)
             if (projectService.refExists(projectref)) {
                 val project = projectService.getProjectByRefCustomRepo(projectref)!!
-                codelistService.createCodelist(codelist) //codelist.persist
+                //codelistService.createCodelist(codelist) //codelist.persist
                 // legger til kodelisten i prosjekt
                 project.codelist.add(codelist)
                 //oppdaterer codeliste i prosjekt
@@ -89,13 +81,13 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
             if (codelist.isPersistent) {
-                return Response.created(URI.create("/api/v1/projects/$projectref/codelists" + codelist.id)).build();
+                return Response.created(URI.create("/api/v1/projects/$projectref/codelists" + codelist.ref)).build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).build()
             }
         } catch (e: Exception) {
-            throw IllegalArgumentException("Creating codelist FAILED. Message: $e")
-//return Response.status(Response.Status.BAD_REQUEST).build()
+            return Response.status(Response.Status.BAD_REQUEST).build()
+            // throw IllegalArgumentException("Creating codelist FAILED. Message: $e")
         }
     }
 
@@ -108,25 +100,17 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         @PathParam("projectref") projectref: String,
         @PathParam("codelistref") ref: String
     ): Response {
-
-        /**
-         * TODO
-         * Færre repo-kall
-         *
-         */
         return try {
-            val project = projectService.getProjectByRef(projectref)!!
             if (projectService.refExists(projectref)) {
-                //  val codelist = codelistService.getCodelistByRef(ref)!! //Bruk find metode på prosjekt sin codeliste
+                val project = projectService.getProjectByRefCustomRepo(projectref)!!
+                //  val codelist = codelistService.getCodelistByRef(ref)!!
                 val codelist = project.codelist.find { codelist -> codelist.ref == ref }
-                println("print codelist id here  " + codelist!!.id)
                 val deleted = codelistService.deleteCodelist(codelist!!.id)
-                project.codelist.remove(codelist)
-                projectService.updateProject(project.id, project)
-
                 if (deleted) {
-                   return  Response.noContent().build()
-                 } else Response.status(Response.Status.BAD_REQUEST).build()
+                    project.codelist.remove(codelist) //nødvendig?
+                    projectService.updateProject(project.id, project)
+                    return Response.noContent().build()
+                } else Response.status(Response.Status.BAD_REQUEST).build()
             } else Response.status(Response.Status.NOT_FOUND).build()
         } catch (e: Exception) {
             throw IllegalArgumentException("DELETING codelist FAILED. Message: $e")
@@ -148,22 +132,19 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     @Transactional
     fun updateCodelist(
         @PathParam("projectref") projectref: String,
-        @PathParam("codelistref") ref: String,
+        @PathParam("codelistref") codelistref: String,
         codelist: Codelist
     ): Response? {
-        val project = projectService.getProjectByRef(projectref)!!
-        try {
-            if (projectService.exists(project.id)) {
-                val foundCodelist = codelistService.getCodelistByRef(ref)
-                if (codelistService.exists(foundCodelist!!.id)) {
-                    codelistService.updateCodelist(foundCodelist.id, codelist)
-                    return Response.ok(codelist).build()
-                }
-            } else return Response.status(Response.Status.BAD_REQUEST).build()
+        return try {
+            if (projectService.refExists(projectref) && codelistService.refExists(codelistref)) {
+                // val project = projectService.getProjectByRefCustomRepo(projectref)!!
+                val foundCodelist = codelistService.getCodelistByRef(codelistref)
+                codelistService.updateCodelist(foundCodelist!!.id, codelist)
+                Response.ok(codelist).build()
+            } else Response.status(Response.Status.BAD_REQUEST).build()
         } catch (e: Exception) {
-            return Response.status(Response.Status.BAD_REQUEST).build()
-// throw IllegalArgumentException("Updating codelist FAILED. Message: $e")
+            Response.status(Response.Status.BAD_REQUEST).build()
+    // throw IllegalArgumentException("Updating codelist FAILED. Message: $e")
         }
-        return TODO("Provide the return value")
     }
 }

@@ -12,5 +12,8 @@ class ProjectRepository : PanacheRepository<Project> { //project, long
 
     fun findByRef(ref: String) = find("ref", ref).firstResult<Project>()
 
+    fun listAllByProjectRef(ref: String) = find("ref", ref).list<Project>()
+
+
 
 }
