@@ -33,27 +33,9 @@ class ProjectService(val projectRepository: ProjectRepository) {
 
 
     fun updateProject(id: Long, project: Project) {
-       projectRepository.update("title = ?1 where id= ?2", project.title, id)
-
-       // projectRepository.update("codelist = ?1 where id = ?2", project.codelist, id)
-
-
-
-
-        /*
+       projectRepository.update("title = ?1, description= ?2 where id = ?3",
+           project.title,
            project.description,
-           project.publishedDate,
-           project.projectId,
-           //project.version,
-
-            //project.products,
-           //project.publications,
-                  "products = ?5, " +
-               "publications = ?6 " +
-
-                          "description = ?2, " +
-               "publishedDate = ?3," +
-               "projectId = ?4, " +
-         */
+           id)
     }
 }

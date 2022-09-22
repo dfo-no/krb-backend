@@ -15,12 +15,12 @@ import javax.ws.rs.core.Response
 @RequestScoped
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
-class ProjectResource (val projectService: ProjectService){
+class ProjectResource(val projectService: ProjectService) {
     //GET PROJECT
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{ref}")
-    fun getProject(@PathParam("ref") ref : String): Response {
+    fun getProject(@PathParam("ref") ref: String): Response {
 
         try {
             val project = projectService.getProjectByRefCustomRepo(ref)!!
@@ -30,7 +30,7 @@ class ProjectResource (val projectService: ProjectService){
                 Response.status(Response.Status.NOT_FOUND).build()
             }
         } catch (e: Exception) {
-            throw IllegalArgumentException ("GET One project FAILED. Message: $e")
+            throw IllegalArgumentException("GET One project FAILED. Message: $e")
         }
     }
 
@@ -38,7 +38,7 @@ class ProjectResource (val projectService: ProjectService){
     //@Operation(summary = "List all projects")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listProjects():List<Project> =
+    fun listProjects(): List<Project> =
         projectService.listProjects();
 
     //CREATE PROJECT
@@ -48,15 +48,16 @@ class ProjectResource (val projectService: ProjectService){
     fun createProject(project: Project): Response? {
         try {
             projectService.createProject(project)
-            return if (project.isPersistent){
+            return if (project.isPersistent) {
                 Response.created(URI.create("/projects" + project.id)).build();
             } else {
                 Response.status(Response.Status.BAD_REQUEST).build()
             }
-        }catch (e: Exception){
-            throw IllegalArgumentException ("Create project FAILED. Message: $e")
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Create project FAILED. Message: $e")
         }
     }
+
     //DELETE PROJECT
     @DELETE
     @Path("{projectref}")
@@ -80,26 +81,27 @@ class ProjectResource (val projectService: ProjectService){
     }
 
     //UPDATE PROJECT
+
+    /**
+     * todo
+     * DTO / FORM
+     *
+     */
     @PUT
     @Path("{projectref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun updateProject(@PathParam("projectref") projectref: String, project: Project): Response {
-
-        if (projectService.refExists(projectref)) {
-            val project = projectService.getProjectByRefCustomRepo(projectref)
-            try {
-
-                /**
-                 * todo
-                 */
-                projectService.updateProject(project!!.id, project)
-                return Response.ok(projectService.getProjectByRefCustomRepo(projectref)).build()
-            } catch(e: Exception) {
-                throw IllegalArgumentException ("Updating project FAILED. Message: $e")
+    fun updateProject(@PathParam("projectref") projectref: String, project: Project): Response? {
+        try {
+            return if (projectService.refExists(projectref)) {
+                val foundProject = projectService.getProjectByRefCustomRepo(projectref)
+                projectService.updateProject(foundProject!!.id, project)
+                Response.ok(project).build()
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build()
             }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Delete project FAILED. Message: $e")
         }
     }
 }
