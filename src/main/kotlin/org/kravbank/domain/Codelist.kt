@@ -8,6 +8,11 @@ import kotlin.collections.ArrayList
 
 @Entity
 class Codelist() : PanacheEntity() {
+    /**
+     *
+     *
+     *
+     */
 
     var title: String = ""
 

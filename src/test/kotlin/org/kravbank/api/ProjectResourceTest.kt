@@ -23,24 +23,12 @@ class ProjectResourceTest {
              .body(`is`("Hello RESTEasy"))
     }
 
-
-
-    // BEFORE ALL ?
-
-
-
     @Test
     fun createProject() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080";
         //RestAssured.port = 8080;
         RestAssured.basePath = "/api/v1/";
-
-        val product = Product();
-        product.title ="Integrasjonstittle produkttittel"
-        product.description="Integrasjonstest produktbeskrivelse"
-        product.deletedDate="21-02-91"
-
 
         val project = Project()
         project.title = "Integrasjonstest prosjektittel"
@@ -49,7 +37,6 @@ class ProjectResourceTest {
         project.version="1.0"
         project.publishedDate="Not published"
         project.deletedDate="11-11-11"
-        //project.products[0] = product
 
         given()
             .`when`()
@@ -68,18 +55,13 @@ class ProjectResourceTest {
     @Test
     fun getProject() {
 
-    }
-
-   /*     val uuid = UUID.randomUUID().toString()
-        given()
-            .pathParam("uuid", uuid)
-            .`when`().get("http://localhost:8080/api/v1/projects/{uuid}")
+     given()
+            //.pathParam("uuid", uuid)
+            .`when`().get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-            //.body(`is`("hello $uuid"))
+           // .body(`is`("hello $uuid"))
     }
-
-    */
 
 
     @Test
@@ -92,12 +74,7 @@ class ProjectResourceTest {
                 .then()
                 .statusCode(200)
                 //.body(, equalTo("Integrasjonstest prosjektittel"))
-
-        //val statusCode = given().get("http://localhost:8080/kt/projects").statusCode
-
-        //println(statusCode)
-
-    }
+        }
 
     @Test
     fun deleteProject() {
@@ -105,10 +82,8 @@ class ProjectResourceTest {
         //feil status code
         //fungerer i postman
 
-
-
         given()
-            .`when`().delete("http://localhost:8080/api/v1/projects/1")
+            .`when`().delete("http://localhost:8080/api/v1/projects/ccc4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(204)
             //.body(`is`("Hello RESTEasy"))

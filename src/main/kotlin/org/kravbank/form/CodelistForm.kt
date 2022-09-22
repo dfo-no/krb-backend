@@ -1,11 +1,8 @@
 package org.kravbank.form
 
 
-class CodelistForm() {
+data class CodelistForm(
 
-     var title: String = ""
-
+    var title: String = "",
     var description: String = ""
-
-
-}
+)

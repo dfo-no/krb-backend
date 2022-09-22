@@ -19,13 +19,12 @@ class ProjectResource(val projectService: ProjectService) {
     //GET PROJECT
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("/{ref}")
-    fun getProject(@PathParam("ref") ref: String): Response {
+    @Path("/{projectref}")
+    fun getProject(@PathParam("projectref") projectref: String): Response {
 
-        try {
-            val project = projectService.getProjectByRefCustomRepo(ref)!!
-            return if (projectService.exists(project.id)) {
-                Response.ok(project).build()
+        return try {
+            if (projectService.refExists(projectref)) {
+                Response.ok(projectService.getProjectByRefCustomRepo(projectref)).build()
             } else {
                 Response.status(Response.Status.NOT_FOUND).build()
             }

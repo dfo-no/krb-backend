@@ -14,7 +14,12 @@ import javax.persistence.EntityManager
 @ApplicationScoped
 class CodelistService(val codelistRepository: CodelistRepository) {
 
-
+    /**
+     * todo
+     *
+     * cashing
+     * auth
+     */
     fun listCodelists(): MutableList<Codelist> = codelistRepository.listAll()
 
     fun listCodelistsByRef(ref: String): MutableList<Codelist> = codelistRepository.listAllRefs(ref)
