@@ -2,18 +2,13 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import lombok.Getter
+import lombok.Setter
 import java.util.*
 import javax.persistence.*
-import kotlin.collections.ArrayList
 
 @Entity
 class Codelist() : PanacheEntity() {
-    /**
-     *
-     *
-     *
-     */
-
     var title: String = ""
 
     var description: String = ""
@@ -36,6 +31,4 @@ class Codelist() : PanacheEntity() {
 
     // public String type; //code
     //public parent
-
-
 }

@@ -1,6 +1,8 @@
 package org.kravbank.utils
 
+import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
+import org.kravbank.domain.Project
 import org.kravbank.form.CodelistForm
 
 class CodelistMapper : Mapper<CodelistForm, Codelist> {
@@ -13,7 +15,12 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
         )
 
 
+
     override fun toEntity(domain: CodelistForm): Codelist {
-        TODO("Not yet implemented")
+      var c = Codelist()
+        c.title = domain.title
+        c.description = domain.description
+        // ref ?
+        return c
     }
 }

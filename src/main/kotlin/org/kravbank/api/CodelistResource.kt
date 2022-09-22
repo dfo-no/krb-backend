@@ -24,26 +24,15 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         @PathParam("codelistref") codelistref: String
     ): Response {
 
-        //val project = projectService.getProjectByRef(projectref)!!
+        //try
         //hvis prosjektet eksisterer finn kodeliste i prosjektet
-        // eller returner HTTP 404 NOT FOUND
-
-        /**
-         * todo
-         * delete ref exists
-         * backend exception mapper
-         * error 500 og 404
-         * all logikk i service
-         */
-        // var m = CodelistMapper().fromEntity(codelist)
-
         if (projectService.refExists(projectref)) {
             val project = projectService.getProjectByRefCustomRepo(projectref)!!
             val codelist = project.codelist.find { codelist ->
                 codelist.ref == codelistref
             }
             val codelistMapper = CodelistMapper().fromEntity(codelist!!)
-            
+
             return Response.ok(codelistMapper).build()
 
         } else return Response.status(Response.Status.NOT_FOUND).build()
@@ -65,6 +54,8 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             if (projectService.refExists(projectref)) {
                 val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 // list codelist by project ref
+                // val codelistMapper = CodelistMapper().fromEntityProjectCodlist(project.codelist!!)
+
                 return Response.ok(project.codelist).build()
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
@@ -158,6 +149,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
                 // val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 val foundCodelist = codelistService.getCodelistByRef(codelistref)
                 codelistService.updateCodelist(foundCodelist!!.id, codelist)
+
                 Response.ok(codelist).build()
             } else Response.status(Response.Status.BAD_REQUEST).build()
         } catch (e: Exception) {

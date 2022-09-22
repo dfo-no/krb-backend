@@ -6,7 +6,6 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
-import org.kravbank.domain.Product
 
 @QuarkusTest
 class CodelistResourceTest () {
@@ -38,13 +37,16 @@ class CodelistResourceTest () {
     @Test
     fun createCodelist() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "$baseUri"
+        RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;
-        RestAssured.basePath = "$basePath";
+        RestAssured.basePath = basePath;
+
 
         val codelist = Codelist()
         codelist.title = "Integrasjonstest - Tittel 1"
         codelist.description = "Integrasjonstest - Beskrivelse 1"
+
+        //    val codelist = Codelist("Integrasjonstest - Tittel 1 dataclass", "Integrasjonstest - Beskrivelse 1 dataclass", "bbq4db69-edb2-431f-855a-4368e2bcddd1", null,null,null)
 
         given()
             .`when`()
