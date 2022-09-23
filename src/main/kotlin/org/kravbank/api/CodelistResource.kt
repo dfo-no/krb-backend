@@ -1,6 +1,7 @@
 package org.kravbank.api;
 
 import org.kravbank.domain.Codelist;
+import org.kravbank.form.CodelistForm
 import org.kravbank.service.CodelistService
 import org.kravbank.service.ProjectService
 import org.kravbank.utils.CodelistMapper
@@ -52,11 +53,15 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     fun listCodelists(@PathParam("projectref") projectref: String): Response {
         try {
             if (projectService.refExists(projectref)) {
-                val project = projectService.getProjectByRefCustomRepo(projectref)!!
+                val projectCodelist = projectService.getProjectByRefCustomRepo(projectref)!!.codelist
                 // list codelist by project ref
                 // val codelistMapper = CodelistMapper().fromEntityProjectCodlist(project.codelist!!)
 
-                return Response.ok(project.codelist).build()
+                //val codelistMapper = CodelistMapper().fromEntity(projectCodelist)
+
+                var array = ArrayList<CodelistForm>()
+                for(c in projectCodelist) array.add(CodelistMapper().fromEntity(c))
+                return Response.ok(array).build()
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
@@ -71,25 +76,27 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createCodelist(@PathParam("projectref") projectref: String, codelist: Codelist): Response? {
+    fun createCodelist(@PathParam("projectref") projectref: String, codelist: CodelistForm): Response? {
         //lager codeliste tilhørende prosjektet
         // legger til i prosjekt med kobling til prosjektet ved opprettelse
         try {
 
             //var m = CodelistMapper()
             //m.toEntity(codelist)
-            // val createCodelist = Codelist.ModelMapper.from(codelist)
+            val codelistMapper = CodelistMapper().toEntity(codelist)
+
             if (projectService.refExists(projectref)) {
                 val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 //codelistService.createCodelist(codelist) //codelist.persist
                 // legger til kodelisten i prosjekt
-                project.codelist.add(codelist)
+                project.codelist.add(codelistMapper)
                 //oppdaterer codeliste i prosjekt
                 projectService.updateProject(project.id, project)
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
-            if (codelist.isPersistent) {
+            if (codelistMapper.isPersistent) {
+
                 return Response.created(URI.create("/api/v1/projects/$projectref/codelists" + codelist.ref)).build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).build()

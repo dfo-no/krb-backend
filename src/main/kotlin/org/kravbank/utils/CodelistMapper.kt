@@ -17,10 +17,11 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
 
 
     override fun toEntity(domain: CodelistForm): Codelist {
-      var c = Codelist()
+      val c = Codelist()
         c.title = domain.title
         c.description = domain.description
         // ref ?
         return c
     }
+
 }
