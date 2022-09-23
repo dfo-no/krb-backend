@@ -1,4 +1,4 @@
-package org.kravbank.form
+package org.kravbank.form.codelist
 
 
 data class CodelistForm(

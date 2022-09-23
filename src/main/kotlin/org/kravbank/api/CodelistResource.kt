@@ -1,10 +1,11 @@
 package org.kravbank.api;
 
-import org.kravbank.domain.Codelist;
-import org.kravbank.form.CodelistForm
+import org.kravbank.form.codelist.CodelistForm
+import org.kravbank.form.codelist.CodelistFormUpdate
 import org.kravbank.service.CodelistService
 import org.kravbank.service.ProjectService
-import org.kravbank.utils.CodelistMapper
+import org.kravbank.utils.codelist.CodelistMapper
+import org.kravbank.utils.codelist.CodelistUpdateMapper
 import java.lang.IllegalArgumentException
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -20,30 +21,24 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{codelistref}")
-    fun getCodelist(
+    fun getCodelistByRef(
         @PathParam("projectref") projectref: String,
         @PathParam("codelistref") codelistref: String
     ): Response {
-
-        //try
-        //hvis prosjektet eksisterer finn kodeliste i prosjektet
-        if (projectService.refExists(projectref)) {
-            val project = projectService.getProjectByRefCustomRepo(projectref)!!
-            val codelist = project.codelist.find { codelist ->
-                codelist.ref == codelistref
-            }
-            val codelistMapper = CodelistMapper().fromEntity(codelist!!)
-
-            return Response.ok(codelistMapper).build()
-
-        } else return Response.status(Response.Status.NOT_FOUND).build()
-
-        /* } catch (e: Exception) {
-             return Response.status(Response.Status.BAD_REQUEST).build()
-             // throw IllegalArgumentException("GET ONE codelist failed")
-         }
-
-         */
+        try {
+            //hvis prosjektet eksisterer finn kodeliste i prosjektet
+            if (projectService.refExists(projectref)) {
+                val project = projectService.getProjectByRefCustomRepo(projectref)!!
+                val codelist = project.codelist.find { codelist ->
+                    codelist.ref == codelistref
+                }
+                val codelistMapper = CodelistMapper().fromEntity(codelist!!)
+                return Response.ok(codelistMapper).build()
+            } else return Response.status(Response.Status.NOT_FOUND).build()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("GET ONE codelist failed")
+            //return Response.status(Response.Status.BAD_REQUEST).build()
+        }
     }
 
     //GET CODELIST
@@ -55,13 +50,10 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             if (projectService.refExists(projectref)) {
                 val projectCodelist = projectService.getProjectByRefCustomRepo(projectref)!!.codelist
                 // list codelist by project ref
-                // val codelistMapper = CodelistMapper().fromEntityProjectCodlist(project.codelist!!)
-
-                //val codelistMapper = CodelistMapper().fromEntity(projectCodelist)
-
-                var array = ArrayList<CodelistForm>()
-                for(c in projectCodelist) array.add(CodelistMapper().fromEntity(c))
-                return Response.ok(array).build()
+                val codelistFormList = ArrayList<CodelistForm>()
+                // map from entity to codelist form
+                for (c in projectCodelist) codelistFormList.add(CodelistMapper().fromEntity(c))
+                return Response.ok(codelistFormList).build()
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
@@ -71,7 +63,6 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         }
     }
 
-
     //CREATE CODELIST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,11 +71,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         //lager codeliste tilhørende prosjektet
         // legger til i prosjekt med kobling til prosjektet ved opprettelse
         try {
-
-            //var m = CodelistMapper()
-            //m.toEntity(codelist)
             val codelistMapper = CodelistMapper().toEntity(codelist)
-
             if (projectService.refExists(projectref)) {
                 val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 //codelistService.createCodelist(codelist) //codelist.persist
@@ -135,13 +122,6 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
 
 
     //UPDATE CODELIST
-
-    /***
-     * todo
-     *
-     * Fix id = null ved endring -> DTO / FORM
-     */
-
     @PUT
     @Path("{codelistref}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -149,14 +129,14 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     fun updateCodelist(
         @PathParam("projectref") projectref: String,
         @PathParam("codelistref") codelistref: String,
-        codelist: Codelist
+        codelist: CodelistFormUpdate
     ): Response? {
         return try {
             if (projectService.refExists(projectref) && codelistService.refExists(codelistref)) {
                 // val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 val foundCodelist = codelistService.getCodelistByRef(codelistref)
-                codelistService.updateCodelist(foundCodelist!!.id, codelist)
-
+                val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
+                codelistService.updateCodelist(foundCodelist!!.id, codelistMapper)
                 Response.ok(codelist).build()
             } else Response.status(Response.Status.BAD_REQUEST).build()
         } catch (e: Exception) {

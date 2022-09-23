@@ -1,7 +1,11 @@
 package org.kravbank.api
 
 import org.kravbank.domain.Project
+import org.kravbank.form.codelist.CodelistForm
+import org.kravbank.form.project.ProjectForm
 import org.kravbank.service.ProjectService
+import org.kravbank.utils.codelist.CodelistMapper
+import org.kravbank.utils.project.ProjectMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import javax.enterprise.context.RequestScoped
@@ -24,7 +28,9 @@ class ProjectResource(val projectService: ProjectService) {
 
         return try {
             if (projectService.refExists(projectref)) {
-                Response.ok(projectService.getProjectByRefCustomRepo(projectref)).build()
+                val project = projectService.getProjectByRefCustomRepo(projectref)
+                val projectMapper = ProjectMapper().fromEntity(project!!)
+                Response.ok(projectMapper).build()
             } else {
                 Response.status(Response.Status.NOT_FOUND).build()
             }
@@ -37,8 +43,19 @@ class ProjectResource(val projectService: ProjectService) {
     //@Operation(summary = "List all projects")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listProjects(): List<Project> =
-        projectService.listProjects();
+    fun listProjects(): Response? {
+       try  {
+           val projects = projectService.listProjects();
+
+           val projectFormList = ArrayList<ProjectForm>()
+           for (p in projects) projectFormList.add(ProjectMapper().fromEntity(p))
+           return Response.ok(projectFormList).build()
+
+       }catch (e: Exception)
+       {
+           return null
+       }
+    }
 
     //CREATE PROJECT
     @Transactional

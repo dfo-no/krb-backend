@@ -6,20 +6,23 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
+import java.awt.PageAttributes.MediaType
+import javax.print.attribute.standard.MediaTray
 
 @QuarkusTest
-class CodelistResourceTest () {
-    val baseUri= "http://localhost:8080"
+class CodelistResourceTest() {
+    val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
-   val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+    val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
     @Test
-    fun getCodelist() {
+    fun getCodelistByRef() {
 
         val getCodelistPath = "$baseUri$basePath$useProjectRef"
 
         given()
-            .`when`().get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
+            .`when`()
+            .get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
         //.body(, equalTo("Integrasjonstest prosjektittel"))
@@ -41,12 +44,9 @@ class CodelistResourceTest () {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-
         val codelist = Codelist()
         codelist.title = "Integrasjonstest - Tittel 1"
         codelist.description = "Integrasjonstest - Beskrivelse 1"
-
-        //    val codelist = Codelist("Integrasjonstest - Tittel 1 dataclass", "Integrasjonstest - Beskrivelse 1 dataclass", "bbq4db69-edb2-431f-855a-4368e2bcddd1", null,null,null)
 
         given()
             .`when`()
@@ -58,18 +58,34 @@ class CodelistResourceTest () {
     }
 
     @Test
-    fun deleteCodelistById() {
+    fun deleteCodelistByRef() {
+        given()
+            .`when`()
+            .delete("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(204)
+        //.body(`is`("Hello RESTEasy"))
     }
 
     @Test
     fun updateCodelist() {
-    }
 
-    @Test
-    fun getCodelistService() {
-    }
+        //val ut = given().put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1").statusCode()
+        RestAssured.defaultParser = Parser.JSON
+        RestAssured.baseURI = baseUri
+        //RestAssured.port = 8080;
+        RestAssured.basePath = basePath;
 
-    @Test
-    fun getProjectService() {
+        val codelist = Codelist()
+        codelist.title = "Oppdatert integrasjonstest - Tittel 1"
+        codelist.description = "Oppdatert integrasjonstest - Beskrivelse 1"
+
+        given()
+            .`when`()
+            .body(codelist)
+            .header("Content-type", "application/json")
+            .put("$useProjectRef/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(200) //envt 200
     }
 }

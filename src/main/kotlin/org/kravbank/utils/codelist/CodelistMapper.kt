@@ -1,12 +1,13 @@
-package org.kravbank.utils
+package org.kravbank.utils.codelist
 
-import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
-import org.kravbank.domain.Project
-import org.kravbank.form.CodelistForm
+import org.kravbank.form.codelist.CodelistForm
+import org.kravbank.utils.Mapper
 
 class CodelistMapper : Mapper<CodelistForm, Codelist> {
 
+
+    // FROM ENTITY
     override fun fromEntity(entity: Codelist): CodelistForm =
         CodelistForm(
             entity.ref,
@@ -15,7 +16,7 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
         )
 
 
-
+    //TO ENTITY
     override fun toEntity(domain: CodelistForm): Codelist {
       val c = Codelist()
         c.title = domain.title
@@ -23,5 +24,7 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
         // ref ?
         return c
     }
+
+
 
 }
