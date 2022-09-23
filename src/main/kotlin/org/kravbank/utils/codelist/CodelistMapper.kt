@@ -21,7 +21,6 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
       val c = Codelist()
         c.title = domain.title
         c.description = domain.description
-        // ref ?
         return c
     }
 

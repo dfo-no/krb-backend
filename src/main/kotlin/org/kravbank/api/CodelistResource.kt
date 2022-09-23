@@ -116,7 +116,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
                 } else Response.status(Response.Status.BAD_REQUEST).build()
             } else Response.status(Response.Status.NOT_FOUND).build()
         } catch (e: Exception) {
-            throw IllegalArgumentException("DELETING codelist FAILED. Message: $e")
+            throw IllegalArgumentException("Delete codelist FAILED. Message: $e")
         }
     }
 

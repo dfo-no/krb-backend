@@ -25,8 +25,7 @@ class ProjectMapper : Mapper<ProjectForm, Project> {
         p.description = domain.description
         p.version = domain.version
         p.publishedDate = domain.publishedDate
-        p.deletedDate = domain.publishedDate
-        // ref ?
+        p.deletedDate = domain.deletedDate
         return p
     }
 
