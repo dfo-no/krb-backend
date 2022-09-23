@@ -24,8 +24,12 @@ class CodelistRepository: PanacheRepository<Codelist> {
 
     fun listAllRefs(ref: String) = find("ref", ref).list<Codelist>()
 
+    /*
+
     fun listAllByProjectId(id: Long): MutableList<Codelist>? {
        //var q = NativeQuery("SELECT * FROM Codelist WHERE id in (SELECT id FROM project_codelist WHERE project_id = ?1)",id)
         return find("FROM Codelist c WHERE id c.ref.id = ?1", id).list<Codelist>()
     }
+
+     */
 }

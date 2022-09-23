@@ -3,31 +3,36 @@ package org.kravbank.api
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import io.restassured.http.ContentType
 import io.restassured.parsing.Parser
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Product
 import org.kravbank.domain.Project
-import java.util.*
 
 @QuarkusTest
 class ProjectResourceTest {
 
+    val baseUri = "http://localhost:8080"
+    val basePath = "/api/v1/projects"
+    val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+
+
     @Test
-    fun testHelloEndpoint() {
+    fun getProjectByRef() {
         given()
-          .`when`().get("/hello")
-          .then()
-             .statusCode(200)
-             .body(`is`("Hello RESTEasy"))
+            //.pathParam("uuid", uuid)
+            .`when`().get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(200)
+        // .body(`is`("hello $uuid"))
     }
 
-
-
-    // BEFORE ALL ?
-
-
+    @Test
+    fun listProjects() {
+        given()
+            .`when`().get("http://localhost:8080/api/v1/projects")
+            .then()
+            .statusCode(200)
+        //.body(, equalTo("Integrasjonstest prosjektittel"))
+    }
 
     @Test
     fun createProject() {
@@ -36,20 +41,13 @@ class ProjectResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = "/api/v1/";
 
-        val product = Product();
-        product.title ="Integrasjonstittle produkttittel"
-        product.description="Integrasjonstest produktbeskrivelse"
-        product.deletedDate="21-02-91"
-
-
         val project = Project()
         project.title = "Integrasjonstest prosjektittel"
-        project.description ="Integrasjonstest prosjektbeskrivelse"
+        project.description = "Integrasjonstest prosjektbeskrivelse"
         //project.projectId = UUID.randomUUID().toString()
-        project.version="1.0"
-        project.publishedDate="Not published"
-        project.deletedDate="11-11-11"
-        //project.products[0] = product
+        project.version = "1.0"
+        project.publishedDate = "Not published"
+        project.deletedDate = "11-11-11"
 
         given()
             .`when`()
@@ -59,64 +57,34 @@ class ProjectResourceTest {
             .then()
             .statusCode(201) //envt 200
 
-       // RestAssured.reset()
+        // RestAssured.reset()
         //body(both(startsWith("")).and(not(endsWith("null"))))
-
-
     }
 
     @Test
-    fun getProject() {
-
-    }
-
-   /*     val uuid = UUID.randomUUID().toString()
+    fun deleteProjectByRef() {
         given()
-            .pathParam("uuid", uuid)
-            .`when`().get("http://localhost:8080/api/v1/projects/{uuid}")
-            .then()
-            .statusCode(200)
-            //.body(`is`("hello $uuid"))
-    }
-
-    */
-
-
-    @Test
-    fun getProjects() {
-
-        //val response = RestAssured.get("http://localhost:8080/kt/projects")
-       // println(response.statusCode())
-            given()
-                .`when`().get("http://localhost:8080/api/v1/projects")
-                .then()
-                .statusCode(200)
-                //.body(, equalTo("Integrasjonstest prosjektittel"))
-
-        //val statusCode = given().get("http://localhost:8080/kt/projects").statusCode
-
-        //println(statusCode)
-
-    }
-
-    @Test
-    fun deleteProject() {
-
-        //feil status code
-        //fungerer i postman
-
-
-
-        given()
-            .`when`().delete("http://localhost:8080/api/v1/projects/1")
+            .`when`().delete("http://localhost:8080/api/v1/projects/ccc4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(204)
-            //.body(`is`("Hello RESTEasy"))
-
     }
 
+    @Test
+    fun updateProjectByRef() {
+        RestAssured.defaultParser = Parser.JSON
+        RestAssured.baseURI = baseUri
+        RestAssured.basePath = basePath;
 
-    //get one project
+        val project = Project()
+        project.title = "Oppdatert integrasjonstest - Tittel 1"
+        project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
 
-
+        given()
+            .`when`()
+            .body(project)
+            .header("Content-type", "application/json")
+            .put(useProjectRef)
+            .then()
+            .statusCode(200)
+    }
 }

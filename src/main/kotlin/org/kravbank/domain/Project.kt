@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 @Entity
-//@Table(name = "projectktl-test")
+//@Table(name = "Project")
 class Project: PanacheEntity() {
 
     //@Id

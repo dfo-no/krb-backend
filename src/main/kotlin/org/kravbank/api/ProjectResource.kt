@@ -1,7 +1,11 @@
 package org.kravbank.api
 
 import org.kravbank.domain.Project
+import org.kravbank.form.project.ProjectForm
+import org.kravbank.form.project.ProjectFormUpdate
 import org.kravbank.service.ProjectService
+import org.kravbank.utils.project.ProjectMapper
+import org.kravbank.utils.project.ProjectUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import javax.enterprise.context.RequestScoped
@@ -15,21 +19,23 @@ import javax.ws.rs.core.Response
 @RequestScoped
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
-class ProjectResource (val projectService: ProjectService){
+class ProjectResource(val projectService: ProjectService) {
     //GET PROJECT
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("/{ref}")
-    fun getProject(@PathParam("ref") ref : String): Response {
+    @Path("/{projectref}")
+    fun getProjectByRef(@PathParam("projectref") projectref: String): Response {
 
-        //try catch block
-
-        val project = projectService.getProjectByRef(ref)!!
-
-        if (projectService.exists(project.id)){
-            return Response.ok(project).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
+        return try {
+            if (projectService.refExists(projectref)) {
+                val project = projectService.getProjectByRefCustomRepo(projectref)
+                val projectMapper = ProjectMapper().fromEntity(project!!)
+                Response.ok(projectMapper).build()
+            } else {
+                Response.status(Response.Status.NOT_FOUND).build()
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException("GET One project FAILED. Message: $e")
         }
     }
 
@@ -37,54 +43,69 @@ class ProjectResource (val projectService: ProjectService){
     //@Operation(summary = "List all projects")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listProjects():List<Project> =
-        projectService.listProjects();
+    fun listProjects(): Response? {
+           val projects = projectService.listProjects();
+           val projectFormList = ArrayList<ProjectForm>()
+           for (p in projects) projectFormList.add(ProjectMapper().fromEntity(p))
+           return Response.ok(projectFormList).build()
+    }
 
     //CREATE PROJECT
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createProject(project: Project): Response? {
+    fun createProject(project: ProjectForm): Response? {
         try {
-
-            projectService.createProject(project)
-            if (project.isPersistent){
-                return Response.created(URI.create("/projects" + project.id)).build();
+            val projectMapper = ProjectMapper().toEntity(project)
+            projectService.createProject(projectMapper)
+            return if (projectMapper.isPersistent) {
+                Response.created(URI.create("/projects" + project.ref)).build();
             } else {
-                return Response.status(Response.Status.BAD_REQUEST).build()
+                Response.status(Response.Status.BAD_REQUEST).build()
             }
-        }catch (e: Exception){
-            throw IllegalArgumentException ("Create project FAILED. Message: $e")
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Create project FAILED. Message: $e")
         }
     }
+
     //DELETE PROJECT
     @DELETE
-    @Path("{id}")
+    @Path("{projectref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun deleteProjectById(@PathParam("id") id: Long): Response {
-        val deleted = projectService.deleteProject(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
+    fun deleteProjectByRef(@PathParam("projectref") projectref: String): Response {
+        try {
+            return if (projectService.refExists(projectref)) {
+                val project = projectService.getProjectByRefCustomRepo(projectref)
+                val deleted = projectService.deleteProject(project!!.id)
+                if (deleted) {
+                    Response.noContent().build()
+                } else Response.status(Response.Status.BAD_REQUEST).build()
+            } else {
+                Response.status(Response.Status.NOT_FOUND).build()
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Delete project FAILED. Message: $e")
+        }
     }
 
     //UPDATE PROJECT
     @PUT
-    @Path("{id}")
+    @Path("{projectref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun updateProject(@PathParam("id") id: Long, project: Project): Response {
-        if (projectService.exists(id)) {
-            try {
-                projectService.updateProject(id, project)
-                return Response.ok(projectService.getProject(id)).build()
-            } catch(e: Exception) {
-                throw IllegalArgumentException ("Updating project FAILED. Message: $e")
+    fun updateProject(@PathParam("projectref") projectref: String, project: ProjectFormUpdate): Response? {
+        try {
+            return if (projectService.refExists(projectref)) {
+                val projectMapper = ProjectUpdateMapper().toEntity(project)
+                val foundProject = projectService.getProjectByRefCustomRepo(projectref)
+                projectService.updateProject(foundProject!!.id, projectMapper)
+                Response.ok(project).build()
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build()
             }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Delete project FAILED. Message: $e")
         }
     }
 }

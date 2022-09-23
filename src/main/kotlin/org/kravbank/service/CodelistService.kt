@@ -14,12 +14,17 @@ import javax.persistence.EntityManager
 @ApplicationScoped
 class CodelistService(val codelistRepository: CodelistRepository) {
 
-
+    /**
+     * todo
+     *
+     * cashing
+     * auth
+     */
     fun listCodelists(): MutableList<Codelist> = codelistRepository.listAll()
 
     fun listCodelistsByRef(ref: String): MutableList<Codelist> = codelistRepository.listAllRefs(ref)
 
-    fun listCodelistsByProjectId(id: Long) : MutableList<Codelist>? = codelistRepository.listAllByProjectId(id)
+    //fun listCodelistsByProjectId(id: Long) : MutableList<Codelist>? = codelistRepository.listAllByProjectId(id)
 
     fun getCodelist(id: Long): Codelist = codelistRepository.findById(id)
 
@@ -36,7 +41,7 @@ class CodelistService(val codelistRepository: CodelistRepository) {
 
     fun exists(id: Long?): Boolean = codelistRepository.count("id", id) == 1L
 
-    //   fun refExists(ref: String): Boolean = codelistRepository.count("ref", ref) == 1L
+    fun refExists(ref: String): Boolean = codelistRepository.count("ref", ref) == 1L
 
 
     /***
