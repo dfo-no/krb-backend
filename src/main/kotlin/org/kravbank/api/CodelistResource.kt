@@ -46,19 +46,19 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     fun listCodelists(@PathParam("projectref") projectref: String): Response {
-        try {
+        return try {
             if (projectService.refExists(projectref)) {
                 val projectCodelist = projectService.getProjectByRefCustomRepo(projectref)!!.codelist
                 // list codelist by project ref
                 val codelistFormList = ArrayList<CodelistForm>()
                 // map from entity to codelist form
                 for (c in projectCodelist) codelistFormList.add(CodelistMapper().fromEntity(c))
-                return Response.ok(codelistFormList).build()
+                Response.ok(codelistFormList).build()
             } else {
-                return Response.status(Response.Status.NOT_FOUND).build()
+                Response.status(Response.Status.NOT_FOUND).build()
             }
         } catch (e: Exception) {
-            return Response.status(Response.Status.BAD_REQUEST).build()
+            Response.status(Response.Status.BAD_REQUEST).build()
             // throw IllegalArgumentException("GET codelists failed")
         }
     }
@@ -134,7 +134,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         return try {
             if (projectService.refExists(projectref) && codelistService.refExists(codelistref)) {
                 // val project = projectService.getProjectByRefCustomRepo(projectref)!!
-                val foundCodelist = codelistService.getCodelistByRef(codelistref)
+                val foundCodelist = codelistService.getCodelistByRefCustomRepo(codelistref)
                 val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
                 codelistService.updateCodelist(foundCodelist!!.id, codelistMapper)
                 Response.ok(codelist).build()

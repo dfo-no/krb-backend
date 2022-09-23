@@ -1,6 +1,8 @@
 package org.kravbank.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -9,11 +11,20 @@ class Product: PanacheEntity() {
     //@Id
     //@GeneratedValue
     //var id: Long? = null;
-    lateinit var title: String
+    var title: String = ""
 
-    lateinit var description: String
+    var description: String = ""
 
-    lateinit var deletedDate: String
+    var deletedDate: String = ""
+
+    @Column(unique = true)
+    var ref: String = UUID.randomUUID().toString()
+
+    @ManyToOne
+    @JsonIgnore
+    lateinit var project: Project
+
+
 
     /*
     OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
