@@ -1,6 +1,5 @@
 package org.kravbank.api
 
-import org.kravbank.domain.Project
 import org.kravbank.form.project.ProjectForm
 import org.kravbank.form.project.ProjectFormUpdate
 import org.kravbank.service.ProjectService

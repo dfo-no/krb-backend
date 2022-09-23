@@ -23,8 +23,18 @@ values(3,5);
 
 -- PRODUCT
 
+insert into Product("id",title, description,  ref, deleteddate)
+values(5,'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', '00-00-00');
+insert into Product("id",title, description,  ref, deleteddate)
+values(6,'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', '01-02-03');
+
+insert into project_product(project_id, products_id)
+values(3,5);
+
+insert into project_product(project_id, products_id)
+values(3,6);
 
 
 
 --CONFIG
-select setval('hibernate_sequence', 5, true);
+select setval('hibernate_sequence', 100, true);

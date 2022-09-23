@@ -54,13 +54,8 @@ class Project: PanacheEntity() {
     @JsonIgnore
     var needs = mutableListOf<Need>()
 
-    /***
-     * TODO
-     * Fix delete
-     */
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
-    //@OnDelete(action = OnDeleteAction.CASCADE)
     var codelist = mutableListOf<Codelist>()
 
     //private String dependency; //vent med bruk
