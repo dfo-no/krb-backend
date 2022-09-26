@@ -1,6 +1,7 @@
 package org.kravbank.api
 
 import org.kravbank.domain.Product
+import org.kravbank.form.product.ProductForm
 import org.kravbank.service.ProductService
 import org.kravbank.service.ProjectService
 import java.net.URI
@@ -24,47 +25,26 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{productref}")
-    fun getProjectByRef(
+    fun getProduct(
         @PathParam("productref") productref: String,
         @PathParam("projectref") projectref: String,
-    ): Response {
-        if (productService.refExists(productref) && projectService.refExists(projectref)) {
-            return Response.ok(productService.getProductByRefCustomRepo(productref)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
+    ): Response =
+        productService.getProductByRefFromService(projectref, productref)
 
     //LIST PRODUCTS
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listProducts(@PathParam("projectref") projectref: String): Response? {
-
-        try {
-            if (projectService.refExists(projectref)) {
-                return Response.ok(productService.listProducts()).build()
-            }
-        } catch (e: Exception) {
-            return null
-        }
-        return TODO("Provide the return value")
-    }
+    fun listProducts(@PathParam("projectref") projectref: String): Response =
+        productService.listProductsFromService(projectref)
 
 
     //CREATE PRODUCT
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createProduct(product: Product): Response {
+    fun createProduct(@PathParam("projectref") projectref: String, product: ProductForm): Response =
+        productService.createProductFromService(projectref, product)
 
-        //try catch
-        productService.createProduct(product)
-        if (product.isPersistent) {
-            return Response.created(URI.create("/products" + product.id)).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build()
-        }
-    }
 
     //DELETE PRODUCT
     @DELETE
@@ -95,3 +75,4 @@ class ProductResource(val productService: ProductService, val projectService: Pr
 
 
 }
+

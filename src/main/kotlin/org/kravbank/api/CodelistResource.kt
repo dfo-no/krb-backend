@@ -82,11 +82,11 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
-            if (codelistMapper.isPersistent) {
+            return if (codelistMapper.isPersistent) {
 
-                return Response.created(URI.create("/api/v1/projects/$projectref/codelists" + codelist.ref)).build();
+                Response.created(URI.create("/api/v1/projects/$projectref/codelists" + codelist.ref)).build();
             } else {
-                return Response.status(Response.Status.BAD_REQUEST).build()
+                Response.status(Response.Status.BAD_REQUEST).build()
             }
         } catch (e: Exception) {
             return Response.status(Response.Status.BAD_REQUEST).build()

@@ -38,7 +38,7 @@ class Project: PanacheEntity() {
     @NotNull
     var deletedDate: String = "" // logic here
 
-    @OneToMany //(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
     var products = mutableListOf<Product>()
 
