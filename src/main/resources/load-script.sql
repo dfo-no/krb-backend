@@ -32,12 +32,22 @@ values(7,'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e
 
 insert into project_product(project_id, products_id)
 values(3,5);
-
 insert into project_product(project_id, products_id)
 values(3,6);
 insert into project_product(project_id, products_id)
 values(1,7);
 
+-- PUBLICATION
+insert into Publication("id",comment, version, date,  ref, deleteddate)
+values(8,'comment1', 'date', 'v11','zzz4db69-edb2-431f-855a-4368e2bcddd1', 'Ikke satt, endre type');
+insert into Publication("id",comment, version, date,  ref, deleteddate)
+values(9,'comment2', 'date2', 'v123','xxx4db69-edb2-431f-855a-4368e2bcddd1', '');
+
+
+insert into project_publication(project_id, publications_id)
+values(3,8);
+insert into project_publication(project_id, publications_id)
+values(3,9);
 
 --CONFIG
 select setval('hibernate_sequence', 100, true);

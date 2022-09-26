@@ -1,12 +1,14 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Product
 
-internal class ProductResourceTest {
+@QuarkusTest
+class ProductResourceTest {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
     val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
@@ -34,7 +36,6 @@ internal class ProductResourceTest {
 
     @Test
     fun createProduct() {
-
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;

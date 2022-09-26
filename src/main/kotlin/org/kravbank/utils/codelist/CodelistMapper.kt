@@ -6,7 +6,6 @@ import org.kravbank.utils.Mapper
 
 class CodelistMapper : Mapper<CodelistForm, Codelist> {
 
-
     // FROM ENTITY
     override fun fromEntity(entity: Codelist): CodelistForm =
         CodelistForm(
@@ -14,7 +13,6 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
             entity.title,
             entity.description,
         )
-
 
     //TO ENTITY
     override fun toEntity(domain: CodelistForm): Codelist {

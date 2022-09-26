@@ -50,10 +50,10 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             if (projectService.refExists(projectref)) {
                 val projectCodelist = projectService.getProjectByRefCustomRepo(projectref)!!.codelist
                 // list codelist by project ref
-                val codelistFormList = ArrayList<CodelistForm>()
+                val publicationFormList = ArrayList<CodelistForm>()
                 // map from entity to codelist form
-                for (c in projectCodelist) codelistFormList.add(CodelistMapper().fromEntity(c))
-                Response.ok(codelistFormList).build()
+                for (c in projectCodelist) publicationFormList.add(CodelistMapper().fromEntity(c))
+                Response.ok(publicationFormList).build()
             } else {
                 Response.status(Response.Status.NOT_FOUND).build()
             }

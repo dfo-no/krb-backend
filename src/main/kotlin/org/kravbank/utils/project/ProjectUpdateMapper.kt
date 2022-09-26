@@ -1,8 +1,6 @@
 package org.kravbank.utils.project
 
-import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
-import org.kravbank.form.codelist.CodelistFormUpdate
 import org.kravbank.form.project.ProjectFormUpdate
 import org.kravbank.utils.Mapper
 

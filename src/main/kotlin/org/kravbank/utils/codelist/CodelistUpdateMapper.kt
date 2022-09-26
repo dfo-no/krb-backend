@@ -20,5 +20,4 @@ class CodelistUpdateMapper : Mapper<CodelistFormUpdate, Codelist> {
         c.description = domain.description
         return c
     }
-
 }
