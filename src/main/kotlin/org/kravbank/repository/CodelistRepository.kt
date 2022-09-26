@@ -24,6 +24,7 @@ class CodelistRepository: PanacheRepository<Codelist> {
 
     fun listAllRefs(ref: String) = find("ref", ref).list<Codelist>()
 
+
     /*
 
     fun listAllByProjectId(id: Long): MutableList<Codelist>? {

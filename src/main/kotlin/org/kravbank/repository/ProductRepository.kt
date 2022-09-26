@@ -9,4 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 class ProductRepository : PanacheRepository<Product> {
     fun findByRef(ref: String) = find("ref", ref).firstResult<Product>()
 
+    fun deleteByRef(ref:String)  = find("ref", ref).firstResult<Product>().delete()
+
+
 }
