@@ -1,76 +1,57 @@
 package org.kravbank.api;
 
-
-import org.kravbank.domain.Requirement
+import org.kravbank.form.requirement.RequirementForm
+import org.kravbank.form.requirement.RequirementFormUpdate
 import org.kravbank.service.RequirementService
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import javax.enterprise.context.RequestScoped
 
-@Path("/requirements")
+@Path("/api/v1/projects/{projectRef}/requirements")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
 class RequirementResource(val requirementService: RequirementService) {
-
     //GET REQUIREMENT
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("/{id}")
-    fun getRequirement(@PathParam("id") id: Long): Response {
-        if (requirementService.exists(id)) {
-            return Response.ok(requirementService.getRequirement(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
+    @Path("/{requirementRef}")
+    fun getRequirement(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String
+    ): Response =
+        requirementService.getRequirementByRefFromService(projectRef, requirementRef)
 
     //LIST REQUIREMENTS
-    //@Operation(summary = "List all requirement")
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listRequirements(): MutableList<Requirement> =
-        requirementService.listRequirements();
+    fun listRequirements(@PathParam("projectRef") projectRef: String): Response =
+        requirementService.listRequirementsFromService(projectRef)
 
     //CREATE REQUIREMENT
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createRequirement(publication: Requirement): Response? {
-        requirementService.createRequirement(publication)
-        if (publication.isPersistent) {
-            return Response.created(URI.create("/requirement" + publication.id)).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build()
-        }
-    }
+    fun createRequirement(@PathParam("projectRef") projectRef: String, requirement: RequirementForm): Response =
+        requirementService.createRequirementFromService(projectRef, requirement)
 
     //DELETE REQUIREMENT
     @DELETE
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{requirementRef}")
     @Transactional
-    fun deleteRequirementById(@PathParam("id") id: Long): Response {
-        val deleted = requirementService.deleteRequirement(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
-    }
+    fun deleteRequirement(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String
+    ): Response =
+        requirementService.deleteRequirementFromService(projectRef, requirementRef)
 
     //UPDATE REQUIREMENT
     @PUT
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{requirementRef}")
     @Transactional
-    fun updateRequirement(@PathParam("id") id: Long, publication: Requirement): Response {
-        if (requirementService.exists(id)) {
-            requirementService.updateRequirement(id, publication)
-            return Response.ok(requirementService.getRequirement(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-
-        }
-    }
+    fun updateRequirement(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String,
+        requirement: RequirementFormUpdate
+    ): Response =
+        requirementService.updateRequirementFromService(projectRef, requirementRef, requirement)
 }

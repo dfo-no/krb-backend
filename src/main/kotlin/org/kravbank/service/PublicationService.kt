@@ -14,9 +14,8 @@ import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class PublicationService(val publicationRepository: PublicationRepository, val projectService: ProjectService) {
-
     fun getPublicationByRefFromService(projectRef: String, publicationRef: String): Response {
-        if (projectService.refExists(projectRef) && refExists(publicationRef) ) {
+        if (projectService.refExists(projectRef) && refExists(publicationRef)) {
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             val publication = project.publications.find { pub -> pub.ref == publicationRef }
             val publicationMapper = PublicationMapper().fromEntity(publication!!)
@@ -49,14 +48,16 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
         try {
             val publicationMapper = PublicationMapper().toEntity(publication)
             if (projectService.refExists(projectRef)) {
-               val project = projectService.getProjectByRefCustomRepo(projectRef)!!
+                val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 project.publications.add(publicationMapper)
-                projectService.updateProject(project.id, project) /** {{{{ Fix }}}} **/
+                projectService.updateProject(project.id, project)
+                /** {{{{ Fix }}}} **/
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
             return if (publicationMapper.isPersistent) {
-                Response.created(URI.create("/api/v1/projects/$projectRef/publications" + publication.ref)).build(); /** ENDRE **/
+                Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build();
+                /** ENDRE **/
             } else {
                 Response.status(Response.Status.BAD_REQUEST).build()
             }
@@ -65,21 +66,15 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
             throw IllegalArgumentException("POST publication failed")
         }
     }
-    fun deletePublicationFromService(projectRef: String, publicationRef: String): Response {
 
-        /**
-         * todo
-         * færre repokall for å få slettet
-         * teller: 4
-         *
-         */
+    fun deletePublicationFromService(projectRef: String, publicationRef: String): Response {
         return try {
-            //repo 2
+            //val project = projectService.getProjectByRefCustomRepo(projectRef)!!
+            //val publication = getPublicationByRefFromService(projectRef, publicationRef)
+
             if (projectService.refExists(projectRef) && refExists(publicationRef)) {
-                //repo 3
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 val publication = project.publications.find { publication -> publication.ref == publicationRef }
-                //repo 4
                 val deleted = publicationRepository.deleteById(publication!!.id)
                 if (deleted) {
                     project.publications.remove(publication)
@@ -94,15 +89,12 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
         }
     }
 
-    fun updatePublicationFromService(projectRef: String, publicationRef: String, publication: PublicationFormUpdate): Response {
-
-        /**
-         * todo
-         * research "description"
-         */
-
-
-        if (projectService.refExists(projectRef) && refExists(publicationRef)){
+    fun updatePublicationFromService(
+        projectRef: String,
+        publicationRef: String,
+        publication: PublicationFormUpdate
+    ): Response {
+        if (projectService.refExists(projectRef) && refExists(publicationRef)) {
             // if publication exists in this project
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             //val foundProduct = getProductByRefCustomRepo(publicationRef)
@@ -124,7 +116,7 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
             }
         } else {
 
-        return Response.status(Response.Status.NOT_FOUND).build()
+            return Response.status(Response.Status.NOT_FOUND).build()
         }
     }
 

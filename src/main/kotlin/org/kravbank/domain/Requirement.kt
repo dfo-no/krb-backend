@@ -3,10 +3,13 @@ package org.kravbank.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import java.util.*
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 @Entity
-class Need:  PanacheEntity() {
+class Requirement: PanacheEntity() {
 
     lateinit var title: String
 
@@ -14,13 +17,11 @@ class Need:  PanacheEntity() {
 
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
-    var requirements = mutableListOf<Requirement>();
+    var requirementvariants = mutableListOf<RequirementVariant>();
 
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
 
-    @ManyToOne(cascade = [CascadeType.PERSIST])
-    @JsonIgnore
-    lateinit var project: Project
+//    lateinit var tags = arrayOf(String)
 
 }

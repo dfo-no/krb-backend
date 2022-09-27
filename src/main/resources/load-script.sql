@@ -1,5 +1,6 @@
 
 --PROJECT
+
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
 values(1,'Prosjekt1', 'Beskrivelse1', '1','030303','Ikke slettet', 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
@@ -38,6 +39,7 @@ insert into project_product(project_id, products_id)
 values(1,7);
 
 -- PUBLICATION
+
 insert into Publication("id",comment, version, date,  ref, deleteddate)
 values(8,'comment1', 'date', 'v11','zzz4db69-edb2-431f-855a-4368e2bcddd1', 'Ikke satt, endre type');
 insert into Publication("id",comment, version, date,  ref, deleteddate)
@@ -48,6 +50,35 @@ insert into project_publication(project_id, publications_id)
 values(3,8);
 insert into project_publication(project_id, publications_id)
 values(3,9);
+
+-- NEED
+
+insert into Need("id",title, description, ref)
+values(10,'Need tittel fra script', 'Need beskrivelse fra script','need1b69-edb2-431f-855a-4368e2bcddd1');
+insert into Need("id",title, description, ref)
+values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b69-edb2-431f-855a-4368e2bcddd1');
+
+insert into project_need(project_id, needs_id)
+values(2,10);
+insert into project_need(project_id, needs_id)
+values(2,11);
+
+-- REQUIREMENT
+
+insert into Requirement("id",title, description, ref)
+values(12,'Requirement tittel fra script', 'Requirement beskrivelse fra script','req1b69-edb2-431f-855a-4368e2bcddd1');
+insert into Requirement("id",title, description, ref)
+values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2','reqd2b69-edb2-431f-855a-4368e2bcddd1');
+
+insert into project_requirement(project_id, requirements_id)
+values(2,12);
+insert into project_requirement(project_id, requirements_id)
+values(2,13);
+
+
+
+
+
 
 --CONFIG
 select setval('hibernate_sequence', 100, true);

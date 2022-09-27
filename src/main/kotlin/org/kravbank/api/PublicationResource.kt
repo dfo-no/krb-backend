@@ -1,24 +1,20 @@
 package org.kravbank.api;
 
-import org.kravbank.domain.Publication
-import org.kravbank.form.product.ProductFormUpdate
 import org.kravbank.form.publication.PublicationForm
 import org.kravbank.form.publication.PublicationFormUpdate
-import org.kravbank.service.ProjectService
 import org.kravbank.service.PublicationService
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
 @Path("/api/v1/projects/{projectref}/publications")
-//@Produces(APPLICATION_JSON)
-//@Consumes(APPLICATION_JSON)
+@Produces(APPLICATION_JSON)
+@Consumes(APPLICATION_JSON)
 @RequestScoped
-class PublicationResource(val publicationService: PublicationService, val projectService: ProjectService) {
+class PublicationResource(val publicationService: PublicationService) {
     //GET PUBLICATION
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/{publicationref}")
     fun getPublication(
@@ -29,15 +25,12 @@ class PublicationResource(val publicationService: PublicationService, val projec
 
 
     //LIST PUBLICATIONS
-    //@Operation(summary = "List all publications")
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
     fun listPublications(@PathParam("projectref") projectRef: String): Response =
         publicationService.listPublicationsFromService(projectRef)
 
     //CREATE PUBLICATION
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
     fun createPublication(@PathParam("projectref") projectRef: String, publication: PublicationForm): Response =
         publicationService.createPublicationFromService(projectRef, publication)
@@ -45,7 +38,6 @@ class PublicationResource(val publicationService: PublicationService, val projec
     //DELETE PUBLICATION
     @DELETE
     @Path("/{publicationref}")
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     fun deletePublication(
         @PathParam("projectref") projectRef: String,
@@ -55,16 +47,10 @@ class PublicationResource(val publicationService: PublicationService, val projec
 
 
     //UPDATE PUBLICATION
-
-    /**
-     * todo
-     * research "description"
-     */
     @PUT
     @Path("{publicationref}")
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun updateProduct(
+    fun updatePublication(
         @PathParam("projectref") projectRef: String,
         @PathParam("publicationref") publicationRef: String,
         publication: PublicationFormUpdate

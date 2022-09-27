@@ -4,53 +4,53 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Publication
+import org.kravbank.domain.Need
 
 @QuarkusTest
-class PublicationResourceTest {
+class NeedResourceTest {
     private final val baseUri = "http://localhost:8080"
     private final val basePath = "/api/v1/projects"
-    private final val useProjectRef = "/bbb4db69-edb2-431f-855a-4368e2bcddd1"
-    private final val useResourceFolder = "/publications"
-    private final val usePublicationRef = "/xxx4db69-edb2-431f-855a-4368e2bcddd1"
-    private final val usePublicaionRefPut = "/zzz4db69-edb2-431f-855a-4368e2bcddd1"
+    private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
+    private final val useResourceFolder = "/needs"
+    private final val useNeedRef = "/need1b69-edb2-431f-855a-4368e2bcddd1"
+    private final val useNeedRefPut = "/need2b69-edb2-431f-855a-4368e2bcddd1"
     private final val resourceUrl = "$baseUri$basePath$useProjectRef$useResourceFolder"
-    private final val fullUrl = "$resourceUrl$usePublicaionRefPut"
+    private final val fullUrl = "$resourceUrl$useNeedRefPut"
+
     @Test
-    fun getPublication() {
+    fun getNeed() {
         RestAssured.given()
             //.pathParam("uuid", uuid)
             .`when`()
-            .get("$resourceUrl$usePublicationRef")
+            .get("$resourceUrl$useNeedRef")
             .then()
             .statusCode(200)
         // .body(`is`("hello $uuid"))
     }
 
     @Test
-    fun listPublication() {
+    fun listNeed() {
         RestAssured.given()
             .`when`().get(resourceUrl)
             .then()
             .statusCode(200)
         //.body(, equalTo("Integrasjonstest prosjektittel"))
-
     }
 
     @Test
-    fun createPublication() {
+    fun createNeed() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val publication = Publication ()
-        publication.comment = "Integrasjonstest publication - comment 1"
-        publication.deletedDate = "Integrasjonstest publication - del  1"
+        val need = Need ()
+        need.title = "Integrasjonstest need - tittel 1"
+        need.description = "Integrasjonstest need - beskrivelse 1"
 
         RestAssured.given()
             .`when`()
-            .body(publication)
+            .body(need)
             .header("Content-type", "application/json")
             .post("$useProjectRef$useResourceFolder")
             .then()
@@ -58,19 +58,19 @@ class PublicationResourceTest {
     }
 
     @Test
-    fun updatePublication() {
+    fun updateNeed() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val publication = Publication()
-        publication.comment = "Oppdatert integrasjonstest pub - comment 1"
-        publication.deletedDate = "Oppdatert integrasjonstest pub - del 1"
+        val need = Need ()
+        need.title = "Oppdatert Integrasjonstest need - tittel 1"
+        need.description = "Oppdatert Integrasjonstest need - beskrivelse 1"
 
         RestAssured.given()
             .`when`()
-            .body(publication)
+            .body(need)
             .header("Content-type", "application/json")
             .put(fullUrl)
             .then()
@@ -79,10 +79,10 @@ class PublicationResourceTest {
 
 
     @Test
-    fun deletePublication() {
+    fun deleteNeed() {
         RestAssured.given()
             .`when`()
-            .delete("$resourceUrl$usePublicationRef")
+            .delete("$resourceUrl$useNeedRef")
             .then()
             .statusCode(204)
         //.body(`is`("Hello RESTEasy"))
