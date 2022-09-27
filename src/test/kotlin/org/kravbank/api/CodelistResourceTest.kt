@@ -18,7 +18,7 @@ class CodelistResourceTest() {
     @Test
     fun getCodelistByRef() {
 
-        val getCodelistPath = "$baseUri$basePath$useProjectRef"
+        //val getCodelistPath = "$baseUri$basePath$useProjectRef"
 
         given()
             .`when`()

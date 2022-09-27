@@ -1,74 +1,63 @@
 package org.kravbank.api;
 
-import org.kravbank.domain.RequirementVariant
+
+import org.kravbank.form.requirementvariant.RequirementVariantForm
+import org.kravbank.form.requirementvariant.RequirementVariantFormUpdate
 import org.kravbank.service.RequirementVariantService
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import javax.enterprise.context.RequestScoped
 
-@Path("/requirementvariants")
+@Path("/api/v1/projects/{projectRef}/requirement/{requirementRef}")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
 class RequirementVariantResource(val requirementVariantService: RequirementVariantService) {
-    //GET REQUIREMENT VARIANT
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @Path("/{id}")
-    fun getRequirementVariant(@PathParam("id") id: Long): Response {
-        if (requirementVariantService.exists(id)) {
-            return Response.ok(requirementVariantService.getRequirementVariant(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
 
-    //LIST REQUIREMENT VARIANTS
-    //@Operation(summary = "List all requirementvariant")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    fun listRequirementVariants(): MutableList<RequirementVariant> =
-        requirementVariantService.listRequirementVariants();
 
-    //CREATE REQUIREMENT VARIANT
+    //GET REQUIREMENTVARIANT
+    @GET
+    @Path("/{requirementVariantRef}")
+    fun getRequirementVariant(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String,
+        @PathParam("requirementVariantRef") requirementVariantRef: String
+    ): Response =
+        requirementVariantService.getRequirementVariantByRefFromService(projectRef, requirementRef, requirementVariantRef)
+
+    //LIST REQUIREMENTVARIANTS
+    @GET
+    fun listRequirementVariants(@PathParam("projectRef") projectRef: String, @PathParam("requirementRef") requirementRef: String ): Response =
+        requirementVariantService.listRequirementVariantsFromService(projectRef, requirementRef)
+
+    //CREATE REQUIREMENTVARIANT
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createRequirementVariant(publication: RequirementVariant): Response? {
-        requirementVariantService.createRequirementVariant(publication)
-        if (publication.isPersistent) {
-            return Response.created(URI.create("/requirementvariants" + publication.id)).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build()
-        }
-    }
+    fun createRequirementVariant(@PathParam("projectRef") projectRef: String, requirementVariant: RequirementVariantForm): Response =
+        requirementVariantService.createRequirementVariantFromService(projectRef, requirementVariant)
 
-    //DELETE REQUIREMENT VARIANT
+    //DELETE REQUIREMENTVARIANT
     @DELETE
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{requirementVariantRef}")
     @Transactional
-    fun deleteRequirementVariantById(@PathParam("id") id: Long): Response {
-        val deleted = requirementVariantService.deleteRequirementVariant(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
-    }
+    fun deleteRequirementVariant(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementVariantRef") requirementVariantRef: String
+    ): Response =
+        requirementVariantService.deleteRequirementVariantFromService(projectRef, requirementVariantRef)
 
-    //UPDATE REQUIREMENT VARIANT
+    //UPDATE REQUIREMENTVARIANT
     @PUT
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{requirementVariantRef}")
     @Transactional
-    fun updateRequirementVariant(@PathParam("id") id: Long, publication: RequirementVariant): Response {
-        if (requirementVariantService.exists(id)) {
-            requirementVariantService.updateRequirementVariant(id, publication)
-            return Response.ok(requirementVariantService.getRequirementVariant(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
+    fun updateRequirementVariant(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementVariantRef") requirementVariantRef: String,
+        requirementVariant: RequirementVariantFormUpdate
+    ): Response =
+        requirementVariantService.updateRequirementVariantFromService(projectRef, requirementVariantRef, requirementVariant)
 }
+
 
