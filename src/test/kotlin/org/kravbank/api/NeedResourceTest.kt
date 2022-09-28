@@ -7,7 +7,6 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Need
 
-@QuarkusTest
 @QuarkusIntegrationTest
 class NeedResourceTest {
     private final val baseUri = "http://localhost:8080"

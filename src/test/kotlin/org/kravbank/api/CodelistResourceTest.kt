@@ -10,7 +10,6 @@ import org.kravbank.domain.Codelist
 import java.awt.PageAttributes.MediaType
 import javax.print.attribute.standard.MediaTray
 
-//@QuarkusTest
 @QuarkusIntegrationTest
 class CodelistResourceTest() {
     val baseUri = "http://localhost:8080"

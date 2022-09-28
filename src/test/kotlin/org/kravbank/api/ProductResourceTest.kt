@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Product
 
-@QuarkusTest
 @QuarkusIntegrationTest
-
 class ProductResourceTest {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"

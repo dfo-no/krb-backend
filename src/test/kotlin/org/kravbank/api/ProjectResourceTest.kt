@@ -8,9 +8,8 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Project
 
-@QuarkusTest
-@QuarkusIntegrationTest
 
+@QuarkusIntegrationTest
 class ProjectResourceTest {
 
     val baseUri = "http://localhost:8080"

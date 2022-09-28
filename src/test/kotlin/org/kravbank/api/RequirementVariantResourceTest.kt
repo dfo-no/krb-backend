@@ -6,9 +6,7 @@ import io.restassured.RestAssured
 import org.junit.jupiter.api.Test
 
 @QuarkusIntegrationTest
-@QuarkusTest
 internal class RequirementVariantResourceTest {
-
     private final val baseUri = "http://localhost:8080"
     private final val basePath = "/api/v1/projects"
     private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
