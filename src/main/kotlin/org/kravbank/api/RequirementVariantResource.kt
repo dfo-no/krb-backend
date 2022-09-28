@@ -25,17 +25,28 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response =
-        requirementVariantService.getRequirementVariantByRefFromService(projectRef, requirementRef, requirementVariantRef)
+        requirementVariantService.getRequirementVariantByRefFromService(
+            projectRef,
+            requirementRef,
+            requirementVariantRef
+        )
 
     //LIST REQUIREMENTVARIANTS
     @GET
-    fun listRequirementVariants(@PathParam("projectRef") projectRef: String, @PathParam("requirementRef") requirementRef: String,  ): Response =
+    fun listRequirementVariants(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String,
+    ): Response =
         requirementVariantService.listRequirementVariantsFromService(projectRef, requirementRef)
 
     //CREATE REQUIREMENTVARIANT
     @Transactional
     @POST
-    fun createRequirementVariant(@PathParam("projectRef") projectRef: String, @PathParam("requirementRef") requirementRef: String, requirementVariant: RequirementVariantForm): Response =
+    fun createRequirementVariant(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String,
+        requirementVariant: RequirementVariantForm
+    ): Response =
         requirementVariantService.createRequirementVariantFromService(projectRef, requirementRef, requirementVariant)
 
     //DELETE REQUIREMENTVARIANT
@@ -44,9 +55,10 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     @Transactional
     fun deleteRequirementVariant(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response =
-        requirementVariantService.deleteRequirementVariantFromService(projectRef, requirementVariantRef)
+        requirementVariantService.deleteRequirementVariantFromService(projectRef, requirementRef, requirementVariantRef)
 
     //UPDATE REQUIREMENTVARIANT
     @PUT
@@ -57,7 +69,11 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementVariantRef") requirementVariantRef: String,
         requirementVariant: RequirementVariantFormUpdate
     ): Response =
-        requirementVariantService.updateRequirementVariantFromService(projectRef, requirementVariantRef, requirementVariant)
+        requirementVariantService.updateRequirementVariantFromService(
+            projectRef,
+            requirementVariantRef,
+            requirementVariant
+        )
 }
 
 
