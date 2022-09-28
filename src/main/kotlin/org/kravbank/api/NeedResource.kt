@@ -1,7 +1,7 @@
 package org.kravbank.api;
 
-import org.kravbank.form.need.NeedForm
-import org.kravbank.form.need.NeedFormUpdate
+import org.kravbank.utils.form.need.NeedForm
+import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.service.NeedService
 import javax.transaction.Transactional;
 import javax.ws.rs.*;

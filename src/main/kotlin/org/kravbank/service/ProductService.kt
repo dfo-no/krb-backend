@@ -1,11 +1,11 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Product
-import org.kravbank.form.product.ProductForm
-import org.kravbank.form.product.ProductFormUpdate
+import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
-import org.kravbank.utils.product.ProductMapper
-import org.kravbank.utils.product.ProductUpdateMapper
+import org.kravbank.utils.mapper.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.*
@@ -23,7 +23,7 @@ class ProductService(val productRepository: ProductRepository, val projectServic
                 val projectProductList = projectService.getProjectByRefCustomRepo(projectRef)!!.products
                 //convert to array of form
                 val productsFormList = ArrayList<ProductForm>()
-                for (p in projectProductList) productsFormList.add(ProductMapper().fromEntity(p))
+                for (p in projectProductList) productsFormList.add(org.kravbank.utils.mapper.product.ProductMapper().fromEntity(p))
                 //returns the custom product form
                 Response.ok(productsFormList).build()
             } else {
@@ -45,7 +45,7 @@ class ProductService(val productRepository: ProductRepository, val projectServic
             val product = project.products.find { products ->
                 products.ref == productRef
             }
-            val productMapper = ProductMapper().fromEntity(product!!)
+            val productMapper = org.kravbank.utils.mapper.product.ProductMapper().fromEntity(product!!)
 
             return Response.ok(productMapper).build()
         } else {
@@ -58,7 +58,7 @@ class ProductService(val productRepository: ProductRepository, val projectServic
     fun createProductFromService(projectRef: String, product: ProductForm): Response {
         //adds a product to relevant project
         try {
-            val productMapper = ProductMapper().toEntity(product)
+            val productMapper = org.kravbank.utils.mapper.product.ProductMapper().toEntity(product)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 project.products.add(productMapper)
@@ -120,7 +120,7 @@ class ProductService(val productRepository: ProductRepository, val projectServic
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             //val foundProduct = getProductByRefCustomRepo(productRef)
             val productInProject = project.products.find { prod -> prod.ref == productRef }
-            val productMapper = ProductUpdateMapper().toEntity(product)
+            val productMapper = org.kravbank.utils.mapper.product.ProductUpdateMapper().toEntity(product)
 
             //if (product.project.ref == project.ref)
 

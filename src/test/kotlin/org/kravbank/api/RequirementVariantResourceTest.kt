@@ -26,7 +26,7 @@ internal class RequirementVariantResourceTest {
         RestAssured.given()
             //.pathParam("uuid", uuid)
             .`when`()
-            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv1b69-edb2-431f-855a-4368e2bcddd1")
+            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
         // .body(`is`("hello $uuid"))
@@ -67,19 +67,36 @@ internal class RequirementVariantResourceTest {
 
     @Test
     fun deleteRequirementVariant() {
+        RestAssured.given()
+            .`when`()
+            .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv1b69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(204)
+        //.body(`is`("Hello RESTEasy"))
 
-        assert(false)
     }
 
     @Test
     fun updateRequirementVariant() {
-        assert(false)
+        RestAssured.defaultParser = Parser.JSON
+        RestAssured.baseURI = baseUri
+        //RestAssured.port = 8080
+        RestAssured.basePath = basePath
 
-    }
+        val rv = RequirementVariant ()
+        rv.description = "Integrasjonstest rv desc"
+        rv.requirementText = "Integrasjonstest rv reqtext"
+        rv.instruction = "Integrasjonstest rv instruction"
+        rv.useProduct = true
+        rv.useSpesification = true
+        rv.useQualification = true
 
-    @Test
-    fun getRequirementVariantService() {
-        assert(false)
-
+        RestAssured.given()
+            .`when`()
+            .body(rv)
+            .header("Content-type", "application/json")
+            .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(200)
     }
 }

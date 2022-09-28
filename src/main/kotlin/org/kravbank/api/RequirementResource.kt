@@ -1,7 +1,7 @@
 package org.kravbank.api;
 
-import org.kravbank.form.requirement.RequirementForm
-import org.kravbank.form.requirement.RequirementFormUpdate
+import org.kravbank.utils.form.requirement.RequirementForm
+import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.service.RequirementService
 import javax.transaction.Transactional;
 import javax.ws.rs.*;

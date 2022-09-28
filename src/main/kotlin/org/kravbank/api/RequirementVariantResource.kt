@@ -1,8 +1,8 @@
 package org.kravbank.api;
 
 
-import org.kravbank.form.requirementvariant.RequirementVariantForm
-import org.kravbank.form.requirementvariant.RequirementVariantFormUpdate
+import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
+import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
 import org.kravbank.service.RequirementVariantService
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -66,11 +66,13 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     @Transactional
     fun updateRequirementVariant(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String,
         requirementVariant: RequirementVariantFormUpdate
     ): Response =
         requirementVariantService.updateRequirementVariantFromService(
             projectRef,
+            requirementRef,
             requirementVariantRef,
             requirementVariant
         )

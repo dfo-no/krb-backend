@@ -1,10 +1,10 @@
 package org.kravbank.api
 
-import org.kravbank.form.project.ProjectForm
-import org.kravbank.form.project.ProjectFormUpdate
+import org.kravbank.utils.form.project.ProjectForm
+import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.service.ProjectService
-import org.kravbank.utils.project.ProjectMapper
-import org.kravbank.utils.project.ProjectUpdateMapper
+import org.kravbank.utils.mapper.project.ProjectMapper
+import org.kravbank.utils.mapper.project.ProjectUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import javax.enterprise.context.RequestScoped
@@ -28,7 +28,7 @@ class ProjectResource(val projectService: ProjectService) {
         return try {
             if (projectService.refExists(projectref)) {
                 val project = projectService.getProjectByRefCustomRepo(projectref)
-                val projectMapper = ProjectMapper().fromEntity(project!!)
+                val projectMapper = org.kravbank.utils.mapper.project.ProjectMapper().fromEntity(project!!)
                 Response.ok(projectMapper).build()
             } else {
                 Response.status(Response.Status.NOT_FOUND).build()
@@ -45,7 +45,7 @@ class ProjectResource(val projectService: ProjectService) {
     fun listProjects(): Response? {
            val projects = projectService.listProjects();
            val projectFormList = ArrayList<ProjectForm>()
-           for (p in projects) projectFormList.add(ProjectMapper().fromEntity(p))
+           for (p in projects) projectFormList.add(org.kravbank.utils.mapper.project.ProjectMapper().fromEntity(p))
            return Response.ok(projectFormList).build()
     }
 
@@ -55,7 +55,7 @@ class ProjectResource(val projectService: ProjectService) {
     @POST
     fun createProject(project: ProjectForm): Response? {
         try {
-            val projectMapper = ProjectMapper().toEntity(project)
+            val projectMapper = org.kravbank.utils.mapper.project.ProjectMapper().toEntity(project)
             projectService.createProject(projectMapper)
             return if (projectMapper.isPersistent) {
                 Response.created(URI.create("/projects" + project.ref)).build();
@@ -96,7 +96,7 @@ class ProjectResource(val projectService: ProjectService) {
     fun updateProject(@PathParam("projectref") projectref: String, project: ProjectFormUpdate): Response? {
         try {
             return if (projectService.refExists(projectref)) {
-                val projectMapper = ProjectUpdateMapper().toEntity(project)
+                val projectMapper = org.kravbank.utils.mapper.project.ProjectUpdateMapper().toEntity(project)
                 val foundProject = projectService.getProjectByRefCustomRepo(projectref)
                 projectService.updateProject(foundProject!!.id, projectMapper)
                 Response.ok(project).build()

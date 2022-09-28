@@ -1,11 +1,11 @@
 package org.kravbank.service
 
 import org.kravbank.domain.RequirementVariant
-import org.kravbank.form.requirementvariant.RequirementVariantForm
-import org.kravbank.form.requirementvariant.RequirementVariantFormUpdate
+import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
+import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.requirementvariant.RequirementVariantMapper
-import org.kravbank.utils.requirementvariant.RequirementVariantUpdateMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.*
@@ -39,7 +39,7 @@ class RequirementVariantService(
                 variant.ref == requirementVariantRef
             }
 
-            val requirementVariantMapper = RequirementVariantMapper().fromEntity(reqVariant!!)
+            val requirementVariantMapper = org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper().fromEntity(reqVariant!!)
             return Response.ok(requirementVariantMapper).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
@@ -63,7 +63,7 @@ class RequirementVariantService(
                 //convert to array of form
                 val requirementVariantsFormList = ArrayList<RequirementVariantForm>()
                 for (rv in requirementVariantList) requirementVariantsFormList.add(
-                    RequirementVariantMapper().fromEntity(
+                    org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper().fromEntity(
                         rv
                     )
                 )
@@ -85,7 +85,7 @@ class RequirementVariantService(
     ): Response {
         //adds a requirementVariant to relevant project
         try {
-            val requirementVariantMapper = RequirementVariantMapper().toEntity(requirementVariant)
+            val requirementVariantMapper = org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper().toEntity(requirementVariant)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 val requirementVariantList =
@@ -114,7 +114,6 @@ class RequirementVariantService(
         return try {
             //val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             //val requirementVariant = getRequirementVariantByRefFromService(projectRef, requirementVariantRef)
-
             if (projectService.refExists(projectRef) && refExists(requirementVariantRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 val requirementVariantList = project.requirements.find { requirement ->
@@ -135,37 +134,53 @@ class RequirementVariantService(
 
     fun updateRequirementVariantFromService(
         projectRef: String,
+        requirementRef: String,
         requirementVariantRef: String,
         requirementVariant: RequirementVariantFormUpdate
     ): Response {
-        if (projectService.refExists(projectRef) && refExists(requirementVariantRef)) {
-            // if requirementVariant exists in this project
-            val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-            //val foundProduct = getProductByRefCustomRepo(requirementVariantRef)
-            // val requirementVariantInProject = project.requirementVariants.find { pub -> pub.ref == requirementVariantRef }
-            val requirementVariantMapper = RequirementVariantUpdateMapper().toEntity(requirementVariant)
+        try {
+            if (projectService.refExists(projectRef) &&
+                requirementService.refExists(requirementRef) &&
+                refExists(requirementVariantRef)
+            ) {
+                // if requirementVariant exists in this project
+                val project = projectService.getProjectByRefCustomRepo(projectRef)!!
+                //val foundProduct = getProductByRefCustomRepo(requirementVariantRef)
 
-            //if (requirementVariant.project.ref == project.ref)
-            /*
-                        return if (requirementVariantInProject != null) {
-                            requirementVariantRepository.update(
-                                "title = ?1, description = ?2 where id= ?3",
-                                requirementVariantMapper.title,
-                                requirementVariantMapper.description,
-                                requirementVariantInProject.id
-                            )
+                println(project)
+                val requirementVariantList = project.requirements.find { requirement ->
+                    requirement.ref == requirementRef
+                }!!.requirementvariants
+                val reqVariantInProject = requirementVariantList.find { variant ->
+                    variant.ref == requirementVariantRef
+                }
 
-             */
-            Response.ok(requirementVariant).build()
-        } else {
-            Response.status(Response.Status.NOT_FOUND).build()
+                val requirementVariantMapper = org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper()
+                    .toEntity(requirementVariant)
+
+                //if (requirementVariant.project.ref == project.ref)
+
+                return if (reqVariantInProject != null) {
+                    requirementVariantRepository.update(
+                        "description = ?1, requirementtext = ?2, instruction = ?3, useproduct = ?4, usespesification = ?5, usequalification = ?6 where id = ?7",
+                        requirementVariantMapper.description,
+                        requirementVariantMapper.requirementText,
+                       requirementVariantMapper.instruction,
+                       requirementVariantMapper.useProduct,
+                       requirementVariantMapper.useSpesification,
+                       requirementVariantMapper.useQualification,
+                        reqVariantInProject.id
+                    )
+                    Response.ok(requirementVariant).build()
+                } else {
+                    Response.status(Response.Status.NOT_FOUND).build()
+                }
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build()
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException("UPDATE requirement variant failed!")
         }
-        // } else {
-
-        //   return Response.status(Response.Status.NOT_FOUND).build()
-        // }
-
-        return Response.ok().build()
     }
 
 
@@ -190,5 +205,6 @@ class RequirementVariantService(
         //)
 
     }
+
 
 }

@@ -1,7 +1,7 @@
 package org.kravbank.api
 
-import org.kravbank.form.product.ProductForm
-import org.kravbank.form.product.ProductFormUpdate
+import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.service.ProductService
 import org.kravbank.service.ProjectService
 import javax.enterprise.context.RequestScoped

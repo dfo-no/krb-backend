@@ -1,11 +1,11 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Requirement
-import org.kravbank.form.requirement.RequirementForm
-import org.kravbank.form.requirement.RequirementFormUpdate
+import org.kravbank.utils.form.requirement.RequirementForm
+import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.repository.RequirementRepository
-import org.kravbank.utils.requirement.RequirementMapper
-import org.kravbank.utils.requirement.RequirementUpdateMapper
+import org.kravbank.utils.mapper.requirement.RequirementMapper
+import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.ArrayList
@@ -18,7 +18,7 @@ class RequirementService(val requirementRepository: RequirementRepository, val p
         if (projectService.refExists(projectRef) && refExists(requirementRef)) {
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             val requirement = project.requirements.find { requirement -> requirement.ref == requirementRef }
-            val requirementMapper = RequirementMapper().fromEntity(requirement!!)
+            val requirementMapper = org.kravbank.utils.mapper.requirement.RequirementMapper().fromEntity(requirement!!)
             return Response.ok(requirementMapper).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
@@ -32,7 +32,8 @@ class RequirementService(val requirementRepository: RequirementRepository, val p
                 val projectRequirementsList = projectService.getProjectByRefCustomRepo(projectRef)!!.requirements
                 //convert to array of form
                 val requirementsFormList = ArrayList<RequirementForm>()
-                for (n in projectRequirementsList) requirementsFormList.add(RequirementMapper().fromEntity(n))
+                for (n in projectRequirementsList) requirementsFormList.add(
+                    org.kravbank.utils.mapper.requirement.RequirementMapper().fromEntity(n))
                 //returns the custom requirement form
                 Response.ok(requirementsFormList).build()
                 //
@@ -47,7 +48,7 @@ class RequirementService(val requirementRepository: RequirementRepository, val p
     fun createRequirementFromService(projectRef: String, requirement: RequirementForm): Response {
         //adds a requirement to relevant project
         try {
-            val requirementMapper = RequirementMapper().toEntity(requirement)
+            val requirementMapper = org.kravbank.utils.mapper.requirement.RequirementMapper().toEntity(requirement)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 project.requirements.add(requirementMapper)
@@ -97,7 +98,7 @@ class RequirementService(val requirementRepository: RequirementRepository, val p
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             //val foundProduct = getProductByRefCustomRepo(requirementRef)
             val requirementInProject = project.requirements.find { pub -> pub.ref == requirementRef }
-            val requirementMapper = RequirementUpdateMapper().toEntity(requirement)
+            val requirementMapper = org.kravbank.utils.mapper.requirement.RequirementUpdateMapper().toEntity(requirement)
 
             //if (requirement.project.ref == project.ref)
 

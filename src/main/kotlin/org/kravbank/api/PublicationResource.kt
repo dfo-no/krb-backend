@@ -1,7 +1,7 @@
 package org.kravbank.api;
 
-import org.kravbank.form.publication.PublicationForm
-import org.kravbank.form.publication.PublicationFormUpdate
+import org.kravbank.utils.form.publication.PublicationForm
+import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.service.PublicationService
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional

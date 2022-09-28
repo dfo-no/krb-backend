@@ -1,11 +1,11 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Need
-import org.kravbank.form.need.NeedForm
-import org.kravbank.form.need.NeedFormUpdate
+import org.kravbank.utils.form.need.NeedForm
+import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.repository.NeedRepository
-import org.kravbank.utils.need.NeedMapper
-import org.kravbank.utils.need.NeedUpdateMapper
+import org.kravbank.utils.mapper.need.NeedMapper
+import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.ArrayList
@@ -18,7 +18,7 @@ class NeedService(val needRepository: NeedRepository, val projectService: Projec
         if (projectService.refExists(projectRef) && refExists(needRef)) {
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             val need = project.needs.find { need -> need.ref == needRef }
-            val needMapper = NeedMapper().fromEntity(need!!)
+            val needMapper = org.kravbank.utils.mapper.need.NeedMapper().fromEntity(need!!)
             return Response.ok(needMapper).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
@@ -32,7 +32,7 @@ class NeedService(val needRepository: NeedRepository, val projectService: Projec
                 val projectNeedsList = projectService.getProjectByRefCustomRepo(projectRef)!!.needs
                 //convert to array of form
                 val needsFormList = ArrayList<NeedForm>()
-                for (n in projectNeedsList) needsFormList.add(NeedMapper().fromEntity(n))
+                for (n in projectNeedsList) needsFormList.add(org.kravbank.utils.mapper.need.NeedMapper().fromEntity(n))
                 //returns the custom need form
                 Response.ok(needsFormList).build()
             } else {
@@ -46,7 +46,7 @@ class NeedService(val needRepository: NeedRepository, val projectService: Projec
     fun createNeedFromService(projectRef: String, need: NeedForm): Response {
         //adds a need to relevant project
         try {
-            val needMapper = NeedMapper().toEntity(need)
+            val needMapper = org.kravbank.utils.mapper.need.NeedMapper().toEntity(need)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 project.needs.add(needMapper)
@@ -96,7 +96,7 @@ class NeedService(val needRepository: NeedRepository, val projectService: Projec
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             //val foundProduct = getProductByRefCustomRepo(needRef)
             val needInProject = project.needs.find { pub -> pub.ref == needRef }
-            val needMapper = NeedUpdateMapper().toEntity(need)
+            val needMapper = org.kravbank.utils.mapper.need.NeedUpdateMapper().toEntity(need)
 
             //if (need.project.ref == project.ref)
 

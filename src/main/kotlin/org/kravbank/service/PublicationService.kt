@@ -1,11 +1,11 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Publication
-import org.kravbank.form.publication.PublicationFormUpdate
-import org.kravbank.form.publication.PublicationForm
+import org.kravbank.utils.form.publication.PublicationFormUpdate
+import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.repository.PublicationRepository
-import org.kravbank.utils.publication.PublicationMapper
-import org.kravbank.utils.publication.PublicationUpdateMapper
+import org.kravbank.utils.mapper.publication.PublicationMapper
+import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.ArrayList
@@ -18,7 +18,7 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
         if (projectService.refExists(projectRef) && refExists(publicationRef)) {
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             val publication = project.publications.find { pub -> pub.ref == publicationRef }
-            val publicationMapper = PublicationMapper().fromEntity(publication!!)
+            val publicationMapper = org.kravbank.utils.mapper.publication.PublicationMapper().fromEntity(publication!!)
             return Response.ok(publicationMapper).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()
@@ -32,7 +32,8 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
                 val projectPublicationsList = projectService.getProjectByRefCustomRepo(projectRef)!!.publications
                 //convert to array of form
                 val publicationsFormList = ArrayList<PublicationForm>()
-                for (p in projectPublicationsList) publicationsFormList.add(PublicationMapper().fromEntity(p))
+                for (p in projectPublicationsList) publicationsFormList.add(
+                    org.kravbank.utils.mapper.publication.PublicationMapper().fromEntity(p))
                 //returns the custom publication form
                 Response.ok(publicationsFormList).build()
             } else {
@@ -46,7 +47,7 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
     fun createPublicationFromService(projectRef: String, publication: PublicationForm): Response {
         //adds a publication to relevant project
         try {
-            val publicationMapper = PublicationMapper().toEntity(publication)
+            val publicationMapper = org.kravbank.utils.mapper.publication.PublicationMapper().toEntity(publication)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 project.publications.add(publicationMapper)
@@ -99,7 +100,7 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             //val foundProduct = getProductByRefCustomRepo(publicationRef)
             val publicationInProject = project.publications.find { pub -> pub.ref == publicationRef }
-            val publicationMapper = PublicationUpdateMapper().toEntity(publication)
+            val publicationMapper = org.kravbank.utils.mapper.publication.PublicationUpdateMapper().toEntity(publication)
 
             //if (publication.project.ref == project.ref)
 
