@@ -1,5 +1,6 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
@@ -8,6 +9,8 @@ import org.kravbank.domain.Codelist
 import org.kravbank.domain.Product
 
 @QuarkusTest
+@QuarkusIntegrationTest
+
 class ProductResourceTest {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"

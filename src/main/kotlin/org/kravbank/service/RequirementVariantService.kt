@@ -65,19 +65,20 @@ class RequirementVariantService(val requirementVariantRepository: RequirementVar
         }
     }
 
-    fun createRequirementVariantFromService(projectRef: String, requirementVariant: RequirementVariantForm): Response {
+    fun createRequirementVariantFromService(projectRef: String, requirementRef: String, requirementVariant: RequirementVariantForm): Response {
         //adds a requirementVariant to relevant project
         try {
             val requirementVariantMapper = RequirementVariantMapper().toEntity(requirementVariant)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-                //project.requirementVariants.add(requirementVariantMapper)
+                val requirementVariantList = project.requirements.find { requirement -> requirement.ref == requirementRef }!!.requirementvariants
+                requirementVariantList.add(requirementVariantMapper)
                 projectService.updateProject(project.id, project)
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
             return if (requirementVariantMapper.isPersistent) {
-                Response.created(URI.create("/api/v1/projects/$projectRef/requirementVariants/" + requirementVariant.ref)).build();
+                Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + requirementVariant.ref)).build();
             } else {
                 Response.status(Response.Status.BAD_REQUEST).build()
             }

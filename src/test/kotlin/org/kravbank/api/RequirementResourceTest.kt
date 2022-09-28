@@ -1,5 +1,6 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
@@ -7,6 +8,8 @@ import org.junit.jupiter.api.Test
 import org.kravbank.domain.Requirement
 
 @QuarkusTest
+@QuarkusIntegrationTest
+
 class RequirementResourceTest {
     private final val baseUri = "http://localhost:8080"
     private final val basePath = "/api/v1/projects"

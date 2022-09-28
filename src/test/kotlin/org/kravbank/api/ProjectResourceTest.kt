@@ -1,5 +1,6 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test
 import org.kravbank.domain.Project
 
 @QuarkusTest
+@QuarkusIntegrationTest
+
 class ProjectResourceTest {
 
     val baseUri = "http://localhost:8080"

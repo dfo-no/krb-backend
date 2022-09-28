@@ -1,5 +1,6 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
@@ -9,7 +10,8 @@ import org.kravbank.domain.Codelist
 import java.awt.PageAttributes.MediaType
 import javax.print.attribute.standard.MediaTray
 
-@QuarkusTest
+//@QuarkusTest
+@QuarkusIntegrationTest
 class CodelistResourceTest() {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"

@@ -1,9 +1,12 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusIntegrationTest
+import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 
+@QuarkusIntegrationTest
+@QuarkusTest
 internal class RequirementVariantResourceTest {
 
     private final val baseUri = "http://localhost:8080"

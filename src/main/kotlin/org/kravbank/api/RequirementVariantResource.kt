@@ -29,14 +29,14 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
 
     //LIST REQUIREMENTVARIANTS
     @GET
-    fun listRequirementVariants(@PathParam("projectRef") projectRef: String, @PathParam("requirementRef") requirementRef: String ): Response =
+    fun listRequirementVariants(@PathParam("projectRef") projectRef: String, @PathParam("requirementRef") requirementRef: String,  ): Response =
         requirementVariantService.listRequirementVariantsFromService(projectRef, requirementRef)
 
     //CREATE REQUIREMENTVARIANT
     @Transactional
     @POST
-    fun createRequirementVariant(@PathParam("projectRef") projectRef: String, requirementVariant: RequirementVariantForm): Response =
-        requirementVariantService.createRequirementVariantFromService(projectRef, requirementVariant)
+    fun createRequirementVariant(@PathParam("projectRef") projectRef: String, @PathParam("requirementRef") requirementRef: String, requirementVariant: RequirementVariantForm): Response =
+        requirementVariantService.createRequirementVariantFromService(projectRef, requirementRef, requirementVariant)
 
     //DELETE REQUIREMENTVARIANT
     @DELETE
