@@ -12,8 +12,8 @@ class RequirementResourceTest {
     private final val basePath = "/api/v1/projects"
     private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
     private final val useResourceFolder = "/requirements"
-    private final val useRequirementRef = "/req1b69-edb2-431f-855a-4368e2bcddd1"
-    private final val useRequirementRefPut = "/reqd2b69-edb2-431f-855a-4368e2bcddd1"
+    private final val useRequirementRefPut = "/req1b69-edb2-431f-855a-4368e2bcddd1"
+    private final val useRequirementRef = "/reqd2b69-edb2-431f-855a-4368e2bcddd1"
     private final val resourceUrl = "$baseUri$basePath$useProjectRef$useResourceFolder"
     private final val fullUrl = "$resourceUrl$useRequirementRefPut"
 
