@@ -1,6 +1,5 @@
 package org.kravbank.api;
 
-
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
 import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
 import org.kravbank.service.RequirementVariantService
@@ -15,9 +14,7 @@ import javax.enterprise.context.RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
 class RequirementVariantResource(val requirementVariantService: RequirementVariantService) {
-
-
-    //GET REQUIREMENTVARIANT
+    //GET REQUIREMENT VARIANT
     @GET
     @Path("/{requirementVariantRef}")
     fun getRequirementVariant(
@@ -31,7 +28,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
             requirementVariantRef
         )
 
-    //LIST REQUIREMENTVARIANTS
+    //LIST REQUIREMENT VARIANTS
     @GET
     fun listRequirementVariants(
         @PathParam("projectRef") projectRef: String,
@@ -39,7 +36,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     ): Response =
         requirementVariantService.listRequirementVariantsFromService(projectRef, requirementRef)
 
-    //CREATE REQUIREMENTVARIANT
+    //CREATE REQUIREMENT VARIANT
     @Transactional
     @POST
     fun createRequirementVariant(
@@ -49,7 +46,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     ): Response =
         requirementVariantService.createRequirementVariantFromService(projectRef, requirementRef, requirementVariant)
 
-    //DELETE REQUIREMENTVARIANT
+    //DELETE REQUIREMENT VARIANT
     @DELETE
     @Path("/{requirementVariantRef}")
     @Transactional
@@ -60,7 +57,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     ): Response =
         requirementVariantService.deleteRequirementVariantFromService(projectRef, requirementRef, requirementVariantRef)
 
-    //UPDATE REQUIREMENTVARIANT
+    //UPDATE REQUIREMENT VARIANT
     @PUT
     @Path("{requirementVariantRef}")
     @Transactional

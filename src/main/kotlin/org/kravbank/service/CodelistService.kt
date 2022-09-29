@@ -95,7 +95,8 @@ class CodelistService(val codelistRepository: CodelistRepository, val projectSer
                 //if (deleted) {
                 if (foundCodelist != null) {
                     project.codelist.remove(foundCodelist)
-                    projectService.updateProject(project.id, project)
+                    deleteCodelist(foundCodelist.id)
+                    //projectService.updateProject(project.id, project)
                     Response.noContent().build()
                 } else Response.status(Response.Status.BAD_REQUEST).build()
             } else Response.status(Response.Status.NOT_FOUND).build()
@@ -115,10 +116,8 @@ class CodelistService(val codelistRepository: CodelistRepository, val projectSer
             ) {
                 val foundProject = projectService.getProjectByRefCustomRepo(projectRef)!!
                 //val foundCodelist = getCodelistByRefCustomRepo(codelistRef)!!
-                // print("codelistRef er lik $codelistRef")
                 val mappedCodelistToEntity = CodelistUpdateMapper().toEntity(updateCodelist)
                 //val codelistExistInProject = foundCodelist.project.ref.compareTo(projectRef)
-                // println(foundCodelist.project.ref)
                 val foundCodelist = foundProject.codelist.find { codelist -> codelist.ref == codelistRef }
                 if (foundCodelist != null) {
                     updateCodelist(foundCodelist.id, mappedCodelistToEntity)
