@@ -162,14 +162,8 @@ class CodeService(
                 }
                 val codeMapper = CodeUpdateMapper().toEntity(updateCode)
                 //if (code.project.ref == project.ref)
-
                 return if (foundCode != null) {
-                    codeRepository.update(
-                        "title = ?1,  description = ?2  where id = ?3",
-                        codeMapper.title,
-                        codeMapper.description,
-                        foundCode.id
-                    )
+                    updateCode(foundCode.id, codeMapper)
                     Response.ok(updateCode).build()
                 } else {
                     Response.status(Response.Status.BAD_REQUEST).build()
@@ -193,12 +187,12 @@ class CodeService(
 
     fun deleteCode(id: Long) = codeRepository.deleteById(id)
 
-    fun updateCode(id: Long, requirement: Code) {
-       // codeRepository.update(
-          //  "comment = ?1, version = ?2, bankid = ?3, date = ?4 where id= ?5",
-            // requirement.comment, requirement.version, requirement.bankId, requirement.date, id
-        //)
-
+    fun updateCode(id: Long, updateCode: Code) {
+        codeRepository.update(
+            "title = ?1,  description = ?2  where id = ?3",
+            updateCode.title,
+            updateCode.description,
+            id
+        )
     }
-
 }
