@@ -1,11 +1,9 @@
 package org.kravbank.api
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
-import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
 
 @QuarkusIntegrationTest

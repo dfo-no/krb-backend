@@ -4,8 +4,6 @@ import org.kravbank.domain.RequirementVariant
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
 import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.*
@@ -27,18 +25,12 @@ class RequirementVariantService(
         if (projectService.refExists(projectRef) && refExists(requirementVariantRef)) {
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
 
-            /**
-             * todo
-             * fix here
-             *
-             */
             val requirement = project.requirements.find { requirement ->
                 requirement.ref == requirementRef
             }
             val reqVariant = requirement!!.requirementvariants.find { variant ->
                 variant.ref == requirementVariantRef
             }
-
             val requirementVariantMapper = org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper().fromEntity(reqVariant!!)
             return Response.ok(requirementVariantMapper).build()
         } else {
@@ -88,8 +80,7 @@ class RequirementVariantService(
             val requirementVariantMapper = org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper().toEntity(requirementVariant)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-                val requirementVariantList =
-                    project.requirements.find { requirement -> requirement.ref == requirementRef }!!.requirementvariants
+                val requirementVariantList = project.requirements.find { requirement -> requirement.ref == requirementRef }!!.requirementvariants
                 requirementVariantList.add(requirementVariantMapper)
                 projectService.updateProject(project.id, project)
             } else {

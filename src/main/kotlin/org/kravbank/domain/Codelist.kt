@@ -16,7 +16,7 @@ class Codelist() : PanacheEntity() {
     @Column(unique = true)
     var ref : String = UUID.randomUUID().toString()
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
     var codes = mutableListOf<Code>()
 

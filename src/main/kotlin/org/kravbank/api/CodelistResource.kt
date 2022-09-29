@@ -4,8 +4,6 @@ import org.kravbank.utils.form.codelist.CodelistForm
 import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.service.CodelistService
 import org.kravbank.service.ProjectService
-import org.kravbank.utils.mapper.codelist.CodelistMapper
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
 import java.lang.IllegalArgumentException
 import javax.transaction.Transactional;
 import javax.ws.rs.*;

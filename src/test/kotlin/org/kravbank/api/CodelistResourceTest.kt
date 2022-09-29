@@ -62,7 +62,7 @@ class CodelistResourceTest() {
     fun deleteCodelistByRef() {
         given()
             .`when`()
-            .delete("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1")
+            .delete("http://localhost:8080/api/v1/projects/prosjekt5-edb2-431f-855a-4368e2bcddd1/codelists/newlist2222db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(204)
         //.body(`is`("Hello RESTEasy"))

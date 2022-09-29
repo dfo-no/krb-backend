@@ -4,8 +4,7 @@ import org.kravbank.domain.Codelist
 import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.utils.mapper.Mapper
 
-class CodelistUpdateMapper :
-    org.kravbank.utils.mapper.Mapper<CodelistFormUpdate, Codelist> {
+class CodelistUpdateMapper : Mapper<CodelistFormUpdate, Codelist> {
 
     // FROM ENTTY
     override fun fromEntity(entity: Codelist): CodelistFormUpdate =

@@ -1,89 +1,76 @@
 package org.kravbank.api;
 
-
-import org.kravbank.domain.Code;
 import org.kravbank.service.CodeService
-import java.lang.IllegalArgumentException
+import org.kravbank.utils.form.code.CodeForm
+import org.kravbank.utils.form.code.CodeFormUpdate
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
+import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
-@Path("/codes")
-//@Produces(APPLICATION_JSON)
-//@Consumes(APPLICATION_JSON)
-
+@Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
+@Produces(APPLICATION_JSON)
+@Consumes(APPLICATION_JSON)
 class CodeResource (val codeService: CodeService) {
-    //GET CODE
-    @Produces(MediaType.APPLICATION_JSON)
+
+    //GET REQUIREMENTVARIANT
     @GET
-    @Path("/{id}")
+    @Path("/{codeRef}")
+    fun getCode(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("codelistRef") codelistRef: String,
+        @PathParam("codeRef") codeRef: String
+    ): Response =
+        codeService.getCodeByRefFromService(
+            projectRef,
+            codelistRef,
+            codeRef
+        )
 
-    fun getCode(@PathParam("id") id : Long): Response {
-        if (codeService.exists(id)){
-
-            return Response.ok(codeService.getCode(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
-
-    //LIST CODE
-    //@Operation(summary = "List all needs")
-    @Produces(MediaType.APPLICATION_JSON)
+    //LIST REQUIREMENTVARIANTS
     @GET
-    fun listCode(): MutableList<Code> =
-        codeService.listCodes();
+    fun listCodes(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("codelistRef") codelistRef: String,
+    ): Response =
+        codeService.listCodesFromService(projectRef, codelistRef)
 
-
-
-    //CREATE CODE
+    //CREATE REQUIREMENTVARIANT
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createCode(need: Code): Response? {
-        try {
-            codeService.createCode(need)
-            if (need.isPersistent){
-                return Response.created(URI.create("/needs" + need.id)).build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST).build()
-            }
-        }catch (e: Exception){
-            throw IllegalArgumentException ("Creating code FAILED. Message: $e")
-        }
-    }
+    fun createCode(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("codelistRef") codelistRef: String,
+        code: CodeForm
+    ): Response =
+        codeService.createCodeFromService(projectRef, codelistRef, code)
 
-    //DELETE CODE
+    //DELETE REQUIREMENTVARIANT
     @DELETE
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{codeRef}")
     @Transactional
-    fun deleteCodeById(@PathParam("id") id: Long): Response {
-        val deleted = codeService.deleteCode(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
-    }
+    fun deleteCode(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("codelistRef") codelistRef: String,
+        @PathParam("codeRef") codeRef: String
+    ): Response =
+        codeService.deleteCodeFromService(projectRef, codelistRef, codeRef)
 
-    //UPDATE CODE
+    //UPDATE REQUIREMENTVARIANT
     @PUT
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{codeRef}")
     @Transactional
-    fun updateCode(@PathParam("id") id: Long, need: Code): Response {
-        if (codeService.exists(id)) {
-            try {
-                codeService.updateCode(id, need)
-                return Response.ok(codeService.getCode(id)).build()
-            } catch(e: Exception) {
-                throw IllegalArgumentException ("Updating code FAILED. Message: $e")
-            }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
+    fun updateCode(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("codelistRef") codelistRef: String,
+        @PathParam("codeRef") codeRef: String,
+        code: CodeFormUpdate
+    ): Response =
+        codeService.updateCodeFromService(
+            projectRef,
+            codelistRef,
+            codeRef,
+            code
+        )
 }
 
