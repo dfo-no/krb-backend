@@ -22,7 +22,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\":\"Update prosj\",\r\n    \"description\":\"Beskrivelse av prosjekt\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"21-02-1991\",\r\n    \"projectId\":\"643fgfdg4325-uuid\",\r\n    \"deletedDate\":\"not deleted date\",\r\n    \"products\": [],\r\n   \"publications\":[]\r\n}\r\n\r\n\r\n\r\n    \r\n",
+											"raw": "{\r\n    \"title\":\"Oppdatert\",\r\n    \"description\": \"Ny oppdatert beskrivelse\"\r\n}\r\n\r\n\r\n\r\n    \r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -30,14 +30,16 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/projects/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
 												"projects",
-												"1"
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -77,7 +79,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\": \"En tittel\",\r\n    \"description\": \"En beskrivelse\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"pub dato\",\r\n    \"projectId\":\"14353tewfdgfdggsfasdsfdsg\",\r\n    \"deletedDate\":\"slettet dato \",\r\n    \"publications\":[],\r\n    \"needs\": [],\r\n    \"requirements\": [],\r\n    \"products\":[],\r\n    \"codeList\": [{\"id\": 3}]\r\n}\r\n",
+											"raw": "{\r\n    \"title\": \"En tittel fra postman pat\",\r\n    \"description\": \"En beskrivelse fra postman pat\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"21-02-91\",\r\n    \"deletedDate\":\"slettet dato \"\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -85,13 +87,16 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/projects",
+											"raw": "localhost:8080/api/v1/projects/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"projects"
+												"api",
+												"v1",
+												"projects",
+												""
 											]
 										}
 									},
@@ -103,12 +108,14 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/projects/",
+											"raw": "localhost:8080/api/v1/projects/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
 												"projects",
 												""
 											]
@@ -122,34 +129,16 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/projects/9",
+											"raw": "localhost:8080/api/v1/projects/ccc4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
 												"projects",
-												"9"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "get one by projectid",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "localhost:8080/projects/projectid/14353tewfdgfdgg uuid",
-											"host": [
-												"localhost"
-											],
-											"port": "8080",
-											"path": [
-												"projects",
-												"projectid",
-												"14353tewfdgfdgg uuid"
+												"ccc4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -162,7 +151,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\":\"tittel\",\r\n    \"description\":\"\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"21-02-1991\",\r\n    \"projectId\":\"643fgfdg4325-uuid\",\r\n    \"deletedDate\":\"not deleted date\",\r\n    \"products\": [\r\n         {\r\n        \"id\": 1\r\n\r\n\r\n    }\r\n    ]\r\n}",
+											"raw": "",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -170,14 +159,16 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/projects/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
 												"projects",
-												"1"
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -195,7 +186,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"comment\": \"Dette er ENDA annen kommentar\",\r\n    \"date\": \"21-02-1991\",\r\n    \"version\":1,\r\n    \"bankId\":\"fredrik\",\r\n    \"deletedDate\":\"dette skal være delete dato felt\"\r\n}",
+											"raw": "{\r\n    \"comment\": \"Dette er ENDA annen kommentar\",\r\n    \"deletedDate\":\"dette skal være delete dato felt\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -203,12 +194,16 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/publications/",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"publications",
 												""
 											]
@@ -223,7 +218,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"comment\": \"fjerde endring\",\r\n    \"date\": \"today\",\r\n    \"version\":3,\r\n    \"bankId\":\"ludvig\",\r\n    \"deletedDate\":\"dette skal være delete dato felt\"\r\n}",
+											"raw": "{\r\n    \"comment\": \"postman pat endring\",\r\n    \"deletedDate\":\"string dato er feil\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -231,14 +226,18 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/publications/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/zzz4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"publications",
-												"1"
+												"zzz4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -250,13 +249,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/publications",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"publications"
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
+												"publications",
+												""
 											]
 										}
 									},
@@ -268,14 +272,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/publications/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/zzz4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"publications",
-												"1"
+												"zzz4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -327,14 +335,18 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/publications/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/zzz4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"publications",
-												"1"
+												"zzz4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -405,6 +417,38 @@
 											"path": [
 												"needs",
 												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update need",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"oppdatert need tittel\",\r\n    \"description\":\"oppdatert need desc\"\r\n\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need2b69-edb2-431f-855a-4368e2bcddd1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
+												"needs",
+												"need2b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -585,14 +629,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/codelists/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"codelists",
-												"1"
+												"qqq4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -604,13 +652,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/codelists",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"codelists"
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												""
 											]
 										}
 									},
@@ -623,7 +676,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\":\"Kodelist med liste av koder og configs\",\r\n    \"description\":\"kodeliste beskrivelse\",\r\n    \"codes\": [{\"id\":1}, {\"id\": 2}]\r\n}\r\n",
+											"raw": "{\r\n    \"title\":\"ny\",\r\n    \"description\":\"kodeliste beskrivelse\"\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -631,14 +684,50 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/codelists/",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"codelists",
 												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update codelist",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \r\n    \"title\":\"Fredrik endret nå\",\r\n    \"description\":\"Endret beskrivelse\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"qqq4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -681,14 +770,18 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/codelists/1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"codelists",
-												"1"
+												"asd4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -706,7 +799,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\": \"Product\",\r\n    \"description\": \"Beskrivelse av produkt 1\",\r\n    \"deletedDate\":\"ikke slettet enda\"\r\n}",
+											"raw": "{\r\n    \"title\": \"Product\",\r\n    \"description\": \"Beskrivelse av nytt produkt fra postman pat\",\r\n    \"deletedDate\":\"ikke slettet enda\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -714,14 +807,17 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/products/",
+											"raw": "localhost:8080/api/v1/projects/ccc4db69-edb2-431f-855a-4368e2bcddd1/products",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"products",
-												""
+												"api",
+												"v1",
+												"projects",
+												"ccc4db69-edb2-431f-855a-4368e2bcddd1",
+												"products"
 											]
 										}
 									},
@@ -734,7 +830,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\": \"endret produkt\",\r\n    \"description\": \"Endret Beskrivelse av produkt 1\",\r\n    \"deletedDate\":\"ikke slettet enda\"\r\n}",
+											"raw": "{\r\n    \"title\": \"Fullstedig Endret\",\r\n    \"description\": \"Fullstendig endret\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -742,14 +838,18 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/products/2",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"products",
-												"2"
+												"edb4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -761,12 +861,16 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/products/",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"products",
 												""
 											]
@@ -780,14 +884,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/products/2",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"products",
-												"2"
+												"edb4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -819,14 +927,18 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/products/4",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"products",
-												"4"
+												"edb4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -852,7 +964,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\": \"Requirement med samme variants \",\r\n    \"description\": \"Beskrivelse av requirement 1\",\r\n    \"needId\":\"unikNeedId kanskje uid\",\r\n    \"requirementvariants\":[{\"id\": 6}]\r\n}",
+											"raw": "{\r\n    \"title\": \"Ny postman pat req tittel \",\r\n    \"description\": \"Ny postman pat req beskrivelse\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -860,12 +972,48 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/requirements/",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
+												"requirements",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update requirement",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Ny postman pat req tittel \",\r\n    \"description\": \"Ny postman pat req beskrivelse\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"requirements",
 												""
 											]
@@ -898,14 +1046,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/requirements/6",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"requirements",
-												"6"
+												"req1b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -932,7 +1084,7 @@
 									"response": []
 								},
 								{
-									"name": "delete by id Copy",
+									"name": "delete requirement",
 									"request": {
 										"method": "DELETE",
 										"header": [],

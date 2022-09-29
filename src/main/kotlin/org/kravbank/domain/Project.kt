@@ -42,15 +42,15 @@ class Project: PanacheEntity() {
     @JsonIgnore
     var products = mutableListOf<Product>()
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
     var publications = mutableListOf<Publication>()
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
     var requirements = mutableListOf<Requirement>()
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
     var needs = mutableListOf<Need>()
 

@@ -1,84 +1,56 @@
 package org.kravbank.api;
 
-
-import org.kravbank.domain.Need;
+import org.kravbank.utils.form.need.NeedForm
+import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.service.NeedService
-import java.lang.IllegalArgumentException
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 
-@Path("/needs")
-//@Produces(APPLICATION_JSON)
-//@Consumes(APPLICATION_JSON)
-
+@Path("/api/v1/projects/{projectRef}/needs")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 class NeedResource (val needService: NeedService) {
     //GET NEED
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("/{id}")
-    fun getNeed(@PathParam("id") id : Long): Response {
-        if (needService.exists(id)){
-            return Response.ok(needService.getNeed(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
+    @Path("/{needRef}")
+    fun getNeed(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String
+    ): Response =
+        needService.getNeedByRefFromService(projectRef, needRef)
 
     //LIST NEEDS
-    //@Operation(summary = "List all needs")
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listNeeds(): MutableList<Need> =
-        needService.listNeeds();
+    fun listPublications(@PathParam("projectRef") projectRef: String): Response =
+        needService.listNeedsFromService(projectRef)
 
     //CREATE NEED
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createNeed(need: Need): Response? {
-        try {
-            needService.createNeed(need)
-            if (need.isPersistent){
-                return Response.created(URI.create("/needs" + need.id)).build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST).build()
-            }
-        }catch (e: Exception){
-            throw IllegalArgumentException ("Create need FAILED. Message: $e")
-        }
-    }
+    fun createNeed(@PathParam("projectRef") projectRef: String, need: NeedForm): Response =
+        needService.createNeedFromService(projectRef, need)
+
+
     //DELETE NEED
     @DELETE
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{needRef}")
     @Transactional
-    fun deleteNeedById(@PathParam("id") id: Long): Response {
-        val deleted = needService.deleteNeed(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
-    }
+    fun deletePublication(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String
+    ): Response =
+        needService.deleteNeedFromService(projectRef, needRef)
 
     //UPDATE NEED
     @PUT
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{needRef}")
     @Transactional
-    fun updateNeed(@PathParam("id") id: Long, need: Need): Response {
-        if (needService.exists(id)) {
-            try {
-                needService.updateNeed(id, need)
-                return Response.ok(needService.getNeed(id)).build()
-            } catch(e: Exception) {
-                throw IllegalArgumentException ("Updating need FAILED. Message: $e")
-            }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
+    fun updatePublication(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String,
+        need: NeedFormUpdate
+    ): Response =
+        needService.updateNeedFromService(projectRef, needRef, need)
 }
-

@@ -1,16 +1,14 @@
 package org.kravbank.api
 
-import org.kravbank.domain.Product
-import org.kravbank.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.service.ProductService
 import org.kravbank.service.ProjectService
-import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-
 
 //@Tags(value = [Tag(name = "Read products", description = "Read uploaded products.")])
 //@Path("/products")
@@ -48,31 +46,25 @@ class ProductResource(val productService: ProductService, val projectService: Pr
 
     //DELETE PRODUCT
     @DELETE
-    @Path("/{id}")
+    @Path("/{productref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun deleteProdudctById(@PathParam("id") id: Long): Response {
-        val deleted = productService.deleteProduct(id)
-        return if (deleted) {
-            //println(deleted)
-            Response.noContent().build()
-        } else Response.status(Response.Status.BAD_REQUEST).build()
-    }
+    fun deleteProdudctById(
+        @PathParam("projectref") projectref: String,
+        @PathParam("productref") productref: String
+    ): Response =
+        productService.deleteProductFromService(projectref, productref)
 
     //UPDATE PRODUCT
     @PUT
-    @Path("{id}")
+    @Path("{productref}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    fun updateProduct(@PathParam("id") id: Long, product: Product): Response {
-        if (productService.exists(id)) {
-            productService.updateProduct(id, product)
-            return Response.ok(productService.getProduct(id)).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
-    }
-
-
+    fun updateProduct(
+        @PathParam("projectref") projectref: String,
+        @PathParam("productref") productref: String,
+        product: ProductFormUpdate
+    ): Response =
+        productService.updateProductFromService(projectref, productref, product)
 }
 

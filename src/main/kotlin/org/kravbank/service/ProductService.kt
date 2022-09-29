@@ -1,9 +1,11 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Product
-import org.kravbank.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
-import org.kravbank.utils.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.*
@@ -12,30 +14,30 @@ import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class ProductService(val productRepository: ProductRepository, val projectService: ProjectService) {
-    fun listProducts(): List<Product>  = productRepository.listAll()
+    fun listProducts(): List<Product> = productRepository.listAll()
 
-    fun listProductsFromService(projectRef : String) : Response {
+    fun listProductsFromService(projectRef: String): Response {
         return try {
             if (projectService.refExists(projectRef)) {
                 //list proudcts by project ref
                 val projectProductList = projectService.getProjectByRefCustomRepo(projectRef)!!.products
                 //convert to array of form
                 val productsFormList = ArrayList<ProductForm>()
-                for (p in projectProductList) productsFormList.add(ProductMapper().fromEntity(p))
+                for (p in projectProductList) productsFormList.add(org.kravbank.utils.mapper.product.ProductMapper().fromEntity(p))
                 //returns the custom product form
                 Response.ok(productsFormList).build()
             } else {
                 Response.status(Response.Status.NOT_FOUND).build()
             }
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             throw IllegalArgumentException("GET list of products failed")
         }
     }
 
     fun getProduct(id: Long): Optional<Product>? = productRepository.findByIdOptional(id)
-    fun getProductByRefCustomRepo (ref: String): Product = productRepository.findByRef(ref)
+    fun getProductByRefCustomRepo(ref: String): Product = productRepository.findByRef(ref)
 
-    fun getProductByRefFromService (projectRef: String, productRef: String) : Response {
+    fun getProductByRefFromService(projectRef: String, productRef: String): Response {
 
         if (refExists(productRef) && projectService.refExists(projectRef)) {
 
@@ -43,7 +45,7 @@ class ProductService(val productRepository: ProductRepository, val projectServic
             val product = project.products.find { products ->
                 products.ref == productRef
             }
-            val productMapper = ProductMapper().fromEntity(product!!)
+            val productMapper = org.kravbank.utils.mapper.product.ProductMapper().fromEntity(product!!)
 
             return Response.ok(productMapper).build()
         } else {
@@ -53,14 +55,14 @@ class ProductService(val productRepository: ProductRepository, val projectServic
 
     fun createProduct(product: Product) = productRepository.persist(product) //persist and flush vs persist
 
-    fun createProductFromService (projectRef: String, product: ProductForm): Response {
+    fun createProductFromService(projectRef: String, product: ProductForm): Response {
         //adds a product to relevant project
         try {
-            val productMapper = ProductMapper().toEntity(product)
+            val productMapper = org.kravbank.utils.mapper.product.ProductMapper().toEntity(product)
             if (projectService.refExists(projectRef)) {
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-               project.products.add(productMapper)
-               projectService.updateProject(project.id, project)
+                project.products.add(productMapper)
+                projectService.updateProject(project.id, project)
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
@@ -82,10 +84,60 @@ class ProductService(val productRepository: ProductRepository, val projectServic
 
     fun deleteProduct(id: Long) = productRepository.deleteById(id)
 
-    fun updateProduct(id: Long, product: Product) {
-        productRepository.update("title = ?1, description = ?2 where id= ?3",
-            product.title,
-            product.description,
-            id)
+    fun deleteProductFromService(projectRef: String, productRef: String): Response {
+
+        /**
+         * todo
+         * færre repokall for å få slettet
+         * teller: 4
+         *
+         */
+        return try {
+            //repo 2
+            if (projectService.refExists(projectRef) && refExists(productRef)) {
+                //repo 3
+                val project = projectService.getProjectByRefCustomRepo(projectRef)!!
+                val product = project.products.find { product -> product.ref == productRef }
+                //repo 4
+                val deleted = productRepository.deleteById(product!!.id)
+                if (deleted) {
+                    project.products.remove(product)
+                    Response.noContent().build()
+                } else {
+                    Response.status(Response.Status.BAD_REQUEST).build()
+                }
+            } else
+                Response.status(Response.Status.NOT_FOUND).build()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("DELETE product failed!")
+        }
+    }
+
+
+    fun updateProductFromService(projectRef: String, productRef: String, product: ProductFormUpdate): Response {
+        if (projectService.refExists(projectRef) && refExists(productRef)){
+            // if product exists in this project
+            val project = projectService.getProjectByRefCustomRepo(projectRef)!!
+            //val foundProduct = getProductByRefCustomRepo(productRef)
+            val productInProject = project.products.find { prod -> prod.ref == productRef }
+            val productMapper = org.kravbank.utils.mapper.product.ProductUpdateMapper().toEntity(product)
+
+            //if (product.project.ref == project.ref)
+
+            return if (productInProject != null) {
+                productRepository.update(
+                    "title = ?1, description = ?2 where id= ?3",
+                    productMapper.title,
+                    productMapper.description,
+                    //product.deletedDate,
+                    productInProject.id
+                )
+                Response.ok(product).build()
+            } else {
+                Response.status(Response.Status.NOT_FOUND).build()
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build()
+        }
     }
 }

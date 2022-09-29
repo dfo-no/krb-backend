@@ -68,7 +68,7 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
-      <version>4.0.0</version>
+      <version>5.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -120,7 +120,6 @@
         <configuration>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.manager.LogManager</java.util.logging.manager>
-            <!--suppress UnresolvedMavenProperty -->
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
         </configuration>
@@ -138,7 +137,6 @@
               <systemPropertyVariables>
                 <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                 <java.util.logging.manager>org.jboss.manager.LogManager</java.util.logging.manager>
-                <!--suppress UnresolvedMavenProperty -->
                 <maven.home>${maven.home}</maven.home>
               </systemPropertyVariables>
             </configuration>
@@ -182,6 +180,32 @@
             <option>all-open:annotation=io.quarkus.test.junit.QuarkusTest</option>
           </pluginOptions>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/*ResourceTest.*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <phase>integration-test</phase>
+            <configuration>
+              <excludes>
+                <exclude>none</exclude>
+              </excludes>
+              <includes>
+                <include>**/**ResourceTest.*</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -1,5 +1,6 @@
 package org.kravbank.api
 
+import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
@@ -9,7 +10,7 @@ import org.kravbank.domain.Codelist
 import java.awt.PageAttributes.MediaType
 import javax.print.attribute.standard.MediaTray
 
-@QuarkusTest
+@QuarkusIntegrationTest
 class CodelistResourceTest() {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
@@ -18,7 +19,7 @@ class CodelistResourceTest() {
     @Test
     fun getCodelistByRef() {
 
-        val getCodelistPath = "$baseUri$basePath$useProjectRef"
+        //val getCodelistPath = "$baseUri$basePath$useProjectRef"
 
         given()
             .`when`()
@@ -61,7 +62,7 @@ class CodelistResourceTest() {
     fun deleteCodelistByRef() {
         given()
             .`when`()
-            .delete("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1")
+            .delete("http://localhost:8080/api/v1/projects/prosjekt5-edb2-431f-855a-4368e2bcddd1/codelists/newlist2222db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(204)
         //.body(`is`("Hello RESTEasy"))

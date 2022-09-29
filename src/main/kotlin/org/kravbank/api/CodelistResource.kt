@@ -1,11 +1,9 @@
 package org.kravbank.api;
 
-import org.kravbank.form.codelist.CodelistForm
-import org.kravbank.form.codelist.CodelistFormUpdate
+import org.kravbank.utils.form.codelist.CodelistForm
+import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.service.CodelistService
 import org.kravbank.service.ProjectService
-import org.kravbank.utils.codelist.CodelistMapper
-import org.kravbank.utils.codelist.CodelistUpdateMapper
 import java.lang.IllegalArgumentException
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -32,7 +30,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
                 val codelist = project.codelist.find { codelist ->
                     codelist.ref == codelistref
                 }
-                val codelistMapper = CodelistMapper().fromEntity(codelist!!)
+                val codelistMapper = org.kravbank.utils.mapper.codelist.CodelistMapper().fromEntity(codelist!!)
                 return Response.ok(codelistMapper).build()
             } else return Response.status(Response.Status.NOT_FOUND).build()
         } catch (e: Exception) {
@@ -50,10 +48,11 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             if (projectService.refExists(projectref)) {
                 val projectCodelist = projectService.getProjectByRefCustomRepo(projectref)!!.codelist
                 // list codelist by project ref
-                val codelistFormList = ArrayList<CodelistForm>()
+                val publicationFormList = ArrayList<CodelistForm>()
                 // map from entity to codelist form
-                for (c in projectCodelist) codelistFormList.add(CodelistMapper().fromEntity(c))
-                Response.ok(codelistFormList).build()
+                for (c in projectCodelist) publicationFormList.add(
+                    org.kravbank.utils.mapper.codelist.CodelistMapper().fromEntity(c))
+                Response.ok(publicationFormList).build()
             } else {
                 Response.status(Response.Status.NOT_FOUND).build()
             }
@@ -71,7 +70,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         //lager codeliste tilhørende prosjektet
         // legger til i prosjekt med kobling til prosjektet ved opprettelse
         try {
-            val codelistMapper = CodelistMapper().toEntity(codelist)
+            val codelistMapper = org.kravbank.utils.mapper.codelist.CodelistMapper().toEntity(codelist)
             if (projectService.refExists(projectref)) {
                 val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 //codelistService.createCodelist(codelist) //codelist.persist
@@ -135,7 +134,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
             if (projectService.refExists(projectref) && codelistService.refExists(codelistref)) {
                 // val project = projectService.getProjectByRefCustomRepo(projectref)!!
                 val foundCodelist = codelistService.getCodelistByRefCustomRepo(codelistref)
-                val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
+                val codelistMapper = org.kravbank.utils.mapper.codelist.CodelistUpdateMapper().toEntity(codelist)
                 codelistService.updateCodelist(foundCodelist!!.id, codelistMapper)
                 Response.ok(codelist).build()
             } else Response.status(Response.Status.BAD_REQUEST).build()
