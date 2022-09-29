@@ -3,10 +3,6 @@ package org.kravbank.api
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.service.ProjectService
-import org.kravbank.utils.mapper.project.ProjectMapper
-import org.kravbank.utils.mapper.project.ProjectUpdateMapper
-import java.lang.IllegalArgumentException
-import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
@@ -16,95 +12,38 @@ import javax.ws.rs.core.Response
 //@Tags(value = [Tag(name = "Read projects", description = "Read uploaded projects.")])
 @Path("/api/v1/projects")
 @RequestScoped
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
 class ProjectResource(val projectService: ProjectService) {
     //GET PROJECT
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("/{projectref}")
-    fun getProjectByRef(@PathParam("projectref") projectref: String): Response {
-
-        return try {
-            if (projectService.refExists(projectref)) {
-                val project = projectService.getProjectByRefCustomRepo(projectref)
-                val projectMapper = org.kravbank.utils.mapper.project.ProjectMapper().fromEntity(project!!)
-                Response.ok(projectMapper).build()
-            } else {
-                Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("GET One project FAILED. Message: $e")
-        }
-    }
+    @Path("/{projcetRef}")
+    fun getProjectByRef(@PathParam("projcetRef") projcetRef: String): Response =
+        projectService.getProjcetFromService(projcetRef)
 
     //LIST PROJECTS
-    //@Operation(summary = "List all projects")
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun listProjects(): Response? {
-           val projects = projectService.listProjects();
-           val projectFormList = ArrayList<ProjectForm>()
-           for (p in projects) projectFormList.add(org.kravbank.utils.mapper.project.ProjectMapper().fromEntity(p))
-           return Response.ok(projectFormList).build()
-    }
+    fun listProjects(): Response =
+        projectService.listProjectsFromService()
 
     //CREATE PROJECT
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    fun createProject(project: ProjectForm): Response? {
-        try {
-            val projectMapper = org.kravbank.utils.mapper.project.ProjectMapper().toEntity(project)
-            projectService.createProject(projectMapper)
-            return if (projectMapper.isPersistent) {
-                Response.created(URI.create("/projects" + project.ref)).build();
-            } else {
-                Response.status(Response.Status.BAD_REQUEST).build()
-            }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Create project FAILED. Message: $e")
-        }
-    }
+    fun createProject(newProject: ProjectForm): Response =
+        projectService.createProjectFromService(newProject)
 
     //DELETE PROJECT
     @DELETE
-    @Path("{projectref}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{projcetRef}")
     @Transactional
-    fun deleteProjectByRef(@PathParam("projectref") projectref: String): Response {
-        try {
-            return if (projectService.refExists(projectref)) {
-                val project = projectService.getProjectByRefCustomRepo(projectref)
-                val deleted = projectService.deleteProject(project!!.id)
-                if (deleted) {
-                    Response.noContent().build()
-                } else Response.status(Response.Status.BAD_REQUEST).build()
-            } else {
-                Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Delete project FAILED. Message: $e")
-        }
-    }
+    fun deleteProjectByRef(@PathParam("projcetRef") projcetRef: String): Response =
+        projectService.deleteProjectFromService(projcetRef)
 
     //UPDATE PROJECT
     @PUT
-    @Path("{projectref}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{projcetRef}")
     @Transactional
-    fun updateProject(@PathParam("projectref") projectref: String, project: ProjectFormUpdate): Response? {
-        try {
-            return if (projectService.refExists(projectref)) {
-                val projectMapper = org.kravbank.utils.mapper.project.ProjectUpdateMapper().toEntity(project)
-                val foundProject = projectService.getProjectByRefCustomRepo(projectref)
-                projectService.updateProject(foundProject!!.id, projectMapper)
-                Response.ok(project).build()
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Delete project FAILED. Message: $e")
-        }
-    }
+    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response = projectService.updateProjectFromService(projcetRef, updateProject)
 }

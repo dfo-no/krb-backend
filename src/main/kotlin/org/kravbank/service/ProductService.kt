@@ -4,8 +4,6 @@ import org.kravbank.domain.Product
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
-import org.kravbank.utils.mapper.product.ProductMapper
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.*

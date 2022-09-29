@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 @Consumes(APPLICATION_JSON)
 class CodeResource (val codeService: CodeService) {
 
-    //GET REQUIREMENTVARIANT
+    //GET CODE
     @GET
     @Path("/{codeRef}")
     fun getCode(
@@ -27,7 +27,7 @@ class CodeResource (val codeService: CodeService) {
             codeRef
         )
 
-    //LIST REQUIREMENTVARIANTS
+    //LIST CODES
     @GET
     fun listCodes(
         @PathParam("projectRef") projectRef: String,
@@ -45,7 +45,7 @@ class CodeResource (val codeService: CodeService) {
     ): Response =
         codeService.createCodeFromService(projectRef, codelistRef, code)
 
-    //DELETE REQUIREMENTVARIANT
+    //DELETE CODE
     @DELETE
     @Path("/{codeRef}")
     @Transactional
@@ -56,7 +56,7 @@ class CodeResource (val codeService: CodeService) {
     ): Response =
         codeService.deleteCodeFromService(projectRef, codelistRef, codeRef)
 
-    //UPDATE REQUIREMENTVARIANT
+    //UPDATE CODE
     @PUT
     @Path("{codeRef}")
     @Transactional

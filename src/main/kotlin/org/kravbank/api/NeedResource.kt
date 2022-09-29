@@ -3,12 +3,14 @@ package org.kravbank.api;
 import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.service.NeedService
+import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/projects/{projectRef}/needs")
+@RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class NeedResource (val needService: NeedService) {

@@ -24,7 +24,7 @@ class Codelist() : PanacheEntity() {
     @JsonIgnore
     var configs = mutableListOf<Config>()
 
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE])
     @JsonIgnore
     lateinit var project: Project
 

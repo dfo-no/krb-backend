@@ -4,8 +4,6 @@ import org.kravbank.domain.Need
 import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.repository.NeedRepository
-import org.kravbank.utils.mapper.need.NeedMapper
-import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.ArrayList
@@ -116,8 +114,6 @@ class NeedService(val needRepository: NeedRepository, val projectService: Projec
             return Response.status(Response.Status.NOT_FOUND).build()
         }
     }
-
-
 
     fun listNeeds(): MutableList<Need> = needRepository.listAll()
     fun getNeed(id: Long): Need = needRepository.findById(id)
