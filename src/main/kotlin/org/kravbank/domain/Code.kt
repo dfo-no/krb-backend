@@ -1,9 +1,9 @@
 package org.kravbank.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity;
+import javax.persistence.*
 
 @Entity
 class Code: PanacheEntity() {
@@ -14,8 +14,12 @@ class Code: PanacheEntity() {
      @Column(unique = true)
      var ref: String = UUID.randomUUID().toString()
 
-     // public String type; //code
 
+     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE])
+     @JsonIgnore
+     lateinit var codelist: Codelist
+
+     // public String type; //code
      //public parent
 
 }

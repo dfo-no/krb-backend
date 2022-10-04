@@ -172,7 +172,7 @@ class CodeService(
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
         } catch (e: Exception) {
-            throw IllegalArgumentException("UPDATE requirement variant failed!")
+            throw IllegalArgumentException("UPDATE code failed!")
         }
     }
 

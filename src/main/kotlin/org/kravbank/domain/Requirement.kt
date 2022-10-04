@@ -17,7 +17,7 @@ class Requirement: PanacheEntity() {
     lateinit var description: String
 
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
-   @JsonIgnore
+    @JsonIgnore
     var requirementvariants = mutableListOf<RequirementVariant>()
 
     @Column(unique = true)

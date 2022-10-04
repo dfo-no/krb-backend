@@ -7,6 +7,9 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Project
+import org.kravbank.utils.form.project.ProjectForm
+import org.kravbank.utils.mapper.project.ProjectMapper
+import java.time.LocalDateTime
 
 
 @QuarkusIntegrationTest
@@ -15,6 +18,8 @@ class ProjectResourceTest {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
     val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+
+
 
 
     @Test
@@ -43,17 +48,19 @@ class ProjectResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = "/api/v1/";
 
-        val project = Project()
-        project.title = "Integrasjonstest prosjektittel"
-        project.description = "Integrasjonstest prosjektbeskrivelse"
-        //project.projectId = UUID.randomUUID().toString()
-        project.version = "1.0"
-        project.publishedDate = "Not published"
-        project.deletedDate = "11-11-11"
+        val project = ProjectForm()
+        project.title = "Oppdatert integrasjonstest - Tittel 1"
+        project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
+        project.version = 11
+        //project.deletedDate = "sadsfdsa"
+
+        val projectMappedForm = ProjectMapper().toEntity(project)
+
+        //project.publishedDate = LocalDateTime.now()
 
         given()
             .`when`()
-            .body(project)
+            .body(projectMappedForm)
             .header("Content-type", "application/json")
             .post("/projects")
             .then()
@@ -71,19 +78,31 @@ class ProjectResourceTest {
             .statusCode(204)
     }
 
+
     @Test
     fun updateProjectByRef() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         RestAssured.basePath = basePath;
 
-        val project = Project()
+        val project = ProjectForm()
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
+        project.version = 11
+        //project.deletedDate = "sadsfdsa"
+
+        val projectMappedForm = ProjectMapper().toEntity(project)
+
+
+
+
+      //  project.publishedDate = LocalDateTime.now()
+
+        // project.publishedDate = LocalDateTime.now()
 
         given()
             .`when`()
-            .body(project)
+            .body(projectMappedForm)
             .header("Content-type", "application/json")
             .put(useProjectRef)
             .then()

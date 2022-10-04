@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.kravbank.domain.RequirementVariant
 
 @QuarkusIntegrationTest
-internal class RequirementVariantResourceTest {
+class RequirementVariantResourceTest {
     private final val baseUri = "http://localhost:8080"
     private final val basePath = "/api/v1/projects"
     private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"

@@ -2,6 +2,7 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull
 //@Table(name = "Project")
 class Project: PanacheEntity() {
 
+
     //@Id
     //@GeneratedValue
     //var id: Long? = null;
@@ -19,24 +21,19 @@ class Project: PanacheEntity() {
     @NotNull
     var title: String = ""
 
-    @NotNull
-    @NotBlank
-    @NotEmpty
+
     var description: String = ""
 
-    @NotEmpty
-    @NotNull
-    @NotBlank
-    @GeneratedValue
-    var version: String = ""
 
-    var publishedDate: String  = ""//date
+    var version: Long  = 0 // //if changed +1 via update form
+
+    var publishedDate: LocalDateTime  =  LocalDateTime.now() // evnt last updated attribute
 
     @Column(unique = true)
      var ref: String = UUID.randomUUID().toString()
 
-    @NotNull
-    var deletedDate: String = "" // logic here
+    //@NotNull
+     var deletedDate: LocalDateTime? = LocalDateTime.now() //inactive vs. active projs --> if inactive show deleted date?
 
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore
