@@ -7,6 +7,11 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
+import org.kravbank.utils.form.codelist.CodelistForm
+import org.kravbank.utils.form.codelist.CodelistFormUpdate
+import org.kravbank.utils.mapper.codelist.CodelistMapper
+import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
+import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.awt.PageAttributes.MediaType
 import javax.print.attribute.standard.MediaTray
 
@@ -45,13 +50,15 @@ internal class CodelistResourceTest() {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val codelist = Codelist()
+        val codelist = CodelistForm()
         codelist.title = "CODELIST Integrasjonstest - Tittel 1"
         codelist.description = "CODELIST Integrasjonstest - Beskrivelse 1"
 
+        val codelistMapper = CodelistMapper().toEntity(codelist)
+
         given()
             .`when`()
-            .body(codelist)
+            .body(codelistMapper)
             .header("Content-type", "application/json")
             .post("$useProjectRef/codelists")
             .then()
@@ -69,10 +76,6 @@ internal class CodelistResourceTest() {
         //.body(`is`("Hello RESTEasy"))
     }
 
-
-
-
-
     @Test
     fun updateCodelist() {
 
@@ -82,13 +85,14 @@ internal class CodelistResourceTest() {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val codelist = Codelist()
+        val codelist = CodelistFormUpdate()
         codelist.title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
         codelist.description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
+        val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
 
         given()
             .`when`()
-            .body(codelist)
+            .body(codelistMapper)
             .header("Content-type", "application/json")
             .put("$useProjectRef/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
             .then()

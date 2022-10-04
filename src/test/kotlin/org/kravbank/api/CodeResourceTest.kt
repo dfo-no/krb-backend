@@ -8,6 +8,11 @@ import org.junit.jupiter.api.Assertions.*
 import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.RequirementVariant
+import org.kravbank.utils.form.code.CodeForm
+import org.kravbank.utils.form.code.CodeFormUpdate
+import org.kravbank.utils.mapper.code.CodeMapper
+import org.kravbank.utils.mapper.code.CodeUpdateMapper
+import org.kravbank.utils.mapper.project.ProjectMapper
 
 @QuarkusIntegrationTest
 class CodeResourceTest {
@@ -71,13 +76,16 @@ class CodeResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath
 
-        val code = Code ()
+        val code = CodeForm ()
         code.title = "CODE Integrasjonstest tittel"
         code.description = "CODE Integrasjonstest code desc"
 
+        val codeMapper = CodeMapper().toEntity(code)
+
+
         RestAssured.given()
             .`when`()
-            .body(code)
+            .body(codeMapper)
             .header("Content-type", "application/json")
             .post("/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes")
             .then()
@@ -106,13 +114,19 @@ class CodeResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val code = Code()
-        code.title = "CODE Oppdatert integrasjonstest - Tittel 1"
-        code.description = "CODE Oppdatert integrasjonstest - Beskrivelse 1"
+
+        val code = CodeFormUpdate ()
+        code.title = "CODE Integrasjonstest tittel"
+        code.description = "CODE Integrasjonstest code desc"
+
+        val codeMapper = CodeUpdateMapper().toEntity(code)
+
+
+
 
         RestAssured.given()
             .`when`()
-            .body(code)
+            .body(codeMapper)
             .header("Content-type", "application/json")
             .put("http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/script4b69-edb2-431f-855a-4368e2bcddd1")
             .then()

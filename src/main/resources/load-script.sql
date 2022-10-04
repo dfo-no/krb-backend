@@ -1,17 +1,17 @@
 
 --PROJECT
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(1,'Prosjekt1', 'Beskrivelse1', 1,'2022-09-29 21:17:30.23195+02',null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
+values(1,'Prosjekt1', 'Beskrivelse1', 1,'2020-09-29 21:17:30.23195',null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(2,'Prosjekt2', 'Beskrivelse2',2,'2022-09-29 21:17:30.23195+02',null, 'aaa4db69-edb2-431f-855a-4368e2bcddd1');
+values(2,'Prosjekt2', 'Beskrivelse2',2,'2021-09-29 21:17:30.23195',null, 'aaa4db69-edb2-431f-855a-4368e2bcddd1');
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(3,'Prosjekt3', 'Beskrivelse3', 3,'2022-09-29 21:17:30.23195+02',null, 'bbb4db69-edb2-431f-855a-4368e2bcddd1');
+values(3,'Prosjekt3', 'Beskrivelse3', 3,'2000-09-29 21:17:30.23195',null, 'bbb4db69-edb2-431f-855a-4368e2bcddd1');
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(22,'ScriptProsjekt4', 'Beskrivelse3', 4,'2022-09-29 21:17:30.23195+02',null, 'prosjekt4-edb2-431f-855a-4368e2bcddd1');
+values(22,'ScriptProsjekt4', 'Beskrivelse3', 4,'1999-09-29 21:17:30.23195','2021-09-29 21:17:30.23195', 'prosjekt4-edb2-431f-855a-4368e2bcddd1');
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(24,'ScriptProsjekt5', 'Beskrivelse3', 5,'2022-09-29 21:17:30.23195+02',null, 'prosjekt5-edb2-431f-855a-4368e2bcddd1');
+values(24,'ScriptProsjekt5', 'Beskrivelse3', 5,'2005-09-29 21:17:30.23195',null, 'prosjekt5-edb2-431f-855a-4368e2bcddd1');
 insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(26,'ScriptProsjekt6', 'Beskrivelse3', 6,'2022-09-29 21:17:30.23195+02','2022-09-29 21:17:30.23195+02', 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
+values(26,'ScriptProsjekt6', 'Beskrivelse3', 6,'1998-09-29 21:17:30.23195',null, 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
 
 
 --CODELIST
@@ -26,7 +26,6 @@ insert into Codelist("id",title, description,  ref)
 values(25,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1');
 insert into Codelist("id",title, description,  ref)
 values(27,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist33333db69-edb2-431f-855a-4368e2bcddd1');
-
 
 
 insert into project_codelist(project_id, codelist_id)
@@ -57,9 +56,9 @@ values(1,7);
 
 -- PUBLICATION
 insert into Publication("id",comment, version, date,  ref, deleteddate)
-values(8,'comment1', 'date', 'v11','zzz4db69-edb2-431f-855a-4368e2bcddd1', 'Ikke satt, endre type');
+values(8,'comment1', 2, '2019-10-04T12:27:55.191667','zzz4db69-edb2-431f-855a-4368e2bcddd1', null);
 insert into Publication("id",comment, version, date,  ref, deleteddate)
-values(9,'comment2', 'date2', 'v123','xxx4db69-edb2-431f-855a-4368e2bcddd1', '');
+values(9,'comment2', 4, '2020-10-04T12:27:55.191667','xxx4db69-edb2-431f-855a-4368e2bcddd1', null);
 
 
 insert into project_publication(project_id, publications_id)
@@ -123,8 +122,6 @@ values(28,'code tittel fra script6','code beskrivelse fra script','script6b69-ed
 
 insert into codelist_code(codelist_id, codes_id)
 values(4,17);
-
-
 insert into codelist_code(codelist_id, codes_id)
 values(4,18);
 insert into codelist_code(codelist_id, codes_id)
@@ -139,11 +136,5 @@ values(27,28);
 --CONFIG
 select setval('hibernate_sequence', 100, true);
 
-
--- http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/
-
---
-
---- code url
 
 

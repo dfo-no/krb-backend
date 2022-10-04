@@ -6,6 +6,11 @@ import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Requirement
+import org.kravbank.utils.form.requirement.RequirementForm
+import org.kravbank.utils.form.requirement.RequirementFormUpdate
+import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
+import org.kravbank.utils.mapper.requirement.RequirementMapper
+import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 
 @QuarkusIntegrationTest
 class RequirementResourceTest {
@@ -45,13 +50,16 @@ class RequirementResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val requirement = Requirement ()
+        val requirement = RequirementForm ()
         requirement.title = "Integrasjonstest requirement - tittel 1"
         requirement.description = "Integrasjonstest requirement - beskrivelse 1"
 
+        val requirementMapper = RequirementMapper().toEntity(requirement)
+
+
         RestAssured.given()
             .`when`()
-            .body(requirement)
+            .body(requirementMapper)
             .header("Content-type", "application/json")
             .post("$useProjectRef$useResourceFolder")
             .then()
@@ -65,13 +73,14 @@ class RequirementResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val requirement = Requirement ()
+        val requirement = RequirementFormUpdate ()
         requirement.title = "Oppdatert Integrasjonstest requirement - tittel 1"
         requirement.description = "Oppdatert Integrasjonstest requirement - beskrivelse 1"
+        val requirementMapper = RequirementUpdateMapper().toEntity(requirement)
 
         RestAssured.given()
             .`when`()
-            .body(requirement)
+            .body(requirementMapper)
             .header("Content-type", "application/json")
             .put(fullUrl)
             .then()

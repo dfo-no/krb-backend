@@ -21,9 +21,7 @@ class Project: PanacheEntity() {
     @NotNull
     var title: String = ""
 
-
     var description: String = ""
-
 
     var version: Long  = 0 // //if changed +1 via update form
 
@@ -33,7 +31,7 @@ class Project: PanacheEntity() {
      var ref: String = UUID.randomUUID().toString()
 
     //@NotNull
-     var deletedDate: LocalDateTime? = LocalDateTime.now() //inactive vs. active projs --> if inactive show deleted date?
+     var deletedDate: LocalDateTime? = null //inactive vs. active projs --> if inactive show deleted date?
 
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
     @JsonIgnore

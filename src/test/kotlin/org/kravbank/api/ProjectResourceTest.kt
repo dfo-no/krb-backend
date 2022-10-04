@@ -8,7 +8,9 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Project
 import org.kravbank.utils.form.project.ProjectForm
+import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.utils.mapper.project.ProjectMapper
+import org.kravbank.utils.mapper.project.ProjectUpdateMapper
 import java.time.LocalDateTime
 
 
@@ -41,6 +43,7 @@ class ProjectResourceTest {
         //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
+
     @Test
     fun createProject() {
         RestAssured.defaultParser = Parser.JSON
@@ -70,6 +73,8 @@ class ProjectResourceTest {
         //body(both(startsWith("")).and(not(endsWith("null"))))
     }
 
+
+
     @Test
     fun deleteProjectByRef() {
         given()
@@ -85,13 +90,13 @@ class ProjectResourceTest {
         RestAssured.baseURI = baseUri
         RestAssured.basePath = basePath;
 
-        val project = ProjectForm()
+        val project = ProjectFormUpdate()
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
         project.version = 11
         //project.deletedDate = "sadsfdsa"
 
-        val projectMappedForm = ProjectMapper().toEntity(project)
+        val projectMappedForm = ProjectUpdateMapper().toEntity(project)
 
 
 
@@ -108,4 +113,6 @@ class ProjectResourceTest {
             .then()
             .statusCode(200)
     }
+
+
 }

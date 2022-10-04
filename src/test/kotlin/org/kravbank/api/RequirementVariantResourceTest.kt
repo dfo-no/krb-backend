@@ -5,6 +5,11 @@ import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.RequirementVariant
+import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
+import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
+import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper
 
 @QuarkusIntegrationTest
 class RequirementVariantResourceTest {
@@ -46,7 +51,7 @@ class RequirementVariantResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath
 
-        val rv = RequirementVariant ()
+        val rv = RequirementVariantForm ()
         rv.description = "Integrasjonstest rv desc"
         rv.requirementText = "Integrasjonstest rv reqtext"
         rv.instruction = "Integrasjonstest rv instruction"
@@ -54,9 +59,12 @@ class RequirementVariantResourceTest {
         rv.useSpesification = true
         rv.useQualification = true
 
+        val rVariantMapper = RequirementVariantMapper().toEntity(rv)
+
+
         RestAssured.given()
             .`when`()
-            .body(rv)
+            .body(rVariantMapper)
             .header("Content-type", "application/json")
             .post("$useProjectRef$useRequirementURI$useResourceFolder")
             .then()
@@ -81,7 +89,7 @@ class RequirementVariantResourceTest {
         //RestAssured.port = 8080
         RestAssured.basePath = basePath
 
-        val rv = RequirementVariant ()
+        val rv = RequirementVariantFormUpdate ()
         rv.description = "Integrasjonstest rv desc"
         rv.requirementText = "Integrasjonstest rv reqtext"
         rv.instruction = "Integrasjonstest rv instruction"
@@ -89,9 +97,13 @@ class RequirementVariantResourceTest {
         rv.useSpesification = true
         rv.useQualification = true
 
+        val rVariantMapper = RequirementVariantUpdateMapper().toEntity(rv)
+
+
+
         RestAssured.given()
             .`when`()
-            .body(rv)
+            .body(rVariantMapper)
             .header("Content-type", "application/json")
             .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
             .then()

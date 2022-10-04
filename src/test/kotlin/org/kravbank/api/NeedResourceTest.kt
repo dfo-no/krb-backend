@@ -6,6 +6,9 @@ import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Need
+import org.kravbank.utils.form.need.NeedFormUpdate
+import org.kravbank.utils.mapper.code.CodeUpdateMapper
+import org.kravbank.utils.mapper.need.NeedUpdateMapper
 
 @QuarkusIntegrationTest
 class NeedResourceTest {
@@ -65,13 +68,14 @@ class NeedResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val need = Need ()
+        val need = NeedFormUpdate ()
         need.title = "Oppdatert Integrasjonstest need - tittel 1"
         need.description = "Oppdatert Integrasjonstest need - beskrivelse 1"
 
+        val needMapper = NeedUpdateMapper().toEntity(need)
         RestAssured.given()
             .`when`()
-            .body(need)
+            .body(needMapper)
             .header("Content-type", "application/json")
             .put(fullUrl)
             .then()

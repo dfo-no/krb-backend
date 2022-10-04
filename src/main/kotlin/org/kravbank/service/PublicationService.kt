@@ -5,7 +5,6 @@ import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.utils.mapper.publication.PublicationMapper
-import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.ArrayList
@@ -18,7 +17,7 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
         if (projectService.refExists(projectRef) && refExists(publicationRef)) {
             val project = projectService.getProjectByRefCustomRepo(projectRef)!!
             val publication = project.publications.find { pub -> pub.ref == publicationRef }
-            val publicationMapper = org.kravbank.utils.mapper.publication.PublicationMapper().fromEntity(publication!!)
+            val publicationMapper = PublicationMapper().fromEntity(publication!!)
             return Response.ok(publicationMapper).build()
         } else {
             return Response.status(Response.Status.NOT_FOUND).build()

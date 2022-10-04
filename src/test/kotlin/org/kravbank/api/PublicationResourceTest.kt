@@ -6,6 +6,10 @@ import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Publication
+import org.kravbank.utils.form.publication.PublicationForm
+import org.kravbank.utils.form.publication.PublicationFormUpdate
+import org.kravbank.utils.mapper.publication.PublicationMapper
+import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 
 
 @QuarkusIntegrationTest
@@ -46,13 +50,16 @@ class PublicationResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val publication = Publication ()
+        val publication = PublicationForm ()
         publication.comment = "Integrasjonstest publication - comment 1"
-        publication.deletedDate = "Integrasjonstest publication - del  1"
+        publication.version = 3
+        //publication.deletedDate =
+        val publicationMapper = PublicationMapper().toEntity(publication)
+
 
         RestAssured.given()
             .`when`()
-            .body(publication)
+            .body(publicationMapper)
             .header("Content-type", "application/json")
             .post("$useProjectRef$useResourceFolder")
             .then()
@@ -66,13 +73,16 @@ class PublicationResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val publication = Publication()
-        publication.comment = "Oppdatert integrasjonstest pub - comment 1"
-        publication.deletedDate = "Oppdatert integrasjonstest pub - del 1"
+        val publication = PublicationFormUpdate ()
+        publication.comment = "Oppdatert Integrasjonstest publication - comment 1"
+        publication.version = 2
+       // publication.deletedDate = ""
+        val publicationMapper = PublicationUpdateMapper().toEntity(publication)
+
 
         RestAssured.given()
             .`when`()
-            .body(publication)
+            .body(publicationMapper)
             .header("Content-type", "application/json")
             .put(fullUrl)
             .then()

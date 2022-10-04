@@ -7,6 +7,11 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Product
+import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormUpdate
+import org.kravbank.utils.mapper.need.NeedUpdateMapper
+import org.kravbank.utils.mapper.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductUpdateMapper
 
 @QuarkusIntegrationTest
 class ProductResourceTest {
@@ -42,13 +47,15 @@ class ProductResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val codelist = Codelist()
-        codelist.title = "Integrasjonstest - Tittel 1"
-        codelist.description = "Integrasjonstest - Beskrivelse 1"
+        val product = ProductForm()
+        product.title = "Integrasjonstest - Tittel 1"
+        product.description = "Integrasjonstest - Beskrivelse 1"
+
+        val productMapper = ProductMapper().toEntity(product)
 
         RestAssured.given()
             .`when`()
-            .body(codelist)
+            .body(productMapper)
             .header("Content-type", "application/json")
             .post("$useProjectRef/codelists")
             .then()
@@ -75,13 +82,17 @@ class ProductResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val product = Product()
+        val product = ProductFormUpdate()
         product.title = "Oppdatert integrasjonstest produkt - Tittel 1"
         product.description = "Oppdatert integrasjonstest produkt - Beskrivelse 1"
 
+        val productMapper = ProductUpdateMapper().toEntity(product)
+
+
+
         RestAssured.given()
             .`when`()
-            .body(product)
+            .body(productMapper)
             .header("Content-type", "application/json")
             .put("$useProjectRef/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
