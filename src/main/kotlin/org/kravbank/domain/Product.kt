@@ -2,6 +2,7 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -15,7 +16,7 @@ class Product: PanacheEntity() {
 
     var description: String = ""
 
-    var deletedDate: String = ""
+    var deletedDate: LocalDateTime? = null
 
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
@@ -25,13 +26,9 @@ class Product: PanacheEntity() {
     lateinit var project: Project
 
 
-
     /*
     OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
     var products = mutableListOf<Product>()
      */
 
-    //public String type;
-    //public children
-    //public parent
 }

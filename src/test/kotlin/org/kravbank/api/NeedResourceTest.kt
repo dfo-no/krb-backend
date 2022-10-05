@@ -10,6 +10,7 @@ import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.utils.mapper.code.CodeUpdateMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
 
+@QuarkusTest
 @QuarkusIntegrationTest
 class NeedResourceTest {
     private final val baseUri = "http://localhost:8080"
@@ -92,5 +93,4 @@ class NeedResourceTest {
             .statusCode(204)
         //.body(`is`("Hello RESTEasy"))
     }
-
 }

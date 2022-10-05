@@ -1,16 +1,16 @@
 package org.kravbank.api
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
+import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.RequirementVariant
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
 import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
-import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
 import org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper
 
+@QuarkusTest
 @QuarkusIntegrationTest
 class RequirementVariantResourceTest {
     private final val baseUri = "http://localhost:8080"

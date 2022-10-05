@@ -29,7 +29,4 @@ class Codelist() : PanacheEntity() {
     lateinit var project: Project
 
      */
-
-    // public String type; //code
-    //public parent
 }

@@ -14,7 +14,6 @@ class Code: PanacheEntity() {
      @Column(unique = true)
      var ref: String = UUID.randomUUID().toString()
 
-
      @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE])
      @JsonIgnore
      lateinit var codelist: Codelist

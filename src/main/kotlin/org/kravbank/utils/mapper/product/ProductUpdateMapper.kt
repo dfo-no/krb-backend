@@ -4,14 +4,14 @@ import org.kravbank.domain.Product
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.utils.mapper.Mapper
 
-class ProductUpdateMapper :
-    org.kravbank.utils.mapper.Mapper<ProductFormUpdate, Product> {
+class ProductUpdateMapper: Mapper<ProductFormUpdate, Product> {
 
     // FROM ENTTY
     override fun fromEntity(entity: Product): ProductFormUpdate =
         ProductFormUpdate(
             entity.title,
-            entity.description
+            entity.description,
+            entity.deletedDate
         )
 
     // TO ENTITY
@@ -19,6 +19,7 @@ class ProductUpdateMapper :
         val p = Product()
         p.title = domain.title
         p.description = domain.description
+        p.deletedDate = domain.deletedDate
         return p
     }
 

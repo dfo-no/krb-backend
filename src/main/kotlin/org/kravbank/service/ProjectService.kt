@@ -1,13 +1,13 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Project
+import org.kravbank.exception.project.CustomProjectException
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.response.project.ResponseProject
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.utils.mapper.project.ProjectMapper
 import org.kravbank.utils.mapper.project.ProjectUpdateMapper
-import java.lang.IllegalArgumentException
-import java.net.URI
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 
@@ -18,22 +18,24 @@ class ProjectService(val projectRepository: ProjectRepository) {
             if (refExists(projcetRef)) {
                 val project = getProjectByRefCustomRepo(projcetRef)
                 val mappedProjectToEntity = ProjectMapper().fromEntity(project!!)
-                Response.ok(mappedProjectToEntity).build()
+
+               //Response.ok(mappedProjectToEntity).build()
+               ResponseProject().ok(mappedProjectToEntity)
             } else {
-                Response.status(Response.Status.NOT_FOUND).build()
+                ResponseProject().not_found()
             }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("GET one project failed")
+        }catch (e : CustomProjectException){
+           throw CustomProjectException("GET one project failed. Message: $e")
         }
     }
 
     fun listProjectsFromService(): Response {
-        try {
+       return try {
             val projectFormList = ArrayList<ProjectForm>()
             for (p in listProjects()) projectFormList.add(ProjectMapper().fromEntity(p))
-            return Response.ok(projectFormList).build()
-        } catch (e: Exception) {
-            throw IllegalArgumentException("GET all projects failed")
+            ResponseProject().ok_list(projectFormList)
+        } catch (e: CustomProjectException) {
+            throw CustomProjectException("GET all projects failed. Message: $e")
         }
     }
 
@@ -42,12 +44,15 @@ class ProjectService(val projectRepository: ProjectRepository) {
             val mappedProjectToEntity = ProjectMapper().toEntity(newProject)
             createProject(mappedProjectToEntity)
             return if (mappedProjectToEntity.isPersistent) {
-                Response.created(URI.create("/projects" + newProject.ref)).build();
+
+                ResponseProject().create_ok("/projects" + newProject.ref)
+                //Response.created(URI.create("/projects" + newProject.ref)).build();
             } else {
-                Response.status(Response.Status.BAD_REQUEST).build()
+                ResponseProject().bad_req()
+                //Response.status(Response.Status.BAD_REQUEST).build()
             }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("POST project failed")
+        } catch (e: CustomProjectException) {
+            throw CustomProjectException("POST project failed. Message: $e")
         }
     }
 
@@ -57,13 +62,15 @@ class ProjectService(val projectRepository: ProjectRepository) {
                 val project = getProjectByRefCustomRepo(projcetRef)
                 val deleted = deleteProject(project!!.id)
                 if (deleted) {
-                    Response.noContent().build()
-                } else Response.status(Response.Status.BAD_REQUEST).build()
+                    ResponseProject().delete_ok()
+                } else ResponseProject().bad_req()
+                    //Response.status(Response.Status.BAD_REQUEST).build()
             } else {
-                Response.status(Response.Status.NOT_FOUND).build()
+                ResponseProject().not_found()
+                //Response.status(Response.Status.NOT_FOUND).build()
             }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Delete project FAILED. Message: $e")
+        } catch (e: CustomProjectException) {
+            throw CustomProjectException("Delete project failed. Message: $e")
         }
     }
 
@@ -73,12 +80,15 @@ class ProjectService(val projectRepository: ProjectRepository) {
                 val projectMapper = ProjectUpdateMapper().toEntity(project)
                 val foundProject = getProjectByRefCustomRepo(projcetRef)
                 updateProject(foundProject!!.id, projectMapper)
-                Response.ok(project).build()
+                ResponseProject().ok_update(project)
+
+            // Response.ok(project).build()
             } else {
-                return Response.status(Response.Status.NOT_FOUND).build()
+                ResponseProject().not_found()
+                //return Response.status(Response.Status.NOT_FOUND).build()
             }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Delete project failed")
+        } catch (e: CustomProjectException) {
+            throw CustomProjectException("Delete project failed. Message:  $e")
         }
     }
 

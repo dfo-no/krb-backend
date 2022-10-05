@@ -6,15 +6,12 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Codelist
 import org.kravbank.utils.form.codelist.CodelistForm
 import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
-import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
-import java.awt.PageAttributes.MediaType
-import javax.print.attribute.standard.MediaTray
 
+@QuarkusTest
 @QuarkusIntegrationTest
 internal class CodelistResourceTest() {
     val baseUri = "http://localhost:8080"
@@ -75,6 +72,7 @@ internal class CodelistResourceTest() {
 
         //.body(`is`("Hello RESTEasy"))
     }
+
 
     @Test
     fun updateCodelist() {

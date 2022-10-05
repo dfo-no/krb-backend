@@ -6,22 +6,19 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Project
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.utils.mapper.project.ProjectMapper
 import org.kravbank.utils.mapper.project.ProjectUpdateMapper
-import java.time.LocalDateTime
 
 
+@QuarkusTest
 @QuarkusIntegrationTest
 class ProjectResourceTest {
 
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
     val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
-
 
 
     @Test
@@ -42,7 +39,6 @@ class ProjectResourceTest {
             .statusCode(200)
         //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
-
 
     @Test
     fun createProject() {

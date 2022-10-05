@@ -23,6 +23,4 @@ class Requirement: PanacheEntity() {
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
 
-//    lateinit var tags = arrayOf(String)
-
 }
