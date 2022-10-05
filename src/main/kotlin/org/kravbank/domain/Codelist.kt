@@ -24,10 +24,11 @@ class Codelist() : PanacheEntity() {
     @JsonIgnore
     var configs = mutableListOf<Config>()
 
-    @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE])
+    /*@ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE])
     @JsonIgnore
     lateinit var project: Project
 
+     */
 
     // public String type; //code
     //public parent

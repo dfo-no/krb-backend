@@ -4,8 +4,7 @@ import org.kravbank.domain.Project
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.mapper.Mapper
 
-class ProjectMapper :
-    org.kravbank.utils.mapper.Mapper<ProjectForm, Project> {
+class ProjectMapper: Mapper<ProjectForm, Project> {
 
     // FROM ENTITY
     override fun fromEntity(entity: Project): ProjectForm =
@@ -29,7 +28,4 @@ class ProjectMapper :
         p.deletedDate = domain.deletedDate
         return p
     }
-
-
-
 }

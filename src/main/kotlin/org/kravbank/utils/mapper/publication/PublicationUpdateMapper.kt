@@ -12,6 +12,7 @@ class PublicationUpdateMapper :
         PublicationFormUpdate(
             //entity.ref,
             entity.comment,
+            entity.version,
             entity.deletedDate
         )
 
@@ -19,6 +20,7 @@ class PublicationUpdateMapper :
     override fun toEntity(domain: PublicationFormUpdate): Publication {
         val p = Publication()
         p.comment = domain.comment
+        p.version = domain.version
         p.deletedDate = domain.deletedDate
         return p
     }

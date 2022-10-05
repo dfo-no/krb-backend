@@ -7,11 +7,16 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
+import org.kravbank.utils.form.codelist.CodelistForm
+import org.kravbank.utils.form.codelist.CodelistFormUpdate
+import org.kravbank.utils.mapper.codelist.CodelistMapper
+import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
+import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.awt.PageAttributes.MediaType
 import javax.print.attribute.standard.MediaTray
 
 @QuarkusIntegrationTest
-class CodelistResourceTest() {
+internal class CodelistResourceTest() {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
     val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
@@ -45,13 +50,15 @@ class CodelistResourceTest() {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val codelist = Codelist()
-        codelist.title = "Integrasjonstest - Tittel 1"
-        codelist.description = "Integrasjonstest - Beskrivelse 1"
+        val codelist = CodelistForm()
+        codelist.title = "CODELIST Integrasjonstest - Tittel 1"
+        codelist.description = "CODELIST Integrasjonstest - Beskrivelse 1"
+
+        val codelistMapper = CodelistMapper().toEntity(codelist)
 
         given()
             .`when`()
-            .body(codelist)
+            .body(codelistMapper)
             .header("Content-type", "application/json")
             .post("$useProjectRef/codelists")
             .then()
@@ -65,6 +72,7 @@ class CodelistResourceTest() {
             .delete("http://localhost:8080/api/v1/projects/prosjekt5-edb2-431f-855a-4368e2bcddd1/codelists/newlist2222db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(204)
+
         //.body(`is`("Hello RESTEasy"))
     }
 
@@ -77,13 +85,14 @@ class CodelistResourceTest() {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val codelist = Codelist()
-        codelist.title = "Oppdatert integrasjonstest - Tittel 1"
-        codelist.description = "Oppdatert integrasjonstest - Beskrivelse 1"
+        val codelist = CodelistFormUpdate()
+        codelist.title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
+        codelist.description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
+        val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
 
         given()
             .`when`()
-            .body(codelist)
+            .body(codelistMapper)
             .header("Content-type", "application/json")
             .put("$useProjectRef/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
