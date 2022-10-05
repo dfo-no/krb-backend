@@ -12,6 +12,8 @@ import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 
+
+@QuarkusTest
 @QuarkusIntegrationTest
 class RequirementResourceTest {
     private final val baseUri = "http://localhost:8080"

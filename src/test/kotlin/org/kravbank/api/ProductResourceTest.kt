@@ -5,14 +5,12 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Codelist
-import org.kravbank.domain.Product
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
-import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
 
+@QuarkusTest
 @QuarkusIntegrationTest
 class ProductResourceTest {
     val baseUri = "http://localhost:8080"
@@ -37,7 +35,6 @@ class ProductResourceTest {
             .then()
             .statusCode(200)
         //.body(, equalTo("Integrasjonstest prosjektittel"))
-
     }
 
     @Test
@@ -76,7 +73,6 @@ class ProductResourceTest {
     @Test
     fun updateProduct() {
 
-        //val ut = given().put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1").statusCode()
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;
@@ -87,8 +83,6 @@ class ProductResourceTest {
         product.description = "Oppdatert integrasjonstest produkt - Beskrivelse 1"
 
         val productMapper = ProductUpdateMapper().toEntity(product)
-
-
 
         RestAssured.given()
             .`when`()

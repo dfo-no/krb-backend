@@ -5,13 +5,13 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Publication
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 
 
+@QuarkusTest
 @QuarkusIntegrationTest
 class PublicationResourceTest {
     private final val baseUri = "http://localhost:8080"
@@ -40,7 +40,6 @@ class PublicationResourceTest {
             .then()
             .statusCode(200)
         //.body(, equalTo("Integrasjonstest prosjektittel"))
-
     }
 
     @Test
@@ -55,7 +54,6 @@ class PublicationResourceTest {
         publication.version = 3
         //publication.deletedDate =
         val publicationMapper = PublicationMapper().toEntity(publication)
-
 
         RestAssured.given()
             .`when`()
@@ -79,7 +77,6 @@ class PublicationResourceTest {
        // publication.deletedDate = ""
         val publicationMapper = PublicationUpdateMapper().toEntity(publication)
 
-
         RestAssured.given()
             .`when`()
             .body(publicationMapper)
@@ -88,7 +85,6 @@ class PublicationResourceTest {
             .then()
             .statusCode(200) //envt 200
     }
-
 
     @Test
     fun deletePublication() {
@@ -99,5 +95,4 @@ class PublicationResourceTest {
             .statusCode(204)
         //.body(`is`("Hello RESTEasy"))
     }
-
 }

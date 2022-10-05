@@ -22,7 +22,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\":\"Oppdatert\",\r\n    \"description\": \"Ny oppdatert beskrivelse\"\r\n}\r\n\r\n\r\n\r\n    \r\n",
+											"raw": "{\r\n    \"title\":\"Oppdatert\",\r\n    \"description\": \"Ny oppdatert beskrivelse\",\r\n    \"version\": \"11\"\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -30,7 +30,7 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1",
+											"raw": "localhost:8080/api/v1/projects/prosjekt6-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
@@ -39,7 +39,7 @@
 												"api",
 												"v1",
 												"projects",
-												"bbb4db69-edb2-431f-855a-4368e2bcddd1"
+												"prosjekt6-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -79,7 +79,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\": \"En tittel fra postman pat\",\r\n    \"description\": \"En beskrivelse fra postman pat\",\r\n    \"version\":1,\r\n    \"publishedDate\":\"21-02-91\",\r\n    \"deletedDate\":\"slettet dato \"\r\n}\r\n",
+											"raw": "{\r\n    \"title\": \"En tittel fra postman pat\",\r\n    \"description\": \"En beskrivelse fra postman pat\",\r\n    \"version\":5\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -186,7 +186,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"comment\": \"Dette er ENDA annen kommentar\",\r\n    \"deletedDate\":\"dette skal være delete dato felt\"\r\n}",
+											"raw": "{\r\n    \"comment\": \"Ny\",\r\n    \"version\" : 15,\r\n    \"deletedDate\": \"\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -363,14 +363,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/needs/2",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need2b69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"needs",
-												"2"
+												"need2b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -382,13 +386,18 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/needs",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"needs"
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
+												"needs",
+												""
 											]
 										}
 									},
@@ -401,7 +410,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\":\"Et behov med requirements\",\r\n    \"description\":\"behovets beskrivelse\",\r\n    \"requirements\": [{\"id\":7}]\r\n}\r\n",
+											"raw": "{\r\n    \"title\":\"need title here\",\r\n    \"description\":\"need description\"\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -409,12 +418,16 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/needs/",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"needs",
 												""
 											]
@@ -488,14 +501,18 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/needs/2",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need2b69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"needs",
-												"2"
+												"need2b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -512,13 +529,47 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/codes",
+											"raw": "http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"codes"
+												"api",
+												"v1",
+												"projects",
+												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"qqq4db69-edb2-431f-855a-4368e2bcddd1",
+												"codes",
+												"script1b69-edb2-431f-855a-4368e2bcddd1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get all codes Copy",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/script4b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt4-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"newlist14db69-edb2-431f-855a-4368e2bcddd1",
+												"codes",
+												"script4b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -530,14 +581,47 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/codes/2",
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/script4b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt4-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"newlist14db69-edb2-431f-855a-4368e2bcddd1",
 												"codes",
-												"2"
+												"script4b69-edb2-431f-855a-4368e2bcddd1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get one code Copy",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt6-edb2-431f-855a-4368e2bcddd1/codelists/newlist33333db69-edb2-431f-855a-4368e2bcddd1/codes/script6b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt6-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"newlist33333db69-edb2-431f-855a-4368e2bcddd1",
+												"codes",
+												"script6b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -558,14 +642,55 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/codes/",
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes",
+											"protocol": "http",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt4-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"newlist14db69-edb2-431f-855a-4368e2bcddd1",
+												"codes"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update code",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\":\"oppdatert kode\",\r\n    \"description\":\"oppdatert beskrivelse\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/script4b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt4-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"newlist14db69-edb2-431f-855a-4368e2bcddd1",
 												"codes",
-												""
+												"script4b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -605,14 +730,21 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/codes/1",
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt6-edb2-431f-855a-4368e2bcddd1/codelists/newlist33333db69-edb2-431f-855a-4368e2bcddd1/codes/script6b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt6-edb2-431f-855a-4368e2bcddd1",
+												"codelists",
+												"newlist33333db69-edb2-431f-855a-4368e2bcddd1",
 												"codes",
-												"1"
+												"script6b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -629,7 +761,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1",
+											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
@@ -640,7 +772,7 @@
 												"projects",
 												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
 												"codelists",
-												"qqq4db69-edb2-431f-855a-4368e2bcddd1"
+												"asd4db69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -652,7 +784,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/",
+											"raw": "localhost:8080/api/v1/projects/prosjekt5-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
@@ -661,9 +793,33 @@
 												"api",
 												"v1",
 												"projects",
-												"bbb4db69-edb2-431f-855a-4368e2bcddd1",
+												"prosjekt5-edb2-431f-855a-4368e2bcddd1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get all codelists Copy",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/script4b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"prosjekt4-edb2-431f-855a-4368e2bcddd1",
 												"codelists",
-												""
+												"newlist14db69-edb2-431f-855a-4368e2bcddd1",
+												"codes",
+												"script4b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -676,7 +832,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\":\"ny\",\r\n    \"description\":\"kodeliste beskrivelse\"\r\n}\r\n",
+											"raw": "{\r\n    \"title\":\"ny kodeliste\",\r\n    \"description\":\"kodeliste beskrivelse\"\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -992,11 +1148,11 @@
 								{
 									"name": "update requirement",
 									"request": {
-										"method": "POST",
+										"method": "PUT",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"title\": \"Ny postman pat req tittel \",\r\n    \"description\": \"Ny postman pat req beskrivelse\"\r\n}",
+											"raw": "{\r\n    \"title\": \"Oppdatert  postman pat req tittel \",\r\n    \"description\": \"oppdatert postman pat req beskrivelse\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1027,12 +1183,16 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/requirements/",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"requirements",
 												""
 											]
@@ -1089,14 +1249,18 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "localhost:8080/requirements/1",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"requirements",
-												"1"
+												"reqd2b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},
@@ -1108,13 +1272,13 @@
 							"name": "requirementVariants",
 							"item": [
 								{
-									"name": "create requirementvariant",
+									"name": "create variant",
 									"request": {
 										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"description\": \"Beskrivelse av requirementvariant med ett product\",\r\n    \"requirementText\":\"requirement tekst\",\r\n    \"instruction\":\"gjør x\",\r\n    \"useProduct\":true,\r\n    \"useSpesification\":true,\r\n    \"useQualification\": true,\r\n    \"products\": [{\"id\":4}],\r\n    \"configs\":[]\r\n}",
+											"raw": "{\r\n    \"description\": \"postman pat - Beskrivelse av requirementvariant med ett product\",\r\n    \"requirementText\":\"postman pat requirement tekst\",\r\n    \"instruction\":\"postman pat instruksjon gjør x\",\r\n    \"useProduct\":true,\r\n    \"useSpesification\":true,\r\n    \"useQualification\": true\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1122,72 +1286,129 @@
 											}
 										},
 										"url": {
-											"raw": "localhost:8080/requirementvariants/",
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
-												"requirementvariants",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "get all requirementvariants",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "localhost:8080/requirementvariants/",
-											"host": [
-												"localhost"
-											],
-											"port": "8080",
-											"path": [
-												"requirementvariants",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "get one requirement",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "localhost:8080/requirements/6",
-											"host": [
-												"localhost"
-											],
-											"port": "8080",
-											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"requirements",
-												"6"
+												"req1b69-edb2-431f-855a-4368e2bcddd1",
+												"requirementvariants"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "get requirements by needId",
+									"name": "update variant",
 									"request": {
-										"method": "GET",
+										"method": "PUT",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"description\": \"update postman pat - Beskrivelse av requirementvariant med ett product\",\r\n    \"requirementText\":\"update postman pat requirement tekst\",\r\n    \"instruction\":\"update postman pat instruksjon gjør x\",\r\n    \"useProduct\":false,\r\n    \"useSpesification\":false,\r\n    \"useQualification\": false\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": {
-											"raw": "localhost:8080/requirements/requirement/unikNeedId kanskje uid",
+											"raw": "http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv3b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
 											"host": [
 												"localhost"
 											],
 											"port": "8080",
 											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
 												"requirements",
-												"requirement",
-												"unikNeedId kanskje uid"
+												"req1b69-edb2-431f-855a-4368e2bcddd1",
+												"requirementvariants",
+												"rvrv3b69-edb2-431f-855a-4368e2bcddd1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all variants",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
+												"requirements",
+												"req1b69-edb2-431f-855a-4368e2bcddd1",
+												"requirementvariants"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get variant",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv3b69-edb2-431f-855a-4368e2bcddd1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
+												"requirements",
+												"req1b69-edb2-431f-855a-4368e2bcddd1",
+												"requirementvariants",
+												"rvrv3b69-edb2-431f-855a-4368e2bcddd1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete variant",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv1b69-edb2-431f-855a-4368e2bcddd1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"projects",
+												"aaa4db69-edb2-431f-855a-4368e2bcddd1",
+												"requirements",
+												"req1b69-edb2-431f-855a-4368e2bcddd1",
+												"requirementvariants",
+												"rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 											]
 										}
 									},

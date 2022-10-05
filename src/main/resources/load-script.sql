@@ -41,11 +41,11 @@ values(26,27);
 
 -- PRODUCT
 insert into Product("id",title, description,  ref, deleteddate)
-values(5,'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', '00-00-00');
+values(5,'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', null);
 insert into Product("id",title, description,  ref, deleteddate)
-values(6,'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', '01-02-03');
+values(6,'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', null);
 insert into Product("id",title, description,  ref, deleteddate)
-values(7,'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', '01-02-03');
+values(7,'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', null);
 
 insert into project_product(project_id, products_id)
 values(3,5);
@@ -59,7 +59,6 @@ insert into Publication("id",comment, version, date,  ref, deleteddate)
 values(8,'comment1', 2, '2019-10-04T12:27:55.191667','zzz4db69-edb2-431f-855a-4368e2bcddd1', null);
 insert into Publication("id",comment, version, date,  ref, deleteddate)
 values(9,'comment2', 4, '2020-10-04T12:27:55.191667','xxx4db69-edb2-431f-855a-4368e2bcddd1', null);
-
 
 insert into project_publication(project_id, publications_id)
 values(3,8);
