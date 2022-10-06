@@ -1,5 +1,6 @@
 package org.kravbank.utils.form.product
 
+import org.kravbank.domain.Product
 import java.time.LocalDateTime
 
 

@@ -5,6 +5,7 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
+import org.kravbank.domain.Codelist
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.utils.mapper.product.ProductMapper
@@ -45,8 +46,8 @@ class ProductResourceTest {
         RestAssured.basePath = basePath;
 
         val product = ProductForm()
-        product.title = "Integrasjonstest - Tittel 1"
-        product.description = "Integrasjonstest - Beskrivelse 1"
+        product.title = "PRODUCT Integrasjonstest - Tittel 1"
+        product.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
 
         val productMapper = ProductMapper().toEntity(product)
 
@@ -54,11 +55,10 @@ class ProductResourceTest {
             .`when`()
             .body(productMapper)
             .header("Content-type", "application/json")
-            .post("$useProjectRef/codelists")
+            .post("$useProjectRef/products")
             .then()
             .statusCode(201) //envt 200
     }
-
 
     @Test
     fun deleteProdudctById() {

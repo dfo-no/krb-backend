@@ -1,17 +1,18 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
 @Entity
-class Product: PanacheEntity() {
+class Product : PanacheEntity() {
 
     //@Id
     //@GeneratedValue
+   // @Column(name = "product_id")
     //var id: Long? = null;
+
     var title: String = ""
 
     var description: String = ""
@@ -21,9 +22,18 @@ class Product: PanacheEntity() {
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
 
-    @ManyToOne
-    @JsonIgnore
-    lateinit var project: Project
+    @ManyToOne(
+        cascade = [CascadeType.ALL],
+        //optional = false
+        //fetch = FetchType.LAZY
+    )
+    //@JsonIgnore
+    //@JoinColumn(name = "project_id", foreignKey = ForeignKey(name = "project_id_fk"))
+    var project: Project? = null
+
+
+
+   // var session: Session? = null
 
 
     /*

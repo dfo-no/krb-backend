@@ -30,7 +30,7 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     //LIST PRODUCTS
     @GET
     fun listProducts(@PathParam("projectRef") projectRef: String): Response =
-        productService.listProductsFromService(projectRef)
+        productService.list(projectRef)
 
     //CREATE PRODUCT
     @Transactional

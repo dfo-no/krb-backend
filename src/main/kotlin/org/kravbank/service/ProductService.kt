@@ -1,9 +1,13 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Product
+import org.kravbank.domain.Project
+import org.kravbank.exception.BackendException
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
+import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.mapper.product.ProductMapper
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.util.*
@@ -11,25 +15,17 @@ import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 
 @ApplicationScoped
-class ProductService(val productRepository: ProductRepository, val projectService: ProjectService) {
-    fun listProducts(): List<Product> = productRepository.listAll()
+class ProductService(val productRepository: ProductRepository, val projectService: ProjectService, val projectRepository: ProjectRepository)  {
 
-    fun listProductsFromService(projectRef: String): Response {
-        return try {
-            if (projectService.refExists(projectRef)) {
+    @Throws(BackendException::class)
+    fun list(projectRef: String): Response  {
                 //list proudcts by project ref
-                val projectProductList = projectService.getProjectByRefCustomRepo(projectRef)!!.products
+                val foundProjectProducts = projectRepository.findByRef(projectRef).products
                 //convert to array of form
                 val productsFormList = ArrayList<ProductForm>()
-                for (p in projectProductList) productsFormList.add(org.kravbank.utils.mapper.product.ProductMapper().fromEntity(p))
+                for (p in foundProjectProducts) productsFormList.add(ProductMapper().fromEntity(p))
                 //returns the custom product form
-                Response.ok(productsFormList).build()
-            } else {
-                Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("GET list of products failed")
-        }
+              return  Response.ok(productsFormList).build()
     }
 
     fun getProduct(id: Long): Optional<Product>? = productRepository.findByIdOptional(id)
@@ -56,11 +52,14 @@ class ProductService(val productRepository: ProductRepository, val projectServic
     fun createProductFromService(projectRef: String, product: ProductForm): Response {
         //adds a product to relevant project
         try {
-            val productMapper = org.kravbank.utils.mapper.product.ProductMapper().toEntity(product)
+
+            val productMapper = ProductMapper().toEntity(product)
             if (projectService.refExists(projectRef)) {
+                productRepository.persistAndFlush(productMapper)
                 val project = projectService.getProjectByRefCustomRepo(projectRef)!!
                 project.products.add(productMapper)
                 projectService.updateProject(project.id, project)
+
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build()
             }
