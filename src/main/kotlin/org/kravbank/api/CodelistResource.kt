@@ -20,20 +20,20 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelisRef: String
     ): Response =
-        codelistService.getCodelistByRefFromService(projectRef, codelisRef)
+        codelistService.get(projectRef, codelisRef)
 
     //GET ALL CODELISTS
     @GET
     fun listCodelists(@PathParam("projectRef") projectRef: String
     ): Response =
-        codelistService.listCodelistFromService(projectRef)
+        codelistService.list(projectRef)
 
     //CREATE CODELIST
     @Transactional
     @POST
     fun createCodelist(@PathParam("projectRef") projectRef: String, codelist: CodelistForm
     ): Response =
-        codelistService.createCodelistFromService(projectRef, codelist)
+        codelistService.create(projectRef, codelist)
 
     //DELETE CODELIST
     @DELETE
@@ -42,7 +42,7 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
     fun deleteCodelistById(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String
-    ): Response = codelistService.deleteCodelistFromService(projectRef, codelistRef)
+    ): Response = codelistService.delete(projectRef, codelistRef)
 
     //UPDATE CODELIST
     @PUT
@@ -52,5 +52,5 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         updateCodelist: CodelistFormUpdate
-    ): Response = codelistService.updateCodelistFromService(projectRef, codelistRef, updateCodelist)
+    ): Response = codelistService.update(projectRef, codelistRef, updateCodelist)
 }
