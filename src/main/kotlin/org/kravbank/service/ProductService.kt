@@ -52,7 +52,7 @@ class ProductService(
             return Response.created(URI.create("/api/v1/projects/$projectRef/products" + product.ref)).build()
         else throw BadRequestException("Bad request! Did not create product")
     }
-
+    @Throws(BackendException::class)
     fun delete(projectRef: String, productRef: String): Response {
         val foundProduct = projectRepository.findByRef(projectRef).products.find { products ->
             products.ref == productRef
@@ -63,6 +63,7 @@ class ProductService(
         return Response.noContent().build()
     }
 
+    @Throws(BackendException::class)
     fun update(projectRef: String, productRef: String, product: ProductFormUpdate): Response {
         val foundProduct = projectRepository.findByRef(projectRef).products.find { products ->
             products.ref == productRef
