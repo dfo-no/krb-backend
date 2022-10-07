@@ -47,11 +47,6 @@ class ProjectService(val projectRepository: ProjectRepository) {
         projectRepository.updateProject(projcetRef, projectMapper)
         return Response.ok(project).build()
     }
-
-    fun getProjectByRefCustomRepo(ref: String): Project? = projectRepository.findByRef(ref)
-
-    fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
-
     fun refExists(ref: String): Boolean = projectRepository.count("ref", ref) == 1L
 
     fun updateProject(id: Long, project: Project) {

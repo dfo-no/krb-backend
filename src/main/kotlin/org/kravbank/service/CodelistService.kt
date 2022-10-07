@@ -17,7 +17,11 @@ import kotlin.collections.ArrayList
 
 
 @ApplicationScoped
-class CodelistService(val codelistRepository: CodelistRepository, val projectService: ProjectService, val projectRepository: ProjectRepository) {
+class CodelistService(
+    val codelistRepository: CodelistRepository,
+    val projectService: ProjectService,
+    val projectRepository: ProjectRepository
+) {
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
         //list codelist by project ref
@@ -52,14 +56,16 @@ class CodelistService(val codelistRepository: CodelistRepository, val projectSer
     }
 
     @Throws(BackendException::class)
-                fun delete(projectRef: String, codelistRef: String): Response {
-                    val foundCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist ->
-                        codelist.ref == codelistRef
-                    }
-                    Optional.ofNullable(foundCodelist)
-                        .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
-        foundCodelist!!.delete()
-        return Response.noContent().build()
+    fun delete(projectRef: String, codelistRef: String): Response {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundCodelist = foundProject.codelist.find { codelist -> codelist.ref == codelistRef }
+        Optional.ofNullable(foundCodelist)
+            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
+        val deleted = foundProject.codelist.remove(foundCodelist)
+        if (deleted) {
+            projectService.updateProject(foundProject.id, foundProject)
+            return Response.noContent().build()
+        } else throw BadRequestException("Bad request! codelist not deleted")
     }
 
     @Throws(BackendException::class)

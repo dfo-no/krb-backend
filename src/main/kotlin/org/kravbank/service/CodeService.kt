@@ -20,11 +20,12 @@ class CodeService(
     val projectService: ProjectService,
     val codelistService: CodelistService,
     val projectRepository: ProjectRepository
-)  {
+) {
     @Throws(BackendException::class)
     fun list(projectRef: String, codelistRef: String): Response {
         //list codes by codelist ref
-        val foundProjectCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist -> codelist.ref == codelistRef }
+        val foundProjectCodelist =
+            projectRepository.findByRef(projectRef).codelist.find { codelist -> codelist.ref == codelistRef }
         Optional.ofNullable(foundProjectCodelist)
             .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
         val codes = foundProjectCodelist!!.codes
@@ -37,7 +38,8 @@ class CodeService(
 
     @Throws(BackendException::class)
     fun get(projectRef: String, codelistRef: String, codeRef: String): Response {
-        val foundProjectCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist -> codelist.ref == codelistRef }
+        val foundProjectCodelist =
+            projectRepository.findByRef(projectRef).codelist.find { codelist -> codelist.ref == codelistRef }
         Optional.ofNullable(foundProjectCodelist)
             .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
         val foundCodelistCode = foundProjectCodelist!!.codes.find { code -> code.ref == codeRef }
@@ -52,34 +54,42 @@ class CodeService(
         val codeMapper = CodeMapper().toEntity(code)
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = foundProject.codelist.find { codelist -> codelist.ref == codelistRef }!!
-        Optional.ofNullable(foundCodelist).orElseThrow{ NotFoundException("Did not find codelist by ref $codelistRef in project by ref $projectRef") }
+        Optional.ofNullable(foundCodelist)
+            .orElseThrow { NotFoundException("Did not find codelist by ref $codelistRef in project by ref $projectRef") }
         val added = foundCodelist.codes.add(codeMapper)
         if (added) {
             projectService.updateProject(foundCodelist.id, foundProject)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref)).build()
+            return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref))
+                .build()
         } else throw BadRequestException("Bad request! Did not create code")
     }
+
     @Throws(BackendException::class)
     fun delete(projectRef: String, codelistRef: String, codeRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = foundProject.codelist.find { codelist -> codelist.ref == codelistRef }!!
-        Optional.ofNullable(foundCodelist).orElseThrow{ NotFoundException("Did not find codelist by ref $codelistRef in project by ref $projectRef") }
+        Optional.ofNullable(foundCodelist)
+            .orElseThrow { NotFoundException("Did not find codelist by ref $codelistRef in project by ref $projectRef") }
         val foundCode = foundCodelist.codes.find { code -> code.ref == codeRef }!!
-        Optional.ofNullable(foundCode).orElseThrow{ NotFoundException("Did not find code by ref $codeRef in codelist by ref $codelistRef") }
+        Optional.ofNullable(foundCode)
+            .orElseThrow { NotFoundException("Did not find code by ref $codeRef in codelist by ref $codelistRef") }
         val deleted = foundCodelist.codes.remove(foundCode)
-        if (deleted){
+        if (deleted) {
             projectService.updateProject(foundProject.id, foundProject)
             Response.noContent().build()
             return Response.noContent().build()
         } else throw NotFoundException("Bad request! Code not deleted")
     }
+
     @Throws(BackendException::class)
     fun update(projectRef: String, codelistRef: String, codeRef: String, code: CodeFormUpdate): Response {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = foundProject.codelist.find { codelist -> codelist.ref == codelistRef }!!
-        Optional.ofNullable(foundCodelist).orElseThrow{ NotFoundException("Did not find codelist by ref $codelistRef in project by ref $projectRef") }
+        Optional.ofNullable(foundCodelist)
+            .orElseThrow { NotFoundException("Did not find codelist by ref $codelistRef in project by ref $projectRef") }
         val foundCode = foundCodelist.codes.find { code -> code.ref == codeRef }!!
-        Optional.ofNullable(foundCode).orElseThrow{ NotFoundException("Did not find code by ref $codeRef in codelist by ref $codelistRef") }
+        Optional.ofNullable(foundCode)
+            .orElseThrow { NotFoundException("Did not find code by ref $codeRef in codelist by ref $codelistRef") }
         val codeMapper = CodeUpdateMapper().toEntity(code)
         codeRepository.update(
             "title = ?1, description = ?2 where id= ?3",

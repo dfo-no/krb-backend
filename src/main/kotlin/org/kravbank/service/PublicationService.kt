@@ -15,7 +15,11 @@ import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 
 @ApplicationScoped
-class PublicationService(val publicationRepository: PublicationRepository, val projectService: ProjectService, val projectRepository: ProjectRepository) {
+class PublicationService(
+    val publicationRepository: PublicationRepository,
+    val projectService: ProjectService,
+    val projectRepository: ProjectRepository
+) {
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
         //list publication by project ref
@@ -26,6 +30,7 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
         //returns the custom publication form
         return Response.ok(publicationList).build()
     }
+
     @Throws(BackendException::class)
     fun get(projectRef: String, publicationRef: String): Response {
         val foundProjectPublication = projectRepository.findByRef(projectRef).publications.find { publication ->
@@ -50,13 +55,15 @@ class PublicationService(val publicationRepository: PublicationRepository, val p
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Response {
-        val foundPublications = projectRepository.findByRef(projectRef).publications.find { publication ->
-            publication.ref == publicationRef
-        }
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundPublications = foundProject.publications.find { publication -> publication.ref == publicationRef }
         Optional.ofNullable(foundPublications)
             .orElseThrow { NotFoundException("Publications not found by ref $publicationRef in project by ref $projectRef") }
-        foundPublications!!.delete()
-        return Response.noContent().build()
+        val deleted = foundProject.publications.remove(foundPublications)
+        if (deleted) {
+            projectService.updateProject(foundProject.id, foundProject)
+            return Response.noContent().build()
+        } else throw BadRequestException("Bad request! Publication not deleted")
     }
 
     @Throws(BackendException::class)

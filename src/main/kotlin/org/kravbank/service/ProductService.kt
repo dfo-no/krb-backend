@@ -52,15 +52,18 @@ class ProductService(
             return Response.created(URI.create("/api/v1/projects/$projectRef/products" + product.ref)).build()
         else throw BadRequestException("Bad request! Did not create product")
     }
+
     @Throws(BackendException::class)
     fun delete(projectRef: String, productRef: String): Response {
-        val foundProduct = projectRepository.findByRef(projectRef).products.find { products ->
-            products.ref == productRef
-        }
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundProduct = foundProject.products.find { products -> products.ref == productRef }
         Optional.ofNullable(foundProduct)
             .orElseThrow { NotFoundException("Product not found by ref $productRef in project by ref $projectRef") }
-        foundProduct!!.delete()
-        return Response.noContent().build()
+        val deleted = foundProject.products.remove(foundProduct)
+        if (deleted) {
+            projectService.updateProject(foundProject.id, foundProject)
+            return Response.noContent().build()
+        } else throw BadRequestException("Bad request! Product not deleted")
     }
 
     @Throws(BackendException::class)

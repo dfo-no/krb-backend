@@ -53,15 +53,18 @@ class NeedService(
             return Response.created(URI.create("/api/v1/projects/$projectRef/needs" + need.ref)).build()
         else throw BadRequestException("Bad request! Did not create need")
     }
+
     @Throws(BackendException::class)
     fun delete(projectRef: String, needRef: String): Response {
-        val foundNeed = projectRepository.findByRef(projectRef).needs.find { needs ->
-            needs.ref == needRef
-        }
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundNeed = foundProject.needs.find { needs -> needs.ref == needRef }
         Optional.ofNullable(foundNeed)
             .orElseThrow { NotFoundException("Need not found by ref $needRef in project by ref $projectRef") }
-        foundNeed!!.delete()
-        return Response.noContent().build()
+        val deleted = foundProject.needs.remove(foundNeed)
+        if (deleted) {
+            projectService.updateProject(foundProject.id, foundProject)
+            return Response.noContent().build()
+        } else throw BadRequestException("Bad request! Need not deleted")
     }
 
     @Throws(BackendException::class)
