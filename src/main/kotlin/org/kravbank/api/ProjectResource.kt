@@ -20,30 +20,30 @@ class ProjectResource(val projectService: ProjectService) {
     //GET PROJECT
     @GET
     @Path("/{projcetRef}")
-    fun getProjectByRef(@PathParam("projcetRef") projcetRef: String): Response =
-        projectService.getProjcetFromService(projcetRef)
+    fun getProject(@PathParam("projcetRef") projcetRef: String): Response =
+        projectService.get(projcetRef)
 
     //LIST PROJECTS
     @GET
     fun listProjects(): Response =
-        projectService.listProjectsFromService()
+        projectService.list()
 
     //CREATE PROJECT
     @Transactional
     @POST
     fun createProject(newProject: ProjectForm): Response =
-        projectService.createProjectFromService(newProject)
+        projectService.create(newProject)
 
     //DELETE PROJECT
     @DELETE
     @Path("{projcetRef}")
     @Transactional
     fun deleteProjectByRef(@PathParam("projcetRef") projcetRef: String): Response =
-        projectService.deleteProjectFromService(projcetRef)
+        projectService.delete(projcetRef)
 
     //UPDATE PROJECT
     @PUT
     @Path("{projcetRef}")
     @Transactional
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response = projectService.updateProjectFromService(projcetRef, updateProject)
+    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response = projectService.update(projcetRef, updateProject)
 }

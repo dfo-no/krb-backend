@@ -25,18 +25,18 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         @PathParam("productref") productref: String,
         @PathParam("projectRef") projectRef: String,
     ): Response =
-        productService.getProductByRefFromService(projectRef, productref)
+        productService.get(projectRef, productref)
 
     //LIST PRODUCTS
     @GET
     fun listProducts(@PathParam("projectRef") projectRef: String): Response =
-        productService.listProductsFromService(projectRef)
+        productService.list(projectRef)
 
     //CREATE PRODUCT
     @Transactional
     @POST
     fun createProduct(@PathParam("projectRef") projectRef: String, product: ProductForm): Response =
-        productService.createProductFromService(projectRef, product)
+        productService.create(projectRef, product)
 
 
     //DELETE PRODUCT
@@ -47,7 +47,7 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String
     ): Response =
-        productService.deleteProductFromService(projectRef, productref)
+        productService.delete(projectRef, productref)
 
     //UPDATE PRODUCT
     @PUT
@@ -58,6 +58,6 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         @PathParam("productref") productref: String,
         product: ProductFormUpdate
     ): Response =
-        productService.updateProductFromService(projectRef, productref, product)
+        productService.update(projectRef, productref, product)
 }
 

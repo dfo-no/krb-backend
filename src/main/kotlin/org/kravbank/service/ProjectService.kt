@@ -1,119 +1,53 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Project
-import org.kravbank.exception.project.CustomProjectException
+import org.kravbank.exception.BackendException
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.response.project.ResponseProject
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.utils.mapper.project.ProjectMapper
 import org.kravbank.utils.mapper.project.ProjectUpdateMapper
+import java.net.URI
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 
+
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
-    fun getProjcetFromService(projcetRef: String): Response {
-        return try {
-            if (refExists(projcetRef)) {
-                val project = getProjectByRefCustomRepo(projcetRef)
-                val mappedProjectToEntity = ProjectMapper().fromEntity(project!!)
 
-               //Response.ok(mappedProjectToEntity).build()
-               ResponseProject().ok(mappedProjectToEntity)
-            } else {
-                ResponseProject().not_found()
-            }
-        }catch (e : CustomProjectException){
-           throw CustomProjectException("GET one project failed. Message: $e")
-        }
+    @Throws(BackendException::class)
+    fun get(projcetRef: String): Response {
+        val project = projectRepository.findByRef(projcetRef)
+        val projectMapped = ProjectMapper().fromEntity(project)
+        return Response.ok(projectMapped).build()
     }
 
-    fun listProjectsFromService(): Response {
-       return try {
-            val projectFormList = ArrayList<ProjectForm>()
-            for (p in listProjects()) projectFormList.add(ProjectMapper().fromEntity(p))
-            ResponseProject().ok_list(projectFormList)
-        } catch (e: CustomProjectException) {
-            throw CustomProjectException("GET all projects failed. Message: $e")
-        }
+    @Throws(BackendException::class)
+    fun list(): Response {
+        val projectFormList = ArrayList<ProjectForm>()
+        val projects = projectRepository.listAllProjects()
+        for (p in projects) projectFormList.add(ProjectMapper().fromEntity(p))
+        return Response.ok(projectFormList).build()
     }
 
-    fun createProjectFromService(newProject: ProjectForm): Response {
-        try {
-            val mappedProjectToEntity = ProjectMapper().toEntity(newProject)
-            createProject(mappedProjectToEntity)
-            return if (mappedProjectToEntity.isPersistent) {
-
-                ResponseProject().create_ok("/projects" + newProject.ref)
-                //Response.created(URI.create("/projects" + newProject.ref)).build();
-            } else {
-                ResponseProject().bad_req()
-                //Response.status(Response.Status.BAD_REQUEST).build()
-            }
-        } catch (e: CustomProjectException) {
-            throw CustomProjectException("POST project failed. Message: $e")
-        }
+    @Throws(BackendException::class)
+    fun create(newProject: ProjectForm): Response {
+        val mappedProjectToEntity = ProjectMapper().toEntity(newProject)
+        projectRepository.createProject(mappedProjectToEntity)
+        return Response.created(URI.create("/projects" + newProject.ref)).build();
     }
 
-    fun deleteProjectFromService(projcetRef: String): Response{
-        try {
-            return if (refExists(projcetRef)) {
-                val project = getProjectByRefCustomRepo(projcetRef)
-                val deleted = deleteProject(project!!.id)
-                if (deleted) {
-                    ResponseProject().delete_ok()
-                } else ResponseProject().bad_req()
-                    //Response.status(Response.Status.BAD_REQUEST).build()
-            } else {
-                ResponseProject().not_found()
-                //Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: CustomProjectException) {
-            throw CustomProjectException("Delete project failed. Message: $e")
-        }
+    fun delete(projcetRef: String): Response {
+        projectRepository.deleteProject(projcetRef)
+        return Response.noContent().build()
     }
 
-    fun updateProjectFromService(projcetRef: String, project: ProjectFormUpdate): Response {
-        try {
-            return if (refExists(projcetRef)) {
-                val projectMapper = ProjectUpdateMapper().toEntity(project)
-                val foundProject = getProjectByRefCustomRepo(projcetRef)
-                updateProject(foundProject!!.id, projectMapper)
-                ResponseProject().ok_update(project)
-
-            // Response.ok(project).build()
-            } else {
-                ResponseProject().not_found()
-                //return Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: CustomProjectException) {
-            throw CustomProjectException("Delete project failed. Message:  $e")
-        }
+    fun update(projcetRef: String, project: ProjectFormUpdate): Response {
+        val projectMapper = ProjectUpdateMapper().toEntity(project)
+        projectRepository.updateProject(projcetRef, projectMapper)
+        return Response.ok(project).build()
     }
-
-    fun listProjects(): List<Project> = projectRepository.listAll()
-
-    fun getProject(id: Long): Project = projectRepository.findById(id)
-
-    fun getProjectByRef(ref: String): Project? {
-        return listProjects().find { project ->
-            project.ref == ref
-        }
-    }
-
-    fun listProjectsByRef(ref: String): List<Project> = projectRepository.listAllByProjectRef(ref)
-
-    fun getProjectByRefCustomRepo(ref: String): Project? = projectRepository.findByRef(ref)
-
-    fun createProject(project: Project) = projectRepository.persist(project)
-
-    fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
-
     fun refExists(ref: String): Boolean = projectRepository.count("ref", ref) == 1L
-
-    fun deleteProject(id: Long) = projectRepository.deleteById(id)
-
 
     fun updateProject(id: Long, project: Project) {
         projectRepository.update(

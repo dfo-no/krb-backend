@@ -21,19 +21,18 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String,
         @PathParam("publicationref") publicationRef: String
     ): Response =
-        publicationService.getPublicationByRefFromService(projectRef, publicationRef)
-
+        publicationService.get(projectRef, publicationRef)
 
     //LIST PUBLICATIONS
     @GET
     fun listPublications(@PathParam("projectref") projectRef: String): Response =
-        publicationService.listPublicationsFromService(projectRef)
+        publicationService.list(projectRef)
 
     //CREATE PUBLICATION
     @Transactional
     @POST
     fun createPublication(@PathParam("projectref") projectRef: String, publication: PublicationForm): Response =
-        publicationService.createPublicationFromService(projectRef, publication)
+        publicationService.create(projectRef, publication)
 
     //DELETE PUBLICATION
     @DELETE
@@ -43,8 +42,7 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String,
         @PathParam("publicationref") publicationRef: String
     ): Response =
-        publicationService.deletePublicationFromService(projectRef, publicationRef)
-
+        publicationService.delete(projectRef, publicationRef)
 
     //UPDATE PUBLICATION
     @PUT
@@ -55,5 +53,5 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("publicationref") publicationRef: String,
         publication: PublicationFormUpdate
     ): Response =
-        publicationService.updatePublicationFromService(projectRef, publicationRef, publication)
+        publicationService.update(projectRef, publicationRef, publication)
 }

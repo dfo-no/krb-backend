@@ -1,134 +1,85 @@
 package org.kravbank.service
 
-import org.kravbank.domain.Publication
-import org.kravbank.utils.form.publication.PublicationFormUpdate
-import org.kravbank.utils.form.publication.PublicationForm
+import org.kravbank.exception.BackendException
+import org.kravbank.exception.BadRequestException
+import org.kravbank.exception.NotFoundException
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
+import org.kravbank.utils.form.publication.PublicationForm
+import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.mapper.publication.PublicationMapper
-import java.lang.IllegalArgumentException
+import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.net.URI
-import java.util.ArrayList
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 
 @ApplicationScoped
-class PublicationService(val publicationRepository: PublicationRepository, val projectService: ProjectService) {
-    fun getPublicationByRefFromService(projectRef: String, publicationRef: String): Response {
-        if (projectService.refExists(projectRef) && refExists(publicationRef)) {
-            val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-            val publication = project.publications.find { pub -> pub.ref == publicationRef }
-            val publicationMapper = PublicationMapper().fromEntity(publication!!)
-            return Response.ok(publicationMapper).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
+class PublicationService(
+    val publicationRepository: PublicationRepository,
+    val projectService: ProjectService,
+    val projectRepository: ProjectRepository
+) {
+    @Throws(BackendException::class)
+    fun list(projectRef: String): Response {
+        //list publication by project ref
+        val foundProjectPublications = projectRepository.findByRef(projectRef).publications
+        //convert to array of form
+        val publicationList = ArrayList<PublicationForm>()
+        for (publication in foundProjectPublications) publicationList.add(PublicationMapper().fromEntity(publication))
+        //returns the custom publication form
+        return Response.ok(publicationList).build()
     }
 
-    fun listPublicationsFromService(projectRef: String): Response {
-        return try {
-            if (projectService.refExists(projectRef)) {
-                //list proudcts by project ref
-                val projectPublicationsList = projectService.getProjectByRefCustomRepo(projectRef)!!.publications
-                //convert to array of form
-                val publicationsFormList = ArrayList<PublicationForm>()
-                for (p in projectPublicationsList) publicationsFormList.add(
-                    org.kravbank.utils.mapper.publication.PublicationMapper().fromEntity(p))
-                //returns the custom publication form
-                Response.ok(publicationsFormList).build()
-            } else {
-                Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } catch (e: Exception) {
-            throw IllegalArgumentException("GET list of publications failed")
+    @Throws(BackendException::class)
+    fun get(projectRef: String, publicationRef: String): Response {
+        val foundProjectPublication = projectRepository.findByRef(projectRef).publications.find { publication ->
+            publication.ref == publicationRef
         }
+        Optional.ofNullable(foundProjectPublication)
+            .orElseThrow { NotFoundException("Publication not found by ref $publicationRef in project by ref $projectRef") }
+        val publicationMapper = PublicationMapper().fromEntity(foundProjectPublication!!)
+        return Response.ok(publicationMapper).build()
     }
 
-    fun createPublicationFromService(projectRef: String, publication: PublicationForm): Response {
-        //adds a publication to relevant project
-        try {
-            val publicationMapper = org.kravbank.utils.mapper.publication.PublicationMapper().toEntity(publication)
-            if (projectService.refExists(projectRef)) {
-                val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-                project.publications.add(publicationMapper)
-                projectService.updateProject(project.id, project)
-                /** {{{{ Fix }}}} **/
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build()
-            }
-            return if (publicationMapper.isPersistent) {
-                Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build();
-                /** ENDRE **/
-            } else {
-                Response.status(Response.Status.BAD_REQUEST).build()
-            }
-        } catch (e: Exception) {
-            //return Response.status(Response.Status.BAD_REQUEST).build()
-            throw IllegalArgumentException("POST publication failed")
-        }
+    @Throws(BackendException::class)
+    fun create(projectRef: String, publication: PublicationForm): Response {
+        val publicationMapper = PublicationMapper().toEntity(publication)
+        val project = projectRepository.findByRef(projectRef)
+        project.publications.add(publicationMapper)
+        projectService.updateProject(project.id, project)
+        if (publicationMapper.isPersistent)
+            return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
+        else throw BadRequestException("Bad request! Did not create publication")
     }
 
-    fun deletePublicationFromService(projectRef: String, publicationRef: String): Response {
-        return try {
-            //val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-            //val publication = getPublicationByRefFromService(projectRef, publicationRef)
-
-            if (projectService.refExists(projectRef) && refExists(publicationRef)) {
-                val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-                val publication = project.publications.find { publication -> publication.ref == publicationRef }
-                val deleted = publicationRepository.deleteById(publication!!.id)
-                if (deleted) {
-                    project.publications.remove(publication)
-                    Response.noContent().build()
-                } else {
-                    Response.status(Response.Status.BAD_REQUEST).build()
-                }
-            } else
-                Response.status(Response.Status.NOT_FOUND).build()
-        } catch (e: Exception) {
-            throw IllegalArgumentException("DELETE publication failed!")
-        }
+    @Throws(BackendException::class)
+    fun delete(projectRef: String, publicationRef: String): Response {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundPublications = foundProject.publications.find { publication -> publication.ref == publicationRef }
+        Optional.ofNullable(foundPublications)
+            .orElseThrow { NotFoundException("Publications not found by ref $publicationRef in project by ref $projectRef") }
+        val deleted = foundProject.publications.remove(foundPublications)
+        if (deleted) {
+            projectService.updateProject(foundProject.id, foundProject)
+            return Response.noContent().build()
+        } else throw BadRequestException("Bad request! Publication not deleted")
     }
 
-    fun updatePublicationFromService(
-        projectRef: String,
-        publicationRef: String,
-        publication: PublicationFormUpdate
-    ): Response {
-        if (projectService.refExists(projectRef) && refExists(publicationRef)) {
-            // if publication exists in this project
-            val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-            //val foundProduct = getProductByRefCustomRepo(publicationRef)
-            val publicationInProject = project.publications.find { pub -> pub.ref == publicationRef }
-            val publicationMapper = org.kravbank.utils.mapper.publication.PublicationUpdateMapper().toEntity(publication)
-
-            //if (publication.project.ref == project.ref)
-
-            return if (publicationInProject != null) {
-                publicationRepository.update(
-                    "comment = ?1, deleteddate = ?2 where id= ?3",
-                    publicationMapper.comment,
-                    publicationMapper.deletedDate,
-                    publicationInProject.id
-                )
-                Response.ok(publication).build()
-            } else {
-                Response.status(Response.Status.NOT_FOUND).build()
-            }
-        } else {
-
-            return Response.status(Response.Status.NOT_FOUND).build()
+    @Throws(BackendException::class)
+    fun update(projectRef: String, publicationRef: String, publication: PublicationFormUpdate): Response {
+        val foundPublications = projectRepository.findByRef(projectRef).publications.find { pub ->
+            pub.ref == publicationRef
         }
+        Optional.ofNullable(foundPublications)
+            .orElseThrow { NotFoundException("Publications not found by ref $publicationRef in project by ref $projectRef") }
+        val publicationMapper = PublicationUpdateMapper().toEntity(publication)
+        publicationRepository.update(
+            "comment = ?1, deleteddate = ?2 where id= ?3",
+            publicationMapper.comment,
+            publicationMapper.deletedDate,
+            foundPublications!!.id
+        )
+        return Response.ok(publication).build()
     }
-
-    fun listPublications(): List<Publication> = publicationRepository.listAll()
-
-    fun getPublication(id: Long): Publication = publicationRepository.findById(id)
-
-    fun createPublication(publication: Publication) = publicationRepository.persistAndFlush(publication)
-
-    fun exists(id: Long): Boolean = publicationRepository.count("id", id) == 1L
-    fun refExists(ref: String): Boolean = publicationRepository.count("ref", ref) == 1L
-
-    fun deletePublication(id: Long) = publicationRepository.deleteById(id)
-
 }

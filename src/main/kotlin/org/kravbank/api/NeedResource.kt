@@ -21,18 +21,18 @@ class NeedResource (val needService: NeedService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String
     ): Response =
-        needService.getNeedByRefFromService(projectRef, needRef)
+        needService.get(projectRef, needRef)
 
     //LIST NEEDS
     @GET
     fun listPublications(@PathParam("projectRef") projectRef: String): Response =
-        needService.listNeedsFromService(projectRef)
+        needService.list(projectRef)
 
     //CREATE NEED
     @Transactional
     @POST
     fun createNeed(@PathParam("projectRef") projectRef: String, need: NeedForm): Response =
-        needService.createNeedFromService(projectRef, need)
+        needService.create(projectRef, need)
 
 
     //DELETE NEED
@@ -43,7 +43,7 @@ class NeedResource (val needService: NeedService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String
     ): Response =
-        needService.deleteNeedFromService(projectRef, needRef)
+        needService.delete(projectRef, needRef)
 
     //UPDATE NEED
     @PUT
@@ -54,5 +54,5 @@ class NeedResource (val needService: NeedService) {
         @PathParam("needRef") needRef: String,
         need: NeedFormUpdate
     ): Response =
-        needService.updateNeedFromService(projectRef, needRef, need)
+        needService.update(projectRef, needRef, need)
 }

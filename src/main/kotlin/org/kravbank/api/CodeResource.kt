@@ -21,7 +21,7 @@ class CodeResource (val codeService: CodeService) {
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
     ): Response =
-        codeService.getCodeByRefFromService(
+        codeService.get(
             projectRef,
             codelistRef,
             codeRef
@@ -33,7 +33,7 @@ class CodeResource (val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
     ): Response =
-        codeService.listCodesFromService(projectRef, codelistRef)
+        codeService.list(projectRef, codelistRef)
 
     //CREATE REQUIREMENTVARIANT
     @Transactional
@@ -43,7 +43,7 @@ class CodeResource (val codeService: CodeService) {
         @PathParam("codelistRef") codelistRef: String,
         code: CodeForm
     ): Response =
-        codeService.createCodeFromService(projectRef, codelistRef, code)
+        codeService.create(projectRef, codelistRef, code)
 
     //DELETE CODE
     @DELETE
@@ -54,7 +54,7 @@ class CodeResource (val codeService: CodeService) {
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
     ): Response =
-        codeService.deleteCodeFromService(projectRef, codelistRef, codeRef)
+        codeService.delete(projectRef, codelistRef, codeRef)
 
     //UPDATE CODE
     @PUT
@@ -66,7 +66,7 @@ class CodeResource (val codeService: CodeService) {
         @PathParam("codeRef") codeRef: String,
         code: CodeFormUpdate
     ): Response =
-        codeService.updateCodeFromService(
+        codeService.update(
             projectRef,
             codelistRef,
             codeRef,

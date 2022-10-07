@@ -22,7 +22,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response =
-        requirementVariantService.getRequirementVariantByRefFromService(
+        requirementVariantService.get(
             projectRef,
             requirementRef,
             requirementVariantRef
@@ -34,7 +34,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
     ): Response =
-        requirementVariantService.listRequirementVariantsFromService(projectRef, requirementRef)
+        requirementVariantService.list(projectRef, requirementRef)
 
     //CREATE REQUIREMENT VARIANT
     @Transactional
@@ -44,7 +44,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         requirementVariant: RequirementVariantForm
     ): Response =
-        requirementVariantService.createRequirementVariantFromService(projectRef, requirementRef, requirementVariant)
+        requirementVariantService.create(projectRef, requirementRef, requirementVariant)
 
     //DELETE REQUIREMENT VARIANT
     @DELETE
@@ -55,7 +55,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response =
-        requirementVariantService.deleteRequirementVariantFromService(projectRef, requirementRef, requirementVariantRef)
+        requirementVariantService.delete(projectRef, requirementRef, requirementVariantRef)
 
     //UPDATE REQUIREMENT VARIANT
     @PUT
@@ -67,12 +67,10 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementVariantRef") requirementVariantRef: String,
         requirementVariant: RequirementVariantFormUpdate
     ): Response =
-        requirementVariantService.updateRequirementVariantFromService(
+        requirementVariantService.update(
             projectRef,
             requirementRef,
             requirementVariantRef,
             requirementVariant
         )
 }
-
-

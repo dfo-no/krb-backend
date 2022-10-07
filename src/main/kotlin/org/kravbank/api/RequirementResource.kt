@@ -21,18 +21,18 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String
     ): Response =
-        requirementService.getRequirementByRefFromService(projectRef, requirementRef)
+        requirementService.get(projectRef, requirementRef)
 
     //LIST REQUIREMENTS
     @GET
     fun listRequirements(@PathParam("projectRef") projectRef: String): Response =
-        requirementService.listRequirementsFromService(projectRef)
+        requirementService.list(projectRef)
 
     //CREATE REQUIREMENT
     @Transactional
     @POST
     fun createRequirement(@PathParam("projectRef") projectRef: String, requirement: RequirementForm): Response =
-        requirementService.createRequirementFromService(projectRef, requirement)
+        requirementService.create(projectRef, requirement)
 
     //DELETE REQUIREMENT
     @DELETE
@@ -42,7 +42,7 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String
     ): Response =
-        requirementService.deleteRequirementFromService(projectRef, requirementRef)
+        requirementService.delete(projectRef, requirementRef)
 
     //UPDATE REQUIREMENT
     @PUT
@@ -53,5 +53,5 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("requirementRef") requirementRef: String,
         requirement: RequirementFormUpdate
     ): Response =
-        requirementService.updateRequirementFromService(projectRef, requirementRef, requirement)
+        requirementService.update(projectRef, requirementRef, requirement)
 }
