@@ -17,10 +17,9 @@ class ProjectService(val projectRepository: ProjectRepository) {
 
     @Throws(BackendException::class)
     fun get(projcetRef: String): Response {
-
-        val project = ProjectMapper().fromEntity(projectRepository.findByRef(projcetRef))
-
-        return Response.ok(project).build()
+        val project = projectRepository.findByRef(projcetRef)
+        val projectMapped = ProjectMapper().fromEntity(project)
+        return Response.ok(projectMapped).build()
     }
 
     @Throws(BackendException::class)

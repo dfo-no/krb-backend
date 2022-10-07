@@ -1,14 +1,16 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@Entity
-@Table(name = "Project")
+@Entity//(name = "Project")
+@Table //(name = "project")
 class Project : PanacheEntity() {
 
     @NotBlank
@@ -26,19 +28,24 @@ class Project : PanacheEntity() {
 
     var publishedDate: LocalDateTime = LocalDateTime.now() // evnt last updated attribute
 
-    @Column(unique = true, name = "ref")
+    @Column(
+        unique = true,
+        name = "ref")
     var ref: String = UUID.randomUUID().toString()
 
     var deletedDate: LocalDateTime? = null //inactive vs. active projs --> if inactive show deleted date?
 
     @OneToMany(
-        //mappedBy = ("parentProject"),
+      // mappedBy = ("project"),
         cascade = [CascadeType.ALL],
-        orphanRemoval = true
+        orphanRemoval = true,
     )
-   // @JsonIgnore
+    @JsonIgnore
     var products = mutableListOf<Product>()
+    //@JoinColumn(name="project_id")
 
+    //@JsonManagedReference
+    //@JoinColumn(name = "ref")
 
     @OneToMany(
         cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],

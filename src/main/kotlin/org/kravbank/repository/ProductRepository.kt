@@ -15,7 +15,7 @@ class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepos
 
     @Throws(BackendException::class)
     fun findByRef(ref: String): Product {
-        val foundProjectProducts = projectRepository.findByRef(ref).products
+        //val foundProjectProducts = projectRepository.findByRef(ref).products
         val found = find("ref", ref).firstResult<Product>()
         return Optional.ofNullable(found).orElseThrow { NotFoundException("Product not found by ref: $ref") }
     }
@@ -29,9 +29,9 @@ class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepos
     }
 
     @Throws(BackendException::class)
-    fun createProduct(project: Product) {
-        persistAndFlush(project)
-        if (!project.isPersistent) throw BadRequestException("Fail! Product not created")
+    fun createProduct(product: Product) {
+        persistAndFlush(product)
+        if (!product.isPersistent) throw BadRequestException("Fail! Product not created")
     }
 
     @Throws(BackendException::class)

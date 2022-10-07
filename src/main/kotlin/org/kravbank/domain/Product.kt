@@ -1,17 +1,16 @@
 package org.kravbank.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
-@Entity
+@Entity //(name = "Product")
+@Table //(name ="product")
 class Product : PanacheEntity() {
-
-    //@Id
-    //@GeneratedValue
-   // @Column(name = "product_id")
-    //var id: Long? = null;
 
     var title: String = ""
 
@@ -23,18 +22,18 @@ class Product : PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
-        cascade = [CascadeType.ALL],
+        //cascade = [CascadeType.ALL],
         //optional = false
         //fetch = FetchType.LAZY
     )
-    //@JsonIgnore
-    //@JoinColumn(name = "project_id", foreignKey = ForeignKey(name = "project_id_fk"))
+    @JsonIgnore
+    //@JoinColumn(name="project_id")
     var project: Project? = null
 
-
+    //@JsonBackReference
+    //@JoinColumn(name = "project_id", foreignKey = ForeignKey(name = "project_id_fk"))
 
    // var session: Session? = null
-
 
     /*
     OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
