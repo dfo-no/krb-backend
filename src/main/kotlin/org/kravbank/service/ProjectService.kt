@@ -25,7 +25,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
 
-    @CacheResult(cacheName = "project-cache-list")
+//    @CacheResult(cacheName = "project-cache-list")
     @Throws(BackendException::class)
     fun list(): Response {
         val projectFormList = ArrayList<ProjectForm>()
@@ -39,7 +39,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
     fun create(newProject: ProjectForm): Response {
         val mappedProjectToEntity = ProjectMapper().toEntity(newProject)
         projectRepository.createProject(mappedProjectToEntity)
-        return Response.created(URI.create("/projects" + newProject.ref)).build();
+        return Response.created(URI.create("/projects/" + newProject.ref)).build();
     }
 
     fun delete(projcetRef: String): Response {

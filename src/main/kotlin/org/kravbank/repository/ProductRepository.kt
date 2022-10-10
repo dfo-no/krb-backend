@@ -21,10 +21,9 @@ class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepos
     }
 
     @Throws(BackendException::class)
-    fun listAllProducts(projectRef: String): MutableList<Product> {
+    fun listAllProducts(id: Long): MutableList<Product> {
         //val foundProjectProducts = projectRepository.findByRef(projectRef).products
-        val foundProjectsProductsRepo = find("projectRef", projectRef).list<Product>()
-
+        val foundProjectsProductsRepo = find("project_id_fk", id).list<Product>()
         if (foundProjectsProductsRepo.isNotEmpty()) return foundProjectsProductsRepo else throw NotFoundException("No products found")
     }
 

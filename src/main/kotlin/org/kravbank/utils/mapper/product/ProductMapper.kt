@@ -15,6 +15,7 @@ class ProductMapper :
             entity.title,
             entity.description,
             entity.deletedDate,
+            entity.project
         )
 
 
@@ -24,6 +25,8 @@ class ProductMapper :
         p.title = domain.title
         p.description = domain.description
         p.deletedDate = domain.deletedDate
+        p.project = domain.project
+        println("p.project: ${p.project}")
         return p
     }
 }

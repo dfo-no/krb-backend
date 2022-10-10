@@ -52,7 +52,7 @@ class NeedService(
         project.needs.add(needMapper)
         projectService.updateProject(project.id, project)
         if (needMapper.isPersistent)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/needs" + need.ref)).build()
+            return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
         else throw BadRequestException("Bad request! Did not create need")
     }
 

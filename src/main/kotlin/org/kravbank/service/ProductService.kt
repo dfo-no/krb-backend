@@ -37,24 +37,35 @@ class ProductService(
     @CacheResult(cacheName = "product-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
-        //list proudcts by project ref
-        val foundProjectProducts = projectRepository.findByRef(projectRef).products
-        //convert to array of form
+       // val foundProjectProducts = projectRepository.findByRef(projectRef).products
+        println("Here we are ")
+        val foundProject = projectRepository.findByRef(projectRef)
+        println(foundProject)
+        val foundProducts = productRepository.listAllProducts(foundProject.id)
+        println("foundProducts.size:" + foundProducts.size)
         val productsFormList = ArrayList<ProductForm>()
-        for (p in foundProjectProducts) productsFormList.add(ProductMapper().fromEntity(p))
-        //returns the custom product form
+        for (p in foundProducts) productsFormList.add(ProductMapper().fromEntity(p))
         return Response.ok(productsFormList).build()
     }
 
     @Throws(BackendException::class)
     fun create(projectRef: String, product: ProductForm): Response {
-        val productMapper = ProductMapper().toEntity(product)
         val project = projectRepository.findByRef(projectRef)
-        project.products.add(productMapper)
-        projectService.updateProject(project.id, project)
-        if (productMapper.isPersistent)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/products" + product.ref)).build()
-        else throw BadRequestException("Bad request! Did not create product")
+        product.project = project
+
+        println("project: " + project)
+        //createProductDTO
+        val productMapper = ProductMapper().toEntity(product)
+        println("productMapper: " + productMapper)
+
+        //project.products.add(productMapper)
+       // projectService.updateProject(project.id, project)
+
+        productRepository.persistAndFlush(productMapper)
+
+       // if (productMapper.isPersistent)
+            return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
+      //  else throw BadRequestException("Bad request! Did not create product")
     }
 
     @Throws(BackendException::class)

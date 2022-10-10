@@ -35,6 +35,7 @@ class CodelistService(
         val codelistMapper = CodelistMapper().fromEntity(foundProjectCodelist!!)
         return Response.ok(codelistMapper).build()
     }
+
     @CacheResult(cacheName = "codelist-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
