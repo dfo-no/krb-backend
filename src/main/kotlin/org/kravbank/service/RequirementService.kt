@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
@@ -20,17 +21,7 @@ class RequirementService(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
-    @Throws(BackendException::class)
-    fun list(projectRef: String): Response {
-        //list requirement by project ref
-        val foundProjectRequirement = projectRepository.findByRef(projectRef).requirements
-        //convert to array of form
-        val requirementFormList = ArrayList<RequirementForm>()
-        for (p in foundProjectRequirement) requirementFormList.add(RequirementMapper().fromEntity(p))
-        //returns the custom requirement form
-        return Response.ok(requirementFormList).build()
-    }
-
+    @CacheResult(cacheName = "requirement-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, requirementRef: String): Response {
         val foundProjectRequirement = projectRepository.findByRef(projectRef).requirements.find { requirement ->
@@ -40,6 +31,18 @@ class RequirementService(
             .orElseThrow { NotFoundException("Requirement not found by ref $requirementRef in project by ref $projectRef") }
         val requirementMapper = RequirementMapper().fromEntity(foundProjectRequirement!!)
         return Response.ok(requirementMapper).build()
+    }
+
+    @CacheResult(cacheName = "requirement-cache-list")
+    @Throws(BackendException::class)
+    fun list(projectRef: String): Response {
+        //list requirement by project ref
+        val foundProjectRequirement = projectRepository.findByRef(projectRef).requirements
+        //convert to array of form
+        val requirementFormList = ArrayList<RequirementForm>()
+        for (p in foundProjectRequirement) requirementFormList.add(RequirementMapper().fromEntity(p))
+        //returns the custom requirement form
+        return Response.ok(requirementFormList).build()
     }
 
     @Throws(BackendException::class)

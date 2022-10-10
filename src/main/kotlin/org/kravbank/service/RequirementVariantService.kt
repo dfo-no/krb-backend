@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
@@ -21,7 +22,22 @@ class RequirementVariantService(
     val requirementService: RequirementService,
     val projectRepository: ProjectRepository
 ) {
+    @CacheResult(cacheName = "requirementvariant-cache-get")
+    @Throws(BackendException::class)
+    fun get(projectRef: String, requirementRef: String, reqVariantRef: String): Response {
+        val foundReqVariants =
+            projectRepository.findByRef(projectRef).requirements.find { req -> req.ref == requirementRef }
+        Optional.ofNullable(foundReqVariants)
+            .orElseThrow { NotFoundException("Requirement not found by ref $requirementRef in project by ref $projectRef") }
+        val foundRequirementCode =
+            foundReqVariants!!.requirementvariants.find { reqVariant -> reqVariant.ref == reqVariantRef }
+        Optional.ofNullable(foundRequirementCode)
+            .orElseThrow { NotFoundException("Requirement variant not found by ref $reqVariantRef in requirements by ref $requirementRef") }
+        val reqVariantFormMapper = RequirementVariantMapper().fromEntity(foundRequirementCode!!)
+        return Response.ok(reqVariantFormMapper).build()
+    }
 
+    @CacheResult(cacheName = "requirementvariant-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String, requirementRef: String): Response {
         //list reqVariants by requirements ref
@@ -35,20 +51,6 @@ class RequirementVariantService(
         for (reqVariant in reqVariants) reqVariantsFormList.add(RequirementVariantMapper().fromEntity(reqVariant))
         //returns the custom reqVariantForm form
         return Response.ok(reqVariantsFormList).build()
-    }
-
-    @Throws(BackendException::class)
-    fun get(projectRef: String, requirementRef: String, reqVariantRef: String): Response {
-        val foundReqVariants =
-            projectRepository.findByRef(projectRef).requirements.find { req -> req.ref == requirementRef }
-        Optional.ofNullable(foundReqVariants)
-            .orElseThrow { NotFoundException("Requirement not found by ref $requirementRef in project by ref $projectRef") }
-        val foundRequirementCode =
-            foundReqVariants!!.requirementvariants.find { reqVariant -> reqVariant.ref == reqVariantRef }
-        Optional.ofNullable(foundRequirementCode)
-            .orElseThrow { NotFoundException("Requirement variant not found by ref $reqVariantRef in requirements by ref $requirementRef") }
-        val reqVariantFormMapper = RequirementVariantMapper().fromEntity(foundRequirementCode!!)
-        return Response.ok(reqVariantFormMapper).build()
     }
 
     @Throws(BackendException::class)

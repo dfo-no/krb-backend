@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
@@ -20,17 +21,8 @@ class ProductService(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
-    @Throws(BackendException::class)
-    fun list(projectRef: String): Response {
-        //list proudcts by project ref
-        val foundProjectProducts = projectRepository.findByRef(projectRef).products
-        //convert to array of form
-        val productsFormList = ArrayList<ProductForm>()
-        for (p in foundProjectProducts) productsFormList.add(ProductMapper().fromEntity(p))
-        //returns the custom product form
-        return Response.ok(productsFormList).build()
-    }
 
+    @CacheResult(cacheName = "product-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, productRef: String): Response {
         val project = projectRepository.findByRef(projectRef).products.find { products ->
@@ -40,6 +32,18 @@ class ProductService(
             .orElseThrow { NotFoundException("Product not found by ref $productRef in project by ref $projectRef") }
         val productMapper = ProductMapper().fromEntity(project!!)
         return Response.ok(productMapper).build()
+    }
+
+    @CacheResult(cacheName = "product-cache-list")
+    @Throws(BackendException::class)
+    fun list(projectRef: String): Response {
+        //list proudcts by project ref
+        val foundProjectProducts = projectRepository.findByRef(projectRef).products
+        //convert to array of form
+        val productsFormList = ArrayList<ProductForm>()
+        for (p in foundProjectProducts) productsFormList.add(ProductMapper().fromEntity(p))
+        //returns the custom product form
+        return Response.ok(productsFormList).build()
     }
 
     @Throws(BackendException::class)

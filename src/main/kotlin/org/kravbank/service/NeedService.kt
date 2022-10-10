@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
@@ -20,6 +21,7 @@ class NeedService(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
+    @CacheResult(cacheName = "need-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, needRef: String): Response {
         val project = projectRepository.findByRef(projectRef).needs.find { needs ->
@@ -30,7 +32,7 @@ class NeedService(
         val needMapper = NeedMapper().fromEntity(project!!)
         return Response.ok(needMapper).build()
     }
-
+    @CacheResult(cacheName = "need-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
         //list needs by project ref

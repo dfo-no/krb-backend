@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Project
 import org.kravbank.exception.BackendException
 import org.kravbank.repository.ProjectRepository
@@ -15,6 +16,7 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
+    @CacheResult(cacheName = "project-cache-get")
     @Throws(BackendException::class)
     fun get(projcetRef: String): Response {
         val project = projectRepository.findByRef(projcetRef)
@@ -22,6 +24,8 @@ class ProjectService(val projectRepository: ProjectRepository) {
         return Response.ok(projectMapped).build()
     }
 
+
+    @CacheResult(cacheName = "project-cache-list")
     @Throws(BackendException::class)
     fun list(): Response {
         val projectFormList = ArrayList<ProjectForm>()
@@ -29,6 +33,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
         for (p in projects) projectFormList.add(ProjectMapper().fromEntity(p))
         return Response.ok(projectFormList).build()
     }
+
 
     @Throws(BackendException::class)
     fun create(newProject: ProjectForm): Response {

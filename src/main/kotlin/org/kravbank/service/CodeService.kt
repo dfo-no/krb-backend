@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
@@ -21,6 +22,22 @@ class CodeService(
     val codelistService: CodelistService,
     val projectRepository: ProjectRepository
 ) {
+
+    @CacheResult(cacheName = "code-cache-get")
+    @Throws(BackendException::class)
+    fun get(projectRef: String, codelistRef: String, codeRef: String): Response {
+        val foundProjectCodelist =
+            projectRepository.findByRef(projectRef).codelist.find { codelist -> codelist.ref == codelistRef }
+        Optional.ofNullable(foundProjectCodelist)
+            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
+        val foundCodelistCode = foundProjectCodelist!!.codes.find { code -> code.ref == codeRef }
+        Optional.ofNullable(foundCodelistCode)
+            .orElseThrow { NotFoundException("Code not found by ref $codeRef in codelist by ref $codelistRef") }
+        val codeMapper = CodeMapper().fromEntity(foundCodelistCode!!)
+        return Response.ok(codeMapper).build()
+    }
+
+    @CacheResult(cacheName = "code-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String, codelistRef: String): Response {
         //list codes by codelist ref
@@ -36,18 +53,6 @@ class CodeService(
         return Response.ok(codesFormList).build()
     }
 
-    @Throws(BackendException::class)
-    fun get(projectRef: String, codelistRef: String, codeRef: String): Response {
-        val foundProjectCodelist =
-            projectRepository.findByRef(projectRef).codelist.find { codelist -> codelist.ref == codelistRef }
-        Optional.ofNullable(foundProjectCodelist)
-            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
-        val foundCodelistCode = foundProjectCodelist!!.codes.find { code -> code.ref == codeRef }
-        Optional.ofNullable(foundCodelistCode)
-            .orElseThrow { NotFoundException("Code not found by ref $codeRef in codelist by ref $codelistRef") }
-        val codeMapper = CodeMapper().fromEntity(foundCodelistCode!!)
-        return Response.ok(codeMapper).build()
-    }
 
     @Throws(BackendException::class)
     fun create(projectRef: String, codelistRef: String, code: CodeForm): Response {

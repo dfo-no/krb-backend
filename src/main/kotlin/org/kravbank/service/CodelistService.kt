@@ -1,5 +1,6 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
@@ -22,6 +23,19 @@ class CodelistService(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
+
+    @CacheResult(cacheName = "codelist-cache-get")
+    @Throws(BackendException::class)
+    fun get(projectRef: String, codelistRef: String): Response {
+        val foundProjectCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist ->
+            codelist.ref == codelistRef
+        }
+        Optional.ofNullable(foundProjectCodelist)
+            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
+        val codelistMapper = CodelistMapper().fromEntity(foundProjectCodelist!!)
+        return Response.ok(codelistMapper).build()
+    }
+    @CacheResult(cacheName = "codelist-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
         //list codelist by project ref
@@ -33,16 +47,6 @@ class CodelistService(
         return Response.ok(codelistFormList).build()
     }
 
-    @Throws(BackendException::class)
-    fun get(projectRef: String, codelistRef: String): Response {
-        val foundProjectCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist ->
-            codelist.ref == codelistRef
-        }
-        Optional.ofNullable(foundProjectCodelist)
-            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
-        val codelistMapper = CodelistMapper().fromEntity(foundProjectCodelist!!)
-        return Response.ok(codelistMapper).build()
-    }
 
     @Throws(BackendException::class)
     fun create(projectRef: String, codelist: CodelistForm): Response {
