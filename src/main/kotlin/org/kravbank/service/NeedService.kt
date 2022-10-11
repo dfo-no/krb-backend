@@ -23,8 +23,8 @@ class NeedService(
     fun get(projectRef: String, needRef: String): Response {
       val project = projectRepository.findByRef(projectRef)
       val foundNeed = needRepository.findByRef(project.id, needRef)
-      val mappedProduct = NeedMapper().fromEntity(foundNeed)
-      return Response.ok(mappedProduct).build()
+      val needForm = NeedMapper().fromEntity(foundNeed)
+      return Response.ok(needForm).build()
     }
 
     //@CacheResult(cacheName = "need-cache-list")
@@ -32,9 +32,9 @@ class NeedService(
     fun list(projectRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundNeeds = needRepository.listAllNeeds(foundProject.id)
-        val needDTO = ArrayList<NeedForm>()
-        for (n in foundNeeds) needDTO.add(NeedMapper().fromEntity(n))
-        return Response.ok(needDTO).build()
+        val needForm = ArrayList<NeedForm>()
+        for (n in foundNeeds) needForm.add(NeedMapper().fromEntity(n))
+        return Response.ok(needForm).build()
     }
 
     @Throws(BackendException::class)

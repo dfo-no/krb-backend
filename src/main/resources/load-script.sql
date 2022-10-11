@@ -16,28 +16,28 @@ values(26,'ScriptProsjekt6', 'Beskrivelse3', 6,'1998-09-29 21:17:30.23195',null,
 
 --CODELIST
 
-insert into Codelist("id",title, description,  ref)
-values(4,'CodelistTittel1', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Codelist("id",title, description,  ref)
-values(5,'CodelistTittel2', 'CodelistBeskrivelse2', 'asd4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Codelist("id",title, description,  ref)
-values(21,'CodelistTittel3', 'CodelistBeskrivelse2', 'newlist14db69-edb2-431f-855a-4368e2bcddd1');
-insert into Codelist("id",title, description,  ref)
-values(25,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1');
-insert into Codelist("id",title, description,  ref)
-values(27,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist33333db69-edb2-431f-855a-4368e2bcddd1');
+insert into Codelist("id",title, description,  ref, project_id_fk)
+values(4,'CodelistTittel1', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Codelist("id",title, description,  ref, project_id_fk)
+values(5,'CodelistTittel2', 'CodelistBeskrivelse2','asd4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Codelist("id",title, description,  ref, project_id_fk)
+values(21,'CodelistTittel3', 'CodelistBeskrivelse2', 'newlist14db69-edb2-431f-855a-4368e2bcddd1', 22);
+insert into Codelist("id",title, description,  ref, project_id_fk)
+values(25,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1', 24);
+insert into Codelist("id",title, description,  ref, project_id_fk)
+values(27,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist33333db69-edb2-431f-855a-4368e2bcddd1', 26);
 
 
-insert into project_codelist(project_id, codelist_id)
-values(3,4);
-insert into project_codelist(project_id, codelist_id)
-values(3,5);
-insert into project_codelist(project_id, codelist_id)
-values(22,21);
-insert into project_codelist(project_id, codelist_id)
-values(24,25);
-insert into project_codelist(project_id, codelist_id)
-values(26,27);
+-- insert into project_codelist(project_id, codelist_id)
+-- values(3,4);
+-- insert into project_codelist(project_id, codelist_id)
+-- values(3,5);
+-- insert into project_codelist(project_id, codelist_id)
+-- values(22,21);
+-- insert into project_codelist(project_id, codelist_id)
+-- values(24,25);
+-- insert into project_codelist(project_id, codelist_id)
+-- values(26,27);
 
 -- PRODUCT
 insert into product("id",title, description,  ref, deleteddate, project_id_fk)
@@ -119,19 +119,6 @@ values(23,'code tittel fra script5','code beskrivelse fra script','script5b69-ed
 insert into Code("id", title, description, ref)
 values(28,'code tittel fra script6','code beskrivelse fra script','script6b69-edb2-431f-855a-4368e2bcddd1');
 
-
-insert into codelist_code(codelist_id, codes_id)
-values(4,17);
-insert into codelist_code(codelist_id, codes_id)
-values(4,18);
-insert into codelist_code(codelist_id, codes_id)
-values(5,19);
-insert into codelist_code(codelist_id, codes_id)
-values(21,20);
-insert into codelist_code(codelist_id, codes_id)
-values(21,23);
-insert into codelist_code(codelist_id, codes_id)
-values(27,28);
 
 --CONFIG
 select setval('hibernate_sequence', 100, true);

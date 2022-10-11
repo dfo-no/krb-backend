@@ -31,7 +31,7 @@ class NeedRepository: PanacheRepository<Need> {
     fun createNeed(need: Need) {
         persistAndFlush(need)
         if (!need.isPersistent) {
-            throw BadRequestException("Bad request! Need not created")
+            throw BadRequestException("Bad request! Need was not created")
         }
     }
 
@@ -40,7 +40,7 @@ class NeedRepository: PanacheRepository<Need> {
         val deleted: Boolean
         val found = findByRef(projectId, needRef)
         deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Need not deleted")
+        if (!deleted) throw BadRequestException("Bad request! Need was not deleted")
     }
 
     @Throws(BackendException::class)

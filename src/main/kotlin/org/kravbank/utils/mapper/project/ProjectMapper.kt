@@ -16,7 +16,8 @@ class ProjectMapper: Mapper<ProjectForm, Project> {
             entity.publishedDate,
             entity.deletedDate,
           //entity.products,
-           entity.needs
+          // entity.needs
+        entity.codelist
         )
 
     //TO ENTITY

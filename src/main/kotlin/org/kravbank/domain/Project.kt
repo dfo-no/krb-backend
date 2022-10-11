@@ -69,10 +69,13 @@ class Project : PanacheEntity() {
     var needs = mutableListOf<Need>()
 
     @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonBackReference(value="codelist")
+    //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
 
 

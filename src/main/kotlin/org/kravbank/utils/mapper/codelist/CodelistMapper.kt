@@ -12,6 +12,8 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
             entity.ref,
             entity.title,
             entity.description,
+            entity.project
+
         )
 
     //TO ENTITY
@@ -19,6 +21,8 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
       val c = Codelist()
         c.title = domain.title
         c.description = domain.description
+        c.project = domain.project
+
         return c
     }
 }
