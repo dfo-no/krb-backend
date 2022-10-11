@@ -106,18 +106,18 @@ values(12,16);
 
 
 -- CODE
-insert into Code("id", title, description, ref)
-values(17,'code tittel fra script1','code beskrivelse fra script','script1b69-edb2-431f-855a-4368e2bcddd1');
-insert into Code("id", title, description, ref)
-values(18,'code tittel fra script2','code beskrivelse fra script','scrip21b69-edb2-431f-855a-4368e2bcddd1');
-insert into Code("id", title, description, ref)
-values(19,'code tittel fra script3','code beskrivelse fra script','script3b69-edb2-431f-855a-4368e2bcddd1');
-insert into Code("id", title, description, ref)
-values(20,'code tittel fra script4','code beskrivelse fra script','script4b69-edb2-431f-855a-4368e2bcddd1');
-insert into Code("id", title, description, ref)
-values(23,'code tittel fra script5','code beskrivelse fra script','script5b69-edb2-431f-855a-4368e2bcddd1');
-insert into Code("id", title, description, ref)
-values(28,'code tittel fra script6','code beskrivelse fra script','script6b69-edb2-431f-855a-4368e2bcddd1');
+insert into Code("id", title, description, ref, codelist_id_fk)
+values(17,'code tittel fra script1','code beskrivelse fra script','script1b69-edb2-431f-855a-4368e2bcddd1', 4);
+insert into Code("id", title, description, ref, codelist_id_fk)
+values(18,'code tittel fra script2','code beskrivelse fra script','scrip21b69-edb2-431f-855a-4368e2bcddd1', 4);
+insert into Code("id", title, description, ref, codelist_id_fk)
+values(19,'code tittel fra script3','code beskrivelse fra script','script3b69-edb2-431f-855a-4368e2bcddd1', 5);
+insert into Code("id", title, description, ref, codelist_id_fk)
+values(20,'code tittel fra script4','code beskrivelse fra script','script4b69-edb2-431f-855a-4368e2bcddd1', 21);
+insert into Code("id", title, description, ref, codelist_id_fk)
+values(23,'code tittel fra script5','code beskrivelse fra script','script5b69-edb2-431f-855a-4368e2bcddd1', 21);
+insert into Code("id", title, description, ref, codelist_id_fk)
+values(28,'code tittel fra script6','code beskrivelse fra script','script6b69-edb2-431f-855a-4368e2bcddd1', 27);
 
 
 --CONFIG

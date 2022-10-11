@@ -1,5 +1,6 @@
 package org.kravbank.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
@@ -17,8 +18,13 @@ class Codelist() : PanacheEntity() {
     @Column(unique = true)
     var ref : String = UUID.randomUUID().toString()
 
-    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE], orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(
+        mappedBy = ("codelist"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+    )
+    @JsonBackReference(value="code")
+    //@JsonIgnore
     var codes = mutableListOf<Code>()
 
     @OneToMany
@@ -31,7 +37,7 @@ class Codelist() : PanacheEntity() {
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value="codelist")
-    @JsonIgnore
+   // @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 

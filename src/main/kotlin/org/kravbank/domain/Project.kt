@@ -73,7 +73,6 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value="codelist")
     //@JsonIgnore
     var codelist = mutableListOf<Codelist>()

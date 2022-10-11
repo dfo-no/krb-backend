@@ -28,7 +28,7 @@ class Product : PanacheEntity() {
         //optional = false,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference(value="products")
+    @JsonManagedReference(value="product")
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null

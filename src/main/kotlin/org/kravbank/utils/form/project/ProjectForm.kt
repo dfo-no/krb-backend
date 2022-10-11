@@ -10,9 +10,10 @@ data class ProjectForm(
     var title: String = "",
     var description: String = "",
     var version: Long? = null, //Long = 1,
-    var publishedDate: LocalDateTime = LocalDateTime.now(),
+    var publishedDate: LocalDateTime = LocalDateTime.now(), // datetime fra publication
     var deletedDate: LocalDateTime? = null,
     //var products: MutableList<Product> = mutableListOf(),
     //var needs: MutableList<Need> = mutableListOf()
-    var codelist: MutableList<Codelist> = mutableListOf()
+    //var codelist: MutableList<Codelist> = mutableListOf()
+
 )

@@ -12,8 +12,8 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
             entity.ref,
             entity.title,
             entity.description,
-            entity.project
-
+            entity.project,
+            entity.codes
         )
 
     //TO ENTITY
@@ -22,7 +22,7 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
         c.title = domain.title
         c.description = domain.description
         c.project = domain.project
-
+        c.codes = domain.codes
         return c
     }
 }

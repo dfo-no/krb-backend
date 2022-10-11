@@ -18,19 +18,19 @@ class ProjectRepository : PanacheRepository<Project> { //project, long
     @Throws(BackendException::class)
     fun findByRef(ref: String): Project {
         val found = find("ref", ref).firstResult<Project>()
-        return Optional.ofNullable(found).orElseThrow { NotFoundException("Project not found by ref: $ref") }
+        return Optional.ofNullable(found).orElseThrow { NotFoundException("Project not found!") }
     }
 
     @Throws(BackendException::class)
     fun listAllProjects(): MutableList<Project> {
         val all = findAll().list<Project>()
-        if (all.isNotEmpty()) return all else throw NotFoundException("No projects found")
+        if (all.isNotEmpty()) return all else throw NotFoundException("Project was not found!")
     }
 
     @Throws(BackendException::class)
     fun createProject(project: Project) {
         persistAndFlush(project)
-        if (!project.isPersistent) throw BadRequestException("Fail! Project not created")
+        if (!project.isPersistent) throw BadRequestException("Bad request! Project was not created")
     }
 
     @Throws(BackendException::class)
@@ -38,7 +38,7 @@ class ProjectRepository : PanacheRepository<Project> { //project, long
         val deleted: Boolean
         val found = findByRef(projectRef)
         deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Fail! Project not deleted")
+        if (!deleted) throw BadRequestException("Bad request! Project was not deleted")
     }
 
     @Throws(BackendException::class)
@@ -50,6 +50,6 @@ class ProjectRepository : PanacheRepository<Project> { //project, long
             project.description,
             foundProject.id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Fail! Project did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Project did not update") }
     }
 }

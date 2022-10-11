@@ -33,7 +33,7 @@ class CodelistService(
     fun list(projectRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelists = codelistRepository.listAllCodelists(foundProject.id)
-        println("FOUND CODELIST: ${foundCodelists.size}")
+        //println("FOUND CODELIST: ${foundCodelists.size}")
         val codelistForm = ArrayList<CodelistForm>()
         for (n in foundCodelists) codelistForm.add(CodelistMapper().fromEntity(n))
         return Response.ok(codelistForm).build()
