@@ -22,30 +22,24 @@ class ProductService(
     val projectRepository: ProjectRepository
 ) {
 
-    @CacheResult(cacheName = "product-cache-get")
+    // @CacheResult(cacheName = "product-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, productRef: String): Response {
-        val project = projectRepository.findByRef(projectRef).products.find { products ->
-            products.ref == productRef
-        }
-        Optional.ofNullable(project)
-            .orElseThrow { NotFoundException("Product not found by ref $productRef in project by ref $projectRef") }
-        val productMapper = ProductMapper().fromEntity(project!!)
-        return Response.ok(productMapper).build()
+        val project = projectRepository.findByRef(projectRef)
+        val foundProduct = productRepository.findByRef(project.id, productRef)
+        val mappedProduct = ProductMapper().fromEntity(foundProduct)
+        return Response.ok(mappedProduct).build()
     }
 
-    @CacheResult(cacheName = "product-cache-list")
+    //@CacheResult(cacheName = "product-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
-       // val foundProjectProducts = projectRepository.findByRef(projectRef).products
-        println("Here we are ")
         val foundProject = projectRepository.findByRef(projectRef)
-        println(foundProject)
         val foundProducts = productRepository.listAllProducts(foundProject.id)
-        println("foundProducts.size:" + foundProducts.size)
-        val productsFormList = ArrayList<ProductForm>()
-        for (p in foundProducts) productsFormList.add(ProductMapper().fromEntity(p))
-        return Response.ok(productsFormList).build()
+
+        val productsDTO = ArrayList<ProductForm>()
+        for (p in foundProducts) productsDTO.add(ProductMapper().fromEntity(p))
+        return Response.ok(productsDTO).build()
     }
 
     @Throws(BackendException::class)
@@ -53,19 +47,19 @@ class ProductService(
         val project = projectRepository.findByRef(projectRef)
         product.project = project
 
-        println("project: " + project)
+        //println("project: " + project)
         //createProductDTO
         val productMapper = ProductMapper().toEntity(product)
-        println("productMapper: " + productMapper)
+        //println("productMapper: " + productMapper)
 
         //project.products.add(productMapper)
-       // projectService.updateProject(project.id, project)
+        // projectService.updateProject(project.id, project)
 
         productRepository.persistAndFlush(productMapper)
 
-       // if (productMapper.isPersistent)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
-      //  else throw BadRequestException("Bad request! Did not create product")
+        // if (productMapper.isPersistent)
+        return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
+        //  else throw BadRequestException("Bad request! Did not create product")
     }
 
     @Throws(BackendException::class)

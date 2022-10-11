@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
-    @CacheResult(cacheName = "project-cache-get")
+   // @CacheResult(cacheName = "project-cache-get")
     @Throws(BackendException::class)
     fun get(projcetRef: String): Response {
         val project = projectRepository.findByRef(projcetRef)

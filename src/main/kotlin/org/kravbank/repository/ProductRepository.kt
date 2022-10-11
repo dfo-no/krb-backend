@@ -11,13 +11,17 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepository<Product> {
 
-    fun deleteByRef(ref:String)  = find("ref", ref).firstResult<Product>().delete()
+    fun deleteByRef(ref: String) = find("ref", ref).firstResult<Product>().delete()
 
     @Throws(BackendException::class)
-    fun findByRef(ref: String): Product {
-        //val foundProjectProducts = projectRepository.findByRef(ref).products
-        val found = find("ref", ref).firstResult<Product>()
-        return Optional.ofNullable(found).orElseThrow { NotFoundException("Product not found by ref: $ref") }
+    fun findByRef(projectId: Long, ref: String): Product {
+        val product =
+        find(
+              "ref = ?1 and project_id_fk = ?2",
+            ref,
+            projectId
+        ).firstResult<Product>()
+        return Optional.ofNullable(product).orElseThrow { NotFoundException("Product not found by ref: $ref") }
     }
 
     @Throws(BackendException::class)
@@ -36,19 +40,19 @@ class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepos
     @Throws(BackendException::class)
     fun deleteProduct(projectRef: String) {
         val deleted: Boolean
-        val found = findByRef(projectRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Fail! Product not deleted")
+        //val found = findByRef(projectRef)
+        //deleted = deleteById(found.id)
+        // if (!deleted) throw BadRequestException("Fail! Product not deleted")
     }
 
     @Throws(BackendException::class)
     fun updateProduct(projectRef: String, project: Product) {
-        val foundProduct = findByRef(projectRef)
+        val foundProduct = 1L //hardcode
         val updated = update(
             "title = ?1, description= ?2 where id = ?3",
             project.title,
             project.description,
-            foundProduct.id
+            foundProduct
         )
         Optional.of(updated).orElseThrow { BadRequestException("Fail! Product did not update") }
     }

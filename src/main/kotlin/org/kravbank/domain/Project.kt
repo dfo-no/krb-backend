@@ -42,11 +42,7 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         )
-    //@JsonManagedReference
     @JsonBackReference
-
-    //@JsonIgnore
-    //@JoinColumn(name = "project_id_fk")
     var products = mutableListOf<Product>()
 
     @OneToMany(

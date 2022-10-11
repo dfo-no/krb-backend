@@ -25,13 +25,11 @@ class Product : PanacheEntity() {
 
     @ManyToOne(
         cascade = [CascadeType.ALL],
-        
         //optional = false,
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @JsonIgnore
-    //@JsonBackReference
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
