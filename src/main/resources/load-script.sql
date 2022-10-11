@@ -67,15 +67,15 @@ insert into project_publication(project_id, publications_id)
 values(3,9);
 
 -- NEED
-insert into Need("id",title, description, ref)
-values(10,'Need tittel fra script', 'Need beskrivelse fra script','need1b69-edb2-431f-855a-4368e2bcddd1');
-insert into Need("id",title, description, ref)
-values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b69-edb2-431f-855a-4368e2bcddd1');
+insert into Need("id",title, description, ref, project_id_fk)
+values(10,'Need tittel fra script', 'Need beskrivelse fra script','need1b69-edb2-431f-855a-4368e2bcddd1', 2);
+insert into Need("id",title, description, ref, project_id_fk)
+values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b69-edb2-431f-855a-4368e2bcddd1', 2);
 
-insert into project_need(project_id, needs_id)
-values(2,10);
-insert into project_need(project_id, needs_id)
-values(2,11);
+-- insert into project_need(project_id, needs_id)
+-- values(2,10);
+-- insert into project_need(project_id, needs_id)
+-- values(2,11);
 
 -- REQUIREMENT
 insert into Requirement("id",title, description, ref)

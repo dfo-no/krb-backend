@@ -14,7 +14,7 @@ class ProductMapper : Mapper<ProductForm, Product> {
             entity.title,
             entity.description,
             entity.deletedDate,
-            //entity.project
+            entity.project
         )
 
 

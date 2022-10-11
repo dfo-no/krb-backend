@@ -2,8 +2,6 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
-import org.kravbank.exception.BadRequestException
-import org.kravbank.exception.NotFoundException
 import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.repository.NeedRepository
@@ -18,74 +16,49 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class NeedService(
     val needRepository: NeedRepository,
-    val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
-    @CacheResult(cacheName = "need-cache-get")
+  //  @CacheResult(cacheName = "need-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, needRef: String): Response {
-        val project = projectRepository.findByRef(projectRef).needs.find { needs ->
-            needs.ref == needRef
-        }
-        Optional.ofNullable(project)
-            .orElseThrow { NotFoundException("Need not found by ref $needRef in project by ref $projectRef") }
-        val needMapper = NeedMapper().fromEntity(project!!)
-        return Response.ok(needMapper).build()
+      val project = projectRepository.findByRef(projectRef)
+      val foundNeed = needRepository.findByRef(project.id, needRef)
+      val mappedProduct = NeedMapper().fromEntity(foundNeed)
+      return Response.ok(mappedProduct).build()
     }
-    @CacheResult(cacheName = "need-cache-list")
+
+    //@CacheResult(cacheName = "need-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
-        //list needs by project ref
-        val foundProjectNeeds = projectRepository.findByRef(projectRef).needs
-        //convert to array of form
-        val needsFormList = ArrayList<NeedForm>()
-        for (p in foundProjectNeeds) needsFormList.add(NeedMapper().fromEntity(p))
-        //returns the custom need form
-        return Response.ok(needsFormList).build()
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundNeeds = needRepository.listAllNeeds(foundProject.id)
+        val needDTO = ArrayList<NeedForm>()
+        for (n in foundNeeds) needDTO.add(NeedMapper().fromEntity(n))
+        return Response.ok(needDTO).build()
     }
 
-
     @Throws(BackendException::class)
-    fun create(projectRef: String, need: NeedForm): Response {
-        val needMapper = NeedMapper().toEntity(need)
+    fun create(projectRef: String, needForm: NeedForm): Response {
         val project = projectRepository.findByRef(projectRef)
-        project.needs.add(needMapper)
-        projectService.updateProject(project.id, project)
-        if (needMapper.isPersistent)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
-        else throw BadRequestException("Bad request! Did not create need")
+        needForm.project = project
+        val need = NeedMapper().toEntity(needForm)
+        needRepository.createNeed(need)
+        return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
     }
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, needRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundNeed = foundProject.needs.find { needs -> needs.ref == needRef }
-        Optional.ofNullable(foundNeed)
-            .orElseThrow { NotFoundException("Need not found by ref $needRef in project by ref $projectRef") }
-        val deleted = foundProject.needs.remove(foundNeed)
-        if (deleted) {
-            projectService.updateProject(foundProject.id, foundProject)
-            return Response.noContent().build()
-        } else throw BadRequestException("Bad request! Need not deleted")
+        needRepository.deleteNeed(foundProject.id, needRef)
+        return Response.noContent().build()
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, needRef: String, need: NeedFormUpdate): Response {
-        val foundNeed = projectRepository.findByRef(projectRef).needs.find { needs ->
-            needs.ref == needRef
-        }
-        Optional.ofNullable(foundNeed)
-            .orElseThrow { NotFoundException("Need not found by ref $needRef in project by ref $projectRef") }
-        val needMapper = NeedUpdateMapper().toEntity(need)
-        needRepository.update(
-            "title = ?1, description = ?2 where id= ?3",
-            needMapper.title,
-            needMapper.description,
-            //need.deletedDate,
-            foundNeed!!.id
-        )
-        return Response.ok(need).build()
+    fun update(projectRef: String, needRef: String, needForm: NeedFormUpdate): Response {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+        val need = NeedUpdateMapper().toEntity(needForm)
+        needRepository.updateNeed(foundNeed.id, need)
+        return Response.ok(needForm).build()
     }
-    //fun exists(id: Long): Boolean = needRepository.count("id", id) == 1L
-    // fun refExists(ref: String): Boolean = needRepository.count("ref", ref) == 1L
 }

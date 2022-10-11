@@ -42,7 +42,7 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         )
-    @JsonBackReference
+    @JsonBackReference(value="products")
     var products = mutableListOf<Product>()
 
     @OneToMany(
@@ -60,10 +60,12 @@ class Project : PanacheEntity() {
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    @JsonIgnore
+    //@JsonIgnore
+   @JsonBackReference(value="needs")
     var needs = mutableListOf<Need>()
 
     @OneToMany(
@@ -77,7 +79,7 @@ class Project : PanacheEntity() {
     //private String dependency; //vent med bruk
     //private String tags; //vent med bruk
 
-    override fun toString(): String {
-        return  "project id: $id title: $title"
-    }
+//    override fun toString(): String {
+//        return  "project id: $id title: $title"
+//    }
 }
