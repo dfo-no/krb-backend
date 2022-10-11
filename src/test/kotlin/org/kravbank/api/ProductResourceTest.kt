@@ -58,7 +58,7 @@ class ProductResourceTest {
             .header("Content-type", "application/json")
             .post("$useProjectRef/products")
             .then()
-            .statusCode(201) //envt 200
+            .statusCode(201)
     }
 
     @Test

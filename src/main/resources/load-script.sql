@@ -48,8 +48,6 @@ insert into Product("id",title, description,  ref, deleteddate, project_id_fk)
 values(7,'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', null, 1);
 
 
-
-
 --insert into project_product(project_id, products_id)
 --values(3,5);
 --insert into project_product(project_id, products_id)

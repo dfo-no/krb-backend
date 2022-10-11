@@ -4,8 +4,7 @@ import org.kravbank.domain.Product
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.mapper.Mapper
 
-class ProductMapper :
-    org.kravbank.utils.mapper.Mapper<ProductForm, Product> {
+class ProductMapper : Mapper<ProductForm, Product> {
 
 
     // FROM ENTITY
@@ -15,7 +14,7 @@ class ProductMapper :
             entity.title,
             entity.description,
             entity.deletedDate,
-            entity.project
+            //entity.project
         )
 
 
@@ -26,7 +25,6 @@ class ProductMapper :
         p.description = domain.description
         p.deletedDate = domain.deletedDate
         p.project = domain.project
-        println("p.project: ${p.project}")
         return p
     }
 }

@@ -9,16 +9,15 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepository<Product> {
-
+class ProductRepository: PanacheRepository<Product> {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Product {
         val product =
-        find(
-              "ref = ?1 and project_id_fk = ?2",
-            ref,
-            projectId
-        ).firstResult<Product>()
+            find(
+                "ref = ?1 and project_id_fk = ?2",
+                ref,
+                projectId
+            ).firstResult<Product>()
         return Optional.ofNullable(product).orElseThrow { NotFoundException("Product not found") }
     }
 
@@ -53,5 +52,4 @@ class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepos
         )
         Optional.of(updated).orElseThrow { BadRequestException("Fail! Product did not update") }
     }
-
 }

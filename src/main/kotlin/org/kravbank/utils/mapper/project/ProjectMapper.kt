@@ -15,9 +15,8 @@ class ProjectMapper: Mapper<ProjectForm, Project> {
             entity.version,
             entity.publishedDate,
             entity.deletedDate,
-            entity.products
+            //entity.products
         )
-
 
     //TO ENTITY
     override fun toEntity(domain: ProjectForm): Project {
@@ -27,7 +26,7 @@ class ProjectMapper: Mapper<ProjectForm, Project> {
         p.version = domain.version
         p.publishedDate = domain.publishedDate
         p.deletedDate = domain.deletedDate
-        p.products = domain.products
+        //p.products = domain.products
         return p
     }
 }

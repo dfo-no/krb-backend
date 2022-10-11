@@ -10,5 +10,5 @@ data class ProjectForm(
     var version: Long? = null, //Long = 1,
     var publishedDate: LocalDateTime = LocalDateTime.now(),
     var deletedDate: LocalDateTime? = null,
-    var products: MutableList<Product> = mutableListOf<Product>()
+    //var products: MutableList<Product> = mutableListOf<Product>()
 )

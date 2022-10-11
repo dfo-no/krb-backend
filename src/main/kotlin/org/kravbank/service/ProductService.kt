@@ -18,7 +18,6 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class ProductService(
     val productRepository: ProductRepository,
-    val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
 
@@ -59,34 +58,10 @@ class ProductService(
 
     @Throws(BackendException::class)
     fun update(projectRef: String, productRef: String, productForm: ProductFormUpdate): Response {
-
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundProduct = productRepository.findByRef(foundProject.id,productRef)
+        val foundProduct = productRepository.findByRef(foundProject.id, productRef)
         val product = ProductUpdateMapper().toEntity(productForm)
         productRepository.updateProduct(foundProduct.id, product)
-        return Response.ok(product).build()
-
-
-
-        /*
-
-        val foundProduct = projectRepository.findByRef(projectRef).products.find { products ->
-            products.ref == productRef
-        }
-        Optional.ofNullable(foundProduct)
-            .orElseThrow { NotFoundException("Product not found by ref $productRef in project by ref $projectRef") }
-        val productMapper = ProductUpdateMapper().toEntity(product)
-        productRepository.update(
-            "title = ?1, description = ?2 where id= ?3",
-            productMapper.title,
-            productMapper.description,
-            //product.deletedDate,
-            foundProduct!!.id
-        )
-        return Response.ok(product).build()
-
-         */
+        return Response.ok(productForm).build()
     }
-    //fun exists(id: Long): Boolean = productRepository.count("id", id) == 1L
-    //fun refExists(ref: String): Boolean = productRepository.count("ref", ref) == 1L
 }
