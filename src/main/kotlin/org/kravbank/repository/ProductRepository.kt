@@ -11,8 +11,6 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepository<Product> {
 
-    fun deleteByRef(ref: String) = find("ref", ref).firstResult<Product>().delete()
-
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Product {
         val product =
@@ -21,41 +19,39 @@ class ProductRepository(val projectRepository: ProjectRepository) : PanacheRepos
             ref,
             projectId
         ).firstResult<Product>()
-        return Optional.ofNullable(product).orElseThrow { NotFoundException("Product not found by ref: $ref") }
+        return Optional.ofNullable(product).orElseThrow { NotFoundException("Product not found") }
     }
 
     @Throws(BackendException::class)
     fun listAllProducts(id: Long): MutableList<Product> {
-        //val foundProjectProducts = projectRepository.findByRef(projectRef).products
-        val foundProjectsProductsRepo = find("project_id_fk", id).list<Product>()
-        if (foundProjectsProductsRepo.isNotEmpty()) return foundProjectsProductsRepo else throw NotFoundException("No products found")
+        return find("project_id_fk", id).list<Product>()
     }
 
     @Throws(BackendException::class)
     fun createProduct(product: Product) {
         persistAndFlush(product)
-        if (!product.isPersistent) throw BadRequestException("Fail! Product not created")
+        if (!product.isPersistent) {
+            throw BadRequestException("Bad request! Product not created")
+        }
     }
 
     @Throws(BackendException::class)
-    fun deleteProduct(projectRef: String) {
+    fun deleteProduct(projectId: Long, productRef: String) {
         val deleted: Boolean
-        //val found = findByRef(projectRef)
-        //deleted = deleteById(found.id)
-        // if (!deleted) throw BadRequestException("Fail! Product not deleted")
+        val found = findByRef(projectId, productRef)
+        deleted = deleteById(found.id)
+        if (!deleted) throw BadRequestException("Bad request! Product not deleted")
     }
 
     @Throws(BackendException::class)
-    fun updateProduct(projectRef: String, project: Product) {
-        val foundProduct = 1L //hardcode
+    fun updateProduct(id: Long, product: Product) {
         val updated = update(
             "title = ?1, description= ?2 where id = ?3",
-            project.title,
-            project.description,
-            foundProduct
+            product.title,
+            product.description,
+            id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Fail! Product did not update") }
     }
-
 
 }

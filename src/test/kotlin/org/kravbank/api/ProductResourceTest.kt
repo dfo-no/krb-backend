@@ -10,6 +10,7 @@ import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
+import java.time.LocalDateTime
 
 @QuarkusTest
 @QuarkusIntegrationTest

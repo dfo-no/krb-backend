@@ -36,47 +36,40 @@ class ProductService(
     fun list(projectRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProducts = productRepository.listAllProducts(foundProject.id)
-
         val productsDTO = ArrayList<ProductForm>()
         for (p in foundProducts) productsDTO.add(ProductMapper().fromEntity(p))
         return Response.ok(productsDTO).build()
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, product: ProductForm): Response {
+    fun create(projectRef: String, productForm: ProductForm): Response {
         val project = projectRepository.findByRef(projectRef)
-        product.project = project
-
-        //println("project: " + project)
-        //createProductDTO
-        val productMapper = ProductMapper().toEntity(product)
-        //println("productMapper: " + productMapper)
-
-        //project.products.add(productMapper)
-        // projectService.updateProject(project.id, project)
-
-        productRepository.persistAndFlush(productMapper)
-
-        // if (productMapper.isPersistent)
+        productForm.project = project
+        val product = ProductMapper().toEntity(productForm)
+        productRepository.createProduct(product)
         return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
-        //  else throw BadRequestException("Bad request! Did not create product")
     }
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, productRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundProduct = foundProject.products.find { products -> products.ref == productRef }
-        Optional.ofNullable(foundProduct)
-            .orElseThrow { NotFoundException("Product not found by ref $productRef in project by ref $projectRef") }
-        val deleted = foundProject.products.remove(foundProduct)
-        if (deleted) {
-            projectService.updateProject(foundProject.id, foundProject)
-            return Response.noContent().build()
-        } else throw BadRequestException("Bad request! Product not deleted")
+        productRepository.deleteProduct(foundProject.id, productRef)
+        return Response.noContent().build()
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, productRef: String, product: ProductFormUpdate): Response {
+    fun update(projectRef: String, productRef: String, productForm: ProductFormUpdate): Response {
+
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundProduct = productRepository.findByRef(foundProject.id,productRef)
+        val product = ProductUpdateMapper().toEntity(productForm)
+        productRepository.updateProduct(foundProduct.id, product)
+        return Response.ok(product).build()
+
+
+
+        /*
+
         val foundProduct = projectRepository.findByRef(projectRef).products.find { products ->
             products.ref == productRef
         }
@@ -91,6 +84,8 @@ class ProductService(
             foundProduct!!.id
         )
         return Response.ok(product).build()
+
+         */
     }
     //fun exists(id: Long): Boolean = productRepository.count("id", id) == 1L
     //fun refExists(ref: String): Boolean = productRepository.count("ref", ref) == 1L

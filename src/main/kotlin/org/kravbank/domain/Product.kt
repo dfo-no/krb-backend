@@ -24,7 +24,7 @@ class Product : PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
-        cascade = [CascadeType.ALL],
+        cascade = [CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         //optional = false,
         fetch = FetchType.LAZY,
     )
@@ -43,8 +43,8 @@ class Product : PanacheEntity() {
     var products = mutableListOf<Product>()
      */
 
-    override fun toString(): String {
-        return "project id: ${id} title: ${title} project: $project"
-    }
+//    override fun toString(): String {
+//        return "project id: ${id} title: ${title} project: $project"
+//    }
 
 }
