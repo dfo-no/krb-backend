@@ -11,7 +11,7 @@ class CodeMapper: Mapper<CodeForm, Code> {
             entity.ref,
             entity.title,
             entity.description,
-            entity.codelist
+            //entity.codelist
         )
 
     //TO ENTITY

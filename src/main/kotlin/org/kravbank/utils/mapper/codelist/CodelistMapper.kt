@@ -12,8 +12,8 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
             entity.ref,
             entity.title,
             entity.description,
-            entity.project,
-            entity.codes
+            //entity.project,
+           // entity.codes
         )
 
     //TO ENTITY

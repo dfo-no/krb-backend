@@ -42,7 +42,7 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         )
-    @JsonBackReference(value="products")
+    @JsonBackReference(value="product")
     var products = mutableListOf<Product>()
 
     @OneToMany(
@@ -65,7 +65,7 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     //@JsonIgnore
-   @JsonBackReference(value="needs")
+   @JsonBackReference(value="need")
     var needs = mutableListOf<Need>()
 
     @OneToMany(
