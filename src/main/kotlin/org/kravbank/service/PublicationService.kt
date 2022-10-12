@@ -2,16 +2,10 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
-import org.kravbank.exception.BadRequestException
-import org.kravbank.exception.NotFoundException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
-import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
-import org.kravbank.utils.mapper.need.NeedMapper
-import org.kravbank.utils.mapper.need.NeedUpdateMapper
-import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.net.URI

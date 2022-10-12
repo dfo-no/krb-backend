@@ -78,15 +78,15 @@ values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b6
 -- values(2,11);
 
 -- REQUIREMENT
-insert into Requirement("id",title, description, ref)
-values(12,'Requirement tittel fra script', 'Requirement beskrivelse fra script','req1b69-edb2-431f-855a-4368e2bcddd1');
-insert into Requirement("id",title, description, ref)
-values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2','reqd2b69-edb2-431f-855a-4368e2bcddd1');
+insert into Requirement("id",title, description, ref, project_id_fk)
+values(12,'Requirement tittel fra script', 'Requirement beskrivelse fra script','req1b69-edb2-431f-855a-4368e2bcddd1', 2);
+insert into Requirement("id",title, description, ref, project_id_fk)
+values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2','reqd2b69-edb2-431f-855a-4368e2bcddd1', 2);
 
-insert into project_requirement(project_id, requirements_id)
-values(2,12);
-insert into project_requirement(project_id, requirements_id)
-values(2,13);
+-- insert into project_requirement(project_id, requirements_id)
+-- values(2,12);
+-- insert into project_requirement(project_id, requirements_id)
+-- values(2,13);
 
 --REQUIREMENT VARIANT
 insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification )

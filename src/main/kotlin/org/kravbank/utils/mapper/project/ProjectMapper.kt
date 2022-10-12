@@ -18,7 +18,8 @@ class ProjectMapper: Mapper<ProjectForm, Project> {
           //entity.products,
           // entity.needs
         //entity.codelist
-        entity.publications
+        //entity.publications
+        entity.requirements
         )
 
     //TO ENTITY

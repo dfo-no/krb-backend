@@ -12,7 +12,8 @@ class RequirementMapper :
         RequirementForm(
             entity.ref,
             entity.title,
-            entity.description
+            entity.description,
+            entity.project
         )
 
     // TO ENTITY
@@ -20,6 +21,8 @@ class RequirementMapper :
         val r = Requirement()
         r.title = domain.title
         r.description = domain.description
+        r.project = domain.project
+
         return r
     }
 }
