@@ -89,19 +89,19 @@ values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra scrip
 -- values(2,13);
 
 --REQUIREMENT VARIANT
-insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification )
-values(14,'Requirement variant beskrivelse fra script','instruksjon','rvrv1b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true);
-insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification )
-values(15,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv2b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true);
-insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification )
-values(16,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv3b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true);
+insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification, requirement_id_fk)
+values(14,'Requirement variant beskrivelse fra script','instruksjon','rvrv1b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
+insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification, requirement_id_fk)
+values(15,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv2b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
+insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification, requirement_id_fk)
+values(16,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv3b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
 
-insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
-values(12,14);
-insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
-values(12,15);
-insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
-values(12,16);
+-- insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
+-- values(12,14);
+-- insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
+-- values(12,15);
+-- insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
+-- values(12,16);
 
 
 

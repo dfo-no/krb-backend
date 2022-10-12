@@ -32,7 +32,8 @@ class Project : PanacheEntity() {
 
     @Column(
         unique = true,
-        name = "ref")
+        name = "ref"
+    )
     var ref: String = UUID.randomUUID().toString()
 
     var deletedDate: LocalDateTime? = null //inactive vs. active projs --> if inactive show deleted date?
@@ -41,8 +42,8 @@ class Project : PanacheEntity() {
         mappedBy = ("project"),
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        )
-    @JsonBackReference(value="product")
+    )
+    @JsonBackReference(value = "product")
     var products = mutableListOf<Product>()
 
     @OneToMany(
@@ -51,7 +52,7 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     //@JsonIgnore
-    @JsonBackReference(value="val-publication")
+    @JsonBackReference(value = "val-publication")
     var publications = mutableListOf<Publication>()
 
     @OneToMany(
@@ -60,7 +61,7 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     //@JsonIgnore
-    @JsonBackReference(value="val-requirement")
+    @JsonBackReference(value = "val-requirement")
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany(
@@ -69,7 +70,7 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     //@JsonIgnore
-   @JsonBackReference(value="need")
+    @JsonBackReference(value = "need")
     var needs = mutableListOf<Need>()
 
     @OneToMany(
@@ -77,7 +78,7 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value="val-codelist")
+    @JsonBackReference(value = "val-codelist")
     //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
 

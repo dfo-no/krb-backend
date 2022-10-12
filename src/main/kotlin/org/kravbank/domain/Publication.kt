@@ -8,7 +8,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Publication: PanacheEntity() {
+class Publication : PanacheEntity() {
 
     var comment: String = ""
 
@@ -26,7 +26,7 @@ class Publication: PanacheEntity() {
         //optional = false,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference(value="val-publication")
+    @JsonManagedReference(value = "val-publication")
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
