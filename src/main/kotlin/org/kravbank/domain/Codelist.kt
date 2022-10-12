@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
-import lombok.Getter
-import lombok.Setter
 import java.util.*
 import javax.persistence.*
 
 @Entity
-class Codelist() : PanacheEntity() {
+class Codelist: PanacheEntity() {
     var title: String = ""
 
     var description: String = ""
@@ -23,8 +21,8 @@ class Codelist() : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value="code")
     //@JsonIgnore
+    @JsonBackReference(value="value-codes")
     var codes = mutableListOf<Code>()
 
     @OneToMany
@@ -36,9 +34,8 @@ class Codelist() : PanacheEntity() {
         //optional = false,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference(value="codelist")
-   // @JsonIgnore
+    @JsonManagedReference(value="val-codelist")
+   @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
-
 }

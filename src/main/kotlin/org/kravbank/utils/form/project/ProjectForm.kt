@@ -3,6 +3,7 @@ package org.kravbank.utils.form.project
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Need
 import org.kravbank.domain.Product
+import org.kravbank.domain.Publication
 import java.time.LocalDateTime
 
 data class ProjectForm(
@@ -15,5 +16,7 @@ data class ProjectForm(
     //var products: MutableList<Product> = mutableListOf(),
     //var needs: MutableList<Need> = mutableListOf()
     //var codelist: MutableList<Codelist> = mutableListOf()
+    var publications: MutableList<Publication> = mutableListOf()
+
 
 )

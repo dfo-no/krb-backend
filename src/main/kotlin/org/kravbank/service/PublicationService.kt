@@ -6,8 +6,10 @@ import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
+import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
+import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
@@ -22,38 +24,31 @@ class PublicationService(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
-    @CacheResult(cacheName = "publication-cache-get")
+    //@CacheResult(cacheName = "publication-cache-get")
     fun get(projectRef: String, publicationRef: String): Response {
-        val foundProjectPublication = projectRepository.findByRef(projectRef).publications.find { publication ->
-            publication.ref == publicationRef
-        }
-        Optional.ofNullable(foundProjectPublication)
-            .orElseThrow { NotFoundException("Publication not found by ref $publicationRef in project by ref $projectRef") }
-        val publicationMapper = PublicationMapper().fromEntity(foundProjectPublication!!)
-        return Response.ok(publicationMapper).build()
+            val project = projectRepository.findByRef(projectRef)
+            val foundPublication = publicationRepository.findByRef(project.id, publicationRef)
+            val publicationForm = PublicationMapper().fromEntity(foundPublication)
+            return Response.ok(publicationForm).build()
     }
 
-    @CacheResult(cacheName = "publication-cache-list")
+    //@CacheResult(cacheName = "publication-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
-        //list publication by project ref
-        val foundProjectPublications = projectRepository.findByRef(projectRef).publications
-        //convert to array of form
-        val publicationList = ArrayList<PublicationForm>()
-        for (publication in foundProjectPublications) publicationList.add(PublicationMapper().fromEntity(publication))
-        //returns the custom publication form
-        return Response.ok(publicationList).build()
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundPublications = publicationRepository.listAllPublications(foundProject.id)
+        val publicationsForm = ArrayList<PublicationForm>()
+        for (n in foundPublications) publicationsForm.add(PublicationMapper().fromEntity(n))
+        return Response.ok(publicationsForm).build()
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, publication: PublicationForm): Response {
-        val publicationMapper = PublicationMapper().toEntity(publication)
+    fun create(projectRef: String, publicationForm: PublicationForm): Response {
         val project = projectRepository.findByRef(projectRef)
-        project.publications.add(publicationMapper)
-        projectService.updateProject(project.id, project)
-        if (publicationMapper.isPersistent)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
-        else throw BadRequestException("Bad request! Did not create publication")
+        publicationForm.project = project
+        val publication = PublicationMapper().toEntity(publicationForm)
+        publicationRepository.createPublication(publication)
+        return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
     }
 
     @Throws(BackendException::class)

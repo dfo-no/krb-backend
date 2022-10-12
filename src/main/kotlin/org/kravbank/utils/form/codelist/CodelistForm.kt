@@ -10,5 +10,5 @@ data class CodelistForm(
     var title: String = "",
     var description: String = "",
     var project: Project? = null,
-    var codes: MutableList<Code> = mutableListOf()
+    //var codes: MutableList<Code> = mutableListOf()
 )

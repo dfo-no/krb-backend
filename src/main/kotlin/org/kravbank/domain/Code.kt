@@ -1,5 +1,6 @@
 package org.kravbank.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import java.util.*
@@ -17,14 +18,10 @@ class Code: PanacheEntity() {
      @ManyToOne(
           cascade = [CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
           //optional = false,
-          fetch = FetchType.LAZY,
+          fetch = FetchType.LAZY
      )
-     @JsonManagedReference(value="code")
-     //@JsonIgnore
+     @JsonManagedReference(value="value-codes")
+     @JsonIgnore
      @JoinColumn(name = "codelist_id_fk")
      var codelist: Codelist? = null
-
-     // public String type; //code
-     //public parent
-
 }
