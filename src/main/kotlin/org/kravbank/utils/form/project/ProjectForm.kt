@@ -1,5 +1,6 @@
 package org.kravbank.utils.form.project
 
+import org.kravbank.domain.*
 import java.time.LocalDateTime
 
 data class ProjectForm(
@@ -7,6 +8,11 @@ data class ProjectForm(
     var title: String = "",
     var description: String = "",
     var version: Long? = null, //Long = 1,
-    var publishedDate: LocalDateTime = LocalDateTime.now(),
-    var deletedDate: LocalDateTime? = null
+    var publishedDate: LocalDateTime = LocalDateTime.now(), // datetime fra publication
+    var deletedDate: LocalDateTime? = null,
+    //var products: MutableList<Product> = mutableListOf(),
+    //var needs: MutableList<Need> = mutableListOf()
+    //var codelist: MutableList<Codelist> = mutableListOf()
+    //var publications: MutableList<Publication> = mutableListOf()
+    var requirements: MutableList<Requirement> = mutableListOf()
 )

@@ -2,8 +2,6 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
-import org.kravbank.exception.BadRequestException
-import org.kravbank.exception.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.form.codelist.CodelistForm
@@ -11,7 +9,6 @@ import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
 import java.net.URI
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 import kotlin.collections.ArrayList
@@ -20,77 +17,50 @@ import kotlin.collections.ArrayList
 @ApplicationScoped
 class CodelistService(
     val codelistRepository: CodelistRepository,
-    val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
-
-    @CacheResult(cacheName = "codelist-cache-get")
+    //@CacheResult(cacheName = "codelist-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, codelistRef: String): Response {
-        val foundProjectCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist ->
-            codelist.ref == codelistRef
-        }
-        Optional.ofNullable(foundProjectCodelist)
-            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
-        val codelistMapper = CodelistMapper().fromEntity(foundProjectCodelist!!)
-        return Response.ok(codelistMapper).build()
+        val project = projectRepository.findByRef(projectRef)
+        val foundCodelist = codelistRepository.findByRef(project.id, codelistRef)
+        val codelistForm = CodelistMapper().fromEntity(foundCodelist)
+        return Response.ok(codelistForm).build()
     }
-    @CacheResult(cacheName = "codelist-cache-list")
+
+    //@CacheResult(cacheName = "codelist-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
-        //list codelist by project ref
-        val foundProjectCodelists = projectRepository.findByRef(projectRef).codelist
-        //convert to array of form
-        val codelistFormList = ArrayList<CodelistForm>()
-        for (p in foundProjectCodelists) codelistFormList.add(CodelistMapper().fromEntity(p))
-        //returns the custom codelist form
-        return Response.ok(codelistFormList).build()
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundCodelists = codelistRepository.listAllCodelists(foundProject.id)
+        //println("FOUND CODELIST: ${foundCodelists.size}")
+        val codelistForm = ArrayList<CodelistForm>()
+        for (n in foundCodelists) codelistForm.add(CodelistMapper().fromEntity(n))
+        return Response.ok(codelistForm).build()
     }
 
-
     @Throws(BackendException::class)
-    fun create(projectRef: String, codelist: CodelistForm): Response {
-        val codelistMapper = CodelistMapper().toEntity(codelist)
+    fun create(projectRef: String, codelistForm: CodelistForm): Response {
         val project = projectRepository.findByRef(projectRef)
-        project.codelist.add(codelistMapper)
-        projectService.updateProject(project.id, project)
-        if (codelistMapper.isPersistent)
-            return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/" + codelist.ref)).build()
-        else throw BadRequestException("Bad request! Did not create codelist")
+        codelistForm.project = project
+        val codelist = CodelistMapper().toEntity(codelistForm)
+        codelistRepository.createCodelist(codelist)
+        return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/" + codelist.ref)).build()
     }
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, codelistRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundCodelist = foundProject.codelist.find { codelist -> codelist.ref == codelistRef }
-        Optional.ofNullable(foundCodelist)
-            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
-        val deleted = foundProject.codelist.remove(foundCodelist)
-        if (deleted) {
-            projectService.updateProject(foundProject.id, foundProject)
-            return Response.noContent().build()
-        } else throw BadRequestException("Bad request! codelist not deleted")
+        codelistRepository.deleteCodelist(foundProject.id, codelistRef)
+        return Response.noContent().build()
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, codelistRef: String, codelist: CodelistFormUpdate): Response {
-        val foundCodelist = projectRepository.findByRef(projectRef).codelist.find { codelist ->
-            codelist.ref == codelistRef
-        }
-        Optional.ofNullable(foundCodelist)
-            .orElseThrow { NotFoundException("Codelist not found by ref $codelistRef in project by ref $projectRef") }
-        val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
-        codelistRepository.update(
-            "title = ?1, description = ?2 where id= ?3",
-            codelistMapper.title,
-            codelistMapper.description,
-            //codelist.deletedDate,
-            foundCodelist!!.id
-        )
-        return Response.ok(codelist).build()
+    fun update(projectRef: String, codelistRef: String, codelistForm: CodelistFormUpdate): Response {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+        val codelist = CodelistUpdateMapper().toEntity(codelistForm)
+        codelistRepository.updateCodelist(foundCodelist.id, codelist)
+        return Response.ok(codelistForm).build()
     }
-
-    //fun exists(id: Long?): Boolean = codelistRepository.count("id", id) == 1L
-    fun refExists(ref: String): Boolean = codelistRepository.count("ref", ref) == 1L
-
 }

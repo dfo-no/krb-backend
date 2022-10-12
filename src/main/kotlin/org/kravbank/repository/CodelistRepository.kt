@@ -1,36 +1,57 @@
 package org.kravbank.repository
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
-import org.jboss.resteasy.annotations.Query
-
-import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
-import org.postgresql.core.NativeQuery
+import org.kravbank.exception.BackendException
+import org.kravbank.exception.BadRequestException
+import org.kravbank.exception.NotFoundException
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
-import javax.persistence.NamedNativeQuery
-import javax.persistence.PersistenceContext
 
 
 @ApplicationScoped
-class CodelistRepository: PanacheRepository<Codelist> {
-
-
-
-
-    //fun findByTitle(name: String) = find("name", name).firstResult()
-
-    fun findByRef(ref: String) = find("ref", ref).firstResult<Codelist>()
-
-    fun listAllRefs(ref: String) = find("ref", ref).list<Codelist>()
-
-
-    /*
-
-    fun listAllByProjectId(id: Long): MutableList<Codelist>? {
-       //var q = NativeQuery("SELECT * FROM Codelist WHERE id in (SELECT id FROM project_codelist WHERE project_id = ?1)",id)
-        return find("FROM Codelist c WHERE id c.ref.id = ?1", id).list<Codelist>()
+class CodelistRepository : PanacheRepository<Codelist> {
+    @Throws(BackendException::class)
+    fun findByRef(projectId: Long, ref: String): Codelist {
+        val codelist =
+            find(
+                "ref = ?1 and project_id_fk = ?2",
+                ref,
+                projectId
+            ).firstResult<Codelist>()
+        return Optional.ofNullable(codelist).orElseThrow { NotFoundException("Codelist was not found!") }
     }
 
-     */
+    @Throws(BackendException::class)
+    fun listAllCodelists(id: Long): MutableList<Codelist> {
+        return find("project_id_fk", id).list()
+    }
+
+    @Throws(BackendException::class)
+    fun createCodelist(codelist: Codelist) {
+        persistAndFlush(codelist)
+        if (!codelist.isPersistent) {
+            throw BadRequestException("Bad request! Codelist was not created")
+        }
+    }
+
+    @Throws(BackendException::class)
+    fun deleteCodelist(projectId: Long, codelistRef: String) {
+        val deleted: Boolean
+        val found = findByRef(projectId, codelistRef)
+        deleted = deleteById(found.id)
+        if (!deleted) throw BadRequestException("Bad request! Codelist was not deleted")
+    }
+
+    @Throws(BackendException::class)
+    fun updateCodelist(id: Long, codelist: Codelist) {
+        val updated = update(
+            "title = ?1, description = ?2 where id= ?3",
+            codelist.title,
+            codelist.description,
+            //codelist.deletedDate,
+            id
+        )
+        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Codelist did not update") }
+    }
 }

@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
-    @CacheResult(cacheName = "project-cache-get")
+    // @CacheResult(cacheName = "project-cache-get")
     @Throws(BackendException::class)
     fun get(projcetRef: String): Response {
         val project = projectRepository.findByRef(projcetRef)
@@ -25,7 +25,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
 
-    @CacheResult(cacheName = "project-cache-list")
+    //    @CacheResult(cacheName = "project-cache-list")
     @Throws(BackendException::class)
     fun list(): Response {
         val projectFormList = ArrayList<ProjectForm>()
@@ -34,12 +34,11 @@ class ProjectService(val projectRepository: ProjectRepository) {
         return Response.ok(projectFormList).build()
     }
 
-
     @Throws(BackendException::class)
     fun create(newProject: ProjectForm): Response {
         val mappedProjectToEntity = ProjectMapper().toEntity(newProject)
         projectRepository.createProject(mappedProjectToEntity)
-        return Response.created(URI.create("/projects" + newProject.ref)).build();
+        return Response.created(URI.create("/projects/" + newProject.ref)).build();
     }
 
     fun delete(projcetRef: String): Response {
@@ -52,14 +51,5 @@ class ProjectService(val projectRepository: ProjectRepository) {
         projectRepository.updateProject(projcetRef, projectMapper)
         return Response.ok(project).build()
     }
-    fun refExists(ref: String): Boolean = projectRepository.count("ref", ref) == 1L
 
-    fun updateProject(id: Long, project: Project) {
-        projectRepository.update(
-            "title = ?1, description= ?2 where id = ?3",
-            project.title,
-            project.description,
-            id
-        )
-    }
 }

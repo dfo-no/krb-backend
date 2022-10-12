@@ -4,8 +4,7 @@ import org.kravbank.domain.Publication
 import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.mapper.Mapper
 
-class PublicationUpdateMapper :
-    org.kravbank.utils.mapper.Mapper<PublicationFormUpdate, Publication> {
+class PublicationUpdateMapper : Mapper<PublicationFormUpdate, Publication> {
 
     // FROM ENTITY
     override fun fromEntity(entity: Publication): PublicationFormUpdate =

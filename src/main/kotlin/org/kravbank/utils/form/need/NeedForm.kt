@@ -1,8 +1,10 @@
 package org.kravbank.utils.form.need
 
-data class NeedForm(
+import org.kravbank.domain.Project
 
+data class NeedForm(
     var ref: String = "",
     var title: String = "",
-    var description: String = ""
+    var description: String = "",
+    var project: Project? = null
 )

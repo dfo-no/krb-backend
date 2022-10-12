@@ -1,13 +1,14 @@
 package org.kravbank.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity;
+import javax.persistence.*
 
 @Entity
-class Publication: PanacheEntity() {
+class Publication : PanacheEntity() {
 
     var comment: String = ""
 
@@ -19,5 +20,15 @@ class Publication: PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     var deletedDate: LocalDateTime? = null
+
+    @ManyToOne(
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        //optional = false,
+        fetch = FetchType.LAZY,
+    )
+    @JsonManagedReference(value = "val-publication")
+    @JsonIgnore
+    @JoinColumn(name = "project_id_fk")
+    var project: Project? = null
 
 }

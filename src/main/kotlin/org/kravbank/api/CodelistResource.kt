@@ -24,14 +24,16 @@ class CodelistResource(val codelistService: CodelistService, val projectService:
 
     //GET ALL CODELISTS
     @GET
-    fun listCodelists(@PathParam("projectRef") projectRef: String
+    fun listCodelists(
+        @PathParam("projectRef") projectRef: String
     ): Response =
         codelistService.list(projectRef)
 
     //CREATE CODELIST
     @Transactional
     @POST
-    fun createCodelist(@PathParam("projectRef") projectRef: String, codelist: CodelistForm
+    fun createCodelist(
+        @PathParam("projectRef") projectRef: String, codelist: CodelistForm
     ): Response =
         codelistService.create(projectRef, codelist)
 

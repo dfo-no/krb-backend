@@ -6,8 +6,7 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 data class PublicationFormUpdate(
-
-  //var ref : String = "",
+    //var ref : String = "",
     @NotNull
     @NotBlank
     @NotEmpty

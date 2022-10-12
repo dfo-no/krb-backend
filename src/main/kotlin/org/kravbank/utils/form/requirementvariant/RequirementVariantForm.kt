@@ -1,5 +1,7 @@
 package org.kravbank.utils.form.requirementvariant
 
+import org.kravbank.domain.Requirement
+
 data class RequirementVariantForm(
     var ref: String = "",
     var description: String = "",
@@ -8,4 +10,5 @@ data class RequirementVariantForm(
     var useProduct: Boolean = false,
     var useSpesification: Boolean = false,
     var useQualification: Boolean = false,
-    )
+    var requirement: Requirement? = null
+)

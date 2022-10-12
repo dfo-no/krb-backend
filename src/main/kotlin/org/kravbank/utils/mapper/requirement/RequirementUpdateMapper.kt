@@ -4,8 +4,7 @@ import org.kravbank.domain.Requirement
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.utils.mapper.Mapper
 
-class RequirementUpdateMapper :
-    org.kravbank.utils.mapper.Mapper<RequirementFormUpdate, Requirement> {
+class RequirementUpdateMapper : Mapper<RequirementFormUpdate, Requirement> {
 
     // FROM ENTTY
     override fun fromEntity(entity: Requirement): RequirementFormUpdate =

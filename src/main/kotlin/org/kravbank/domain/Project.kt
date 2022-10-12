@@ -1,9 +1,7 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.fasterxml.jackson.annotation.JsonBackReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.*
@@ -30,52 +28,54 @@ class Project : PanacheEntity() {
 
     @Column(
         unique = true,
-        name = "ref")
+        name = "ref"
+    )
     var ref: String = UUID.randomUUID().toString()
 
     var deletedDate: LocalDateTime? = null //inactive vs. active projs --> if inactive show deleted date?
 
     @OneToMany(
-      // mappedBy = ("project"),
+        mappedBy = ("project"),
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonIgnore
+    @JsonBackReference(value = "product")
     var products = mutableListOf<Product>()
-    //@JoinColumn(name="project_id")
-
-    //@JsonManagedReference
-    //@JoinColumn(name = "ref")
 
     @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonBackReference(value = "val-publication")
     var publications = mutableListOf<Publication>()
 
     @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonBackReference(value = "val-requirement")
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonBackReference(value = "need")
     var needs = mutableListOf<Need>()
 
     @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    @JsonIgnore
+    @JsonBackReference(value = "val-codelist")
+    //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
 
-
-    //private String dependency; //vent med bruk
-    //private String tags; //vent med bruk
 }
