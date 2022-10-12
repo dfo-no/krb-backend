@@ -48,7 +48,7 @@ class PublicationRepository : PanacheRepository<Publication> {
         val updated = update(
             "comment = ?1, deleteddate = ?2 where id= ?3",
             publication.comment,
-            //publication.deletedDate,
+            publication.deletedDate,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Fail! Publication did not update") }

@@ -10,6 +10,7 @@ import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.mapper.need.NeedMapper
+import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
@@ -54,30 +55,16 @@ class PublicationService(
     @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Response {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundPublications = foundProject.publications.find { publication -> publication.ref == publicationRef }
-        Optional.ofNullable(foundPublications)
-            .orElseThrow { NotFoundException("Publications not found by ref $publicationRef in project by ref $projectRef") }
-        val deleted = foundProject.publications.remove(foundPublications)
-        if (deleted) {
-            projectService.updateProject(foundProject.id, foundProject)
-            return Response.noContent().build()
-        } else throw BadRequestException("Bad request! Publication not deleted")
+        publicationRepository.deletePublication(foundProject.id, publicationRef)
+        return Response.noContent().build()
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, publicationRef: String, publication: PublicationFormUpdate): Response {
-        val foundPublications = projectRepository.findByRef(projectRef).publications.find { pub ->
-            pub.ref == publicationRef
-        }
-        Optional.ofNullable(foundPublications)
-            .orElseThrow { NotFoundException("Publications not found by ref $publicationRef in project by ref $projectRef") }
-        val publicationMapper = PublicationUpdateMapper().toEntity(publication)
-        publicationRepository.update(
-            "comment = ?1, deleteddate = ?2 where id= ?3",
-            publicationMapper.comment,
-            publicationMapper.deletedDate,
-            foundPublications!!.id
-        )
-        return Response.ok(publication).build()
+    fun update(projectRef: String, publicationRef: String, publicationForm: PublicationFormUpdate): Response {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
+        val publication = PublicationUpdateMapper().toEntity(publicationForm)
+        publicationRepository.updatePublication(foundPublication.id, publication)
+        return Response.ok(publicationForm).build()
     }
 }

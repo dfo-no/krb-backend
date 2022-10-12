@@ -14,7 +14,7 @@ class PublicationMapper: Mapper<PublicationForm, Publication> {
             entity.date,
             entity.version,
             entity.deletedDate,
-            entity.project
+           // entity.project
         )
 
     //TO ENTITY
