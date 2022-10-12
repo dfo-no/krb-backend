@@ -3,6 +3,10 @@ package org.kravbank.api;
 import org.kravbank.utils.form.requirement.RequirementForm
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.service.RequirementService
+import org.kravbank.utils.mapper.requirement.RequirementMapper
+import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
+import java.net.URI
+import java.util.ArrayList
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,19 +24,28 @@ class RequirementResource(val requirementService: RequirementService) {
     fun getRequirement(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String
-    ): Response =
-        requirementService.get(projectRef, requirementRef)
+    ): Response {
+        val requirement = requirementService.get(projectRef, requirementRef)
+        val requirementDTO = RequirementMapper().fromEntity(requirement)
+        return Response.ok(requirementDTO).build()
+    }
 
     //LIST REQUIREMENTS
     @GET
-    fun listRequirements(@PathParam("projectRef") projectRef: String): Response =
-        requirementService.list(projectRef)
+    fun listRequirements(@PathParam("projectRef") projectRef: String): Response {
+        val requirements = requirementService.list(projectRef)
+        val requirementsDTO = ArrayList<RequirementForm>()
+        for (n in requirements) requirementsDTO.add(RequirementMapper().fromEntity(n))
+        return Response.ok(requirementsDTO).build()
+    }
 
     //CREATE REQUIREMENT
     @Transactional
     @POST
-    fun createRequirement(@PathParam("projectRef") projectRef: String, requirement: RequirementForm): Response =
-        requirementService.create(projectRef, requirement)
+    fun createRequirement(@PathParam("projectRef") projectRef: String, requirementDTO: RequirementForm): Response {
+        val requirement = requirementService.create(projectRef, requirementDTO)
+        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/" + requirement.ref)).build()
+    }
 
     //DELETE REQUIREMENT
     @DELETE
@@ -41,8 +54,10 @@ class RequirementResource(val requirementService: RequirementService) {
     fun deleteRequirement(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String
-    ): Response =
+    ): Response {
         requirementService.delete(projectRef, requirementRef)
+        return Response.noContent().build()
+    }
 
     //UPDATE REQUIREMENT
     @PUT
@@ -52,6 +67,10 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         requirement: RequirementFormUpdate
-    ): Response =
-        requirementService.update(projectRef, requirementRef, requirement)
+    ): Response {
+        val requirement = requirementService.update(projectRef, requirementRef, requirement)
+        val requirementUpdateDTO = RequirementUpdateMapper().fromEntity(requirement)
+        return Response.ok(requirementUpdateDTO).build()
+    }
+
 }
