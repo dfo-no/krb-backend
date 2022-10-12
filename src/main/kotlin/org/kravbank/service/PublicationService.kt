@@ -21,10 +21,10 @@ class PublicationService(
 ) {
     //@CacheResult(cacheName = "publication-cache-get")
     fun get(projectRef: String, publicationRef: String): Response {
-            val project = projectRepository.findByRef(projectRef)
-            val foundPublication = publicationRepository.findByRef(project.id, publicationRef)
-            val publicationForm = PublicationMapper().fromEntity(foundPublication)
-            return Response.ok(publicationForm).build()
+        val project = projectRepository.findByRef(projectRef)
+        val foundPublication = publicationRepository.findByRef(project.id, publicationRef)
+        val publicationForm = PublicationMapper().fromEntity(foundPublication)
+        return Response.ok(publicationForm).build()
     }
 
     //@CacheResult(cacheName = "publication-cache-list")

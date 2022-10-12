@@ -1,11 +1,7 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase
-import lombok.ToString
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.*
@@ -82,11 +78,4 @@ class Project : PanacheEntity() {
     //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
 
-
-    //private String dependency; //vent med bruk
-    //private String tags; //vent med bruk
-
-//    override fun toString(): String {
-//        return  "project id: $id title: $title"
-//    }
 }

@@ -4,7 +4,7 @@ import org.kravbank.domain.RequirementVariant
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
 import org.kravbank.utils.mapper.Mapper
 
-class RequirementVariantMapper: Mapper<RequirementVariantForm, RequirementVariant> {
+class RequirementVariantMapper : Mapper<RequirementVariantForm, RequirementVariant> {
 
     // FROM ENTTY
     override fun fromEntity(entity: RequirementVariant): RequirementVariantForm =

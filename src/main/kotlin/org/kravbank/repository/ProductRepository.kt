@@ -9,7 +9,7 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class ProductRepository: PanacheRepository<Product> {
+class ProductRepository : PanacheRepository<Product> {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Product {
         val product =

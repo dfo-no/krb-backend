@@ -54,5 +54,4 @@ class CodelistRepository : PanacheRepository<Codelist> {
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Codelist did not update") }
     }
-
 }

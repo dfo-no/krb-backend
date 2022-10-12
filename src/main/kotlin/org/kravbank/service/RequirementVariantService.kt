@@ -20,14 +20,14 @@ class RequirementVariantService(
     val requirementRepository: RequirementRepository,
     val projectRepository: ProjectRepository
 ) {
-   // @CacheResult(cacheName = "requirementvariant-cache-get")
+    // @CacheResult(cacheName = "requirementvariant-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, requirementRef: String, reqVariantRef: String): Response {
-       val project = projectRepository.findByRef(projectRef)
-       val foundRequirement = requirementRepository.findByRef(project.id, requirementRef)
-       val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
-       val reqVariantForm = RequirementVariantMapper().fromEntity(foundReqVariant)
-       return Response.ok(reqVariantForm).build()
+        val project = projectRepository.findByRef(projectRef)
+        val foundRequirement = requirementRepository.findByRef(project.id, requirementRef)
+        val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
+        val reqVariantForm = RequirementVariantMapper().fromEntity(foundReqVariant)
+        return Response.ok(reqVariantForm).build()
     }
 
     //@CacheResult(cacheName = "requirementvariant-cache-list")
@@ -48,7 +48,8 @@ class RequirementVariantService(
         reqVariantForm.requirement = requirement
         val reqVariant = RequirementVariantMapper().toEntity(reqVariantForm)
         requirementVariantRepository.createRequirementVariant(reqVariant)
-        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariantForm.ref)).build()
+        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariantForm.ref))
+            .build()
     }
 
     @Throws(BackendException::class)

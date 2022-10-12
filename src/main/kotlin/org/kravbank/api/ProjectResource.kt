@@ -45,5 +45,6 @@ class ProjectResource(val projectService: ProjectService) {
     @PUT
     @Path("{projcetRef}")
     @Transactional
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response = projectService.update(projcetRef, updateProject)
+    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response =
+        projectService.update(projcetRef, updateProject)
 }

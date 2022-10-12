@@ -4,7 +4,7 @@ import org.kravbank.domain.Project
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.mapper.Mapper
 
-class ProjectMapper: Mapper<ProjectForm, Project> {
+class ProjectMapper : Mapper<ProjectForm, Project> {
 
     // FROM ENTITY
     override fun fromEntity(entity: Project): ProjectForm =
@@ -15,16 +15,16 @@ class ProjectMapper: Mapper<ProjectForm, Project> {
             entity.version,
             entity.publishedDate,
             entity.deletedDate,
-          //entity.products,
-          // entity.needs
-        //entity.codelist
-        //entity.publications
-        entity.requirements
+            //entity.products,
+            // entity.needs
+            //entity.codelist
+            //entity.publications
+            entity.requirements
         )
 
     //TO ENTITY
     override fun toEntity(domain: ProjectForm): Project {
-      val p = Project()
+        val p = Project()
         p.title = domain.title
         p.description = domain.description
         p.version = domain.version

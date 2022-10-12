@@ -13,12 +13,12 @@ class CodelistMapper : Mapper<CodelistForm, Codelist> {
             entity.title,
             entity.description,
             //entity.project,
-           // entity.codes
+            // entity.codes
         )
 
     //TO ENTITY
     override fun toEntity(domain: CodelistForm): Codelist {
-      val c = Codelist()
+        val c = Codelist()
         c.title = domain.title
         c.description = domain.description
         c.project = domain.project

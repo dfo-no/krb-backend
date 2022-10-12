@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class NeedResource (val needService: NeedService) {
+class NeedResource(val needService: NeedService) {
     //GET NEED
     @GET
     @Path("/{needRef}")

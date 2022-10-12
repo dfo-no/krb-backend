@@ -4,7 +4,6 @@ import org.kravbank.domain.Project
 import java.time.LocalDateTime
 
 data class PublicationForm(
-
     var ref: String = "",
     var comment: String = "",
     var date: LocalDateTime? = LocalDateTime.now(),

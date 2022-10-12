@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
-class CodeResource (val codeService: CodeService) {
+class CodeResource(val codeService: CodeService) {
 
     //GET CODE
     @GET

@@ -1,20 +1,15 @@
 package org.kravbank.repository
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
-import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
-import org.kravbank.utils.mapper.project.ProjectMapper
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class ProjectRepository : PanacheRepository<Project> { //project, long
-
-    //fun findByTitle(name: String) = find("name", name).firstResult()
-
+class ProjectRepository : PanacheRepository<Project> {
     @Throws(BackendException::class)
     fun findByRef(ref: String): Project {
         val found = find("ref", ref).firstResult<Project>()

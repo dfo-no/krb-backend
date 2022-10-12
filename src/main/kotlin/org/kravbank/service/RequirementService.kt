@@ -19,23 +19,23 @@ class RequirementService(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
-   // @CacheResult(cacheName = "requirement-cache-get")
+    // @CacheResult(cacheName = "requirement-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, requirementRef: String): Response {
-       val project = projectRepository.findByRef(projectRef)
-       val foundRequirement = requirementRepository.findByRef(project.id, requirementRef)
-       val requirementForm = RequirementMapper().fromEntity(foundRequirement)
-       return Response.ok(requirementForm).build()
+        val project = projectRepository.findByRef(projectRef)
+        val foundRequirement = requirementRepository.findByRef(project.id, requirementRef)
+        val requirementForm = RequirementMapper().fromEntity(foundRequirement)
+        return Response.ok(requirementForm).build()
     }
 
-   // @CacheResult(cacheName = "requirement-cache-list")
+    // @CacheResult(cacheName = "requirement-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): Response {
-       val foundProject = projectRepository.findByRef(projectRef)
-       val foundRequirement = requirementRepository.listAllRequirements(foundProject.id)
-       val requirementsForm = ArrayList<RequirementForm>()
-       for (n in foundRequirement) requirementsForm.add(RequirementMapper().fromEntity(n))
-       return Response.ok(requirementsForm).build()
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundRequirement = requirementRepository.listAllRequirements(foundProject.id)
+        val requirementsForm = ArrayList<RequirementForm>()
+        for (n in foundRequirement) requirementsForm.add(RequirementMapper().fromEntity(n))
+        return Response.ok(requirementsForm).build()
     }
 
     @Throws(BackendException::class)
@@ -63,4 +63,3 @@ class RequirementService(
         return Response.ok(requirementForm).build()
     }
 }
-

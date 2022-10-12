@@ -4,8 +4,7 @@ import org.kravbank.domain.Product
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.utils.mapper.Mapper
 
-class ProductUpdateMapper: Mapper<ProductFormUpdate, Product> {
-
+class ProductUpdateMapper : Mapper<ProductFormUpdate, Product> {
     // FROM ENTTY
     override fun fromEntity(entity: Product): ProductFormUpdate =
         ProductFormUpdate(

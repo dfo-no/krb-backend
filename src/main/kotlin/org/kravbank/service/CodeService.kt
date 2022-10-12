@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class CodeService(
     val codeRepository: CodeRepository,
-    val projectService: ProjectService,
     val codelistRepository: CodelistRepository,
     val projectRepository: ProjectRepository
 ) {
@@ -49,7 +48,8 @@ class CodeService(
         codeForm.codelist = codelist
         val code = CodeMapper().toEntity(codeForm)
         codeRepository.createCode(code)
-        return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref)).build()
+        return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref))
+            .build()
     }
 
     @Throws(BackendException::class)

@@ -2,8 +2,6 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.exception.BackendException
-import org.kravbank.exception.BadRequestException
-import org.kravbank.exception.NotFoundException
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository

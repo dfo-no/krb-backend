@@ -25,7 +25,6 @@ class Requirement : PanacheEntity() {
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
 
-
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         //optional = false,

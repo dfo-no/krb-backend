@@ -11,7 +11,7 @@ class NeedMapper : Mapper<NeedForm, Need> {
             entity.ref,
             entity.title,
             entity.description,
-           entity.project
+            entity.project
         )
 
     //TO ENTITY

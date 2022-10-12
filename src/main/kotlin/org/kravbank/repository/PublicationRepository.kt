@@ -10,7 +10,6 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class PublicationRepository : PanacheRepository<Publication> {
-
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Publication {
         val publication =

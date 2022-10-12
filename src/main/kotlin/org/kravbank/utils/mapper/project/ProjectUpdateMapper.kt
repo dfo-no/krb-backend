@@ -4,7 +4,7 @@ import org.kravbank.domain.Project
 import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.utils.mapper.Mapper
 
-class ProjectUpdateMapper: Mapper<ProjectFormUpdate, Project> {
+class ProjectUpdateMapper : Mapper<ProjectFormUpdate, Project> {
 
     // FROM ENTTY
     override fun fromEntity(entity: Project): ProjectFormUpdate =

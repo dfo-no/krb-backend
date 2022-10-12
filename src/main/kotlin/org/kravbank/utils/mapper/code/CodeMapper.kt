@@ -4,14 +4,14 @@ import org.kravbank.domain.Code
 import org.kravbank.utils.form.code.CodeForm
 import org.kravbank.utils.mapper.Mapper
 
-class CodeMapper: Mapper<CodeForm, Code> {
+class CodeMapper : Mapper<CodeForm, Code> {
     // FROM ENTITY
     override fun fromEntity(entity: Code): CodeForm =
         CodeForm(
             entity.ref,
             entity.title,
             entity.description,
-           entity.codelist
+            entity.codelist
         )
 
     //TO ENTITY

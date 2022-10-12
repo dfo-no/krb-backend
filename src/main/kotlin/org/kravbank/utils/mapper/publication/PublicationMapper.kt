@@ -4,7 +4,7 @@ import org.kravbank.domain.Publication
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.mapper.Mapper
 
-class PublicationMapper: Mapper<PublicationForm, Publication> {
+class PublicationMapper : Mapper<PublicationForm, Publication> {
 
     // FROM ENTITY
     override fun fromEntity(entity: Publication): PublicationForm =
@@ -14,12 +14,12 @@ class PublicationMapper: Mapper<PublicationForm, Publication> {
             entity.date,
             entity.version,
             entity.deletedDate,
-           // entity.project
+            // entity.project
         )
 
     //TO ENTITY
     override fun toEntity(domain: PublicationForm): Publication {
-      val p = Publication()
+        val p = Publication()
         p.comment = domain.comment
         p.date = domain.date
         p.version = domain.version

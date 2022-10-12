@@ -18,13 +18,13 @@ class NeedService(
     val needRepository: NeedRepository,
     val projectRepository: ProjectRepository
 ) {
-  //  @CacheResult(cacheName = "need-cache-get")
+    //  @CacheResult(cacheName = "need-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, needRef: String): Response {
-      val project = projectRepository.findByRef(projectRef)
-      val foundNeed = needRepository.findByRef(project.id, needRef)
-      val needForm = NeedMapper().fromEntity(foundNeed)
-      return Response.ok(needForm).build()
+        val project = projectRepository.findByRef(projectRef)
+        val foundNeed = needRepository.findByRef(project.id, needRef)
+        val needForm = NeedMapper().fromEntity(foundNeed)
+        return Response.ok(needForm).build()
     }
 
     //@CacheResult(cacheName = "need-cache-list")
