@@ -1,6 +1,6 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
+import org.kravbank.domain.Code
 import org.kravbank.exception.BackendException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.repository.CodelistRepository
@@ -10,7 +10,6 @@ import org.kravbank.utils.form.code.CodeFormUpdate
 import org.kravbank.utils.mapper.code.CodeMapper
 import org.kravbank.utils.mapper.code.CodeUpdateMapper
 import java.net.URI
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.core.Response
 
@@ -22,51 +21,44 @@ class CodeService(
 ) {
     // @CacheResult(cacheName = "code-cache-get")
     @Throws(BackendException::class)
-    fun get(projectRef: String, codelistRef: String, codeRef: String): Response {
+    fun get(projectRef: String, codelistRef: String, codeRef: String): Code {
         val project = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(project.id, codelistRef)
-        val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
-        val codeForm = CodeMapper().fromEntity(foundCode)
-        return Response.ok(codeForm).build()
+        return codeRepository.findByRef(foundCodelist.id, codeRef)
     }
 
     // @CacheResult(cacheName = "code-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String, codelistRef: String): Response {
+    fun list(projectRef: String, codelistRef: String): MutableList<Code> {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
-        val foundCode = codeRepository.listAllCodes(foundCodelist.id)
-        val codelistForm = ArrayList<CodeForm>()
-        for (c in foundCode) codelistForm.add(CodeMapper().fromEntity(c))
-        return Response.ok(codelistForm).build()
+        return codeRepository.listAllCodes(foundCodelist.id)
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, codelistRef: String, codeForm: CodeForm): Response {
+    fun create(projectRef: String, codelistRef: String, codeForm: CodeForm): Code {
         val project = projectRepository.findByRef(projectRef)
         val codelist = codelistRepository.findByRef(project.id, codelistRef)
         codeForm.codelist = codelist
         val code = CodeMapper().toEntity(codeForm)
         codeRepository.createCode(code)
-        return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref))
-            .build()
+        return code
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, codelistRef: String, codeRef: String): Response {
+    fun delete(projectRef: String, codelistRef: String, codeRef: String) {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         codeRepository.deleteCode(foundCodelist.id, codeRef)
-        return Response.noContent().build()
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, codelistRef: String, codeRef: String, codeForm: CodeFormUpdate): Response {
+    fun update(projectRef: String, codelistRef: String, codeRef: String, codeForm: CodeFormUpdate): Code {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
         val code = CodeUpdateMapper().toEntity(codeForm)
         codeRepository.updateCode(foundCode.id, code)
-        return Response.ok(codeForm).build()
+        return code
     }
 }

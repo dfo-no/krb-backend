@@ -58,7 +58,7 @@ class CodelistResource(val codelistService: CodelistService) {
     fun deleteCodelist(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String
-    ): Response  {
+    ): Response {
         codelistService.delete(projectRef, codelistRef)
         return Response.noContent().build()
     }
@@ -70,12 +70,10 @@ class CodelistResource(val codelistService: CodelistService) {
     fun updateCodelist(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-        updateCodelist: CodelistFormUpdate
+        codelistUpdateDTO: CodelistFormUpdate
     ): Response {
-        val codelist = codelistService.update(projectRef, codelistRef, updateCodelist)
+        val codelist = codelistService.update(projectRef, codelistRef, codelistUpdateDTO)
         // mapper fra entity
-        //
-        //
         val codelistUpdateDTO = CodelistUpdateMapper().fromEntity(codelist)
         return Response.ok(codelistUpdateDTO).build()
     }

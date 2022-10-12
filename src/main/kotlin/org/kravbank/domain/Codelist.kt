@@ -21,7 +21,7 @@ class Codelist : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
+    //@JsonIgnorepo
     @JsonBackReference(value = "value-codes")
     var codes = mutableListOf<Code>()
 
