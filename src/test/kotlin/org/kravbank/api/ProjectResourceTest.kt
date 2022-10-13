@@ -76,7 +76,7 @@ class ProjectResourceTest {
         given()
             .`when`().delete("http://localhost:8080/api/v1/projects/ccc4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(204)
+            .statusCode(200)
     }
 
 

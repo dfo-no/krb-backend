@@ -36,11 +36,12 @@ class CodelistRepository : PanacheRepository<Codelist> {
     }
 
     @Throws(BackendException::class)
-    fun deleteCodelist(projectId: Long, codelistRef: String) {
+    fun deleteCodelist(projectId: Long, codelistRef: String): Codelist {
         val deleted: Boolean
         val found = findByRef(projectId, codelistRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! Codelist was not deleted")
+        return found
     }
 
     @Throws(BackendException::class)

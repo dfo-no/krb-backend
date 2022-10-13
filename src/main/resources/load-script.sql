@@ -57,9 +57,9 @@ values(7,'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e
 
 -- PUBLICATION
 insert into Publication("id",comment, version, date,  ref, deleteddate, project_id_fk)
-values(8,'comment1', 2, '2019-10-04T12:27:55.191667','zzz4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
+values(8,'comment1', 2, '2020-09-29 21:17:30.23195','zzz4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
 insert into Publication("id",comment, version, date,  ref, deleteddate, project_id_fk)
-values(9,'comment2', 4, '2020-10-04T12:27:55.191667','xxx4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
+values(9,'comment2', 4, '1999-09-10 21:17:30.23195','xxx4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
 
 -- insert into project_publication(project_id, publications_id)
 -- values(3,8);

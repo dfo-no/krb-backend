@@ -35,11 +35,12 @@ class RequirementRepository : PanacheRepository<Requirement> {
     }
 
     @Throws(BackendException::class)
-    fun deleteRequirement(projectId: Long, requirementRef: String) {
+    fun deleteRequirement(projectId: Long, requirementRef: String): Requirement{
         val deleted: Boolean
         val found = findByRef(projectId, requirementRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! Requirement was not deleted")
+        return found
     }
 
     @Throws(BackendException::class)

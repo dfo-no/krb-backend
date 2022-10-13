@@ -1,6 +1,7 @@
 package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
+import org.kravbank.domain.Publication
 import org.kravbank.exception.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
@@ -16,49 +17,42 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class PublicationService(
     val publicationRepository: PublicationRepository,
-    val projectService: ProjectService,
     val projectRepository: ProjectRepository
 ) {
     //@CacheResult(cacheName = "publication-cache-get")
-    fun get(projectRef: String, publicationRef: String): Response {
+    fun get(projectRef: String, publicationRef: String): Publication {
         val project = projectRepository.findByRef(projectRef)
-        val foundPublication = publicationRepository.findByRef(project.id, publicationRef)
-        val publicationForm = PublicationMapper().fromEntity(foundPublication)
-        return Response.ok(publicationForm).build()
+        return publicationRepository.findByRef(project.id,publicationRef)
     }
 
     //@CacheResult(cacheName = "publication-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String): Response {
+    fun list(projectRef: String): MutableList<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundPublications = publicationRepository.listAllPublications(foundProject.id)
-        val publicationsForm = ArrayList<PublicationForm>()
-        for (n in foundPublications) publicationsForm.add(PublicationMapper().fromEntity(n))
-        return Response.ok(publicationsForm).build()
+        return publicationRepository.listAllPublications(foundProject.id)
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, publicationForm: PublicationForm): Response {
+    fun create(projectRef: String, publicationForm: PublicationForm): Publication {
         val project = projectRepository.findByRef(projectRef)
         publicationForm.project = project
         val publication = PublicationMapper().toEntity(publicationForm)
         publicationRepository.createPublication(publication)
-        return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
+        return publication
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, publicationRef: String): Response {
+    fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
-        publicationRepository.deletePublication(foundProject.id, publicationRef)
-        return Response.noContent().build()
+        return publicationRepository.deletePublication(foundProject.id, publicationRef)
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, publicationRef: String, publicationForm: PublicationFormUpdate): Response {
+    fun update(projectRef: String, publicationRef: String, publicationForm: PublicationFormUpdate): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
         val publication = PublicationUpdateMapper().toEntity(publicationForm)
         publicationRepository.updatePublication(foundPublication.id, publication)
-        return Response.ok(publicationForm).build()
+        return publication
     }
 }

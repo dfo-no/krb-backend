@@ -35,21 +35,24 @@ class PublicationRepository : PanacheRepository<Publication> {
     }
 
     @Throws(BackendException::class)
-    fun deletePublication(projectId: Long, publicationRef: String) {
+    fun deletePublication(projectId: Long, publicationRef: String): Publication {
         val deleted: Boolean
         val found = findByRef(projectId, publicationRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! Publication was not deleted")
+        return found
     }
 
     @Throws(BackendException::class)
     fun updatePublication(id: Long, publication: Publication) {
         val updated = update(
-            "comment = ?1, deleteddate = ?2 where id= ?3",
+            "comment = ?1, version = ?2 where id= ?3",
             publication.comment,
-            publication.deletedDate,
+            publication.version,
+            //publication.deletedDate,
             id
         )
+
         Optional.of(updated).orElseThrow { BadRequestException("Fail! Publication did not update") }
     }
 

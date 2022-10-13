@@ -3,10 +3,16 @@ package org.kravbank.api;
 import org.kravbank.service.CodeService
 import org.kravbank.utils.form.code.CodeForm
 import org.kravbank.utils.form.code.CodeFormUpdate
+import org.kravbank.utils.mapper.code.CodeMapper
+import org.kravbank.utils.mapper.code.CodeUpdateMapper
+import org.kravbank.utils.mapper.publication.PublicationMapper
+import java.net.URI
+import java.util.ArrayList
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
+
 
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
@@ -20,30 +26,42 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
-    ): Response =
-        codeService.get(
-            projectRef,
-            codelistRef,
-            codeRef
-        )
+    ): Response {
+        //finner code
+        val code = codeService.get(projectRef, codelistRef, codeRef)
+        //lager DTO - mapper fra entity
+        val codeDTO = CodeMapper().fromEntity(code)
+        return Response.ok(codeDTO).build()
+    }
 
     //LIST CODES
     @GET
     fun listCodes(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-    ): Response =
-        codeService.list(projectRef, codelistRef)
+    ): Response {
+        //finner liste av codes
+        val codes = codeService.list(projectRef, codelistRef)
+        val codelistForm = ArrayList<CodeForm>()
+        //lager DTO - mapper fra entity
+        for (c in codes) codelistForm.add(CodeMapper().fromEntity(c))
+        return Response.ok(codelistForm).build()
+    }
 
-    //CREATE REQUIREMENTVARIANT
+    //CREATE CODE
     @Transactional
     @POST
     fun createCode(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-        code: CodeForm
-    ): Response =
-        codeService.create(projectRef, codelistRef, code)
+        codeDTO: CodeForm
+    ): Response {
+        //lager ny code
+        val code = codeService.create(projectRef, codelistRef, codeDTO)
+        //sender ny code ref i response header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref))
+            .build()
+    }
 
     //DELETE CODE
     @DELETE
@@ -53,8 +71,13 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
-    ): Response =
-        codeService.delete(projectRef, codelistRef, codeRef)
+    ): Response {
+        //sletter code
+        val code = codeService.delete(projectRef, codelistRef, codeRef)
+        val codeDTO = CodeMapper().fromEntity(code)
+        // sender slettet publication ref i body
+        return Response.ok(codeDTO.ref).build()
+    }
 
     //UPDATE CODE
     @PUT
@@ -64,13 +87,12 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String,
-        code: CodeFormUpdate
-    ): Response =
-        codeService.update(
-            projectRef,
-            codelistRef,
-            codeRef,
-            code
-        )
+        codeUpdateDTO: CodeFormUpdate
+    ): Response {
+        //oppdaterer code
+        val code = codeService.update(projectRef, codelistRef, codeRef, codeUpdateDTO)
+        //sender DTO - mapper fra entity
+        val codeUpdateDTO = CodeUpdateMapper().fromEntity(code)
+        return Response.ok(codeUpdateDTO).build()
+    }
 }
-

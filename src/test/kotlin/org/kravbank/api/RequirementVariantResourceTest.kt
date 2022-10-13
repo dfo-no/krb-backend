@@ -77,10 +77,11 @@ class RequirementVariantResourceTest {
             .`when`()
             .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(204)
+            .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
 
     }
+
 
     @Test
     fun updateRequirementVariant() {

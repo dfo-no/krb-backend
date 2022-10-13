@@ -90,7 +90,7 @@ class NeedResourceTest {
             .`when`()
             .delete("$resourceUrl$useNeedRef")
             .then()
-            .statusCode(204)
+            .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
     }
 }

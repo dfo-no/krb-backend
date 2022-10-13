@@ -80,7 +80,7 @@ class CodeResourceTest {
             .`when`()
             .delete("http://localhost:8080/api/v1/projects/prosjekt6-edb2-431f-855a-4368e2bcddd1/codelists/newlist33333db69-edb2-431f-855a-4368e2bcddd1/codes/script6b69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(204)
+            .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
 
     }
