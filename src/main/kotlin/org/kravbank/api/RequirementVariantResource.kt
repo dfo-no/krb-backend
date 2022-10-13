@@ -21,12 +21,14 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
-    ): Response =
-        requirementVariantService.get(
+    ): Response {
+        return requirementVariantService.get(
             projectRef,
             requirementRef,
             requirementVariantRef
         )
+
+    }
 
     //LIST REQUIREMENT VARIANTS
     @GET

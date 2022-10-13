@@ -3,12 +3,10 @@ package org.kravbank.api;
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.service.PublicationService
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.net.URI
 import java.util.ArrayList
-import java.util.ResourceBundle
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*

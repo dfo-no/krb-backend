@@ -72,5 +72,4 @@ class RequirementResource(val requirementService: RequirementService) {
         val requirementUpdateDTO = RequirementUpdateMapper().fromEntity(requirement)
         return Response.ok(requirementUpdateDTO).build()
     }
-
 }
