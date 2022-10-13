@@ -5,6 +5,7 @@ import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.service.RequirementService
 import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
 import java.net.URI
 import java.util.ArrayList
 import javax.transaction.Transactional;
@@ -55,8 +56,10 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String
     ): Response {
-        requirementService.delete(projectRef, requirementRef)
-        return Response.noContent().build()
+        val requirement = requirementService.delete(projectRef, requirementRef)
+        val requirementDTO = RequirementMapper().fromEntity(requirement)
+        // sender slettet req ref i body
+        return Response.ok(requirementDTO.ref).build()
     }
 
     //UPDATE REQUIREMENT

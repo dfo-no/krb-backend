@@ -92,7 +92,7 @@ class PublicationResourceTest {
             .`when`()
             .delete("$resourceUrl$usePublicationRef")
             .then()
-            .statusCode(204)
+            .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
     }
 }

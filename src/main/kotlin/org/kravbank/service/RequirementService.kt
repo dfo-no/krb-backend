@@ -41,9 +41,9 @@ class RequirementService(
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, requirementRef: String) {
+    fun delete(projectRef: String, requirementRef: String): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
-        requirementRepository.deleteRequirement(foundProject.id, requirementRef)
+        return requirementRepository.deleteRequirement(foundProject.id, requirementRef)
     }
 
     @Throws(BackendException::class)

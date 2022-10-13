@@ -5,6 +5,7 @@ import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.service.PublicationService
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
 import java.net.URI
 import java.util.ArrayList
 import javax.enterprise.context.RequestScoped
@@ -55,8 +56,10 @@ class PublicationResource(val publicationService: PublicationService) {
     fun deletePublication(
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
     ): Response {
-        publicationService.delete(projectRef, publicationRef)
-        return Response.noContent().build()
+        val publication = publicationService.delete(projectRef, publicationRef)
+        val publicationDTO = PublicationMapper().fromEntity(publication)
+        // sender slettet publication ref i body
+        return Response.ok(publicationDTO.ref).build()
     }
 
     //UPDATE PUBLICATION

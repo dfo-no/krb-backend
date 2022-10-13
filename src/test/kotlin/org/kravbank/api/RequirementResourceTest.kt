@@ -95,7 +95,7 @@ class RequirementResourceTest {
             .`when`()
             .delete("$resourceUrl$useRequirementRef")
             .then()
-            .statusCode(204)
+            .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
     }
 }

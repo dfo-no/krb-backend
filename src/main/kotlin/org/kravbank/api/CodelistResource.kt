@@ -5,6 +5,7 @@ import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.service.CodelistService
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
+import org.kravbank.utils.mapper.project.ProjectMapper
 import java.net.URI
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -59,8 +60,9 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String
     ): Response {
-        codelistService.delete(projectRef, codelistRef)
-        return Response.noContent().build()
+        val codelist = codelistService.delete(projectRef, codelistRef)
+        val codelistDTO = CodelistMapper().fromEntity(codelist)
+        return Response.ok(codelistDTO.ref).build()
     }
 
     //UPDATE CODELIST

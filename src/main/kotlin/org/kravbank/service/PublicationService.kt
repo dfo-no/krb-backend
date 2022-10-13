@@ -42,9 +42,9 @@ class PublicationService(
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, publicationRef: String) {
+    fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
-        publicationRepository.deletePublication(foundProject.id, publicationRef)
+        return publicationRepository.deletePublication(foundProject.id, publicationRef)
     }
 
     @Throws(BackendException::class)

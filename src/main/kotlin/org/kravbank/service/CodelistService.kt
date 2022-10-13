@@ -2,6 +2,7 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Codelist
+import org.kravbank.domain.Project
 import org.kravbank.exception.BackendException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
@@ -41,9 +42,9 @@ class CodelistService(
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, codelistRef: String) {
+    fun delete(projectRef: String, codelistRef: String): Codelist {
         val foundProject = projectRepository.findByRef(projectRef)
-        codelistRepository.deleteCodelist(foundProject.id, codelistRef)
+        return codelistRepository.deleteCodelist(foundProject.id, codelistRef)
     }
 
     @Throws(BackendException::class)

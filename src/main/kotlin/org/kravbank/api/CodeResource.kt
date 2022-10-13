@@ -5,6 +5,7 @@ import org.kravbank.utils.form.code.CodeForm
 import org.kravbank.utils.form.code.CodeFormUpdate
 import org.kravbank.utils.mapper.code.CodeMapper
 import org.kravbank.utils.mapper.code.CodeUpdateMapper
+import org.kravbank.utils.mapper.publication.PublicationMapper
 import java.net.URI
 import java.util.ArrayList
 import javax.transaction.Transactional;
@@ -72,8 +73,10 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("codeRef") codeRef: String
     ): Response {
         //sletter code
-        codeService.delete(projectRef, codelistRef, codeRef)
-        return Response.noContent().build()
+        val code = codeService.delete(projectRef, codelistRef, codeRef)
+        val codeDTO = CodeMapper().fromEntity(code)
+        // sender slettet publication ref i body
+        return Response.ok(codeDTO.ref).build()
     }
 
     //UPDATE CODE
