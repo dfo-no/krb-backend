@@ -33,10 +33,10 @@ class PublicationService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, publicationForm: PublicationForm): Publication {
+    fun create(projectRef: String, newPublication: PublicationForm): Publication {
         val project = projectRepository.findByRef(projectRef)
-        publicationForm.project = project
-        val publication = PublicationMapper().toEntity(publicationForm)
+        newPublication.project = project
+        val publication = PublicationMapper().toEntity(newPublication)
         publicationRepository.createPublication(publication)
         return publication
     }
@@ -48,10 +48,10 @@ class PublicationService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, publicationRef: String, publicationForm: PublicationFormUpdate): Publication {
+    fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationFormUpdate): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        val publication = PublicationUpdateMapper().toEntity(publicationForm)
+        val publication = PublicationUpdateMapper().toEntity(updatedPublication)
         publicationRepository.updatePublication(foundPublication.id, publication)
         return publication
     }

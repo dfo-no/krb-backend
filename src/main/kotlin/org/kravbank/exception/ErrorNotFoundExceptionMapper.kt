@@ -9,6 +9,6 @@ import javax.ws.rs.ext.Provider
 class ErrorNotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
 
     override fun toResponse(exception: NotFoundException): Response {
-        return Response.status(Response.Status.NOT_FOUND).entity(exception!!.message).build()
+        return Response.status(Response.Status.NOT_FOUND).entity(exception.message).build()
     }
 }

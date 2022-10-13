@@ -31,10 +31,10 @@ class NeedService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, needForm: NeedForm): Need {
+    fun create(projectRef: String, newNeed: NeedForm): Need {
         val project = projectRepository.findByRef(projectRef)
-        needForm.project = project
-        val need = NeedMapper().toEntity(needForm)
+        newNeed.project = project
+        val need = NeedMapper().toEntity(newNeed)
         needRepository.createNeed(need)
         return need
     }
@@ -46,10 +46,10 @@ class NeedService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, needRef: String, needForm: NeedFormUpdate): Need {
+    fun update(projectRef: String, needRef: String, updatedNeed: NeedFormUpdate): Need {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundNeed = needRepository.findByRef(foundProject.id, needRef)
-        val need = NeedUpdateMapper().toEntity(needForm)
+        val need = NeedUpdateMapper().toEntity(updatedNeed)
         needRepository.updateNeed(foundNeed.id, need)
         return need
     }

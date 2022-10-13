@@ -24,7 +24,7 @@ class Project : PanacheEntity() {
     @Min(1)
     var version: Long? = null  // //if changed +1 via update form
 
-    var publishedDate: LocalDateTime = LocalDateTime.now() // evnt last updated attribute
+    var publishedDate: LocalDateTime? = null // evnt last updated attribute
 
     @Column(
         unique = true,

@@ -10,7 +10,7 @@ class ProductUpdateMapper : Mapper<ProductFormUpdate, Product> {
         ProductFormUpdate(
             entity.title,
             entity.description,
-            entity.deletedDate
+            //entity.deletedDate
         )
 
     // TO ENTITY
@@ -18,7 +18,7 @@ class ProductUpdateMapper : Mapper<ProductFormUpdate, Product> {
         val p = Product()
         p.title = domain.title
         p.description = domain.description
-        p.deletedDate = domain.deletedDate
+       // p.deletedDate = domain.deletedDate
         return p
     }
 

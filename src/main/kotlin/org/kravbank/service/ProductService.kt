@@ -26,32 +26,33 @@ class ProductService(
 
     //@CacheResult(cacheName = "product-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String): MutableList<Product> {
+    fun list(projectRef: String): List<Product> {
         val foundProject = projectRepository.findByRef(projectRef)
         return productRepository.listAllProducts(foundProject.id)
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, productForm: ProductForm): Product {
+    fun create(projectRef: String, newProduct: ProductForm): Product {
         val project = projectRepository.findByRef(projectRef)
-        productForm.project = project
-        val product = ProductMapper().toEntity(productForm)
+        newProduct.project = project
+        val product = ProductMapper().toEntity(newProduct)
         productRepository.createProduct(product)
         return product
     }
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, productRef: String): Product {
-        val foundProject = projectRepository.findByRef(projectRef)
-        return productRepository.deleteProduct(foundProject.id, productRef)
-
+        val project = projectRepository.findByRef(projectRef)
+        val product = productRepository.findByRef(project.id, productRef)
+        productRepository.deleteProduct(product.id)
+        return product
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, productRef: String, productForm: ProductFormUpdate): Product {
+    fun update(projectRef: String, productRef: String, updatedProduct: ProductFormUpdate): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
-        val product = ProductUpdateMapper().toEntity(productForm)
+        val product = ProductUpdateMapper().toEntity(updatedProduct)
         productRepository.updateProduct(foundProduct.id, product)
         return product
     }

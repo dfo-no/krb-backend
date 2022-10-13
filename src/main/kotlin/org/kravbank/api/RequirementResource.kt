@@ -43,8 +43,8 @@ class RequirementResource(val requirementService: RequirementService) {
     //CREATE REQUIREMENT
     @Transactional
     @POST
-    fun createRequirement(@PathParam("projectRef") projectRef: String, requirementDTO: RequirementForm): Response {
-        val requirement = requirementService.create(projectRef, requirementDTO)
+    fun createRequirement(@PathParam("projectRef") projectRef: String, newRequirement: RequirementForm): Response {
+        val requirement = requirementService.create(projectRef, newRequirement)
         return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/" + requirement.ref)).build()
     }
 
@@ -69,9 +69,9 @@ class RequirementResource(val requirementService: RequirementService) {
     fun updateRequirement(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
-        requirement: RequirementFormUpdate
+        updatedRequirement: RequirementFormUpdate
     ): Response {
-        val requirement = requirementService.update(projectRef, requirementRef, requirement)
+        val requirement = requirementService.update(projectRef, requirementRef, updatedRequirement)
         val requirementUpdateDTO = RequirementUpdateMapper().fromEntity(requirement)
         return Response.ok(requirementUpdateDTO).build()
     }

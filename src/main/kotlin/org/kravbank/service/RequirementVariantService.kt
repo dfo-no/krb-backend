@@ -38,11 +38,11 @@ class RequirementVariantService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, requirementRef: String, reqVariantForm: RequirementVariantForm): RequirementVariant {
+    fun create(projectRef: String, requirementRef: String, newReqVariant: RequirementVariantForm): RequirementVariant {
         val project = projectRepository.findByRef(projectRef)
         val requirement = requirementRepository.findByRef(project.id, requirementRef)
-        reqVariantForm.requirement = requirement
-        val reqVariant = RequirementVariantMapper().toEntity(reqVariantForm)
+        newReqVariant.requirement = requirement
+        val reqVariant = RequirementVariantMapper().toEntity(newReqVariant)
         requirementVariantRepository.createRequirementVariant(reqVariant)
         return reqVariant
     }
@@ -59,12 +59,12 @@ class RequirementVariantService(
         projectRef: String,
         requirementRef: String,
         reqVariantRef: String,
-        reqVariantForm: RequirementVariantFormUpdate
+        updatedReqVariant: RequirementVariantFormUpdate
     ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
         val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
-        val reqVariant = RequirementVariantUpdateMapper().toEntity(reqVariantForm)
+        val reqVariant = RequirementVariantUpdateMapper().toEntity(updatedReqVariant)
         requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, reqVariant)
         return reqVariant
     }
