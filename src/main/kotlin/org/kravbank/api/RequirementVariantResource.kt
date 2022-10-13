@@ -50,9 +50,9 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     fun createRequirementVariant(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
-        requirementVariant: RequirementVariantForm
+        newReqVariant: RequirementVariantForm
     ): Response {
-        val reqVariant = requirementVariantService.create(projectRef, requirementRef, requirementVariant)
+        val reqVariant = requirementVariantService.create(projectRef, requirementRef, newReqVariant)
         //sender ny req variant ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariant.ref))
             .build()
@@ -81,10 +81,10 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String,
-        requirementVariant: RequirementVariantFormUpdate
+        updatedReqVariant: RequirementVariantFormUpdate
     ): Response {
         val reqVariant =
-            requirementVariantService.update(projectRef, requirementRef, requirementVariantRef, requirementVariant)
+            requirementVariantService.update(projectRef, requirementRef, requirementVariantRef, updatedReqVariant)
         //sender DTO - mapper fra entity
         val reqVariantUpdateDTO = RequirementVariantMapper().fromEntity(reqVariant)
         return Response.ok(reqVariantUpdateDTO).build()

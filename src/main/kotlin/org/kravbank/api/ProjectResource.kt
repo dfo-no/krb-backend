@@ -62,8 +62,8 @@ class ProjectResource(val projectService: ProjectService) {
     @PUT
     @Path("{projcetRef}")
     @Transactional
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response {
-        val project = projectService.update(projcetRef, updateProject)
+    fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectFormUpdate): Response {
+        val project = projectService.update(projcetRef, updatedProject)
         val projectUpdateDTO = ProjectUpdateMapper().fromEntity(project)
         return Response.ok(projectUpdateDTO).build()
 

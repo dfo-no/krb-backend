@@ -5,6 +5,7 @@ import org.kravbank.domain.Product
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
+import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
@@ -18,12 +19,15 @@ class ProductRepository : PanacheRepository<Product> {
                 ref,
                 projectId
             ).firstResult<Product>()
-        return Optional.ofNullable(product).orElseThrow { NotFoundException("Product not found") }
+        if (product?.deletedDate == null) {
+            return product
+        } else throw NotFoundException("Product not found")
     }
 
     @Throws(BackendException::class)
-    fun listAllProducts(id: Long): MutableList<Product> {
-        return find("project_id_fk", id).list<Product>()
+    fun listAllProducts(id: Long): List<Product> {
+        //returerer bare elementer som ikke er soft deleted
+        return find("project_id_fk", id).list<Product>().filter { p -> p.deletedDate == null }
     }
 
     @Throws(BackendException::class)
@@ -35,18 +39,16 @@ class ProductRepository : PanacheRepository<Product> {
     }
 
     @Throws(BackendException::class)
-    fun deleteProduct(projectId: Long, productRef: String): Product {
-        val deleted: Boolean
-        val found = findByRef(projectId, productRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Product not deleted")
-        return found
+    fun deleteProduct(productId: Long){
+        val deletedDate = LocalDateTime.now()
+        update("deleteddate = ?1 where id = ?2", deletedDate,productId)
+        //
     }
 
     @Throws(BackendException::class)
     fun updateProduct(id: Long, product: Product) {
         val updated = update(
-            "title = ?1, description= ?2 where id = ?3",
+            "title = ?1, description = ?2 where id = ?3",
             product.title,
             product.description,
             id

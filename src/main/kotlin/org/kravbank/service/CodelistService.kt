@@ -32,11 +32,11 @@ class CodelistService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, codelistForm: CodelistForm): Codelist {
+    fun create(projectRef: String, newCodelist: CodelistForm): Codelist {
         val project = projectRepository.findByRef(projectRef)
-        codelistForm.project = project
+        newCodelist.project = project
         //mapper til entity
-        val codelist = CodelistMapper().toEntity(codelistForm)
+        val codelist = CodelistMapper().toEntity(newCodelist)
         codelistRepository.createCodelist(codelist)
         return codelist
     }
@@ -48,11 +48,11 @@ class CodelistService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, codelistRef: String, codelistForm: CodelistFormUpdate): Codelist {
+    fun update(projectRef: String, codelistRef: String, updatedCodelist: CodelistFormUpdate): Codelist {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         //mapper til entity
-        val codelist = CodelistUpdateMapper().toEntity(codelistForm)
+        val codelist = CodelistUpdateMapper().toEntity(updatedCodelist)
         codelistRepository.updateCodelist(foundCodelist.id, codelist)
         return codelist
     }

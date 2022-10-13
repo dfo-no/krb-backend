@@ -85,6 +85,7 @@ class ProductResourceTest {
 
         val productMapper = ProductUpdateMapper().toEntity(product)
 
+
         RestAssured.given()
             .`when`()
             .body(productMapper)

@@ -37,8 +37,8 @@ class ProjectService(val projectRepository: ProjectRepository) {
         return projectRepository.deleteProject(projcetRef)
     }
 
-    fun update(projcetRef: String, project: ProjectFormUpdate): Project {
-        val project = ProjectUpdateMapper().toEntity(project)
+    fun update(projcetRef: String, updatedProject: ProjectFormUpdate): Project {
+        val project = ProjectUpdateMapper().toEntity(updatedProject)
         projectRepository.updateProject(projcetRef, project)
         return project
     }

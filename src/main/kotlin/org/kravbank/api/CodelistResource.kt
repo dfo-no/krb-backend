@@ -5,7 +5,6 @@ import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.service.CodelistService
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
-import org.kravbank.utils.mapper.project.ProjectMapper
 import java.net.URI
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -45,9 +44,9 @@ class CodelistResource(val codelistService: CodelistService) {
     @Transactional
     @POST
     fun createCodelist(
-        @PathParam("projectRef") projectRef: String, codelistDTO: CodelistForm
+        @PathParam("projectRef") projectRef: String, newCodelist: CodelistForm
     ): Response {
-        val codelist = codelistService.create(projectRef, codelistDTO)
+        val codelist = codelistService.create(projectRef, newCodelist)
         //sender ny codelist ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/" + codelist.ref)).build()
     }

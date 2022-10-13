@@ -43,8 +43,8 @@ class NeedResource(val needService: NeedService) {
     //CREATE NEED
     @Transactional
     @POST
-    fun createNeed(@PathParam("projectRef") projectRef: String, need: NeedForm): Response {
-        val need = needService.create(projectRef, need)
+    fun createNeed(@PathParam("projectRef") projectRef: String, newNeed: NeedForm): Response {
+        val need = needService.create(projectRef, newNeed)
         //sender ny need ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
     }
@@ -68,12 +68,12 @@ class NeedResource(val needService: NeedService) {
     @PUT
     @Path("{needRef}")
     @Transactional
-    fun updatePublication(
+    fun updateNeed(
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String,
-        need: NeedFormUpdate
+        updatedNeed: NeedFormUpdate
     ): Response {
-        val need = needService.update(projectRef, needRef, need)
+        val need = needService.update(projectRef, needRef, updatedNeed)
         // mapper fra entity
         val needUpdateDTO = NeedUpdateMapper().fromEntity(need)
         return Response.ok(needUpdateDTO).build()

@@ -43,9 +43,9 @@ class PublicationResource(val publicationService: PublicationService) {
     //CREATE PUBLICATION
     @Transactional
     @POST
-    fun createPublication(@PathParam("projectref") projectRef: String, publication: PublicationForm): Response {
-        val publication = publicationService.create(projectRef, publication)
-        //sender ny publication ref i response header
+    fun createPublication(@PathParam("projectref") projectRef: String, newPublication: PublicationForm): Response {
+        val publication = publicationService.create(projectRef, newPublication)
+        //sender ny publication ref i respons header
         return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
     }
 
@@ -69,9 +69,9 @@ class PublicationResource(val publicationService: PublicationService) {
     fun updatePublication(
         @PathParam("projectref") projectRef: String,
         @PathParam("publicationref") publicationRef: String,
-        updatePublication: PublicationFormUpdate
+        updatedPublication: PublicationFormUpdate
     ): Response {
-        val publication = publicationService.update(projectRef, publicationRef, updatePublication)
+        val publication = publicationService.update(projectRef, publicationRef, updatedPublication)
         // mapper fra entity
         val publicationUpdateDTO = PublicationUpdateMapper().fromEntity(publication)
         return Response.ok(publicationUpdateDTO).build()

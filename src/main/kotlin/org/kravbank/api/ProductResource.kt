@@ -47,8 +47,8 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     //CREATE PRODUCT
     @Transactional
     @POST
-    fun createProduct(@PathParam("projectRef") projectRef: String, product: ProductForm): Response {
-        val product = productService.create(projectRef, product)
+    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductForm): Response {
+        val product = productService.create(projectRef, newProduct)
         //sender ny product ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
     }
@@ -74,9 +74,9 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     fun updateProduct(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String,
-        product: ProductFormUpdate
+        updatedProduct: ProductFormUpdate
     ): Response {
-        val product = productService.update(projectRef, productref, product)
+        val product = productService.update(projectRef, productref, updatedProduct)
         // mapper fra entity
         val productUpdateDTO = ProductUpdateMapper().fromEntity(product)
         return Response.ok(productUpdateDTO).build()

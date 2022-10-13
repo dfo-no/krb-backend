@@ -32,10 +32,10 @@ class RequirementService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, requirementForm: RequirementForm): Requirement {
+    fun create(projectRef: String, newRequirement: RequirementForm): Requirement {
         val project = projectRepository.findByRef(projectRef)
-        requirementForm.project = project
-        val requirement = RequirementMapper().toEntity(requirementForm)
+        newRequirement.project = project
+        val requirement = RequirementMapper().toEntity(newRequirement)
         requirementRepository.createRequirement(requirement)
         return requirement
     }
@@ -47,10 +47,10 @@ class RequirementService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, requirementRef: String, requirementUpdateDTO: RequirementFormUpdate): Requirement {
+    fun update(projectRef: String, requirementRef: String, updatedRequirement: RequirementFormUpdate): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
-        val requirement = RequirementUpdateMapper().toEntity(requirementUpdateDTO)
+        val requirement = RequirementUpdateMapper().toEntity(updatedRequirement)
         requirementRepository.updateRequirement(foundRequirement.id, requirement)
         return requirement
     }

@@ -54,10 +54,10 @@ class CodeResource(val codeService: CodeService) {
     fun createCode(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-        codeDTO: CodeForm
+        newCode: CodeForm
     ): Response {
         //lager ny code
-        val code = codeService.create(projectRef, codelistRef, codeDTO)
+        val code = codeService.create(projectRef, codelistRef, newCode)
         //sender ny code ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref))
             .build()
@@ -87,10 +87,10 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String,
-        codeUpdateDTO: CodeFormUpdate
+        updatedCode: CodeFormUpdate
     ): Response {
         //oppdaterer code
-        val code = codeService.update(projectRef, codelistRef, codeRef, codeUpdateDTO)
+        val code = codeService.update(projectRef, codelistRef, codeRef, updatedCode)
         //sender DTO - mapper fra entity
         val codeUpdateDTO = CodeUpdateMapper().fromEntity(code)
         return Response.ok(codeUpdateDTO).build()
