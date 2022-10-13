@@ -3,6 +3,11 @@ package org.kravbank.api;
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
 import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
 import org.kravbank.service.RequirementVariantService
+import org.kravbank.utils.mapper.code.CodeUpdateMapper
+import org.kravbank.utils.mapper.need.NeedMapper
+import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
+import java.net.URI
+import java.util.ArrayList
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,12 +27,9 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response {
-        return requirementVariantService.get(
-            projectRef,
-            requirementRef,
-            requirementVariantRef
-        )
-
+        val reqVariant = requirementVariantService.get(projectRef, requirementRef, requirementVariantRef)
+        val reqVariantDTO = RequirementVariantMapper().fromEntity(reqVariant)
+        return Response.ok(reqVariantDTO).build()
     }
 
     //LIST REQUIREMENT VARIANTS
@@ -35,8 +37,12 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     fun listRequirementVariants(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
-    ): Response =
-        requirementVariantService.list(projectRef, requirementRef)
+    ): Response {
+        val reqVariants = requirementVariantService.list(projectRef, requirementRef)
+        val reqVariantsDTO = ArrayList<RequirementVariantForm>()
+        for (c in reqVariants) reqVariantsDTO.add(RequirementVariantMapper().fromEntity(c))
+        return Response.ok(reqVariantsDTO).build()
+    }
 
     //CREATE REQUIREMENT VARIANT
     @Transactional
@@ -45,8 +51,12 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         requirementVariant: RequirementVariantForm
-    ): Response =
-        requirementVariantService.create(projectRef, requirementRef, requirementVariant)
+    ): Response {
+        val reqVariant = requirementVariantService.create(projectRef, requirementRef, requirementVariant)
+        //sender ny req variant ref i response header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariant.ref))
+            .build()
+    }
 
     //DELETE REQUIREMENT VARIANT
     @DELETE
@@ -56,8 +66,12 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
-    ): Response =
-        requirementVariantService.delete(projectRef, requirementRef, requirementVariantRef)
+    ): Response {
+        val reqvariant = requirementVariantService.delete(projectRef, requirementRef, requirementVariantRef)
+        val reqVariantDTO = RequirementVariantMapper().fromEntity(reqvariant)
+        // sender slettet req variant ref i body
+        return Response.ok(reqVariantDTO.ref).build()
+    }
 
     //UPDATE REQUIREMENT VARIANT
     @PUT
@@ -68,11 +82,11 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String,
         requirementVariant: RequirementVariantFormUpdate
-    ): Response =
-        requirementVariantService.update(
-            projectRef,
-            requirementRef,
-            requirementVariantRef,
-            requirementVariant
-        )
+    ): Response {
+        val reqVariant =
+            requirementVariantService.update(projectRef, requirementRef, requirementVariantRef, requirementVariant)
+        //sender DTO - mapper fra entity
+        val reqVariantUpdateDTO = RequirementVariantMapper().fromEntity(reqVariant)
+        return Response.ok(reqVariantUpdateDTO).build()
+    }
 }

@@ -1,6 +1,7 @@
 package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
+import org.kravbank.domain.RequirementVariant
 import org.kravbank.exception.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
@@ -22,42 +23,35 @@ class RequirementVariantService(
 ) {
     // @CacheResult(cacheName = "requirementvariant-cache-get")
     @Throws(BackendException::class)
-    fun get(projectRef: String, requirementRef: String, reqVariantRef: String): Response {
+    fun get(projectRef: String, requirementRef: String, reqVariantRef: String): RequirementVariant {
         val project = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(project.id, requirementRef)
-        val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
-        val reqVariantForm = RequirementVariantMapper().fromEntity(foundReqVariant)
-        return Response.ok(reqVariantForm).build()
+        return requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
     }
 
     //@CacheResult(cacheName = "requirementvariant-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String, requirementRef: String): Response {
+    fun list(projectRef: String, requirementRef: String): MutableList<RequirementVariant> {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
-        val foundReqVariant = requirementVariantRepository.listAllRequirementVariants(foundRequirement.id)
-        val reqVariantForm = ArrayList<RequirementVariantForm>()
-        for (c in foundReqVariant) reqVariantForm.add(RequirementVariantMapper().fromEntity(c))
-        return Response.ok(reqVariantForm).build()
+        return requirementVariantRepository.listAllRequirementVariants(foundRequirement.id)
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, requirementRef: String, reqVariantForm: RequirementVariantForm): Response {
+    fun create(projectRef: String, requirementRef: String, reqVariantForm: RequirementVariantForm): RequirementVariant {
         val project = projectRepository.findByRef(projectRef)
         val requirement = requirementRepository.findByRef(project.id, requirementRef)
         reqVariantForm.requirement = requirement
         val reqVariant = RequirementVariantMapper().toEntity(reqVariantForm)
         requirementVariantRepository.createRequirementVariant(reqVariant)
-        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariantForm.ref))
-            .build()
+        return reqVariant
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, requirementRef: String, reqVariantRef: String): Response {
+    fun delete(projectRef: String, requirementRef: String, reqVariantRef: String): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
-        requirementVariantRepository.deleteRequirementVariant(foundRequirement.id, reqVariantRef)
-        return Response.noContent().build()
+        return requirementVariantRepository.deleteRequirementVariant(foundRequirement.id, reqVariantRef)
     }
 
     @Throws(BackendException::class)
@@ -66,12 +60,12 @@ class RequirementVariantService(
         requirementRef: String,
         reqVariantRef: String,
         reqVariantForm: RequirementVariantFormUpdate
-    ): Response {
+    ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
         val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
         val reqVariant = RequirementVariantUpdateMapper().toEntity(reqVariantForm)
         requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, reqVariant)
-        return Response.ok(reqVariantForm).build()
+        return reqVariant
     }
 }

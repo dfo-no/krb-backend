@@ -9,10 +9,7 @@ import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
-import java.net.URI
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class NeedService(

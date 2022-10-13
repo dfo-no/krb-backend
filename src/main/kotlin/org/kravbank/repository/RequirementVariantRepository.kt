@@ -35,11 +35,12 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
     }
 
     @Throws(BackendException::class)
-    fun deleteRequirementVariant(codelistId: Long, codeRef: String) {
+    fun deleteRequirementVariant(codelistId: Long, codeRef: String): RequirementVariant{
         val deleted: Boolean
         val found = findByRef(codelistId, codeRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! RequirementVariant was not deleted")
+        return found
     }
 
     @Throws(BackendException::class)

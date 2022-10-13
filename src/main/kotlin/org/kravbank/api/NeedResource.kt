@@ -3,8 +3,6 @@ package org.kravbank.api;
 import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.service.NeedService
-import org.kravbank.utils.mapper.codelist.CodelistMapper
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
 import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import java.net.URI
@@ -56,7 +54,7 @@ class NeedResource(val needService: NeedService) {
     @DELETE
     @Path("/{needRef}")
     @Transactional
-    fun deletePublication(
+    fun deleteNeed(
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String
     ): Response {
