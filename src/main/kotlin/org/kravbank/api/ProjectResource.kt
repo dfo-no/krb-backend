@@ -3,6 +3,9 @@ package org.kravbank.api
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate
 import org.kravbank.service.ProjectService
+import org.kravbank.utils.mapper.project.ProjectMapper
+import org.kravbank.utils.mapper.project.ProjectUpdateMapper
+import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
@@ -20,31 +23,49 @@ class ProjectResource(val projectService: ProjectService) {
     //GET PROJECT
     @GET
     @Path("/{projcetRef}")
-    fun getProject(@PathParam("projcetRef") projcetRef: String): Response =
-        projectService.get(projcetRef)
+    fun getProject(@PathParam("projcetRef") projcetRef: String): Response {
+        val project = projectService.get(projcetRef)
+        //mapper fra entity
+        val projectDTO = ProjectMapper().fromEntity(project)
+        return Response.ok(projectDTO).build()
+    }
 
     //LIST PROJECTS
     @GET
-    fun listProjects(): Response =
-        projectService.list()
+    fun listProjects(): Response {
+        val projects = projectService.list()
+        val projectsDTO = ArrayList<ProjectForm>()
+        for (p in projects) projectsDTO.add(ProjectMapper().fromEntity(p))
+        return Response.ok(projectsDTO).build()
+    }
 
     //CREATE PROJECT
     @Transactional
     @POST
-    fun createProject(newProject: ProjectForm): Response =
-        projectService.create(newProject)
+    fun createProject(newProject: ProjectForm): Response {
+        val project = projectService.create(newProject)
+        return Response.created(URI.create("/projects/" + project.ref)).build();
+
+    }
 
     //DELETE PROJECT
     @DELETE
     @Path("{projcetRef}")
     @Transactional
-    fun deleteProjectByRef(@PathParam("projcetRef") projcetRef: String): Response =
-        projectService.delete(projcetRef)
+    fun deleteProjectByRef(@PathParam("projcetRef") projcetRef: String): Response {
+        val project = projectService.delete(projcetRef)
+        val projectDTO = ProjectMapper().fromEntity(project)
+        return Response.ok(projectDTO.ref).build()
+    }
 
     //UPDATE PROJECT
     @PUT
     @Path("{projcetRef}")
     @Transactional
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response =
-        projectService.update(projcetRef, updateProject)
+    fun updateProject(@PathParam("projcetRef") projcetRef: String, updateProject: ProjectFormUpdate): Response {
+        val project = projectService.update(projcetRef, updateProject)
+        val projectUpdateDTO = ProjectUpdateMapper().fromEntity(project)
+        return Response.ok(projectUpdateDTO).build()
+
+    }
 }

@@ -4,6 +4,10 @@ import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.service.ProductService
 import org.kravbank.service.ProjectService
+import org.kravbank.utils.mapper.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductUpdateMapper
+import java.net.URI
+import java.util.ArrayList
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
@@ -24,20 +28,30 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     fun getProduct(
         @PathParam("productref") productref: String,
         @PathParam("projectRef") projectRef: String,
-    ): Response =
-        productService.get(projectRef, productref)
+    ): Response {
+        val product = productService.get(projectRef, productref)
+        //mapper fra entity
+        val productDTO = ProductMapper().fromEntity(product)
+        return Response.ok(productDTO).build()
+    }
 
     //LIST PRODUCTS
     @GET
-    fun listProducts(@PathParam("projectRef") projectRef: String): Response =
-        productService.list(projectRef)
+    fun listProducts(@PathParam("projectRef") projectRef: String): Response {
+        val products = productService.list(projectRef)
+        val productsDTO = ArrayList<ProductForm>()
+        for (n in products) productsDTO.add(ProductMapper().fromEntity(n))
+        return Response.ok(productsDTO).build()
+    }
 
     //CREATE PRODUCT
     @Transactional
     @POST
-    fun createProduct(@PathParam("projectRef") projectRef: String, product: ProductForm): Response =
-        productService.create(projectRef, product)
-
+    fun createProduct(@PathParam("projectRef") projectRef: String, product: ProductForm): Response {
+        val product = productService.create(projectRef, product)
+        //sender ny product ref i response header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
+    }
 
     //DELETE PRODUCT
     @DELETE
@@ -46,8 +60,12 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     fun deleteProdudctById(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String
-    ): Response =
-        productService.delete(projectRef, productref)
+    ): Response {
+        val product = productService.delete(projectRef, productref)
+        val productDTO = ProductMapper().fromEntity(product)
+        // sender slettet product ref i body
+        return Response.ok(productDTO.ref).build()
+    }
 
     //UPDATE PRODUCT
     @PUT
@@ -57,7 +75,11 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String,
         product: ProductFormUpdate
-    ): Response =
-        productService.update(projectRef, productref, product)
+    ): Response {
+        val product = productService.update(projectRef, productref, product)
+        // mapper fra entity
+        val productUpdateDTO = ProductUpdateMapper().fromEntity(product)
+        return Response.ok(productUpdateDTO).build()
+    }
 }
 

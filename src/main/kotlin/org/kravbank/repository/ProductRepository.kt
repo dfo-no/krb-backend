@@ -35,11 +35,12 @@ class ProductRepository : PanacheRepository<Product> {
     }
 
     @Throws(BackendException::class)
-    fun deleteProduct(projectId: Long, productRef: String) {
+    fun deleteProduct(projectId: Long, productRef: String): Product {
         val deleted: Boolean
         val found = findByRef(projectId, productRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! Product not deleted")
+        return found
     }
 
     @Throws(BackendException::class)

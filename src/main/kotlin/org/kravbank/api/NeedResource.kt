@@ -60,7 +60,6 @@ class NeedResource(val needService: NeedService) {
     ): Response {
         val need = needService.delete(projectRef, needRef)
         val needDTO = NeedMapper().fromEntity(need)
-
         // sender slettet need ref i body
         return Response.ok(needDTO.ref).build()
     }

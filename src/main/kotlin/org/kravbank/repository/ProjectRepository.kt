@@ -29,11 +29,12 @@ class ProjectRepository : PanacheRepository<Project> {
     }
 
     @Throws(BackendException::class)
-    fun deleteProject(projectRef: String) {
+    fun deleteProject(projectRef: String): Project {
         val deleted: Boolean
         val found = findByRef(projectRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! Project was not deleted")
+        return found
     }
 
     @Throws(BackendException::class)
