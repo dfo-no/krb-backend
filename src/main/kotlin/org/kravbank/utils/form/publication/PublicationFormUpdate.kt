@@ -7,12 +7,9 @@ import javax.validation.constraints.NotNull
 
 data class PublicationFormUpdate(
     //var ref : String = "",
-    @NotNull
-    @NotBlank
-    @NotEmpty
     var comment: String = "",
     var version: Long = 0,
-    var deletedDate: LocalDateTime? = LocalDateTime.now()
+    //var deletedDate: LocalDateTime? = null
 
 
 )

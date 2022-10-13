@@ -70,9 +70,9 @@ class CodelistResource(val codelistService: CodelistService) {
     fun updateCodelist(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-        codelistUpdateDTO: CodelistFormUpdate
+        updateCodelist: CodelistFormUpdate
     ): Response {
-        val codelist = codelistService.update(projectRef, codelistRef, codelistUpdateDTO)
+        val codelist = codelistService.update(projectRef, codelistRef, updateCodelist)
         // mapper fra entity
         val codelistUpdateDTO = CodelistUpdateMapper().fromEntity(codelist)
         return Response.ok(codelistUpdateDTO).build()

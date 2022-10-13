@@ -12,7 +12,7 @@ class PublicationUpdateMapper : Mapper<PublicationFormUpdate, Publication> {
             //entity.ref,
             entity.comment,
             entity.version,
-            entity.deletedDate
+            //entity.deletedDate
         )
 
     //TO ENTITY
@@ -20,7 +20,7 @@ class PublicationUpdateMapper : Mapper<PublicationFormUpdate, Publication> {
         val p = Publication()
         p.comment = domain.comment
         p.version = domain.version
-        p.deletedDate = domain.deletedDate
+       // p.deletedDate = domain.deletedDate
         return p
     }
 
