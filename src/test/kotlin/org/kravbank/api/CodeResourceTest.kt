@@ -102,10 +102,8 @@ class CodeResourceTest {
             .`when`()
             .body(codeMapper)
             .header("Content-type", "application/json")
-            .put("http://localhost:8080/api/v1/projects/prosjekt4-edb2-431f-855a-4368e2bcddd1/codelists/newlist14db69-edb2-431f-855a-4368e2bcddd1/codes/script4b69-edb2-431f-855a-4368e2bcddd1")
+            .put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(200) //envt 200
-
-
+            .statusCode(200)
     }
 }

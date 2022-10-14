@@ -25,7 +25,7 @@ class PublicationRepository : PanacheRepository<Publication> {
         } else throw NotFoundException("Publication not found")
     }
 
-    @Throws(BackendException::class)
+    //@Throws(BackendException::class)
     fun listAllPublications(id: Long): List<Publication> {
         return find("project_id_fk", id).list<Publication>().filter { p -> p.deletedDate == null }
     }
@@ -38,7 +38,7 @@ class PublicationRepository : PanacheRepository<Publication> {
         }
     }
 
-    @Throws(BackendException::class)
+    //@Throws(BackendException::class)
     fun deletePublication(id: Long){
         val deletedDate = LocalDateTime.now()
         update("deleteddate = ?1 where id = ?2", deletedDate,id)
@@ -53,7 +53,6 @@ class PublicationRepository : PanacheRepository<Publication> {
             //publication.deletedDate,
             id
         )
-
         Optional.of(updated).orElseThrow { BadRequestException("Fail! Publication did not update") }
     }
 

@@ -32,7 +32,7 @@ class Project : PanacheEntity() {
     )
     var ref: String = UUID.randomUUID().toString()
 
-    var deletedDate: LocalDateTime? = null //inactive vs. active projs --> if inactive show deleted date?
+    var deletedDate: LocalDateTime? = null
 
     @OneToMany(
         mappedBy = ("project"),

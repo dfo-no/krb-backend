@@ -70,7 +70,6 @@ class ProjectResourceTest {
     }
 
 
-
     @Test
     fun deleteProjectByRef() {
         given()
@@ -90,17 +89,7 @@ class ProjectResourceTest {
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
         project.version = 11
-        //project.deletedDate = "sadsfdsa"
-
         val projectMappedForm = ProjectUpdateMapper().toEntity(project)
-
-
-
-
-      //  project.publishedDate = LocalDateTime.now()
-
-        // project.publishedDate = LocalDateTime.now()
-
         given()
             .`when`()
             .body(projectMappedForm)

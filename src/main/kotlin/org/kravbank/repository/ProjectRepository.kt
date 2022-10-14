@@ -5,6 +5,7 @@ import org.kravbank.domain.Project
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
+import java.time.LocalDateTime
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
 
@@ -12,14 +13,15 @@ import javax.enterprise.context.ApplicationScoped
 class ProjectRepository : PanacheRepository<Project> {
     @Throws(BackendException::class)
     fun findByRef(ref: String): Project {
-        val found = find("ref", ref).firstResult<Project>()
-        return Optional.ofNullable(found).orElseThrow { NotFoundException("Project not found!") }
+        val project = find("ref", ref).firstResult<Project>()
+        if (project?.deletedDate == null) {
+            return project
+        } else throw NotFoundException("Project not found")
     }
 
-    @Throws(BackendException::class)
-    fun listAllProjects(): MutableList<Project> {
-        val all = findAll().list<Project>()
-        if (all.isNotEmpty()) return all else throw NotFoundException("Project was not found!")
+    //@Throws(BackendException::class)
+    fun listAllProjects(): List<Project> {
+        return findAll().list<Project>().filter { p -> p.deletedDate == null }
     }
 
     @Throws(BackendException::class)
@@ -28,23 +30,19 @@ class ProjectRepository : PanacheRepository<Project> {
         if (!project.isPersistent) throw BadRequestException("Bad request! Project was not created")
     }
 
-    @Throws(BackendException::class)
-    fun deleteProject(projectRef: String): Project {
-        val deleted: Boolean
-        val found = findByRef(projectRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Project was not deleted")
-        return found
+    //@Throws(BackendException::class)
+    fun deleteProject(id: Long) {
+        val deletedDate = LocalDateTime.now()
+        update("deleteddate = ?1 where id = ?2", deletedDate, id)
     }
 
     @Throws(BackendException::class)
-    fun updateProject(projectRef: String, project: Project) {
-        val foundProject = findByRef(projectRef)
+    fun updateProject(id: Long, project: Project) {
         val updated = update(
             "title = ?1, description= ?2 where id = ?3",
             project.title,
             project.description,
-            foundProject.id
+            id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Project did not update") }
     }

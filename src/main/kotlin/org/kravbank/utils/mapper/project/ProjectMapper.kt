@@ -14,7 +14,7 @@ class ProjectMapper : Mapper<ProjectForm, Project> {
             entity.description,
             entity.version,
             entity.publishedDate,
-            entity.deletedDate,
+            //entity.deletedDate,
             //entity.products,
             // entity.needs
             //entity.codelist
@@ -29,7 +29,7 @@ class ProjectMapper : Mapper<ProjectForm, Project> {
         p.description = domain.description
         p.version = domain.version
         p.publishedDate = domain.publishedDate
-        p.deletedDate = domain.deletedDate
+        //p.deletedDate = domain.deletedDate
         return p
     }
 }
