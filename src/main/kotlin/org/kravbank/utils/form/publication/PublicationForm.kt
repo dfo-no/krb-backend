@@ -8,6 +8,6 @@ data class PublicationForm(
     var comment: String = "",
     var date: LocalDateTime? = LocalDateTime.now(),
     var version: Long = 0,
-    var deletedDate: LocalDateTime? = null,
+    //var deletedDate: LocalDateTime? = null,
     var project: Project? = null
 )

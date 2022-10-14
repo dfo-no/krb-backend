@@ -13,8 +13,8 @@ class PublicationMapper : Mapper<PublicationForm, Publication> {
             entity.comment,
             entity.date,
             entity.version,
-            entity.deletedDate,
-            // entity.project
+            //entity.deletedDate,
+            //entity.project
         )
 
     //TO ENTITY
@@ -23,7 +23,7 @@ class PublicationMapper : Mapper<PublicationForm, Publication> {
         p.comment = domain.comment
         p.date = domain.date
         p.version = domain.version
-        p.deletedDate = domain.deletedDate
+        //p.deletedDate = domain.deletedDate
         p.project = domain.project
         return p
     }

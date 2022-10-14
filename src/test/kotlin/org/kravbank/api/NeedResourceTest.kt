@@ -7,7 +7,6 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Need
 import org.kravbank.utils.form.need.NeedFormUpdate
-import org.kravbank.utils.mapper.code.CodeUpdateMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
 
 @QuarkusTest

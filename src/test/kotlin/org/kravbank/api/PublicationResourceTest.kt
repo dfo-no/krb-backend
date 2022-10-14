@@ -74,7 +74,6 @@ class PublicationResourceTest {
         val publication = PublicationFormUpdate ()
         publication.comment = "Oppdatert Integrasjonstest publication - comment 1"
         publication.version = 2
-       // publication.deletedDate = ""
         val publicationMapper = PublicationUpdateMapper().toEntity(publication)
 
         RestAssured.given()

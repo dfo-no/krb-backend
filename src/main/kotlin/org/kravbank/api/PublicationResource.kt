@@ -5,7 +5,6 @@ import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.service.PublicationService
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
 import java.net.URI
 import java.util.ArrayList
 import javax.enterprise.context.RequestScoped

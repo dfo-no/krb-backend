@@ -21,8 +21,8 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     //    @CacheResult(cacheName = "project-cache-list")
-    @Throws(BackendException::class)
-    fun list(): MutableList<Project> {
+    //@Throws(BackendException::class)
+    fun list(): List<Project> {
         return projectRepository.listAllProjects()
     }
 
@@ -34,12 +34,16 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     fun delete(projcetRef: String): Project {
-        return projectRepository.deleteProject(projcetRef)
+        val foundProject = projectRepository.findByRef(projcetRef)
+        projectRepository.deleteProject(foundProject.id)
+        return foundProject
     }
 
+    @Throws(BackendException::class)
     fun update(projcetRef: String, updatedProject: ProjectFormUpdate): Project {
+        val foundProject = projectRepository.findByRef(projcetRef)
         val project = ProjectUpdateMapper().toEntity(updatedProject)
-        projectRepository.updateProject(projcetRef, project)
+        projectRepository.updateProject(foundProject.id, project)
         return project
     }
 }

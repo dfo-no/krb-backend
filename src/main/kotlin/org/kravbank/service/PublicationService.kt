@@ -9,10 +9,8 @@ import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
-import java.net.URI
-import java.util.*
+
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class PublicationService(
@@ -21,21 +19,21 @@ class PublicationService(
 ) {
     //@CacheResult(cacheName = "publication-cache-get")
     fun get(projectRef: String, publicationRef: String): Publication {
-        val project = projectRepository.findByRef(projectRef)
-        return publicationRepository.findByRef(project.id,publicationRef)
+        val foundProject = projectRepository.findByRef(projectRef)
+        return publicationRepository.findByRef(foundProject.id,publicationRef)
     }
 
     //@CacheResult(cacheName = "publication-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String): MutableList<Publication> {
+    fun list(projectRef: String): List<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
         return publicationRepository.listAllPublications(foundProject.id)
     }
 
     @Throws(BackendException::class)
     fun create(projectRef: String, newPublication: PublicationForm): Publication {
-        val project = projectRepository.findByRef(projectRef)
-        newPublication.project = project
+        val foundProject = projectRepository.findByRef(projectRef)
+        newPublication.project = foundProject
         val publication = PublicationMapper().toEntity(newPublication)
         publicationRepository.createPublication(publication)
         return publication
@@ -44,7 +42,9 @@ class PublicationService(
     @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
-        return publicationRepository.deletePublication(foundProject.id, publicationRef)
+        val publication = publicationRepository.findByRef(foundProject.id,publicationRef)
+       publicationRepository.deletePublication(publication.id)
+        return publication
     }
 
     @Throws(BackendException::class)
