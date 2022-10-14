@@ -13,7 +13,7 @@ class ProjectUpdateMapper : Mapper<ProjectFormUpdate, Project> {
             entity.description,
             entity.version,
             entity.publishedDate,
-            entity.deletedDate
+            //entity.deletedDate
         )
 
     // TO ENTITY
@@ -23,7 +23,15 @@ class ProjectUpdateMapper : Mapper<ProjectFormUpdate, Project> {
         p.description = domain.description
         p.publishedDate = domain.publishedDate
         p.version = domain.version
-        p.deletedDate = domain.deletedDate
+       // p.deletedDate = domain.deletedDate
         return p
     }
 }
+
+
+
+
+
+
+
+

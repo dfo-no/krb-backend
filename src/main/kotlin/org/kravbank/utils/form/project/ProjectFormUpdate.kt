@@ -8,7 +8,7 @@ data class ProjectFormUpdate(
     var description: String = "",
     var version: Long? = null, // Long = 0,
     var publishedDate: LocalDateTime? = LocalDateTime.now(),
-    var deletedDate: LocalDateTime? =  null
+    //var deletedDate: LocalDateTime? =  null
     ) {
   //  operator fun inc() = ProjectFormUpdate("","",version + 1)
 }
