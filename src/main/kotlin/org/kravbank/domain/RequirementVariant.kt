@@ -1,5 +1,6 @@
 package org.kravbank.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -21,20 +22,14 @@ class RequirementVariant : PanacheEntity() {
 
     var useQualification: Boolean = false
 
-    @OneToMany(
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
-        orphanRemoval = true
-    )
-    var products = mutableListOf<Product>()
+    @Column(unique = true)
+    var ref: String = UUID.randomUUID().toString()
 
     @OneToMany(
         cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE],
         orphanRemoval = true
     )
     var configs = mutableListOf<Config>()
-
-    @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
@@ -46,4 +41,11 @@ class RequirementVariant : PanacheEntity() {
     @JoinColumn(name = "requirement_id_fk")
     var requirement: Requirement? = null
 
+    @OneToMany(
+        mappedBy = ("requirementvariant"),
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH],//, CascadeType.REMOVE],
+        orphanRemoval = true
+    )
+    @JsonBackReference(value = "val-reqvariant-product")
+    var product: MutableList<Product>? = null
 }

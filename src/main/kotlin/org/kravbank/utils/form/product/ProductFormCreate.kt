@@ -4,10 +4,10 @@ import org.kravbank.domain.Project
 import org.kravbank.domain.RequirementVariant
 
 
-data class ProductForm(
+data class ProductFormCreate(
     var ref: String = "",
     var title: String = "",
     var description: String = "",
     var project: Project? = null,
-    //var requirementariant: String = ""
+    var requirementvariant: String = ""
 )

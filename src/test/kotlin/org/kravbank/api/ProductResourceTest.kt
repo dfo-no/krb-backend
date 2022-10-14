@@ -1,16 +1,21 @@
 package org.kravbank.api
 
+import io.quarkus.test.Mock
 import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Codelist
+import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormCreate
 import org.kravbank.utils.form.product.ProductFormUpdate
+import org.kravbank.utils.mapper.product.ProductCreateMapper
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -18,6 +23,8 @@ class ProductResourceTest {
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
     val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+    val useReqVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+
 
     @Test
     fun getProjectByRef() {
@@ -46,11 +53,12 @@ class ProductResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val product = ProductForm()
+        val product = ProductFormCreate()
         product.title = "PRODUCT Integrasjonstest - Tittel 1"
         product.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
+        product.requirementvariant = useReqVariantRef
 
-        val productMapper = ProductMapper().toEntity(product)
+        val productMapper = ProductCreateMapper(product.requirementvariant).toEntity(product)
 
         RestAssured.given()
             .`when`()

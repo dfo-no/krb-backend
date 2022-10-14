@@ -4,6 +4,7 @@ import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.service.ProductService
 import org.kravbank.service.ProjectService
+import org.kravbank.utils.form.product.ProductFormCreate
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.net.URI
@@ -47,7 +48,7 @@ class ProductResource(val productService: ProductService, val projectService: Pr
     //CREATE PRODUCT
     @Transactional
     @POST
-    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductForm): Response {
+    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductFormCreate): Response {
         val product = productService.create(projectRef, newProduct)
         //sender ny product ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()

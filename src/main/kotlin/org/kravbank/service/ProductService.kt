@@ -7,6 +7,10 @@ import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.repository.RequirementRepository
+import org.kravbank.repository.RequirementVariantRepository
+import org.kravbank.utils.form.product.ProductFormCreate
+import org.kravbank.utils.mapper.product.ProductCreateMapper
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import javax.enterprise.context.ApplicationScoped
@@ -14,7 +18,11 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProductService(
     val productRepository: ProductRepository,
-    val projectRepository: ProjectRepository
+    val projectRepository: ProjectRepository,
+    val requirementVariantRepository: RequirementVariantRepository,
+    val requirementService: RequirementService,
+    val requirementVariantService: RequirementVariantService
+
 ) {
 
     // @CacheResult(cacheName = "product-cache-get")
@@ -32,10 +40,10 @@ class ProductService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, newProduct: ProductForm): Product {
+    fun create(projectRef: String, newProduct: ProductFormCreate): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         newProduct.project = foundProject
-        val product = ProductMapper().toEntity(newProduct)
+        val product = ProductCreateMapper(newProduct.requirementvariant).toEntity(newProduct)
         productRepository.createProduct(product)
         return product
     }

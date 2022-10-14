@@ -22,27 +22,22 @@ class Product : PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         //optional = false,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference(value="product")
+    @JsonManagedReference(value = "product")
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
-    //@JsonBackReference
-    //@JoinColumn(name = "project_id", foreignKey = ForeignKey(name = "project_id_fk"))
-
-    // var session: Session? = null
-
-    /*
-    OneToMany //(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)//
-    var products = mutableListOf<Product>()
-     */
-
-//    override fun toString(): String {
-//        return "project id: ${id} title: ${title} project: $project"
-//    }
-
+    @ManyToOne(
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        //optional = false,
+        fetch = FetchType.LAZY
+    )
+    @JsonManagedReference(value = "val-reqvariant-product")
+    @JsonIgnore
+    @JoinColumn(name = "requirementvariant_id_fk")
+    var requirementvariant: RequirementVariant? = null
 }
