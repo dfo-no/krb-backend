@@ -20,8 +20,8 @@ class ProductService(
     // @CacheResult(cacheName = "product-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, productRef: String): Product {
-        val project = projectRepository.findByRef(projectRef)
-        return productRepository.findByRef(project.id, productRef)
+        val foundProject = projectRepository.findByRef(projectRef)
+        return productRepository.findByRef(foundProject.id, productRef)
     }
 
     //@CacheResult(cacheName = "product-cache-list")
@@ -33,8 +33,8 @@ class ProductService(
 
     @Throws(BackendException::class)
     fun create(projectRef: String, newProduct: ProductForm): Product {
-        val project = projectRepository.findByRef(projectRef)
-        newProduct.project = project
+        val foundProject = projectRepository.findByRef(projectRef)
+        newProduct.project = foundProject
         val product = ProductMapper().toEntity(newProduct)
         productRepository.createProduct(product)
         return product
@@ -42,10 +42,10 @@ class ProductService(
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, productRef: String): Product {
-        val project = projectRepository.findByRef(projectRef)
-        val product = productRepository.findByRef(project.id, productRef)
-        productRepository.deleteProduct(product.id)
-        return product
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundProduct = productRepository.findByRef(foundProject.id, productRef)
+        productRepository.deleteProduct(foundProduct.id)
+        return foundProduct
     }
 
     @Throws(BackendException::class)

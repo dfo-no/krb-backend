@@ -39,9 +39,9 @@ class ProductRepository : PanacheRepository<Product> {
     }
 
     @Throws(BackendException::class)
-    fun deleteProduct(productId: Long){
+    fun deleteProduct(id: Long){
         val deletedDate = LocalDateTime.now()
-        update("deleteddate = ?1 where id = ?2", deletedDate,productId)
+        update("deleteddate = ?1 where id = ?2", deletedDate,id)
         //
     }
 

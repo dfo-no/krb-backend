@@ -1,10 +1,12 @@
 package org.kravbank.repository
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
+import org.kravbank.domain.Product
 import org.kravbank.domain.Publication
 import org.kravbank.exception.BackendException
 import org.kravbank.exception.BadRequestException
 import org.kravbank.exception.NotFoundException
+import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
@@ -18,12 +20,14 @@ class PublicationRepository : PanacheRepository<Publication> {
                 ref,
                 projectId
             ).firstResult<Publication>()
-        return Optional.ofNullable(publication).orElseThrow { NotFoundException("Publication not found") }
+        if (publication?.deletedDate == null) {
+            return publication
+        } else throw NotFoundException("Publication not found")
     }
 
     @Throws(BackendException::class)
-    fun listAllPublications(id: Long): MutableList<Publication> {
-        return find("project_id_fk", id).list()
+    fun listAllPublications(id: Long): List<Publication> {
+        return find("project_id_fk", id).list<Publication>().filter { p -> p.deletedDate == null }
     }
 
     @Throws(BackendException::class)
@@ -35,12 +39,9 @@ class PublicationRepository : PanacheRepository<Publication> {
     }
 
     @Throws(BackendException::class)
-    fun deletePublication(projectId: Long, publicationRef: String): Publication {
-        val deleted: Boolean
-        val found = findByRef(projectId, publicationRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Publication was not deleted")
-        return found
+    fun deletePublication(id: Long){
+        val deletedDate = LocalDateTime.now()
+        update("deleteddate = ?1 where id = ?2", deletedDate,id)
     }
 
     @Throws(BackendException::class)
