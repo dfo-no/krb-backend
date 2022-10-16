@@ -53,7 +53,7 @@ values(9,'comment2', 4, '1999-09-10 21:17:30.23195','xxx4db69-edb2-431f-855a-436
 -- NEED
 insert into Need("id",title, description, ref, project_id_fk)
 values(10,'Need tittel fra script', 'Need beskrivelse fra script','need1b69-edb2-431f-855a-4368e2bcddd1', 2);
-insert into Need("id",title, description, ref, project_id_fk)
+insert into Need("id",title, description, ref, project_id_fk )
 values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b69-edb2-431f-855a-4368e2bcddd1', 2);
 
 -- insert into project_need(project_id, needs_id)
@@ -62,10 +62,10 @@ values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b6
 -- values(2,11);
 
 -- REQUIREMENT
-insert into Requirement("id",title, description, ref, project_id_fk)
-values(12,'Requirement tittel fra script', 'Requirement beskrivelse fra script','req1b69-edb2-431f-855a-4368e2bcddd1', 2);
-insert into Requirement("id",title, description, ref, project_id_fk)
-values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2','reqd2b69-edb2-431f-855a-4368e2bcddd1', 2);
+insert into Requirement("id",title, description, ref, project_id_fk, need_id_fk)
+values(12,'Requirement tittel fra script', 'Requirement beskrivelse fra script','req1b69-edb2-431f-855a-4368e2bcddd1', 2, 10);
+insert into Requirement("id",title, description, ref, project_id_fk, need_id_fk)
+values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2','reqd2b69-edb2-431f-855a-4368e2bcddd1', 2, 10);
 
 -- insert into project_requirement(project_id, requirements_id)
 -- values(2,12);

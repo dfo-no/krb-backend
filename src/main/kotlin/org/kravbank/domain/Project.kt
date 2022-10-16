@@ -66,7 +66,7 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     //@JsonIgnore
-    @JsonBackReference(value = "need")
+    @JsonBackReference(value = "val-need-project")
     var needs = mutableListOf<Need>()
 
     @OneToMany(

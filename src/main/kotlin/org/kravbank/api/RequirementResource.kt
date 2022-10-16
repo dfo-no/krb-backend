@@ -3,6 +3,7 @@ package org.kravbank.api;
 import org.kravbank.utils.form.requirement.RequirementForm
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.service.RequirementService
+import org.kravbank.utils.form.requirement.RequirementFormCreate
 import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
@@ -43,7 +44,7 @@ class RequirementResource(val requirementService: RequirementService) {
     //CREATE REQUIREMENT
     @Transactional
     @POST
-    fun createRequirement(@PathParam("projectRef") projectRef: String, newRequirement: RequirementForm): Response {
+    fun createRequirement(@PathParam("projectRef") projectRef: String, newRequirement: RequirementFormCreate): Response {
         val requirement = requirementService.create(projectRef, newRequirement)
         return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/" + requirement.ref)).build()
     }

@@ -2,10 +2,13 @@ package org.kravbank.service
 
 import org.kravbank.domain.Requirement
 import org.kravbank.exception.BackendException
+import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.form.requirement.RequirementForm
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.repository.RequirementRepository
+import org.kravbank.utils.form.requirement.RequirementFormCreate
+import org.kravbank.utils.mapper.requirement.RequirementCreateMapper
 import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 import java.net.URI
@@ -15,7 +18,8 @@ import javax.ws.rs.core.Response
 @ApplicationScoped
 class RequirementService(
     val requirementRepository: RequirementRepository,
-    val projectRepository: ProjectRepository
+    val projectRepository: ProjectRepository,
+    val needRepository: NeedRepository
 ) {
     // @CacheResult(cacheName = "requirement-cache-get")
     @Throws(BackendException::class)
@@ -32,10 +36,22 @@ class RequirementService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, newRequirement: RequirementForm): Requirement {
+    fun create(projectRef: String, newRequirement: RequirementFormCreate): Requirement {
         val project = projectRepository.findByRef(projectRef)
         newRequirement.project = project
-        val requirement = RequirementMapper().toEntity(newRequirement)
+        val need = newRequirement.need
+        val foundNeed = needRepository.findByRefRequirement(need)
+       // val requirement = RequirementCreateMapper(newRequirement.need).toEntity(newRequirement)
+
+        println("PRINTING req-need $foundNeed")
+        println("PRINTING req-need ${newRequirement.need}")
+
+        val requirement = RequirementCreateMapper().toEntity(newRequirement)
+        requirement.need = foundNeed
+
+        println("PRINTING req-need ${requirement.need}")
+
+
         requirementRepository.createRequirement(requirement)
         return requirement
     }

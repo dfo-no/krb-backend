@@ -43,7 +43,9 @@ class ProductService(
     fun create(projectRef: String, newProduct: ProductFormCreate): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         newProduct.project = foundProject
-        val product = ProductCreateMapper(newProduct.requirementvariant).toEntity(newProduct)
+        val product = ProductCreateMapper().toEntity(newProduct)
+        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementvariant)
+        product.requirementvariant = foundReqVariant
         productRepository.createProduct(product)
         return product
     }

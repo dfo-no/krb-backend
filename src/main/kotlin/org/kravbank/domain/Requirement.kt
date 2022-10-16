@@ -34,4 +34,18 @@ class Requirement : PanacheEntity() {
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
+
+    @ManyToOne(
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        //optional = false,
+        fetch = FetchType.LAZY, //
+    )
+    @JsonManagedReference(value = "val-need-requirement")
+    @JsonIgnore
+    @JoinColumn(name = "need_id_fk")
+    var need: Need? = null
+
+
+
+
 }

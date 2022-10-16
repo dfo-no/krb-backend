@@ -6,12 +6,16 @@ import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Need
+import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
+import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
+import org.wildfly.common.Assert
 
-@QuarkusTest
-@QuarkusIntegrationTest
+//@QuarkusTest
+//@QuarkusIntegrationTest
 class NeedResourceTest {
+/*
     private final val baseUri = "http://localhost:8080"
     private final val basePath = "/api/v1/projects"
     private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
@@ -43,27 +47,34 @@ class NeedResourceTest {
 
     @Test
     fun createNeed() {
+
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val need = Need ()
-        need.title = "Integrasjonstest need - tittel 1"
-        need.description = "Integrasjonstest need - beskrivelse 1"
+        val needDTO = NeedForm ()
+        needDTO.title = "Integrasjonstest need - tittel 1"
+        needDTO.description = "Integrasjonstest need - beskrivelse 1"
+
+        val need = NeedMapper().toEntity(needDTO)
+
 
         RestAssured.given()
             .`when`()
-            .body(need)
+            .body(needDTO)
             .header("Content-type", "application/json")
-            .post("$useProjectRef$useResourceFolder")
+            .post("/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
             .then()
             .statusCode(201) //envt 200
+
+
     }
 
     @Test
     fun updateNeed() {
-        RestAssured.defaultParser = Parser.JSON
+
+       RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = baseUri
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
@@ -72,15 +83,18 @@ class NeedResourceTest {
         need.title = "Oppdatert Integrasjonstest need - tittel 1"
         need.description = "Oppdatert Integrasjonstest need - beskrivelse 1"
 
-        val needMapper = NeedUpdateMapper().toEntity(need)
+        //val needMapper = NeedUpdateMapper().toEntity(need)
+
         RestAssured.given()
             .`when`()
-            .body(needMapper)
+            .body(need)
             .header("Content-type", "application/json")
             .put(fullUrl)
             .then()
             .statusCode(200) //envt 200
     }
+
+
 
 
     @Test
@@ -92,4 +106,8 @@ class NeedResourceTest {
             .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
     }
+
+*/
+
+
 }
