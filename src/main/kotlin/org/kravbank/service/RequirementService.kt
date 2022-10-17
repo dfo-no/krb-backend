@@ -41,17 +41,13 @@ class RequirementService(
         newRequirement.project = project
         val need = newRequirement.need
         val foundNeed = needRepository.findByRefRequirement(need)
-       // val requirement = RequirementCreateMapper(newRequirement.need).toEntity(newRequirement)
-
-        println("PRINTING req-need $foundNeed")
-        println("PRINTING req-need ${newRequirement.need}")
-
         val requirement = RequirementCreateMapper().toEntity(newRequirement)
         requirement.need = foundNeed
-
-        println("PRINTING req-need ${requirement.need}")
-
-
+        /**
+         * todo
+         * debug need test
+         */
+        print("TO STRING NEED FROM CREATE REQUIREMENT: $foundNeed")
         requirementRepository.createRequirement(requirement)
         return requirement
     }

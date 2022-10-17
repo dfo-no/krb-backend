@@ -12,9 +12,17 @@ import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import org.wildfly.common.Assert
 
+
+/**
+ * todo
+ * debug need test
+ */
+
+
 //@QuarkusTest
 //@QuarkusIntegrationTest
 class NeedResourceTest {
+
 /*
     private final val baseUri = "http://localhost:8080"
     private final val basePath = "/api/v1/projects"

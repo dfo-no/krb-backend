@@ -78,4 +78,8 @@ class Project : PanacheEntity() {
     //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
 
+
+    //override fun toString(): String = a + b + c
+
+
 }
