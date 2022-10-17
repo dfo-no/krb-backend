@@ -1,14 +1,11 @@
-package org.kravbank.api
+package org.kravbank.api.mock
 
 import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-import org.kravbank.domain.Code
-import org.kravbank.domain.Codelist
+import org.kravbank.api.ProjectResource
 import org.kravbank.domain.Project
-import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import java.time.LocalDateTime
 import javax.inject.Inject

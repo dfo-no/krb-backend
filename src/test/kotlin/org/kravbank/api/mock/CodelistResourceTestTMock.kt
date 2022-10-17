@@ -1,4 +1,4 @@
-package org.kravbank.api
+package org.kravbank.api.mock
 
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import org.kravbank.api.CodelistResource
 import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
