@@ -23,7 +23,7 @@ class Codelist : PanacheEntity() {
     )
     //@JsonIgnorepo
     @JsonBackReference(value = "value-codes")
-    var codes = mutableListOf<Code>()
+    var codes: MutableList<Code>? = null
 
     @OneToMany
     @JsonIgnore
