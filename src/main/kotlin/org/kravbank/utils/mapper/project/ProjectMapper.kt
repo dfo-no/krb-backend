@@ -27,8 +27,8 @@ class ProjectMapper : Mapper<ProjectForm, Project> {
         val p = Project()
         p.title = domain.title
         p.description = domain.description
-        p.version = domain.version
-        p.publishedDate = domain.publishedDate
+       // p.version = domain.version
+        //p.publishedDate = domain.publishedDate
         //p.deletedDate = domain.deletedDate
         return p
     }

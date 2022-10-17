@@ -39,9 +39,11 @@ class ProjectRepository : PanacheRepository<Project> {
     @Throws(BackendException::class)
     fun updateProject(id: Long, project: Project) {
         val updated = update(
-            "title = ?1, description= ?2 where id = ?3",
+            "title = ?1, description= ?2, publisheddate = ?3, version = ?4 where id = ?5",
             project.title,
             project.description,
+            project.publishedDate,
+            project.version,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Project did not update") }

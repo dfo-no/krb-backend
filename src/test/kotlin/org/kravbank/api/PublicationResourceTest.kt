@@ -53,11 +53,11 @@ class PublicationResourceTest {
         publication.comment = "Integrasjonstest publication - comment 1"
         publication.version = 3
         //publication.deletedDate =
-        val publicationMapper = PublicationMapper().toEntity(publication)
+        //val publicationMapper = PublicationMapper().toEntity(publication)
 
         RestAssured.given()
             .`when`()
-            .body(publicationMapper)
+            .body(publication)
             .header("Content-type", "application/json")
             .post("/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications")
             .then()
@@ -73,12 +73,12 @@ class PublicationResourceTest {
 
         val publication = PublicationFormUpdate ()
         publication.comment = "Oppdatert Integrasjonstest publication - comment 1"
-        publication.version = 2
-        val publicationMapper = PublicationUpdateMapper().toEntity(publication)
+        //publication.version = 2
+        //val publicationMapper = PublicationUpdateMapper().toEntity(publication)
 
         RestAssured.given()
             .`when`()
-            .body(publicationMapper)
+            .body(publication)
             .header("Content-type", "application/json")
             .put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/zzz4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
