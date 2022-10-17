@@ -24,7 +24,7 @@ class Project : PanacheEntity() {
     @Min(1)
     var version: Long? = null
 
-    var publishedDate: LocalDateTime? = null // evnt last updated attribute
+    var publishedDate: LocalDateTime? = null
 
     @Column(
         unique = true,
@@ -80,6 +80,5 @@ class Project : PanacheEntity() {
 
 
     //override fun toString(): String = a + b + c
-
 
 }

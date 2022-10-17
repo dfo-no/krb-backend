@@ -9,7 +9,6 @@ import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
-
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -36,6 +35,11 @@ class PublicationService(
         newPublication.project = foundProject
         val publication = PublicationMapper().toEntity(newPublication)
         publicationRepository.createPublication(publication)
+
+        //oppdaterer project med nye publication attributter
+        foundProject.publishedDate = publication.date
+        foundProject.version = publication.version
+        projectRepository.updateProject(foundProject.id, foundProject )
         return publication
     }
 
@@ -53,6 +57,8 @@ class PublicationService(
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
         val publication = PublicationUpdateMapper().toEntity(updatedPublication)
         publicationRepository.updatePublication(foundPublication.id, publication)
+
+
         return publication
     }
 }
