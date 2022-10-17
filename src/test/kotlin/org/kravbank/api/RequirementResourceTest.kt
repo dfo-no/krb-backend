@@ -65,7 +65,7 @@ class RequirementResourceTest {
         val requirementDTO = RequirementFormCreate ()
         requirementDTO.title = "Integrasjonstest requirement - tittel 1"
         requirementDTO.description = "Integrasjonstest requirement - beskrivelse 1"
-        requirementDTO.need = "need2b69-edb2-431f-855a-4368e2bcddd1"
+        requirementDTO.need = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         val newReq = RequirementCreateMapper().toEntity(requirementDTO)
 

@@ -22,7 +22,7 @@ class Project : PanacheEntity() {
     lateinit var description: String
 
     @Min(1)
-    var version: Long? = null  // //if changed +1 via update form
+    var version: Long? = null
 
     var publishedDate: LocalDateTime? = null // evnt last updated attribute
 
