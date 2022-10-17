@@ -59,7 +59,7 @@ class PublicationResourceTest {
             .`when`()
             .body(publicationMapper)
             .header("Content-type", "application/json")
-            .post("$useProjectRef$useResourceFolder")
+            .post("/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications")
             .then()
             .statusCode(201) //envt 200
     }
@@ -80,7 +80,7 @@ class PublicationResourceTest {
             .`when`()
             .body(publicationMapper)
             .header("Content-type", "application/json")
-            .put(fullUrl)
+            .put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/zzz4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200) //envt 200
     }
@@ -89,7 +89,7 @@ class PublicationResourceTest {
     fun deletePublication() {
         RestAssured.given()
             .`when`()
-            .delete("$resourceUrl$usePublicationRef")
+            .delete("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/xxx4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
         //.body(`is`("Hello RESTEasy"))

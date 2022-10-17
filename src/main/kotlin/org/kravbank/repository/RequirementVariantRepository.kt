@@ -22,6 +22,17 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
     }
 
     @Throws(BackendException::class)
+    fun findByRefProduct(ref: String): RequirementVariant {
+        val reqVariant =
+            find(
+                "ref = ?1",
+                ref
+            ).firstResult<RequirementVariant>()
+        return Optional.ofNullable(reqVariant).orElseThrow { NotFoundException("RequirementVariant was not found!") }
+    }
+
+
+    @Throws(BackendException::class)
     fun listAllRequirementVariants(id: Long): MutableList<RequirementVariant> {
         return find("requirement_id_fk", id).list()
     }
@@ -35,7 +46,7 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
     }
 
     @Throws(BackendException::class)
-    fun deleteRequirementVariant(codelistId: Long, codeRef: String): RequirementVariant{
+    fun deleteRequirementVariant(codelistId: Long, codeRef: String): RequirementVariant {
         val deleted: Boolean
         val found = findByRef(codelistId, codeRef)
         deleted = deleteById(found.id)

@@ -21,6 +21,19 @@ class NeedRepository : PanacheRepository<Need> {
         return Optional.ofNullable(need).orElseThrow { NotFoundException("Need not found") }
     }
 
+
+    @Throws(BackendException::class)
+    fun findByRefRequirement(ref: String): Need {
+        val need =
+            find(
+                "ref = ?1",
+                ref
+            ).firstResult<Need>()
+        //println("from repo ${need.ref}")
+        return Optional.ofNullable(need).orElseThrow { NotFoundException("Need not found via requirement service!") }
+    }
+
+
     @Throws(BackendException::class)
     fun listAllNeeds(id: Long): MutableList<Need> {
         return find("project_id_fk", id).list()
@@ -35,7 +48,7 @@ class NeedRepository : PanacheRepository<Need> {
     }
 
     @Throws(BackendException::class)
-    fun deleteNeed(projectId: Long, needRef: String) : Need {
+    fun deleteNeed(projectId: Long, needRef: String): Need {
         val deleted: Boolean
         val found = findByRef(projectId, needRef)
         deleted = deleteById(found.id)

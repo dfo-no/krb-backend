@@ -13,7 +13,7 @@ class RequirementMapper : Mapper<RequirementForm, Requirement> {
             entity.title,
             entity.description,
             entity.project,
-            entity.requirementvariants
+           // entity.requirementvariants
         )
 
     // TO ENTITY

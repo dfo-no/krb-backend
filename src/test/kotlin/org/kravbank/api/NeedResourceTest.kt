@@ -6,36 +6,34 @@ import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Need
+import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
+import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
+import org.wildfly.common.Assert
+
+
 
 @QuarkusTest
 @QuarkusIntegrationTest
 class NeedResourceTest {
-    private final val baseUri = "http://localhost:8080"
-    private final val basePath = "/api/v1/projects"
-    private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    private final val useResourceFolder = "/needs"
-    private final val useNeedRef = "/need1b69-edb2-431f-855a-4368e2bcddd1"
-    private final val useNeedRefPut = "/need2b69-edb2-431f-855a-4368e2bcddd1"
-    private final val resourceUrl = "$baseUri$basePath$useProjectRef$useResourceFolder"
-    private final val fullUrl = "$resourceUrl$useNeedRefPut"
 
     @Test
     fun getNeed() {
         RestAssured.given()
             //.pathParam("uuid", uuid)
             .`when`()
-            .get("$resourceUrl$useNeedRef")
+            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        // .body(`is`("hello $uuid"))
     }
 
     @Test
     fun listNeed() {
+
+
         RestAssured.given()
-            .`when`().get(resourceUrl)
+            .`when`().get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
             .then()
             .statusCode(200)
         //.body(, equalTo("Integrasjonstest prosjektittel"))
@@ -44,40 +42,40 @@ class NeedResourceTest {
     @Test
     fun createNeed() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
+        RestAssured.baseURI = "http://localhost:8080"
         //RestAssured.port = 8080;
-        RestAssured.basePath = basePath;
+        RestAssured.basePath = "/api/v1/projects";
 
-        val need = Need ()
-        need.title = "Integrasjonstest need - tittel 1"
-        need.description = "Integrasjonstest need - beskrivelse 1"
+        val needDTO = NeedForm()
+        needDTO.title = "POST Integrasjonstest need - tittel 1"
+        needDTO.description = "POST Integrasjonstest need - beskrivelse 1"
 
         RestAssured.given()
             .`when`()
-            .body(need)
+            .body(needDTO)
             .header("Content-type", "application/json")
-            .post("$useProjectRef$useResourceFolder")
+            .post("/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
             .then()
             .statusCode(201) //envt 200
     }
 
     @Test
     fun updateNeed() {
+
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
+        RestAssured.baseURI = "http://localhost:8080"
         //RestAssured.port = 8080;
-        RestAssured.basePath = basePath;
+        RestAssured.basePath = "/api/v1/projects";
 
-        val need = NeedFormUpdate ()
-        need.title = "Oppdatert Integrasjonstest need - tittel 1"
-        need.description = "Oppdatert Integrasjonstest need - beskrivelse 1"
+        val needDTO = NeedFormUpdate()
+        needDTO.title = "PUT Integrasjonstest need - tittel 1"
+        needDTO.description = "PUT Integrasjonstest need - beskrivelse 1"
 
-        val needMapper = NeedUpdateMapper().toEntity(need)
         RestAssured.given()
             .`when`()
-            .body(needMapper)
+            .body(needDTO)
             .header("Content-type", "application/json")
-            .put(fullUrl)
+            .put("/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200) //envt 200
     }
@@ -87,7 +85,7 @@ class NeedResourceTest {
     fun deleteNeed() {
         RestAssured.given()
             .`when`()
-            .delete("$resourceUrl$useNeedRef")
+            .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
         //.body(`is`("Hello RESTEasy"))

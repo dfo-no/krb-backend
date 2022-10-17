@@ -7,7 +7,7 @@ data class ProjectForm(
     var title: String = "",
     var description: String = "",
     var version: Long? = null,
-    var publishedDate: LocalDateTime? = null, // datetime fra publication
+    var publishedDate: LocalDateTime? = LocalDateTime.now(), // datetime fra publication
     //var deletedDate: LocalDateTime? = null,
     //var products: MutableList<Product> = mutableListOf(),
     //var needs: MutableList<Need> = mutableListOf()

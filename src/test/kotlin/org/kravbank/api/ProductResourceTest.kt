@@ -5,19 +5,28 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.Codelist
-import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.domain.*
+import org.kravbank.service.ProductService
+import org.kravbank.utils.form.product.ProductFormCreate
 import org.kravbank.utils.form.product.ProductFormUpdate
-import org.kravbank.utils.mapper.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductCreateMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
-import java.time.LocalDateTime
+import javax.inject.Inject
 
 @QuarkusTest
 @QuarkusIntegrationTest
 class ProductResourceTest {
+
+
     val baseUri = "http://localhost:8080"
     val basePath = "/api/v1/projects"
     val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+    val useReqVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+
+
+   // @Inject
+    //lateinit var productService: ProductService
+
 
     @Test
     fun getProjectByRef() {
@@ -39,6 +48,7 @@ class ProductResourceTest {
         //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
+
     @Test
     fun createProduct() {
         RestAssured.defaultParser = Parser.JSON
@@ -46,20 +56,28 @@ class ProductResourceTest {
         //RestAssured.port = 8080;
         RestAssured.basePath = basePath;
 
-        val product = ProductForm()
-        product.title = "PRODUCT Integrasjonstest - Tittel 1"
-        product.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
+        val productDTO = ProductFormCreate()
+        productDTO.title = "PRODUCT Integrasjonstest - Tittel 1"
+        productDTO.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
+        productDTO.requirementvariant = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
 
-        val productMapper = ProductMapper().toEntity(product)
+       // val product = ProductCreateMapper(productDTO.requirementvariant).toEntity(productDTO)
+
+
+        //val prod = productService.create(useProjectRef, productDTO)
+
 
         RestAssured.given()
             .`when`()
-            .body(productMapper)
+            .body(productDTO)
             .header("Content-type", "application/json")
-            .post("$useProjectRef/products")
+            .post("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
+            //.post("$useProjectRef/products")
             .then()
             .statusCode(201)
     }
+
+
 
     @Test
     fun deleteProdudctById() {
@@ -70,6 +88,7 @@ class ProductResourceTest {
             .statusCode(200)
         //.body(`is`("Hello RESTEasy"))
     }
+
 
     @Test
     fun updateProduct() {
@@ -94,4 +113,6 @@ class ProductResourceTest {
             .then()
             .statusCode(200) //envt 200
     }
+
+
 }

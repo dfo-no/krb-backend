@@ -22,7 +22,7 @@ class Project : PanacheEntity() {
     lateinit var description: String
 
     @Min(1)
-    var version: Long? = null  // //if changed +1 via update form
+    var version: Long? = null
 
     var publishedDate: LocalDateTime? = null // evnt last updated attribute
 
@@ -66,7 +66,7 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     //@JsonIgnore
-    @JsonBackReference(value = "need")
+    @JsonBackReference(value = "val-need-project")
     var needs = mutableListOf<Need>()
 
     @OneToMany(
@@ -77,5 +77,9 @@ class Project : PanacheEntity() {
     @JsonBackReference(value = "val-codelist")
     //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
+
+
+    //override fun toString(): String = a + b + c
+
 
 }
