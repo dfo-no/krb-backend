@@ -2,21 +2,20 @@ package org.kravbank.api.mock
 
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.kravbank.api.CodelistResource
 import org.kravbank.domain.*
+import org.kravbank.exception.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.utils.form.codelist.CodelistForm
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.mockito.Mockito
 import java.time.LocalDateTime
 import javax.inject.Inject
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
 import javax.ws.rs.core.Response
 
 @QuarkusTest
@@ -95,13 +94,10 @@ internal class CodelistResourceTestTMock {
         need.description = "desv"
         //need.requirements =
 
-
         publication  = Publication()
 
 
         requirement = Requirement()
-
-
 
 
         //add to list
@@ -110,15 +106,13 @@ internal class CodelistResourceTestTMock {
         products.add(product)
         needs.add(need)
 
-
-
     }
 
     @Test
-    fun getCodelistByRef() {
+    fun getCodelist_OK() {
 
-        println("CODELIST PROJECT ===>>>>>> ${codelist.project?.ref} <<<<<<<<=======")
-        println("PROJECT CODELIST ===>>>>>> ${project.codelist.size} <<<<<<<<=======")
+        //println("CODELIST PROJECT ===>>>>>> ${codelist.project?.ref} <<<<<<<<=======")
+        //println("PROJECT CODELIST ===>>>>>> ${project.codelist.size} <<<<<<<<=======")
 
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
@@ -138,20 +132,48 @@ internal class CodelistResourceTestTMock {
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
 
-        
-        /*val entity: Codelist = response.entity as Codelist
-        assertEquals(1L, entity.id)
-        assertEquals("hello243567", entity.ref)
+        val entity: Codelist = CodelistMapper().toEntity(response.entity as CodelistForm)
+
+       //print(entity.ref)
+
+        /**
+         * todo
+         * feil
+         * id = null |-> skjules med panache
+         * autogen ref |-> Codelistmapper toEntity autogenerer ny id og ref
+         */
+
+        //assertEquals(1L, entity.id)
+        // assertEquals("hello243567", entity.ref)
         assertEquals("Første codelist", entity.title)
         assertEquals("første codelist beskrivelse", entity.description)
-
-
-         */
+        assertEquals(project, entity.project)
 
     }
 
     @Test
-    fun listCodelists() {
+    fun getCodelist_NOTFOUND() {
+        val projectId = 3L
+        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+
+        Mockito.`when`(
+            codelistRepository.findByRef(
+                projectId,
+                codelistRef
+            )
+        )
+            .thenThrow( NotFoundException("Codelist was not found!"))
+        try {
+            val response: Any =
+                codelistResource.getCodelistByRef(projectRef, codelistRef).entity as NotFoundException
+        }catch (e: Exception) {
+            assertEquals("Codelist was not found!", e.message)
+        }
+    }
+
+    @Test
+    fun listCodelists_OK() {
 
         val id = 1L
         val ref = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
