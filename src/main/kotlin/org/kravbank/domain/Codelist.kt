@@ -14,7 +14,7 @@ class Codelist : PanacheEntity() {
     var description: String = ""
 
     @Column(unique = true)
-    var ref: String? = null
+    var ref: String = ""
 
     @OneToMany(
         mappedBy = ("codelist"),

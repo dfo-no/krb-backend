@@ -59,6 +59,7 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String
     ): Response {
+        //val found = codelistService.get(projectRef,codelistRef)
         val codelist = codelistService.delete(projectRef, codelistRef)
         val codelistDTO = CodelistMapper().fromEntity(codelist)
         return Response.ok(codelistDTO.ref).build()

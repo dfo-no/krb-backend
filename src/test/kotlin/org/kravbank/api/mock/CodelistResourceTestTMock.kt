@@ -5,8 +5,6 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.kravbank.api.CodelistResource
 import org.kravbank.domain.*
 import org.kravbank.exception.NotFoundException
@@ -17,6 +15,7 @@ import org.mockito.Mockito
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.core.Response
+
 
 @QuarkusTest
 internal class CodelistResourceTestTMock {
@@ -29,6 +28,10 @@ internal class CodelistResourceTestTMock {
 
     //entity
     var codelist: Codelist = Codelist()
+    var codelist_2: Codelist = Codelist()
+    var codelist_3: Codelist = Codelist()
+
+
     var project: Project = Project()
     var code: Code = Code()
     var publication: Publication = Publication()
@@ -108,6 +111,14 @@ internal class CodelistResourceTestTMock {
 
     }
 
+/*
+    @AfterEach
+    fun reset_mocks() {
+        Mockito.reset(codelistResource, codelistRepository)
+    }
+
+ */
+
     @Test
     fun getCodelist_OK() {
 
@@ -149,6 +160,7 @@ internal class CodelistResourceTestTMock {
         assertEquals("første codelist beskrivelse", entity.description)
         assertEquals(project, entity.project)
 
+
     }
 
     @Test
@@ -170,6 +182,8 @@ internal class CodelistResourceTestTMock {
         }catch (e: Exception) {
             assertEquals("Codelist was not found!", e.message)
         }
+
+
     }
 
     @Test
@@ -194,14 +208,64 @@ internal class CodelistResourceTestTMock {
         assertFalse(entity.isEmpty())
         assertEquals("Første codelist", entity.get(0).title)
         assertEquals("første codelist beskrivelse", entity.get(0).description)
+
+
     }
 
     @Test
     fun createCodelist() {
+
+        //Mockito.reset(codelistResource, codelistRepository)
+
+
+        //Mockito.doNothing().`when`(codelistRepository).createCodelist(Mockito.any() )
+
+
+       //Mockito.`when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java))).thenReturn(true)
+
+        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+        codelist_2 = Codelist()
+        codelist_2.title = "Andre codelist"
+        codelist_2.description = "Andre codelist beskrivelse"
+        codelist_2.ref = "hello2423rfd4353grfdg243567"
+        codelist_2.project = project
+        codelist_2.codes = codes
+        codelist_2.id = (4L)
+        codelist_2.ref = "et7ytijdsa8"
+
+        val mappedToDto = CodelistMapper().fromEntity(codelist_2)
+
+        val response: Response = codelistResource.createCodelist(projectRef,mappedToDto)
+
+        print(response)
+        print(response.entity)
+        assertNotNull(response);
+
+
     }
 
     @Test
     fun deleteCodelist() {
+
+        val projectId = 3L
+        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+        val ref = "dsfdsgs<'fåowi39543tdsf"
+
+        codelist_3 = Codelist()
+        codelist_3.title = "Første codelist"
+        codelist_3.description = "første codelist beskrivelse"
+        codelist_3.ref = ref
+        codelist_3.project = project
+        codelist_3.codes = codes
+        codelist_3.id = (1L)
+
+        Mockito.`when`(codelistRepository.deleteCodelist(projectId,codelistRef)).thenReturn(codelist_3)
+        val response: Response = codelistResource.deleteCodelist(projectRef,codelistRef)
+        assertNotNull(response)
+        assertEquals(ref, response.entity)
+
     }
 
     @Test
