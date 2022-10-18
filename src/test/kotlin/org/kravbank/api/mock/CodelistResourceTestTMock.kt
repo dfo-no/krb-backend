@@ -7,15 +7,16 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.kravbank.api.CodelistResource
-import org.kravbank.domain.Code
-import org.kravbank.domain.Codelist
-import org.kravbank.domain.Project
+import org.kravbank.domain.*
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.utils.form.codelist.CodelistForm
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.mockito.Mockito
 import java.time.LocalDateTime
 import javax.inject.Inject
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import javax.ws.rs.core.Response
 
 @QuarkusTest
@@ -23,14 +24,27 @@ internal class CodelistResourceTestTMock {
 
     @InjectMock
     lateinit var codelistRepository: CodelistRepository
+
     @Inject
     lateinit var codelistResource: CodelistResource
 
-    var codelist: Codelist = Codelist ()
-    var codelists: MutableList<Codelist> = mutableListOf()
+    //entity
+    var codelist: Codelist = Codelist()
     var project: Project = Project()
-    var codes: MutableList<Code>  = mutableListOf()
     var code: Code = Code()
+    var publication: Publication = Publication()
+    var product: Product = Product()
+    var requirement: Requirement = Requirement()
+    var need: Need = Need()
+
+    //list
+    var codes: MutableList<Code> = mutableListOf()
+    var codelists: MutableList<Codelist> = mutableListOf()
+    var requirements: MutableList<Requirement> = mutableListOf()
+    var needs: MutableList<Need> = mutableListOf()
+    var publications: MutableList<Publication> = mutableListOf()
+    var products: MutableList<Product> = mutableListOf()
+
 
 
     @BeforeEach
@@ -41,16 +55,21 @@ internal class CodelistResourceTestTMock {
         project.title = "første prosjekt"
         project.description = "første prosjekt beskrivelse"
         project.version = 2
-        project.publishedDate = LocalDateTime.now()
-        project.ref ="ccc5db69-edb2-431f-855a-4368e2bcddd1"
+        project.publishedDate = LocalDateTime.now().minusDays(2)
+        project.ref = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
         project.id = 120
+        project.codelist = codelists
+        project.requirements = requirements
+        project.publications = publications
+        project.needs = needs
+        project.products = products
+        //project.deletedDate = LocalDateTime.now().minusDays(1)
+
 
         code = Code()
         code.title = "Tittel kode"
         code.description = "beskrivelse kode"
         code.codelist = codelist
-
-        codes.add(code)
 
         codelist = Codelist()
         codelist.title = "Første codelist"
@@ -59,18 +78,80 @@ internal class CodelistResourceTestTMock {
         codelist.project = project
         codelist.codes = codes
         codelist.id = (1L)
+
+        product = Product()
+        product.project = project
+        product.id = 121L
+        product.ref = "34352"
+        product.title ="prod"
+        product.description ="desc"
+        //product.requirementvariant
+       // product.deletedDate
+
+        need = Need ()
+        need.ref ="ewdsfsada567"
+        need.id = 122L
+        need.title = "tittel"
+        need.description = "desv"
+        //need.requirements =
+
+
+        publication  = Publication()
+
+
+        requirement = Requirement()
+
+
+
+
+        //add to list
+        codelists.add(codelist)
+        codes.add(code)
+        products.add(product)
+        needs.add(need)
+
+
+
     }
 
     @Test
     fun getCodelistByRef() {
 
+        println("CODELIST PROJECT ===>>>>>> ${codelist.project?.ref} <<<<<<<<=======")
+        println("PROJECT CODELIST ===>>>>>> ${project.codelist.size} <<<<<<<<=======")
 
+        val projectId = 3L
+        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+        Mockito.`when`(
+            codelistRepository.findByRef(
+                projectId,
+                codelistRef
+            )
+        )
+            .thenReturn(codelist)
+
+        val response: Response =
+            codelistResource.getCodelistByRef(projectRef, codelistRef)
+
+        assertNotNull(response)
+        assertEquals(Response.Status.OK.statusCode, response.status)
+        assertNotNull(response.entity)
+
+        
+        /*val entity: Codelist = response.entity as Codelist
+        assertEquals(1L, entity.id)
+        assertEquals("hello243567", entity.ref)
+        assertEquals("Første codelist", entity.title)
+        assertEquals("første codelist beskrivelse", entity.description)
+
+
+         */
 
     }
 
     @Test
     fun listCodelists() {
-        codelists.add(codelist)
 
         val id = 1L
         val ref = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
