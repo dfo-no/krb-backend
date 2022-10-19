@@ -7,7 +7,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.api.CodelistResource
 import org.kravbank.domain.*
-import org.kravbank.exception.NotFoundException
+import org.kravbank.lang.exception.BadRequestException
+import org.kravbank.lang.exception.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.utils.form.codelist.CodelistForm
 import org.kravbank.utils.form.codelist.CodelistFormUpdate
@@ -214,7 +215,7 @@ internal class CodelistResourceTestTMock {
     }
 
     @Test
-    fun createCodelist() {
+    fun createCodelist_OK() {
 
         //Mockito.reset(codelistResource, codelistRepository)
 
@@ -246,8 +247,42 @@ internal class CodelistResourceTestTMock {
 
     }
 
+    fun createCodelist_BADREQUEST() {
+
+        //Mockito.reset(codelistResource, codelistRepository)
+
+
+        //Mockito.doNothing().`when`(codelistRepository).createCodelist(Mockito.any() )
+
+
+        //Mockito.`when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java))).thenReturn(true)
+
+        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+        codelist_2 = Codelist()
+        codelist_2.title = "Andre codelist"
+        codelist_2.description = "Andre codelist beskrivelse"
+        codelist_2.ref = "hello2423rfd4353grfdg243567"
+        codelist_2.project = project
+        codelist_2.codes = codes
+        codelist_2.id = (4L)
+        codelist_2.ref = "et7ytijdsa8"
+
+        val mappedToDto = CodelistMapper().fromEntity(codelist_2)
+
+        val response: Response = codelistResource.createCodelist(projectRef, mappedToDto)
+
+        print(response)
+        print(response.entity)
+        assertNotNull(response);
+
+
+    }
+
+
+
     @Test
-    fun deleteCodelist() {
+    fun deleteCodelist_OK() {
 
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
@@ -266,7 +301,24 @@ internal class CodelistResourceTestTMock {
         val response: Response = codelistResource.deleteCodelist(projectRef, codelistRef)
         assertNotNull(response)
         assertEquals(ref, response.entity)
+    }
 
+    @Test
+    fun deleteCodelist_BADREQUEST() {
+        val projectId = 3L
+        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+        val ref = "dsfdsgs<'fåowi39543tdsf"
+
+        Mockito.`when`(codelistRepository.deleteCodelist(projectId, codelistRef))
+            .thenThrow(BadRequestException("Bad request! Codelist was not deleted"))
+        try {
+            val response: Response = codelistResource.deleteCodelist(projectRef, codelistRef)
+        } catch (e: Exception) {
+            print("CAUSE ${e.cause}")
+            assertEquals("Bad request! Codelist was not deleted", e.message)
+        }
+        // assertEquals(ref, response.entity)
     }
 
 
@@ -283,7 +335,7 @@ internal class CodelistResourceTestTMock {
         Mockito.`when`(codelistRepository.findByRef(projectId, codelistRef))
             .thenReturn(codelist)
 
-       val response: Response = codelistResource.updateCodelist(projectRef, codelistRef, updatedCodelist)
+        val response: Response = codelistResource.updateCodelist(projectRef, codelistRef, updatedCodelist)
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
@@ -300,7 +352,6 @@ internal class CodelistResourceTestTMock {
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
-
         Mockito.`when`(codelistRepository.findByRef(projectId, codelistRef))
             .thenThrow(NotFoundException("Codelist was not found!"))
 
@@ -311,10 +362,6 @@ internal class CodelistResourceTestTMock {
             assertEquals("Codelist was not found!", e.message)
         }
 
-
-        //assertNotNull(response)
-        //assertEquals(Response.Status.NOT_FOUND.statusCode, response.status)
-        //assertNull(response.entity)
     }
 
     @Test

@@ -1,17 +1,18 @@
 package org.kravbank.api;
 
+import org.kravbank.domain.Code
 import org.kravbank.service.CodeService
 import org.kravbank.utils.form.code.CodeForm
 import org.kravbank.utils.form.code.CodeFormUpdate
 import org.kravbank.utils.mapper.code.CodeMapper
 import org.kravbank.utils.mapper.code.CodeUpdateMapper
-import org.kravbank.utils.mapper.publication.PublicationMapper
 import java.net.URI
-import java.util.ArrayList
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
+import java.util.*
+import java.util.stream.Stream
+import javax.transaction.Transactional
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import javax.ws.rs.core.Response
 
 
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
@@ -42,9 +43,11 @@ class CodeResource(val codeService: CodeService) {
     ): Response {
         //finner liste av codes
         val codes = codeService.list(projectRef, codelistRef)
+
         val codelistForm = ArrayList<CodeForm>()
-        //lager DTO - mapper fra entity
-        for (c in codes) codelistForm.add(CodeMapper().fromEntity(c))
+       //for (c in codes) codelistForm.add(CodeMapper().fromEntity(c))
+        codes.stream().forEach {c -> codelistForm.add(CodeMapper().fromEntity(c))}
+
         return Response.ok(codelistForm).build()
     }
 
