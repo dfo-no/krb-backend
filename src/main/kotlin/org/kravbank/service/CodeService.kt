@@ -1,7 +1,7 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Code
-import org.kravbank.exception.BackendException
+import org.kravbank.lang.exception.BackendException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository

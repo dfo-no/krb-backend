@@ -1,4 +1,4 @@
-package org.kravbank.api;
+package org.kravbank.resource;
 
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
@@ -25,21 +25,17 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
     ): Response {
         val publication = publicationService.get(projectRef, publicationRef)
-        //mapper fra entity
         val publicationDTO = PublicationMapper().fromEntity(publication)
         return Response.ok(publicationDTO).build()
     }
 
-    //LIST PUBLICATIONS
     @GET
     fun listPublications(@PathParam("projectref") projectRef: String): Response {
         val publications = publicationService.list(projectRef)
         val publicationsDTO = ArrayList<PublicationForm>()
-        //mapper fra entity
         for (n in publications) publicationsDTO.add(PublicationMapper().fromEntity(n))
         return Response.ok(publicationsDTO).build()
     }
-    //CREATE PUBLICATION
     @Transactional
     @POST
     fun createPublication(@PathParam("projectref") projectRef: String, newPublication: PublicationForm): Response {
@@ -48,7 +44,6 @@ class PublicationResource(val publicationService: PublicationService) {
         return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
     }
 
-    //DELETE PUBLICATION
     @DELETE
     @Path("/{publicationref}")
     @Transactional
@@ -61,7 +56,6 @@ class PublicationResource(val publicationService: PublicationService) {
         return Response.ok(publicationDTO.ref).build()
     }
 
-    //UPDATE PUBLICATION
     @PUT
     @Path("{publicationref}")
     @Transactional
@@ -71,7 +65,6 @@ class PublicationResource(val publicationService: PublicationService) {
         updatedPublication: PublicationFormUpdate
     ): Response {
         val publication = publicationService.update(projectRef, publicationRef, updatedPublication)
-        // mapper fra entity
         val publicationUpdateDTO = PublicationUpdateMapper().fromEntity(publication)
         return Response.ok(publicationUpdateDTO).build()
     }

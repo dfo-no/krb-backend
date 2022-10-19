@@ -8,3 +8,4 @@ data class CodeForm(
     var description: String = "",
     var codelist: Codelist? = null
 )
+

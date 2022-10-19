@@ -2,7 +2,7 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Project
-import org.kravbank.exception.BackendException
+import org.kravbank.lang.exception.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate

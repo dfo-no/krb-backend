@@ -1,4 +1,4 @@
-package org.kravbank.api;
+package org.kravbank.resource;
 
 import org.kravbank.utils.form.requirement.RequirementForm
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
@@ -6,7 +6,6 @@ import org.kravbank.service.RequirementService
 import org.kravbank.utils.form.requirement.RequirementFormCreate
 import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
 import java.net.URI
 import java.util.ArrayList
 import javax.transaction.Transactional;
@@ -20,7 +19,6 @@ import javax.enterprise.context.RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
 class RequirementResource(val requirementService: RequirementService) {
-    //GET REQUIREMENT
     @GET
     @Path("/{requirementRef}")
     fun getRequirement(
@@ -32,7 +30,6 @@ class RequirementResource(val requirementService: RequirementService) {
         return Response.ok(requirementDTO).build()
     }
 
-    //LIST REQUIREMENTS
     @GET
     fun listRequirements(@PathParam("projectRef") projectRef: String): Response {
         val requirements = requirementService.list(projectRef)
@@ -41,7 +38,6 @@ class RequirementResource(val requirementService: RequirementService) {
         return Response.ok(requirementsDTO).build()
     }
 
-    //CREATE REQUIREMENT
     @Transactional
     @POST
     fun createRequirement(@PathParam("projectRef") projectRef: String, newRequirement: RequirementFormCreate): Response {
@@ -49,7 +45,6 @@ class RequirementResource(val requirementService: RequirementService) {
         return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/" + requirement.ref)).build()
     }
 
-    //DELETE REQUIREMENT
     @DELETE
     @Path("/{requirementRef}")
     @Transactional
@@ -63,7 +58,6 @@ class RequirementResource(val requirementService: RequirementService) {
         return Response.ok(requirementDTO.ref).build()
     }
 
-    //UPDATE REQUIREMENT
     @PUT
     @Path("{requirementRef}")
     @Transactional

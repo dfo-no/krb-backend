@@ -1,4 +1,4 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
@@ -7,8 +7,6 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.utils.form.publication.PublicationForm
 import org.kravbank.utils.form.publication.PublicationFormUpdate
-import org.kravbank.utils.mapper.publication.PublicationMapper
-import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 
 
 @QuarkusTest

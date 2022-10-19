@@ -1,9 +1,8 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.service.ProductService
-import org.kravbank.service.ProjectService
 import org.kravbank.utils.form.product.ProductFormCreate
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
@@ -22,8 +21,7 @@ import javax.ws.rs.core.Response
 @Consumes(MediaType.APPLICATION_JSON)
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
-class ProductResource(val productService: ProductService, val projectService: ProjectService) {
-    //GET PROJECT
+class ProductResource(val productService: ProductService) {
     @GET
     @Path("/{productref}")
     fun getProduct(
@@ -31,12 +29,10 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         @PathParam("projectRef") projectRef: String,
     ): Response {
         val product = productService.get(projectRef, productref)
-        //mapper fra entity
         val productDTO = ProductMapper().fromEntity(product)
         return Response.ok(productDTO).build()
     }
 
-    //LIST PRODUCTS
     @GET
     fun listProducts(@PathParam("projectRef") projectRef: String): Response {
         val products = productService.list(projectRef)
@@ -45,16 +41,14 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         return Response.ok(productsDTO).build()
     }
 
-    //CREATE PRODUCT
     @Transactional
     @POST
     fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductFormCreate): Response {
         val product = productService.create(projectRef, newProduct)
-        //sender ny product ref i response header
+        //sender nytt product ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
     }
 
-    //DELETE PRODUCT
     @DELETE
     @Path("/{productref}")
     @Transactional
@@ -68,7 +62,6 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         return Response.ok(productDTO.ref).build()
     }
 
-    //UPDATE PRODUCT
     @PUT
     @Path("{productref}")
     @Transactional
@@ -78,7 +71,6 @@ class ProductResource(val productService: ProductService, val projectService: Pr
         updatedProduct: ProductFormUpdate
     ): Response {
         val product = productService.update(projectRef, productref, updatedProduct)
-        // mapper fra entity
         val productUpdateDTO = ProductUpdateMapper().fromEntity(product)
         return Response.ok(productUpdateDTO).build()
     }

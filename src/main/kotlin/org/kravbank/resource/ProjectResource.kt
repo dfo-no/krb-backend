@@ -1,4 +1,4 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import org.kravbank.utils.form.project.ProjectForm
 import org.kravbank.utils.form.project.ProjectFormUpdate
@@ -20,17 +20,14 @@ import javax.ws.rs.core.Response
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
 class ProjectResource(val projectService: ProjectService) {
-    //GET PROJECT
     @GET
     @Path("/{projcetRef}")
     fun getProject(@PathParam("projcetRef") projcetRef: String): Response {
         val project = projectService.get(projcetRef)
-        //mapper fra entity
         val projectDTO = ProjectMapper().fromEntity(project)
         return Response.ok(projectDTO).build()
     }
 
-    //LIST PROJECTS
     @GET
     fun listProjects(): Response {
         val projects = projectService.list()
@@ -39,7 +36,6 @@ class ProjectResource(val projectService: ProjectService) {
         return Response.ok(projectsDTO).build()
     }
 
-    //CREATE PROJECT
     @Transactional
     @POST
     fun createProject(newProject: ProjectForm): Response {
@@ -48,7 +44,6 @@ class ProjectResource(val projectService: ProjectService) {
 
     }
 
-    //DELETE PROJECT
     @DELETE
     @Path("{projcetRef}")
     @Transactional
@@ -58,7 +53,6 @@ class ProjectResource(val projectService: ProjectService) {
         return Response.ok(projectDTO.ref).build()
     }
 
-    //UPDATE PROJECT
     @PUT
     @Path("{projcetRef}")
     @Transactional

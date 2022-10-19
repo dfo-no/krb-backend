@@ -1,4 +1,4 @@
-package org.kravbank.api;
+package org.kravbank.resource;
 
 import org.kravbank.utils.form.need.NeedForm
 import org.kravbank.utils.form.need.NeedFormUpdate
@@ -18,7 +18,6 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class NeedResource(val needService: NeedService) {
-    //GET NEED
     @GET
     @Path("/{needRef}")
     fun getNeed(
@@ -26,12 +25,10 @@ class NeedResource(val needService: NeedService) {
         @PathParam("needRef") needRef: String
     ): Response {
         val need = needService.get(projectRef, needRef)
-        //mapper fra entity
         val needDTO = NeedMapper().fromEntity(need)
         return Response.ok(needDTO).build()
     }
 
-    //LIST NEEDS
     @GET
     fun listPublications(@PathParam("projectRef") projectRef: String): Response {
         val needs = needService.list(projectRef)
@@ -40,7 +37,6 @@ class NeedResource(val needService: NeedService) {
         return Response.ok(needsDTO).build()
     }
 
-    //CREATE NEED
     @Transactional
     @POST
     fun createNeed(@PathParam("projectRef") projectRef: String, newNeed: NeedForm): Response {
@@ -49,8 +45,6 @@ class NeedResource(val needService: NeedService) {
         return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
     }
 
-
-    //DELETE NEED
     @DELETE
     @Path("/{needRef}")
     @Transactional
@@ -64,7 +58,6 @@ class NeedResource(val needService: NeedService) {
         return Response.ok(needDTO.ref).build()
     }
 
-    //UPDATE NEED
     @PUT
     @Path("{needRef}")
     @Transactional
@@ -74,7 +67,6 @@ class NeedResource(val needService: NeedService) {
         updatedNeed: NeedFormUpdate
     ): Response {
         val need = needService.update(projectRef, needRef, updatedNeed)
-        // mapper fra entity
         val needUpdateDTO = NeedUpdateMapper().fromEntity(need)
         return Response.ok(needUpdateDTO).build()
     }

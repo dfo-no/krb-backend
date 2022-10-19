@@ -1,4 +1,4 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest

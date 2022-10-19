@@ -1,10 +1,10 @@
-package org.kravbank.api.mock
+package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-import org.kravbank.api.ProjectResource
+import org.kravbank.resource.ProjectResource
 import org.kravbank.domain.Project
 import org.kravbank.repository.ProjectRepository
 import java.time.LocalDateTime

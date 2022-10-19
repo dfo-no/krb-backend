@@ -44,8 +44,4 @@ class Requirement : PanacheEntity() {
     @JsonIgnore
     @JoinColumn(name = "need_id_fk")
     var need: Need? = null
-
-
-
-
 }

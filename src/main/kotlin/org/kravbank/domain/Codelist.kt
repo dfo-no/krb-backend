@@ -25,9 +25,6 @@ class Codelist : PanacheEntity() {
     @JsonBackReference(value = "value-codes")
     var codes: MutableList<Code>? = null
 
-    @OneToMany
-    @JsonIgnore
-    var configs = mutableListOf<Config>()
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach

@@ -1,11 +1,11 @@
-package org.kravbank.api.mock
+package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.api.CodelistResource
+import org.kravbank.resource.CodelistResource
 import org.kravbank.domain.*
 import org.kravbank.lang.exception.BadRequestException
 import org.kravbank.lang.exception.NotFoundException
@@ -124,9 +124,6 @@ internal class CodelistResourceTestTMock {
     @Test
     fun getCodelist_OK() {
 
-        //println("CODELIST PROJECT ===>>>>>> ${codelist.project?.ref} <<<<<<<<=======")
-        //println("PROJECT CODELIST ===>>>>>> ${project.codelist.size} <<<<<<<<=======")
-
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
@@ -147,17 +144,7 @@ internal class CodelistResourceTestTMock {
 
         val entity: Codelist = CodelistMapper().toEntity(response.entity as CodelistForm)
 
-        //print(entity.ref)
-
-        /**
-         * todo
-         * feil
-         * id = null |-> skjules med panache
-         * autogen ref |-> Codelistmapper toEntity autogenerer ny id og ref
-         */
-
-        //assertEquals(1L, entity.id)
-        // assertEquals("hello243567", entity.ref)
+        assertEquals("hello243567", entity.ref)
         assertEquals("Første codelist", entity.title)
         assertEquals("første codelist beskrivelse", entity.description)
         assertEquals(project, entity.project)
@@ -269,16 +256,9 @@ internal class CodelistResourceTestTMock {
         codelist_2.ref = "et7ytijdsa8"
 
         val mappedToDto = CodelistMapper().fromEntity(codelist_2)
-
         val response: Response = codelistResource.createCodelist(projectRef, mappedToDto)
-
-        print(response)
-        print(response.entity)
-        assertNotNull(response);
-
-
+        assertNotNull(response)
     }
-
 
 
     @Test
@@ -318,9 +298,7 @@ internal class CodelistResourceTestTMock {
             print("CAUSE ${e.cause}")
             assertEquals("Bad request! Codelist was not deleted", e.message)
         }
-        // assertEquals(ref, response.entity)
     }
-
 
     @Test
     fun updateCodelist_OK() {
@@ -344,7 +322,6 @@ internal class CodelistResourceTestTMock {
 
     }
 
-
     @Test
     fun updateCodelist_NOTFOUND() {
 
@@ -362,9 +339,5 @@ internal class CodelistResourceTestTMock {
             assertEquals("Codelist was not found!", e.message)
         }
 
-    }
-
-    @Test
-    fun getCodelistService() {
     }
 }

@@ -1,4 +1,4 @@
-package org.kravbank.exception
+package org.kravbank.lang.exception
 
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response

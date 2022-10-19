@@ -1,4 +1,4 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
@@ -20,8 +20,6 @@ internal class CodelistResourceTest() {
 
     @Test
     fun getCodelistByRef() {
-
-        //val getCodelistPath = "$baseUri$basePath$useProjectRef"
 
         given()
             .`when`()

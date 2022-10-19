@@ -1,17 +1,13 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.domain.*
-import org.kravbank.service.ProductService
 import org.kravbank.utils.form.product.ProductFormCreate
 import org.kravbank.utils.form.product.ProductFormUpdate
-import org.kravbank.utils.mapper.product.ProductCreateMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
-import javax.inject.Inject
 
 @QuarkusTest
 @QuarkusIntegrationTest

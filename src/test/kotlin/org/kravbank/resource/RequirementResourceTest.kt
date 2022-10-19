@@ -1,19 +1,14 @@
-package org.kravbank.api
+package org.kravbank.resource
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
-import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test;
-import org.kravbank.domain.Need
 import org.kravbank.repository.NeedRepository
-import org.kravbank.utils.form.requirement.RequirementForm
 import org.kravbank.utils.form.requirement.RequirementFormCreate
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.utils.mapper.requirement.RequirementCreateMapper
-import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
-import javax.inject.Inject
 
 
 //@QuarkusTest

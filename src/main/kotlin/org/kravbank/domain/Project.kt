@@ -7,8 +7,7 @@ import java.util.UUID
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@Entity//(name = "Project")
-@Table //(name = "project")
+@Entity
 class Project : PanacheEntity() {
 
     @NotBlank

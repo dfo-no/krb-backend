@@ -8,8 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
-@Entity //(name = "Product")
-@Table //(name ="product")
+@Entity
 class Product : PanacheEntity() {
 
     var title: String = ""

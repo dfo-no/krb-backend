@@ -1,7 +1,7 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Requirement
-import org.kravbank.exception.BackendException
+import org.kravbank.lang.exception.BackendException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.form.requirement.RequirementForm
@@ -43,11 +43,6 @@ class RequirementService(
         val foundNeed = needRepository.findByRefRequirement(need)
         val requirement = RequirementCreateMapper().toEntity(newRequirement)
         requirement.need = foundNeed
-        /**
-         * todo
-         * debug need test
-         */
-        print("TO STRING NEED FROM CREATE REQUIREMENT: $foundNeed")
         requirementRepository.createRequirement(requirement)
         return requirement
     }
