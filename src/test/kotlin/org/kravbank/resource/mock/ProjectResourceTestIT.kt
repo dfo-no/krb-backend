@@ -14,40 +14,57 @@ internal class ProjectResourceTestIT {
 
     @InjectMock
     lateinit var projectRepository: ProjectRepository
+
     @Inject
     lateinit var projectResource: ProjectResource
 
-    var project: Project = Project ()
+    var project: Project = Project()
 
     @BeforeEach
     fun setUp() {
         project = Project()
         project.title = "første prosjekt"
         project.description = "første prosjekt beskrivelse"
-        project.ref ="ccc5db69-edb2-431f-855a-4368e2bcddd1"
+        project.ref = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
     }
 
     @Test
-    fun getProject() {
+    fun getProject_OK() {
     }
+
+    @Test
+    fun getProject_KO() {
+    }
+
 
     @Test
     fun listProjects() {
     }
 
     @Test
-    fun createProject() {
+    fun createProject_OK() {
     }
 
     @Test
-    fun deleteProjectByRef() {
+    fun createProject_KO() {
+    }
+
+
+    @Test
+    fun deleteProject_OK() {
     }
 
     @Test
-    fun updateProject() {
+    fun deleteProject_KO() {
+    }
+
+
+    @Test
+    fun updateProject_OK() {
     }
 
     @Test
-    fun getProjectService() {
+    fun updateProject_KO() {
     }
+
 }
