@@ -14,6 +14,7 @@ class ProjectRepository : PanacheRepository<Project> {
     @Throws(BackendException::class)
     fun findByRef(ref: String): Project {
         val project = find("ref", ref).firstResult<Project>()
+
         if (project?.deletedDate == null) {
             return project
         } else throw NotFoundException("Project not found")
@@ -39,11 +40,11 @@ class ProjectRepository : PanacheRepository<Project> {
     @Throws(BackendException::class)
     fun updateProject(id: Long, project: Project) {
         val updated = update(
-            "title = ?1, description= ?2, publisheddate = ?3, version = ?4 where id = ?5",
+            "title = ?1, description = ?2 where id = ?3", //publisheddate = ?3, version = ?4 where id = ?5",
             project.title,
             project.description,
-            project.publishedDate,
-            project.version,
+           // project.publishedDate,
+            // project.version,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Project did not update") }

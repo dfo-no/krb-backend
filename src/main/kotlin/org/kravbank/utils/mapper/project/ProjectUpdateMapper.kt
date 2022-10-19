@@ -11,8 +11,8 @@ class ProjectUpdateMapper : Mapper<ProjectFormUpdate, Project> {
         ProjectFormUpdate(
             entity.title,
             entity.description,
-            entity.version,
-            entity.publishedDate,
+           // entity.version,
+            //entity.publishedDate,
             //entity.deletedDate
         )
 
@@ -21,8 +21,8 @@ class ProjectUpdateMapper : Mapper<ProjectFormUpdate, Project> {
         val p = Project()
         p.title = domain.title
         p.description = domain.description
-        p.publishedDate = domain.publishedDate
-        p.version = domain.version
+     //   p.publishedDate = domain.publishedDate
+       // p.version = domain.version
        // p.deletedDate = domain.deletedDate
         return p
     }

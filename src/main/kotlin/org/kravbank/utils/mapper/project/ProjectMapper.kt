@@ -12,8 +12,8 @@ class ProjectMapper : Mapper<ProjectForm, Project> {
             entity.ref,
             entity.title,
             entity.description,
-            entity.version,
-            entity.publishedDate,
+           // entity.version,
+           // entity.publishedDate,
             //entity.deletedDate,
             //entity.products,
             // entity.needs

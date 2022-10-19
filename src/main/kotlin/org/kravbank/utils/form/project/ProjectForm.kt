@@ -6,8 +6,8 @@ data class ProjectForm(
     var ref: String = "",
     var title: String = "",
     var description: String = "",
-    var version: Long? = null,
-    var publishedDate: LocalDateTime? = null
+    //var version: Long? = null,
+    //var publishedDate: LocalDateTime? = null
 
     //var deletedDate: LocalDateTime? = null,
     //var products: MutableList<Product> = mutableListOf(),

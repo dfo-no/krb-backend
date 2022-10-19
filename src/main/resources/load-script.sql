@@ -1,17 +1,17 @@
 
 --PROJECT
-insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(1,'Prosjekt1', 'Beskrivelse1', 1,'2020-09-29 21:17:30.23195',null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(2,'Prosjekt2', 'Beskrivelse2',2,'2021-09-29 21:17:30.23195',null, 'aaa4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(3,'Prosjekt3', 'Beskrivelse3', 3,'2000-09-29 21:17:30.23195',null, 'bbb4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(22,'ScriptProsjekt4', 'Beskrivelse3', 4,'1999-09-29 21:17:30.23195','2021-09-29 21:17:30.23195', 'prosjekt4-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(24,'ScriptProsjekt5', 'Beskrivelse3', 5,'2005-09-29 21:17:30.23195',null, 'prosjekt5-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id",title, description, version, publisheddate, deleteddate, ref)
-values(26,'ScriptProsjekt6', 'Beskrivelse3', 6,'1998-09-29 21:17:30.23195',null, 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id",title, description, deleteddate, ref)
+values(1,'Prosjekt1', 'Beskrivelse1',null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id",title, description, deleteddate, ref)
+values(2,'Prosjekt2', 'Beskrivelse2',null, 'aaa4db69-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id",title, description, deleteddate, ref)
+values(3,'Prosjekt3', 'Beskrivelse3',null, 'bbb4db69-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id",title, description, deleteddate, ref)
+values(22,'ScriptProsjekt4', 'Beskrivelse3','2021-09-29 21:17:30.23195', 'prosjekt4-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id",title, description, deleteddate, ref)
+values(24,'ScriptProsjekt5', 'Beskrivelse3',null, 'prosjekt5-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id",title, description, deleteddate, ref)
+values(26,'ScriptProsjekt6', 'Beskrivelse3',null, 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
 
 
 --CODELIST

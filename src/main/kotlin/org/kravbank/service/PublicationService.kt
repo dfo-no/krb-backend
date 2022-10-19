@@ -36,10 +36,13 @@ class PublicationService(
         val publication = PublicationMapper().toEntity(newPublication)
         publicationRepository.createPublication(publication)
 
+        /*
         //oppdaterer project med nye publication attributter
         foundProject.publishedDate = publication.date
         foundProject.version = publication.version
         projectRepository.updateProject(foundProject.id, foundProject )
+
+         */
         return publication
     }
 

@@ -20,10 +20,10 @@ class Project : PanacheEntity() {
     @Size(min = 4, max = 140, message = "Description must be between 4 and 140 characters long")
     lateinit var description: String
 
-    @Min(1)
-    var version: Long? = null
+    //@Min(1)
+    //var version: Long? = null
 
-    var publishedDate: LocalDateTime? = null
+    //var publishedDate: LocalDateTime? = null
 
     @Column(
         unique = true,

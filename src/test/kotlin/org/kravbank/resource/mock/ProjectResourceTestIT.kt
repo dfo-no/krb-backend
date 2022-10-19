@@ -24,8 +24,6 @@ internal class ProjectResourceTestIT {
         project = Project()
         project.title = "første prosjekt"
         project.description = "første prosjekt beskrivelse"
-        project.version = 2
-        project.publishedDate = LocalDateTime.now()
         project.ref ="ccc5db69-edb2-431f-855a-4368e2bcddd1"
     }
 

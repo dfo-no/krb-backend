@@ -50,7 +50,7 @@ class ProjectResourceTest {
         val project = ProjectForm()
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
-        project.version = 11
+        //  project.version = 11
         //project.deletedDate = "sadsfdsa"
 
         val projectMappedForm = ProjectMapper().toEntity(project)
@@ -88,7 +88,8 @@ class ProjectResourceTest {
         val project = ProjectFormUpdate()
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
-        project.version = 11
+        //project.version = 11
+
         val projectMappedForm = ProjectUpdateMapper().toEntity(project)
         given()
             .`when`()
@@ -98,6 +99,5 @@ class ProjectResourceTest {
             .then()
             .statusCode(200)
     }
-
 
 }
