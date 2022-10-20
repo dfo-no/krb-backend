@@ -1,41 +1,49 @@
 package org.kravbank.service
 
-import io.quarkus.hibernate.orm.panache.PanacheQuery
+import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Project
+import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.form.project.ProjectForm
+import org.kravbank.utils.form.project.ProjectFormUpdate
+import org.kravbank.utils.mapper.project.ProjectMapper
+import org.kravbank.utils.mapper.project.ProjectUpdateMapper
 import javax.enterprise.context.ApplicationScoped
+
 
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
-    fun listProjects(): List<Project> = projectRepository.listAll()
 
-
-    fun getProject(id: Long): Project = projectRepository.findById(id)
-
-
-    fun getProjectByRef(ref: String): Project? {
-       return listProjects().find { project ->
-            project.ref == ref
-        }
+    // @CacheResult(cacheName = "project-cache-get")
+    @Throws(BackendException::class)
+    fun get(projcetRef: String): Project {
+        return projectRepository.findByRef(projcetRef)
     }
 
-    fun listProjectsByRef(ref : String) : List<Project> = projectRepository.listAllByProjectRef(ref)
+    //    @CacheResult(cacheName = "project-cache-list")
+    //@Throws(BackendException::class)
+    fun list(): List<Project> {
+        return projectRepository.listAllProjects()
+    }
 
-    fun getProjectByRefCustomRepo (ref: String): Project? = projectRepository.findByRef(ref)
+    @Throws(BackendException::class)
+    fun create(newProject: ProjectForm): Project {
+        val project = ProjectMapper().toEntity(newProject)
+        projectRepository.createProject(project)
+        return project
+    }
 
-    fun createProject(project: Project) = projectRepository.persist(project)
+    fun delete(projcetRef: String): Project {
+        val foundProject = projectRepository.findByRef(projcetRef)
+        projectRepository.deleteProject(foundProject.id)
+        return foundProject
+    }
 
-    fun exists(id: Long): Boolean = projectRepository.count("id", id) == 1L
-
-    fun refExists(ref: String): Boolean = projectRepository.count("ref", ref) == 1L
-
-    fun deleteProject(id: Long) = projectRepository.deleteById(id)
-
-
-    fun updateProject(id: Long, project: Project) {
-       projectRepository.update("title = ?1, description= ?2 where id = ?3",
-           project.title,
-           project.description,
-           id)
+    @Throws(BackendException::class)
+    fun update(projcetRef: String, updatedProject: ProjectFormUpdate): Project {
+        val foundProject = projectRepository.findByRef(projcetRef)
+        val project = ProjectUpdateMapper().toEntity(updatedProject)
+        projectRepository.updateProject(foundProject.id, project)
+        return project
     }
 }

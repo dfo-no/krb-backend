@@ -1,91 +1,69 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Product
-import org.kravbank.form.product.ProductForm
+import org.kravbank.lang.BackendException
+import org.kravbank.utils.form.product.ProductForm
+import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
-import org.kravbank.utils.product.ProductMapper
-import java.lang.IllegalArgumentException
-import java.net.URI
-import java.util.*
+import org.kravbank.repository.ProjectRepository
+import org.kravbank.repository.RequirementRepository
+import org.kravbank.repository.RequirementVariantRepository
+import org.kravbank.utils.form.product.ProductFormCreate
+import org.kravbank.utils.mapper.product.ProductCreateMapper
+import org.kravbank.utils.mapper.product.ProductMapper
+import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
-class ProductService(val productRepository: ProductRepository, val projectService: ProjectService) {
-    fun listProducts(): List<Product>  = productRepository.listAll()
+class ProductService(
+    val productRepository: ProductRepository,
+    val projectRepository: ProjectRepository,
+    val requirementVariantRepository: RequirementVariantRepository,
+    val requirementService: RequirementService,
+    val requirementVariantService: RequirementVariantService
 
-    fun listProductsFromService(projectRef : String) : Response {
-        return try {
-            if (projectService.refExists(projectRef)) {
-                //list proudcts by project ref
-                val projectProductList = projectService.getProjectByRefCustomRepo(projectRef)!!.products
-                //convert to array of form
-                val productsFormList = ArrayList<ProductForm>()
-                for (p in projectProductList) productsFormList.add(ProductMapper().fromEntity(p))
-                //returns the custom product form
-                Response.ok(productsFormList).build()
-            } else {
-                Response.status(Response.Status.NOT_FOUND).build()
-            }
-        }catch (e: Exception) {
-            throw IllegalArgumentException("GET list of products failed")
-        }
+) {
+
+    // @CacheResult(cacheName = "product-cache-get")
+    @Throws(BackendException::class)
+    fun get(projectRef: String, productRef: String): Product {
+        val foundProject = projectRepository.findByRef(projectRef)
+        return productRepository.findByRef(foundProject.id, productRef)
     }
 
-    fun getProduct(id: Long): Optional<Product>? = productRepository.findByIdOptional(id)
-    fun getProductByRefCustomRepo (ref: String): Product = productRepository.findByRef(ref)
-
-    fun getProductByRefFromService (projectRef: String, productRef: String) : Response {
-
-        if (refExists(productRef) && projectService.refExists(projectRef)) {
-
-            val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-            val product = project.products.find { products ->
-                products.ref == productRef
-            }
-            val productMapper = ProductMapper().fromEntity(product!!)
-
-            return Response.ok(productMapper).build()
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build()
-        }
+    //@CacheResult(cacheName = "product-cache-list")
+    @Throws(BackendException::class)
+    fun list(projectRef: String): List<Product> {
+        val foundProject = projectRepository.findByRef(projectRef)
+        return productRepository.listAllProducts(foundProject.id)
     }
 
-    fun createProduct(product: Product) = productRepository.persist(product) //persist and flush vs persist
-
-    fun createProductFromService (projectRef: String, product: ProductForm): Response {
-        //adds a product to relevant project
-        try {
-            val productMapper = ProductMapper().toEntity(product)
-            if (projectService.refExists(projectRef)) {
-                val project = projectService.getProjectByRefCustomRepo(projectRef)!!
-               project.products.add(productMapper)
-               projectService.updateProject(project.id, project)
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build()
-            }
-            return if (productMapper.isPersistent) {
-                Response.created(URI.create("/api/v1/projects/$projectRef/products" + product.ref)).build();
-            } else {
-                Response.status(Response.Status.BAD_REQUEST).build()
-            }
-        } catch (e: Exception) {
-            //return Response.status(Response.Status.BAD_REQUEST).build()
-            throw IllegalArgumentException("POST product failed")
-        }
+    @Throws(BackendException::class)
+    fun create(projectRef: String, newProduct: ProductFormCreate): Product {
+        val foundProject = projectRepository.findByRef(projectRef)
+        newProduct.project = foundProject
+        val product = ProductCreateMapper().toEntity(newProduct)
+        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementvariant)
+        product.requirementvariant = foundReqVariant
+        productRepository.createProduct(product)
+        return product
     }
 
-    fun exists(id: Long): Boolean = productRepository.count("id", id) == 1L
+    @Throws(BackendException::class)
+    fun delete(projectRef: String, productRef: String): Product {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundProduct = productRepository.findByRef(foundProject.id, productRef)
+        productRepository.deleteProduct(foundProduct.id)
+        return foundProduct
+    }
 
-    fun refExists(ref: String): Boolean = productRepository.count("ref", ref) == 1L
-
-
-    fun deleteProduct(id: Long) = productRepository.deleteById(id)
-
-    fun updateProduct(id: Long, product: Product) {
-        productRepository.update("title = ?1, description = ?2 where id= ?3",
-            product.title,
-            product.description,
-            id)
+    @Throws(BackendException::class)
+    fun update(projectRef: String, productRef: String, updatedProduct: ProductFormUpdate): Product {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundProduct = productRepository.findByRef(foundProject.id, productRef)
+        val product = ProductUpdateMapper().toEntity(updatedProduct)
+        productRepository.updateProduct(foundProduct.id, product)
+        return product
     }
 }

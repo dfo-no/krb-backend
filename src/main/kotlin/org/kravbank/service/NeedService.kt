@@ -1,22 +1,56 @@
 package org.kravbank.service
 
+import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Need
+import org.kravbank.lang.BackendException
+import org.kravbank.utils.form.need.NeedForm
+import org.kravbank.utils.form.need.NeedFormUpdate
 import org.kravbank.repository.NeedRepository
+import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.mapper.need.NeedMapper
+import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class NeedService(val needRepository: NeedRepository) {
-    fun listNeeds(): MutableList<Need> = needRepository.listAll()
-    fun getNeed(id: Long): Need = needRepository.findById(id)
-    fun createNeed(need: Need) = needRepository.persistAndFlush(need)
-    fun exists(id: Long): Boolean = needRepository.count("id", id) == 1L
-    fun deleteNeed(id: Long) = needRepository.deleteById(id)
-    fun updateNeed(id: Long, requirementVariant: Need) {
-       // needRepository.update(
-          //  "comment = ?1, version = ?2, bankid = ?3, date = ?4 where id= ?5",
-            // requirementVariant.comment, requirementVariant.version, requirementVariant.bankId, requirementVariant.date, id
-        //)
-
+class NeedService(
+    val needRepository: NeedRepository,
+    val projectRepository: ProjectRepository
+) {
+    //  @CacheResult(cacheName = "need-cache-get")
+    @Throws(BackendException::class)
+    fun get(projectRef: String, needRef: String): Need {
+        val project = projectRepository.findByRef(projectRef)
+        return needRepository.findByRef(project.id, needRef)
     }
 
+    //@CacheResult(cacheName = "need-cache-list")
+    @Throws(BackendException::class)
+    fun list(projectRef: String): MutableList<Need> {
+        val foundProject = projectRepository.findByRef(projectRef)
+        return needRepository.listAllNeeds(foundProject.id)
+    }
+
+    @Throws(BackendException::class)
+    fun create(projectRef: String, newNeed: NeedForm): Need {
+        val project = projectRepository.findByRef(projectRef)
+        newNeed.project = project
+        val need = NeedMapper().toEntity(newNeed)
+        needRepository.createNeed(need)
+        return need
+    }
+
+    @Throws(BackendException::class)
+    fun delete(projectRef: String, needRef: String): Need{
+        val foundProject = projectRepository.findByRef(projectRef)
+        return needRepository.deleteNeed(foundProject.id, needRef)
+    }
+
+    @Throws(BackendException::class)
+    fun update(projectRef: String, needRef: String, updatedNeed: NeedFormUpdate): Need {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+        val need = NeedUpdateMapper().toEntity(updatedNeed)
+        needRepository.updateNeed(foundNeed.id, need)
+        return need
+    }
 }
