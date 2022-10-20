@@ -6,18 +6,19 @@ import org.kravbank.service.NeedService
 import org.kravbank.utils.mapper.need.NeedMapper
 import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import java.net.URI
-import java.util.ArrayList
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/needs")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class NeedResource(val needService: NeedService) {
+
     @GET
     @Path("/{needRef}")
     fun getNeed(
@@ -31,9 +32,9 @@ class NeedResource(val needService: NeedService) {
 
     @GET
     fun listPublications(@PathParam("projectRef") projectRef: String): Response {
-        val needs = needService.list(projectRef)
-        val needsDTO = ArrayList<NeedForm>()
-        for (n in needs) needsDTO.add(NeedMapper().fromEntity(n))
+        val needsDTO = needService.list(projectRef)
+            .stream()
+            .map(NeedMapper()::fromEntity).toList()
         return Response.ok(needsDTO).build()
     }
 
@@ -41,8 +42,9 @@ class NeedResource(val needService: NeedService) {
     @POST
     fun createNeed(@PathParam("projectRef") projectRef: String, newNeed: NeedForm): Response {
         val need = needService.create(projectRef, newNeed)
-        //sender ny need ref i response header
-        return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
+        //returnerer ny need ref i response header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref))
+            .build()
     }
 
     @DELETE
@@ -54,7 +56,7 @@ class NeedResource(val needService: NeedService) {
     ): Response {
         val need = needService.delete(projectRef, needRef)
         val needDTO = NeedMapper().fromEntity(need)
-        // sender slettet need ref i body
+        // returnerer slettet need ref i body
         return Response.ok(needDTO.ref).build()
     }
 

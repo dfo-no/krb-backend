@@ -14,19 +14,14 @@ import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
 @QuarkusTest
 @QuarkusIntegrationTest
 internal class CodelistResourceTest() {
-    val baseUri = "http://localhost:8080"
-    val basePath = "/api/v1/projects"
-    val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
     @Test
-    fun getCodelistByRef() {
-
+    fun getCodelist() {
         given()
             .`when`()
             .get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
     @Test
@@ -35,51 +30,43 @@ internal class CodelistResourceTest() {
             .`when`().get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/")
             .then()
             .statusCode(200)
-        //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
     @Test
     fun createCodelist() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        //RestAssured.port = 8080;
-        RestAssured.basePath = basePath;
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects";
 
         val codelist = CodelistForm()
         codelist.title = "CODELIST Integrasjonstest - Tittel 1"
         codelist.description = "CODELIST Integrasjonstest - Beskrivelse 1"
-
         val codelistMapper = CodelistMapper().toEntity(codelist)
 
         given()
             .`when`()
             .body(codelistMapper)
             .header("Content-type", "application/json")
-            .post("$useProjectRef/codelists")
+            .post("bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists")
             .then()
-            .statusCode(201) //envt 200
+            .statusCode(201)
     }
 
     @Test
-    fun deleteCodelistByRef() {
+    fun deleteCodelist() {
         given()
             .`when`()
             .delete("http://localhost:8080/api/v1/projects/prosjekt5-edb2-431f-855a-4368e2bcddd1/codelists/newlist2222db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-
-        //.body(`is`("Hello RESTEasy"))
     }
 
 
     @Test
     fun updateCodelist() {
-
-        //val ut = given().put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/asd4db69-edb2-431f-855a-4368e2bcddd1").statusCode()
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        //RestAssured.port = 8080;
-        RestAssured.basePath = basePath;
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects"
 
         val codelist = CodelistFormUpdate()
         codelist.title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
@@ -90,8 +77,8 @@ internal class CodelistResourceTest() {
             .`when`()
             .body(codelistMapper)
             .header("Content-type", "application/json")
-            .put("$useProjectRef/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
+            .put("bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(200) //envt 200
+            .statusCode(200)
     }
 }

@@ -6,12 +6,12 @@ import org.kravbank.service.PublicationService
 import org.kravbank.utils.mapper.publication.PublicationMapper
 import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
 import java.net.URI
-import java.util.ArrayList
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
+import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectref}/publications")
 @Produces(APPLICATION_JSON)
@@ -31,17 +31,19 @@ class PublicationResource(val publicationService: PublicationService) {
 
     @GET
     fun listPublications(@PathParam("projectref") projectRef: String): Response {
-        val publications = publicationService.list(projectRef)
-        val publicationsDTO = ArrayList<PublicationForm>()
-        for (n in publications) publicationsDTO.add(PublicationMapper().fromEntity(n))
+        val publicationsDTO = publicationService.list(projectRef)
+            .stream()
+            .map(PublicationMapper()::fromEntity).toList()
         return Response.ok(publicationsDTO).build()
     }
+
     @Transactional
     @POST
     fun createPublication(@PathParam("projectref") projectRef: String, newPublication: PublicationForm): Response {
         val publication = publicationService.create(projectRef, newPublication)
-        //sender ny publication ref i respons header
-        return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
+        //returnerer ny publication ref i respons header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref))
+            .build()
     }
 
     @DELETE
@@ -52,7 +54,7 @@ class PublicationResource(val publicationService: PublicationService) {
     ): Response {
         val publication = publicationService.delete(projectRef, publicationRef)
         val publicationDTO = PublicationMapper().fromEntity(publication)
-        // sender slettet publication ref i body
+        // returnerer slettet publication ref i body
         return Response.ok(publicationDTO.ref).build()
     }
 

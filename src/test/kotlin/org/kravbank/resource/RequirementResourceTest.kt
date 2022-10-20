@@ -1,111 +1,83 @@
 package org.kravbank.resource
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
+import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
+import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test;
-import org.kravbank.repository.NeedRepository
 import org.kravbank.utils.form.requirement.RequirementFormCreate
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
-import org.kravbank.utils.mapper.requirement.RequirementCreateMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 
-
-//@QuarkusTest
+@QuarkusTest
 @QuarkusIntegrationTest
 class RequirementResourceTest {
 
-
-    private final val baseUri = "http://localhost:8080"
-    private final val basePath = "/api/v1/projects"
-    private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    private final val useResourceFolder = "/requirements"
-    private final val useRequirementRefPut = "/req1b69-edb2-431f-855a-4368e2bcddd1"
-    private final val useRequirementRef = "/reqd2b69-edb2-431f-855a-4368e2bcddd1"
-    private final val resourceUrl = "$baseUri$basePath$useProjectRef$useResourceFolder"
-    private final val fullUrl = "$resourceUrl$useRequirementRefPut"
-
-
-    //@Inject
-    @SuppressWarnings("initialization.fields.uninitialized")
-    var needRepository: NeedRepository? = null
-
     @Test
     fun getRequirement() {
-        RestAssured.given()
-            //.pathParam("uuid", uuid)
+        given()
             .`when`()
-            .get("$resourceUrl$useRequirementRef")
+            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        // .body(`is`("hello $uuid"))
     }
 
     @Test
     fun listRequirements() {
-        RestAssured.given()
-            .`when`().get(resourceUrl)
+        given()
+            .`when`()
+            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/")
             .then()
             .statusCode(200)
-        //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
     @Test
     fun createRequirement() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        //RestAssured.port = 8080;
-        RestAssured.basePath = basePath;
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects"
 
-        val requirementDTO = RequirementFormCreate ()
+        val requirementDTO = RequirementFormCreate()
         requirementDTO.title = "Integrasjonstest requirement - tittel 1"
         requirementDTO.description = "Integrasjonstest requirement - beskrivelse 1"
         requirementDTO.need = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
-        val newReq = RequirementCreateMapper().toEntity(requirementDTO)
-
-        RestAssured.given()
+        given()
             .`when`()
             .body(requirementDTO)
             .header("Content-type", "application/json")
             .post("/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/")
             .then()
-            .statusCode(201) //envt 200
+            .statusCode(201)
     }
-
-
 
     @Test
     fun updateRequirement() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        //RestAssured.port = 8080;
-        RestAssured.basePath = basePath;
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects";
 
-        val requirement = RequirementFormUpdate ()
+        val requirement = RequirementFormUpdate()
         requirement.title = "Oppdatert Integrasjonstest requirement - tittel 1"
         requirement.description = "Oppdatert Integrasjonstest requirement - beskrivelse 1"
         val requirementMapper = RequirementUpdateMapper().toEntity(requirement)
 
-        RestAssured.given()
+        given()
             .`when`()
             .body(requirementMapper)
             .header("Content-type", "application/json")
-            .put(fullUrl)
+            .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(200) //envt 200
+            .statusCode(200)
     }
 
     @Test
     fun deleteRequirement() {
-        RestAssured.given()
+        given()
             .`when`()
-            .delete("$resourceUrl$useRequirementRef")
+            .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        //.body(`is`("Hello RESTEasy"))
     }
-
-
-
 }

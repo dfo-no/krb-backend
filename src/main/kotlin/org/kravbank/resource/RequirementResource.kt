@@ -1,18 +1,17 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.form.requirement.RequirementForm
 import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.service.RequirementService
 import org.kravbank.utils.form.requirement.RequirementFormCreate
 import org.kravbank.utils.mapper.requirement.RequirementMapper
 import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
 import java.net.URI
-import java.util.ArrayList
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.enterprise.context.RequestScoped
+import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/requirements")
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,9 +31,9 @@ class RequirementResource(val requirementService: RequirementService) {
 
     @GET
     fun listRequirements(@PathParam("projectRef") projectRef: String): Response {
-        val requirements = requirementService.list(projectRef)
-        val requirementsDTO = ArrayList<RequirementForm>()
-        for (n in requirements) requirementsDTO.add(RequirementMapper().fromEntity(n))
+        val requirementsDTO = requirementService.list(projectRef)
+            .stream()
+            .map(RequirementMapper()::fromEntity).toList()
         return Response.ok(requirementsDTO).build()
     }
 
@@ -42,7 +41,9 @@ class RequirementResource(val requirementService: RequirementService) {
     @POST
     fun createRequirement(@PathParam("projectRef") projectRef: String, newRequirement: RequirementFormCreate): Response {
         val requirement = requirementService.create(projectRef, newRequirement)
-        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/" + requirement.ref)).build()
+        //returnerer ny requirement ref i response header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/" + requirement.ref))
+            .build()
     }
 
     @DELETE
@@ -54,7 +55,7 @@ class RequirementResource(val requirementService: RequirementService) {
     ): Response {
         val requirement = requirementService.delete(projectRef, requirementRef)
         val requirementDTO = RequirementMapper().fromEntity(requirement)
-        // sender slettet req ref i body
+        // returnerer slettet req ref i body
         return Response.ok(requirementDTO.ref).build()
     }
 

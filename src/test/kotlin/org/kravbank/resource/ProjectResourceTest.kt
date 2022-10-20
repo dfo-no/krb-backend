@@ -16,19 +16,12 @@ import org.kravbank.utils.mapper.project.ProjectUpdateMapper
 @QuarkusIntegrationTest
 class ProjectResourceTest {
 
-    val baseUri = "http://localhost:8080"
-    val basePath = "/api/v1/projects"
-    val useProjectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
-
     @Test
     fun getProjectByRef() {
         given()
-            //.pathParam("uuid", uuid)
             .`when`().get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        // .body(`is`("hello $uuid"))
     }
 
     @Test
@@ -37,25 +30,18 @@ class ProjectResourceTest {
             .`when`().get("http://localhost:8080/api/v1/projects")
             .then()
             .statusCode(200)
-        //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
     @Test
     fun createProject() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080";
-        //RestAssured.port = 8080;
         RestAssured.basePath = "/api/v1/";
 
         val project = ProjectForm()
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
-        //  project.version = 11
-        //project.deletedDate = "sadsfdsa"
-
         val projectMappedForm = ProjectMapper().toEntity(project)
-
-        //project.publishedDate = LocalDateTime.now()
 
         given()
             .`when`()
@@ -63,12 +49,8 @@ class ProjectResourceTest {
             .header("Content-type", "application/json")
             .post("/projects")
             .then()
-            .statusCode(201) //envt 200
-
-        // RestAssured.reset()
-        //body(both(startsWith("")).and(not(endsWith("null"))))
+            .statusCode(201)
     }
-
 
     @Test
     fun deleteProjectByRef() {
@@ -78,26 +60,23 @@ class ProjectResourceTest {
             .statusCode(200)
     }
 
-
     @Test
-    fun updateProjectByRef() {
+    fun updateProject() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        RestAssured.basePath = basePath;
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects";
 
         val project = ProjectFormUpdate()
         project.title = "Oppdatert integrasjonstest - Tittel 1"
         project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
-        //project.version = 11
 
         val projectMappedForm = ProjectUpdateMapper().toEntity(project)
         given()
             .`when`()
             .body(projectMappedForm)
             .header("Content-type", "application/json")
-            .put(useProjectRef)
+            .put("/bbb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
-
 }

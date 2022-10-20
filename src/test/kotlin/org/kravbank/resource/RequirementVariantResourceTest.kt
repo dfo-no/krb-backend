@@ -3,53 +3,38 @@ package org.kravbank.resource
 import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
+import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
 import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper
 
 @QuarkusTest
 @QuarkusIntegrationTest
 class RequirementVariantResourceTest {
-    private final val baseUri = "http://localhost:8080"
-    private final val basePath = "/api/v1/projects"
-    private final val useProjectRef = "/aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    private final val useRequirementURI = "/requirements/req1b69-edb2-431f-855a-4368e2bcddd1"
-    private final val useResourceFolder = "/requirementvariants"
-    private final val useRequirementVariantRef = "/rvrv1b69-edb2-431f-855a-4368e2bcddd1"
-    private final val useRequirementVariantRefPut = "/rvrv2b69-edb2-431f-855a-4368e2bcddd1"
-    private final val resourceUrl = "$baseUri$basePath$useProjectRef$useRequirementURI$useResourceFolder"
-    private final val fullUrl = "$resourceUrl$useRequirementVariantRefPut"
-
 
     @Test
     fun getRequirementVariant() {
-        RestAssured.given()
-            //.pathParam("uuid", uuid)
+        given()
             .`when`()
             .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        // .body(`is`("hello $uuid"))
     }
 
     @Test
     fun listRequirementVariants() {
-        RestAssured.given()
+        given()
             .`when`().get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
             .then()
             .statusCode(200)
-        //.body(, equalTo("Integrasjonstest prosjektittel"))
     }
 
     @Test
     fun createRequirementVariant() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        //RestAssured.port = 8080;
-        RestAssured.basePath = basePath
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects"
 
         val rv = RequirementVariantForm ()
         rv.description = "Integrasjonstest rv desc"
@@ -59,36 +44,29 @@ class RequirementVariantResourceTest {
         rv.useSpesification = true
         rv.useQualification = true
 
-        val rVariantMapper = RequirementVariantMapper().toEntity(rv)
-
-
-        RestAssured.given()
+        given()
             .`when`()
-            .body(rVariantMapper)
+            .body(rv)
             .header("Content-type", "application/json")
-            .post("$useProjectRef$useRequirementURI$useResourceFolder")
+            .post("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
             .then()
-            .statusCode(201) //envt 200
+            .statusCode(201)
     }
 
     @Test
     fun deleteRequirementVariant() {
-        RestAssured.given()
+        given()
             .`when`()
             .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
-        //.body(`is`("Hello RESTEasy"))
-
     }
-
 
     @Test
     fun updateRequirementVariant() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = baseUri
-        //RestAssured.port = 8080
-        RestAssured.basePath = basePath
+        RestAssured.baseURI = "http://localhost:8080"
+        RestAssured.basePath = "/api/v1/projects"
 
         val rv = RequirementVariantFormUpdate ()
         rv.description = "Integrasjonstest rv desc"
@@ -98,18 +76,12 @@ class RequirementVariantResourceTest {
         rv.useSpesification = true
         rv.useQualification = true
 
-        val rVariantMapper = RequirementVariantUpdateMapper().toEntity(rv)
-
-
-
-        RestAssured.given()
+        given()
             .`when`()
-            .body(rVariantMapper)
+            .body(rv)
             .header("Content-type", "application/json")
             .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
-
-
 }

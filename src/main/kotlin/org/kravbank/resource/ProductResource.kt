@@ -1,20 +1,18 @@
 package org.kravbank.resource
 
-import org.kravbank.utils.form.product.ProductForm
 import org.kravbank.utils.form.product.ProductFormUpdate
 import org.kravbank.service.ProductService
 import org.kravbank.utils.form.product.ProductFormCreate
 import org.kravbank.utils.mapper.product.ProductMapper
 import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.net.URI
-import java.util.ArrayList
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
+import kotlin.streams.toList
 
-//@Tags(value = [Tag(name = "Read products", description = "Read uploaded products.")])
 @Path("/api/v1/projects/{projectRef}/products")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,6 +20,7 @@ import javax.ws.rs.core.Response
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
 class ProductResource(val productService: ProductService) {
+
     @GET
     @Path("/{productref}")
     fun getProduct(
@@ -35,9 +34,9 @@ class ProductResource(val productService: ProductService) {
 
     @GET
     fun listProducts(@PathParam("projectRef") projectRef: String): Response {
-        val products = productService.list(projectRef)
-        val productsDTO = ArrayList<ProductForm>()
-        for (n in products) productsDTO.add(ProductMapper().fromEntity(n))
+        val productsDTO = productService.list(projectRef)
+            .stream()
+            .map(ProductMapper()::fromEntity).toList()
         return Response.ok(productsDTO).build()
     }
 
@@ -45,8 +44,9 @@ class ProductResource(val productService: ProductService) {
     @POST
     fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductFormCreate): Response {
         val product = productService.create(projectRef, newProduct)
-        //sender nytt product ref i response header
-        return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref)).build()
+        //returnerer nytt product ref i response header
+        return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref))
+            .build()
     }
 
     @DELETE
@@ -58,7 +58,7 @@ class ProductResource(val productService: ProductService) {
     ): Response {
         val product = productService.delete(projectRef, productref)
         val productDTO = ProductMapper().fromEntity(product)
-        // sender slettet product ref i body
+        // returnerer slettet product ref i body
         return Response.ok(productDTO.ref).build()
     }
 
