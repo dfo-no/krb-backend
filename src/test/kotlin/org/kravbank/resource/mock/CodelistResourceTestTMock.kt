@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.*
-import org.kravbank.lang.exception.BadRequestException
-import org.kravbank.lang.exception.NotFoundException
+import org.kravbank.lang.BadRequestException
+import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.resource.CodelistResource
 import org.kravbank.utils.form.codelist.CodelistForm
@@ -143,7 +143,7 @@ internal class CodelistResourceTestTMock {
     }
 
     @Test
-    fun getCodelist_NOTFOUND() {
+    fun getCodelist_KO() {
 
 //        assertTrue(false)
 
@@ -211,7 +211,7 @@ internal class CodelistResourceTestTMock {
     }
 
     @Test
-    fun createCodelist_BADREQUEST() {
+    fun createCodelist_KO() {
 
         assertTrue(false)
         //arrange
@@ -269,16 +269,11 @@ internal class CodelistResourceTestTMock {
     }
 
     @Test
-    fun deleteCodelist_BADREQUEST() {
-
-       // assertTrue(false)
-
-
+    fun deleteCodelist_KO() {
 
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
-        val ref = "dsfdsgs<'fåowi39543tdsf"
 
         Mockito.`when`(codelistRepository.deleteCodelist(projectId, codelistRef))
             .thenThrow(BadRequestException("Bad request! Codelist was not deleted"))
@@ -312,7 +307,7 @@ internal class CodelistResourceTestTMock {
     }
 
     @Test
-    fun updateCodelist_NOTFOUND() {
+    fun updateCodelist_KO() {
         //assertTrue(false)
 
 
@@ -320,11 +315,13 @@ internal class CodelistResourceTestTMock {
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
+        val updatedCodelist = CodelistFormUpdate()
+        updatedCodelist.title = "Oppdatert tittel"
         Mockito.`when`(codelistRepository.findByRef(projectId, codelistRef))
             .thenThrow(NotFoundException("Codelist was not found!"))
 
         try {
-            codelistResource.getCodelistByRef(projectRef, codelistRef).entity as NotFoundException
+            codelistResource.updateCodelist(projectRef, codelistRef, updatedCodelist).entity as NotFoundException
         } catch (e: Exception) {
             assertEquals("Codelist was not found!", e.message)
         }

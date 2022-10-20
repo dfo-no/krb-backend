@@ -1,4 +1,4 @@
-package org.kravbank.lang.exception
+package org.kravbank.lang
 
 class NotFoundException (message: String) : BackendException(message) {
 

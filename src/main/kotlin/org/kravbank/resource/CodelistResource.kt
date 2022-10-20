@@ -3,36 +3,43 @@ package org.kravbank.resource;
 import org.kravbank.utils.form.codelist.CodelistForm
 import org.kravbank.utils.form.codelist.CodelistFormUpdate
 import org.kravbank.service.CodelistService
+import org.kravbank.utils.form.code.CodeForm
+import org.kravbank.utils.mapper.code.CodeMapper
 import org.kravbank.utils.mapper.codelist.CodelistMapper
 import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
 import java.net.URI
+import java.util.ArrayList
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/codelists")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 class CodelistResource(val codelistService: CodelistService) {
-    @GET
-    @Path("/{codelistRef}")
-    fun getCodelistByRef(
-        @PathParam("projectRef") projectRef: String,
-        @PathParam("codelistRef") codelisRef: String
-    ): Response {
-        val codelist = codelistService.get(projectRef, codelisRef)
-        val codelistDTO = CodelistMapper().fromEntity(codelist)
-        return Response.ok(codelistDTO).build()
-    }
+
+     @GET
+     @Path("/{codelistRef}")
+     fun getCodelistByRef(
+         @PathParam("projectRef") projectRef: String,
+         @PathParam("codelistRef") codelisRef: String
+     ): Response {
+         val codelist = codelistService.get(projectRef, codelisRef)
+         val codelistDTO = CodelistMapper().fromEntity(codelist)
+         return Response.ok(codelistDTO).build()
+     }
 
     @GET
     fun listCodelists(
         @PathParam("projectRef") projectRef: String
     ): Response {
-        val codelists = codelistService.list(projectRef)
-        val codelistsDTO = ArrayList<CodelistForm>()
-        for (n in codelists) codelistsDTO.add(CodelistMapper().fromEntity(n))
+
+        val codelistsDTO = codelistService.list(projectRef).stream()
+            .map(CodelistMapper()::fromEntity)
+            .toList()
+
         return Response.ok(codelistsDTO).build()
     }
 
@@ -41,9 +48,12 @@ class CodelistResource(val codelistService: CodelistService) {
     fun createCodelist(
         @PathParam("projectRef") projectRef: String, newCodelist: CodelistForm
     ): Response {
+
         val codelist = codelistService.create(projectRef, newCodelist)
+
         //sender ny codelist ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/codelists/" + codelist.ref)).build()
+
     }
 
     @DELETE
@@ -53,8 +63,10 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String
     ): Response {
+
         val codelist = codelistService.delete(projectRef, codelistRef)
         val codelistDTO = CodelistMapper().fromEntity(codelist)
+
         return Response.ok(codelistDTO.ref).build()
     }
 
@@ -66,8 +78,10 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("codelistRef") codelistRef: String,
         updateCodelist: CodelistFormUpdate
     ): Response {
+
         val codelist = codelistService.update(projectRef, codelistRef, updateCodelist)
         val codelistUpdateDTO = CodelistUpdateMapper().fromEntity(codelist)
+
         return Response.ok(codelistUpdateDTO).build()
     }
 }

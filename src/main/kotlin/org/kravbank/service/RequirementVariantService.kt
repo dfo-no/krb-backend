@@ -2,7 +2,7 @@ package org.kravbank.service
 
 import io.quarkus.cache.CacheResult
 import org.kravbank.domain.RequirementVariant
-import org.kravbank.lang.exception.BackendException
+import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
 import org.kravbank.utils.form.requirementvariant.RequirementVariantForm

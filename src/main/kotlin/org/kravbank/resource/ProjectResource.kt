@@ -20,36 +20,44 @@ import javax.ws.rs.core.Response
 //@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
 //@Authenticated
 class ProjectResource(val projectService: ProjectService) {
+
     @GET
     @Path("/{projcetRef}")
     fun getProject(@PathParam("projcetRef") projcetRef: String): Response {
+
         val project = projectService.get(projcetRef)
         val projectDTO = ProjectMapper().fromEntity(project)
+
         return Response.ok(projectDTO).build()
     }
 
     @GET
     fun listProjects(): Response {
+
         val projects = projectService.list()
         val projectsDTO = ArrayList<ProjectForm>()
         for (p in projects) projectsDTO.add(ProjectMapper().fromEntity(p))
+
         return Response.ok(projectsDTO).build()
     }
 
     @Transactional
     @POST
     fun createProject(newProject: ProjectForm): Response {
-        val project = projectService.create(newProject)
-        return Response.created(URI.create("/projects/" + project.ref)).build();
 
+        val project = projectService.create(newProject)
+
+        return Response.created(URI.create("/projects/" + project.ref)).build();
     }
 
     @DELETE
     @Path("{projcetRef}")
     @Transactional
     fun deleteProjectByRef(@PathParam("projcetRef") projcetRef: String): Response {
+
         val project = projectService.delete(projcetRef)
         val projectDTO = ProjectMapper().fromEntity(project)
+
         return Response.ok(projectDTO.ref).build()
     }
 
@@ -57,8 +65,10 @@ class ProjectResource(val projectService: ProjectService) {
     @Path("{projcetRef}")
     @Transactional
     fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectFormUpdate): Response {
+
         val project = projectService.update(projcetRef, updatedProject)
         val projectUpdateDTO = ProjectUpdateMapper().fromEntity(project)
+
         return Response.ok(projectUpdateDTO).build()
 
     }

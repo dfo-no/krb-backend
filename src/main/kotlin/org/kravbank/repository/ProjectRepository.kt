@@ -2,9 +2,9 @@ package org.kravbank.repository
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Project
-import org.kravbank.lang.exception.BackendException
-import org.kravbank.lang.exception.BadRequestException
-import org.kravbank.lang.exception.NotFoundException
+import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
+import org.kravbank.lang.NotFoundException
 import java.time.LocalDateTime
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
@@ -34,7 +34,9 @@ class ProjectRepository : PanacheRepository<Project> {
     //@Throws(BackendException::class)
     fun deleteProject(id: Long) {
         val deletedDate = LocalDateTime.now()
+        //soft delete
         update("deleteddate = ?1 where id = ?2", deletedDate, id)
+
     }
 
     @Throws(BackendException::class)

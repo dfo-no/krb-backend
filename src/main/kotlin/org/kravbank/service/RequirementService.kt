@@ -1,7 +1,7 @@
 package org.kravbank.service
 
 import org.kravbank.domain.Requirement
-import org.kravbank.lang.exception.BackendException
+import org.kravbank.lang.BackendException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.form.requirement.RequirementForm

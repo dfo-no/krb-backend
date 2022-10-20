@@ -3,7 +3,7 @@ package org.kravbank.service
 import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
-import org.kravbank.lang.exception.BackendException
+import org.kravbank.lang.BackendException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.form.codelist.CodelistForm
