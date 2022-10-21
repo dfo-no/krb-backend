@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: JVM
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -69,18 +69,14 @@ jobs:
         if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'"
         run: make docker-push
 
-      - name: Tag docker image (main)
-        if: "github.ref == 'refs/heads/main'"
-        run: make docker-tag version=main
-
       - name: Push docker-image (main)
         if: "github.ref == 'refs/heads/main'"
-        run: make docker-push version=main
-
-      - name: Tag docker image (release)
-        if: "startsWith(github.ref, 'refs/tags/')"
-        run: make docker-tag version=latest
+        run:
+          make docker-tag version=main
+          make docker-push version=main
 
       - name: Push docker image (release)
         if: "startsWith(github.ref, 'refs/tags/')"
-        run: make docker-push version=latest
+        run: |
+          make docker-tag version=latest
+          make docker-push version=latest
