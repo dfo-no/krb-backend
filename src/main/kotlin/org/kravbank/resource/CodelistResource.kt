@@ -1,14 +1,11 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.form.codelist.CodelistForm
-import org.kravbank.utils.form.codelist.CodelistFormUpdate
+import org.kravbank.utils.codelist.dto.CodelistForm
+import org.kravbank.utils.codelist.dto.CodelistFormUpdate
 import org.kravbank.service.CodelistService
-import org.kravbank.utils.form.code.CodeForm
-import org.kravbank.utils.mapper.code.CodeMapper
-import org.kravbank.utils.mapper.codelist.CodelistMapper
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
+import org.kravbank.utils.codelist.mapper.CodelistMapper
+import org.kravbank.utils.codelist.mapper.CodelistUpdateMapper
 import java.net.URI
-import java.util.ArrayList
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;

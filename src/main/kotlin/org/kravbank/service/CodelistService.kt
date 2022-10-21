@@ -1,15 +1,13 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Codelist
-import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.form.codelist.CodelistForm
-import org.kravbank.utils.form.codelist.CodelistFormUpdate
-import org.kravbank.utils.mapper.codelist.CodelistMapper
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
+import org.kravbank.utils.codelist.dto.CodelistForm
+import org.kravbank.utils.codelist.dto.CodelistFormUpdate
+import org.kravbank.utils.codelist.mapper.CodelistMapper
+import org.kravbank.utils.codelist.mapper.CodelistUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped

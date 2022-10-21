@@ -1,10 +1,10 @@
 package org.kravbank.resource
 
-import org.kravbank.utils.form.product.ProductFormUpdate
+import org.kravbank.utils.product.dto.ProductFormUpdate
 import org.kravbank.service.ProductService
-import org.kravbank.utils.form.product.ProductFormCreate
-import org.kravbank.utils.mapper.product.ProductMapper
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
+import org.kravbank.utils.product.dto.ProductFormCreate
+import org.kravbank.utils.product.mapper.ProductMapper
+import org.kravbank.utils.product.mapper.ProductUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional

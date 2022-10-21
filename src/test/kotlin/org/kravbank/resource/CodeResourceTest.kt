@@ -6,10 +6,10 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.form.code.CodeForm
-import org.kravbank.utils.form.code.CodeFormUpdate
-import org.kravbank.utils.mapper.code.CodeMapper
-import org.kravbank.utils.mapper.code.CodeUpdateMapper
+import org.kravbank.utils.code.dto.CodeForm
+import org.kravbank.utils.code.dto.CodeFormUpdate
+import org.kravbank.utils.code.mapper.CodeMapper
+import org.kravbank.utils.code.mapper.CodeUpdateMapper
 
 @QuarkusTest
 @QuarkusIntegrationTest

@@ -51,7 +51,6 @@ class RequirementRepository : PanacheRepository<Requirement> {
             requirement.description,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Fail! Requirement did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }
     }
-
 }

@@ -1,14 +1,13 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Need
 import org.kravbank.lang.BackendException
-import org.kravbank.utils.form.need.NeedForm
-import org.kravbank.utils.form.need.NeedFormUpdate
+import org.kravbank.utils.need.dto.NeedForm
+import org.kravbank.utils.need.dto.NeedFormUpdate
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.mapper.need.NeedMapper
-import org.kravbank.utils.mapper.need.NeedUpdateMapper
+import org.kravbank.utils.need.mapper.NeedMapper
+import org.kravbank.utils.need.mapper.NeedUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped

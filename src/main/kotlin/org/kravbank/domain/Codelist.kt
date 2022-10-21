@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
-import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -27,8 +26,7 @@ class Codelist : PanacheEntity() {
 
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-codelist")

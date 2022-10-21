@@ -4,16 +4,12 @@ import org.kravbank.domain.Requirement
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.form.requirement.RequirementForm
-import org.kravbank.utils.form.requirement.RequirementFormUpdate
+import org.kravbank.utils.requirement.dto.RequirementFormUpdate
 import org.kravbank.repository.RequirementRepository
-import org.kravbank.utils.form.requirement.RequirementFormCreate
-import org.kravbank.utils.mapper.requirement.RequirementCreateMapper
-import org.kravbank.utils.mapper.requirement.RequirementMapper
-import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
-import java.net.URI
+import org.kravbank.utils.requirement.dto.RequirementFormCreate
+import org.kravbank.utils.requirement.mapper.RequirementCreateMapper
+import org.kravbank.utils.requirement.mapper.RequirementUpdateMapper
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class RequirementService(

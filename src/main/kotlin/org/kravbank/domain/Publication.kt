@@ -23,7 +23,6 @@ class Publication : PanacheEntity() {
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-publication")

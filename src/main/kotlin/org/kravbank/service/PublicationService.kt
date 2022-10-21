@@ -1,14 +1,14 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
-import org.kravbank.utils.form.publication.PublicationForm
-import org.kravbank.utils.form.publication.PublicationFormUpdate
-import org.kravbank.utils.mapper.publication.PublicationMapper
-import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
+import org.kravbank.utils.publication.dto.PublicationForm
+import org.kravbank.utils.publication.dto.PublicationFormUpdate
+import org.kravbank.utils.publication.mapper.PublicationMapper
+import org.kravbank.utils.publication.mapper.PublicationUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -35,14 +35,6 @@ class PublicationService(
         newPublication.project = foundProject
         val publication = PublicationMapper().toEntity(newPublication)
         publicationRepository.createPublication(publication)
-
-        /*
-        //oppdaterer project med nye publication attributter
-        foundProject.publishedDate = publication.date
-        foundProject.version = publication.version
-        projectRepository.updateProject(foundProject.id, foundProject )
-
-         */
         return publication
     }
 
@@ -55,13 +47,11 @@ class PublicationService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationFormUpdate): Publication {
+    fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        val publication = PublicationUpdateMapper().toEntity(updatedPublication)
+        val publication = PublicationMapper().toEntity(updatedPublication)
         publicationRepository.updatePublication(foundPublication.id, publication)
-
-
         return publication
     }
 }

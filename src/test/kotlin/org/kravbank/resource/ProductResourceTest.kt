@@ -6,9 +6,9 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.form.product.ProductFormCreate
-import org.kravbank.utils.form.product.ProductFormUpdate
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
+import org.kravbank.utils.product.dto.ProductFormCreate
+import org.kravbank.utils.product.dto.ProductFormUpdate
+import org.kravbank.utils.product.mapper.ProductUpdateMapper
 
 @QuarkusTest
 @QuarkusIntegrationTest

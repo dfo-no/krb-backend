@@ -1,7 +1,6 @@
 package org.kravbank.repository
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
-import org.kravbank.domain.Product
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -25,7 +24,6 @@ class PublicationRepository : PanacheRepository<Publication> {
         } else throw NotFoundException("Publication not found")
     }
 
-    //@Throws(BackendException::class)
     fun listAllPublications(id: Long): List<Publication> {
         return find("project_id_fk", id).list<Publication>().filter { p -> p.deletedDate == null }
     }
@@ -38,7 +36,6 @@ class PublicationRepository : PanacheRepository<Publication> {
         }
     }
 
-    //@Throws(BackendException::class)
     fun deletePublication(id: Long){
         val deletedDate = LocalDateTime.now()
         update("deleteddate = ?1 where id = ?2", deletedDate,id)
@@ -47,13 +44,11 @@ class PublicationRepository : PanacheRepository<Publication> {
     @Throws(BackendException::class)
     fun updatePublication(id: Long, publication: Publication) {
         val updated = update(
-            "comment = ?1, version = ?2 where id= ?3",
+            "comment = ?1 where id= ?2",
             publication.comment,
-            publication.version,
-            //publication.deletedDate,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Fail! Publication did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }
     }
 
 }

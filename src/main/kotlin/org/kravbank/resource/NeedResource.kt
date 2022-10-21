@@ -1,10 +1,10 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.form.need.NeedForm
-import org.kravbank.utils.form.need.NeedFormUpdate
+import org.kravbank.utils.need.dto.NeedForm
+import org.kravbank.utils.need.dto.NeedFormUpdate
 import org.kravbank.service.NeedService
-import org.kravbank.utils.mapper.need.NeedMapper
-import org.kravbank.utils.mapper.need.NeedUpdateMapper
+import org.kravbank.utils.need.mapper.NeedMapper
+import org.kravbank.utils.need.mapper.NeedUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional;

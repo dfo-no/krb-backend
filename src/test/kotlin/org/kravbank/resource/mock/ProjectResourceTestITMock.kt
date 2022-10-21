@@ -2,27 +2,19 @@ package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.*
-import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-
 import org.kravbank.resource.ProjectResource
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.form.codelist.CodelistForm
-import org.kravbank.utils.form.codelist.CodelistFormUpdate
-import org.kravbank.utils.form.project.ProjectForm
-import org.kravbank.utils.form.project.ProjectFormUpdate
-import org.kravbank.utils.mapper.codelist.CodelistMapper
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
-import org.kravbank.utils.mapper.project.ProjectMapper
-import org.kravbank.utils.mapper.project.ProjectUpdateMapper
+import org.kravbank.utils.project.dto.ProjectForm
+import org.kravbank.utils.project.dto.ProjectFormUpdate
+import org.kravbank.utils.project.mapper.ProjectMapper
+import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
@@ -122,7 +114,8 @@ internal class ProjectResourceTestITMock {
         //mock
         Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
         val response: Response = projectResource.getProject(projectRef)
-        val entity: Project = ProjectMapper().toEntity(response.entity as ProjectForm)
+        val entity: Project = ProjectMapper()
+            .toEntity(response.entity as ProjectForm)
 
         //assert
         assertEquals("første prosjekt", entity.title)
@@ -162,7 +155,8 @@ internal class ProjectResourceTestITMock {
 
         //map
         val entity: MutableList<Project> = mutableListOf()
-        for (p in response.entity as List<ProjectForm>) entity.add(ProjectMapper().toEntity(p))
+        for (p in response.entity as List<ProjectForm>) entity.add(
+            ProjectMapper().toEntity(p))
 
         //assert
         assertNotNull(response)
@@ -259,7 +253,8 @@ internal class ProjectResourceTestITMock {
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        val entity: Project = ProjectUpdateMapper().toEntity(response.entity as ProjectFormUpdate)
+        val entity: Project = ProjectUpdateMapper()
+            .toEntity(response.entity as ProjectFormUpdate)
         assertEquals("Oppdatert tittel", entity.title);
     }
 

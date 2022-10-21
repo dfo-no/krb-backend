@@ -1,19 +1,15 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
-import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
-import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
+import org.kravbank.utils.requirementvariant.dto.RequirementVariantForm
+import org.kravbank.utils.requirementvariant.dto.RequirementVariantFormUpdate
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantUpdateMapper
-import java.net.URI
-import java.util.*
+import org.kravbank.utils.requirementvariant.mapper.RequirementVariantMapper
+import org.kravbank.utils.requirementvariant.mapper.RequirementVariantUpdateMapper
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class RequirementVariantService(

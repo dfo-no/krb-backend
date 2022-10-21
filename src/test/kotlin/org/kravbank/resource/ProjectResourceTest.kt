@@ -6,10 +6,10 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.form.project.ProjectForm
-import org.kravbank.utils.form.project.ProjectFormUpdate
-import org.kravbank.utils.mapper.project.ProjectMapper
-import org.kravbank.utils.mapper.project.ProjectUpdateMapper
+import org.kravbank.utils.project.dto.ProjectForm
+import org.kravbank.utils.project.dto.ProjectFormUpdate
+import org.kravbank.utils.project.mapper.ProjectMapper
+import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 
 
 @QuarkusTest

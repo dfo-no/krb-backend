@@ -10,15 +10,15 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.resource.CodelistResource
-import org.kravbank.utils.form.codelist.CodelistForm
-import org.kravbank.utils.form.codelist.CodelistFormUpdate
-import org.kravbank.utils.mapper.codelist.CodelistMapper
-import org.kravbank.utils.mapper.codelist.CodelistUpdateMapper
+import org.kravbank.utils.codelist.dto.CodelistForm
+import org.kravbank.utils.codelist.dto.CodelistFormUpdate
+import org.kravbank.utils.codelist.mapper.CodelistMapper
+import org.kravbank.utils.codelist.mapper.CodelistUpdateMapper
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
 import javax.ws.rs.core.Response
-
+import kotlin.streams.toList
 
 @QuarkusTest
 internal class CodelistResourceTestTMock {
@@ -33,7 +33,6 @@ internal class CodelistResourceTestTMock {
     var codelist: Codelist = Codelist()
     var codelist_2: Codelist = Codelist()
     var codelist_3: Codelist = Codelist()
-
 
     var project: Project = Project()
     var code: Code = Code()
@@ -50,7 +49,6 @@ internal class CodelistResourceTestTMock {
     var publications: MutableList<Publication> = mutableListOf()
     var products: MutableList<Product> = mutableListOf()
 
-
     @BeforeEach
     fun setUp() {
 
@@ -58,8 +56,6 @@ internal class CodelistResourceTestTMock {
         project = Project()
         project.title = "første prosjekt"
         project.description = "første prosjekt beskrivelse"
-        // project.version = 2
-        // project.publishedDate = LocalDateTime.now().minusDays(2)
         project.ref = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
         project.id = 120
         project.codelist = codelists
@@ -67,8 +63,6 @@ internal class CodelistResourceTestTMock {
         project.publications = publications
         project.needs = needs
         project.products = products
-        //project.deletedDate = LocalDateTime.now().minusDays(1)
-
 
         code = Code()
         code.title = "Tittel kode"
@@ -89,21 +83,15 @@ internal class CodelistResourceTestTMock {
         product.ref = "34352"
         product.title = "prod"
         product.description = "desc"
-        //product.requirementvariant
-        // product.deletedDate
 
         need = Need()
         need.ref = "ewdsfsada567"
         need.id = 122L
         need.title = "tittel"
         need.description = "desv"
-        //need.requirements =
 
         publication = Publication()
-
-
         requirement = Requirement()
-
 
         //add to list
         codelists.add(codelist)
@@ -134,9 +122,9 @@ internal class CodelistResourceTestTMock {
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
 
-        val entity: Codelist = CodelistMapper().toEntity(response.entity as CodelistForm)
+        val entity: Codelist = CodelistMapper()
+            .toEntity(response.entity as CodelistForm)
 
-        //assertEquals("hello243567", entity.ref)
         assertEquals("Første codelist", entity.title)
         assertEquals("første codelist beskrivelse", entity.description)
         assertEquals(project, entity.project)
@@ -144,9 +132,6 @@ internal class CodelistResourceTestTMock {
 
     @Test
     fun getCodelist_KO() {
-
-//        assertTrue(false)
-
 
         //arrange
         val projectId = 3L
@@ -161,7 +146,7 @@ internal class CodelistResourceTestTMock {
             )
         ).thenThrow(NotFoundException("Codelist was not found!"))
         try {
-                codelistResource.getCodelistByRef(projectRef, codelistRef).entity as NotFoundException
+            codelistResource.getCodelistByRef(projectRef, codelistRef).entity as NotFoundException
         } catch (e: Exception) {
             //assert
             assertEquals("Codelist was not found!", e.message)
@@ -170,7 +155,7 @@ internal class CodelistResourceTestTMock {
 
     @Test
     fun listCodelists_OK() {
-
+        //arrange
         val id = 1L
         val ref = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
 
@@ -178,9 +163,13 @@ internal class CodelistResourceTestTMock {
         Mockito.`when`(codelistRepository.listAllCodelists(id)).thenReturn(codelists)
         val response: Response = codelistResource.listCodelists(ref)
 
-        //mapper response fra DTO til entitets liste
+        //map
         val entity: MutableList<Codelist> = mutableListOf()
-        for (r in response.entity as List<CodelistForm>) entity.add(CodelistMapper().toEntity(r))
+
+
+        for (r in response.entity as List<CodelistForm>) entity.add(
+            CodelistMapper().toEntity(r)
+        )
 
         //assert
         assertNotNull(response)
@@ -193,7 +182,6 @@ internal class CodelistResourceTestTMock {
 
     @Test
     fun createCodelist_OK() {
-
         //arrange
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
 
@@ -212,8 +200,6 @@ internal class CodelistResourceTestTMock {
 
     @Test
     fun createCodelist_KO() {
-
-        assertTrue(false)
         //arrange
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val createCodelistDTO = CodelistForm()
@@ -231,7 +217,7 @@ internal class CodelistResourceTestTMock {
         val codelist = CodelistMapper().toEntity(createCodelistDTO)
 
         //mock
-        //Mockito.doNothing().`when`(codelistRepository).persist(ArgumentMatchers.any(Codelist::class.java))
+        Mockito.`when`(codelistRepository.isPersistent(codelist_4)).thenReturn(false)
         Mockito.`when`(codelistRepository.createCodelist(codelist_4))
             .thenThrow(BadRequestException("Bad request! Codelist was not created"))
 
@@ -245,10 +231,8 @@ internal class CodelistResourceTestTMock {
         }
     }
 
-
     @Test
     fun deleteCodelist_OK() {
-
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
@@ -270,7 +254,6 @@ internal class CodelistResourceTestTMock {
 
     @Test
     fun deleteCodelist_KO() {
-
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
@@ -278,7 +261,7 @@ internal class CodelistResourceTestTMock {
         Mockito.`when`(codelistRepository.deleteCodelist(projectId, codelistRef))
             .thenThrow(BadRequestException("Bad request! Codelist was not deleted"))
         try {
-           codelistResource.deleteCodelist(projectRef, codelistRef).entity as BadRequestException
+            codelistResource.deleteCodelist(projectRef, codelistRef).entity as BadRequestException
         } catch (e: Exception) {
             assertEquals("Bad request! Codelist was not deleted", e.message)
         }
@@ -286,13 +269,15 @@ internal class CodelistResourceTestTMock {
 
     @Test
     fun updateCodelist_OK() {
-
         val projectId = 3L
+        val codelistId = 4L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
         val updatedCodelist = CodelistFormUpdate()
         updatedCodelist.title = "Oppdatert tittel"
+
+        //val codelistEntity = CodelistUpdateMapper().toEntity(updatedCodelist)
 
         Mockito.`when`(codelistRepository.findByRef(projectId, codelistRef))
             .thenReturn(codelist)
@@ -301,16 +286,15 @@ internal class CodelistResourceTestTMock {
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        val entity: Codelist = CodelistUpdateMapper().toEntity(response.entity as CodelistFormUpdate)
+
+        val entity: Codelist = CodelistUpdateMapper()
+            .toEntity(response.entity as CodelistFormUpdate)
         assertEquals("Oppdatert tittel", entity.title);
 
     }
 
     @Test
     fun updateCodelist_KO() {
-        //assertTrue(false)
-
-
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"

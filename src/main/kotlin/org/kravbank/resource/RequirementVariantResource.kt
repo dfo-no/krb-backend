@@ -1,9 +1,9 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.form.requirementvariant.RequirementVariantForm
-import org.kravbank.utils.form.requirementvariant.RequirementVariantFormUpdate
+import org.kravbank.utils.requirementvariant.dto.RequirementVariantForm
+import org.kravbank.utils.requirementvariant.dto.RequirementVariantFormUpdate
 import org.kravbank.service.RequirementVariantService
-import org.kravbank.utils.mapper.requirementvariant.RequirementVariantMapper
+import org.kravbank.utils.requirementvariant.mapper.RequirementVariantMapper
 import java.net.URI
 import javax.transaction.Transactional;
 import javax.ws.rs.*;

@@ -1,10 +1,10 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.form.publication.PublicationForm
-import org.kravbank.utils.form.publication.PublicationFormUpdate
+import org.kravbank.utils.publication.dto.PublicationForm
+import org.kravbank.utils.publication.dto.PublicationFormUpdate
 import org.kravbank.service.PublicationService
-import org.kravbank.utils.mapper.publication.PublicationMapper
-import org.kravbank.utils.mapper.publication.PublicationUpdateMapper
+import org.kravbank.utils.publication.mapper.PublicationMapper
+import org.kravbank.utils.publication.mapper.PublicationUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
@@ -18,7 +18,7 @@ import kotlin.streams.toList
 @Consumes(APPLICATION_JSON)
 @RequestScoped
 class PublicationResource(val publicationService: PublicationService) {
-    //GET PUBLICATION
+
     @GET
     @Path("/{publicationref}")
     fun getPublication(
@@ -64,7 +64,7 @@ class PublicationResource(val publicationService: PublicationService) {
     fun updatePublication(
         @PathParam("projectref") projectRef: String,
         @PathParam("publicationref") publicationRef: String,
-        updatedPublication: PublicationFormUpdate
+        updatedPublication: PublicationForm
     ): Response {
         val publication = publicationService.update(projectRef, publicationRef, updatedPublication)
         val publicationUpdateDTO = PublicationUpdateMapper().fromEntity(publication)

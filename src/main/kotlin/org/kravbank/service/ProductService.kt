@@ -1,18 +1,14 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
 import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
-import org.kravbank.utils.form.product.ProductForm
-import org.kravbank.utils.form.product.ProductFormUpdate
+import org.kravbank.utils.product.dto.ProductFormUpdate
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.form.product.ProductFormCreate
-import org.kravbank.utils.mapper.product.ProductCreateMapper
-import org.kravbank.utils.mapper.product.ProductMapper
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
+import org.kravbank.utils.product.dto.ProductFormCreate
+import org.kravbank.utils.product.mapper.ProductCreateMapper
+import org.kravbank.utils.product.mapper.ProductUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped

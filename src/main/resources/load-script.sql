@@ -16,8 +16,6 @@ values(26,'ScriptProsjekt6', 'Beskrivelse3',null, 'prosjekt6-edb2-431f-855a-4368
 
 --CODELIST
 
-
-
 insert into Codelist("id",title, description,  ref, project_id_fk)
 values(4,'CodelistTittel1', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
 insert into Codelist("id",title, description,  ref, project_id_fk)

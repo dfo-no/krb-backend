@@ -6,8 +6,8 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.form.publication.PublicationForm
-import org.kravbank.utils.form.publication.PublicationFormUpdate
+import org.kravbank.utils.publication.dto.PublicationForm
+import org.kravbank.utils.publication.dto.PublicationFormUpdate
 
 
 @QuarkusTest

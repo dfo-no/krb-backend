@@ -1,10 +1,10 @@
 package org.kravbank.resource
 
-import org.kravbank.utils.form.project.ProjectForm
-import org.kravbank.utils.form.project.ProjectFormUpdate
+import org.kravbank.utils.project.dto.ProjectForm
+import org.kravbank.utils.project.dto.ProjectFormUpdate
 import org.kravbank.service.ProjectService
-import org.kravbank.utils.mapper.project.ProjectMapper
-import org.kravbank.utils.mapper.project.ProjectUpdateMapper
+import org.kravbank.utils.project.mapper.ProjectMapper
+import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional

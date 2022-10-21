@@ -18,7 +18,7 @@ class RequirementVariant : PanacheEntity() {
 
     var useProduct: Boolean = false
 
-    var useSpesification: Boolean = false //typo
+    var useSpesification: Boolean = false
 
     var useQualification: Boolean = false
 
@@ -26,9 +26,7 @@ class RequirementVariant : PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
-        fetch = FetchType.LAZY
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], fetch = FetchType.LAZY
     )
     @JsonManagedReference(value = "val-requirementVariant")
     @JsonIgnore
@@ -37,7 +35,7 @@ class RequirementVariant : PanacheEntity() {
 
     @OneToMany(
         mappedBy = ("requirementvariant"),
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH],//, CascadeType.REMOVE],
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH],
         orphanRemoval = true
     )
     @JsonBackReference(value = "val-reqvariant-product")

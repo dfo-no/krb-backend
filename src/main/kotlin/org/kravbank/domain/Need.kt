@@ -19,7 +19,6 @@ class Need : PanacheEntity() {
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-need-project")
@@ -27,12 +26,12 @@ class Need : PanacheEntity() {
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
-
     @OneToMany(
         mappedBy = ("need"),
         cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH],//, CascadeType.REMOVE],
         orphanRemoval = true,
     )
+
     //@JsonIgnore
     @JsonBackReference(value = "val-need-requirement")
     var requirements = mutableListOf<Requirement>()

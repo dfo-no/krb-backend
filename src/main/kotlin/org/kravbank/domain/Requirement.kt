@@ -27,7 +27,6 @@ class Requirement : PanacheEntity() {
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
         fetch = FetchType.EAGER,
     )
     @JsonManagedReference(value = "val-requirement")
@@ -37,8 +36,7 @@ class Requirement : PanacheEntity() {
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
-        fetch = FetchType.LAZY, //
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-need-requirement")
     @JsonIgnore

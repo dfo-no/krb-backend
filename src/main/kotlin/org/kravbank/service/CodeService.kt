@@ -5,13 +5,11 @@ import org.kravbank.lang.BackendException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.form.code.CodeForm
-import org.kravbank.utils.form.code.CodeFormUpdate
-import org.kravbank.utils.mapper.code.CodeMapper
-import org.kravbank.utils.mapper.code.CodeUpdateMapper
-import java.net.URI
+import org.kravbank.utils.code.dto.CodeForm
+import org.kravbank.utils.code.dto.CodeFormUpdate
+import org.kravbank.utils.code.mapper.CodeMapper
+import org.kravbank.utils.code.mapper.CodeUpdateMapper
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class CodeService(
