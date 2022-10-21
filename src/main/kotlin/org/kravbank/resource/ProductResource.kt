@@ -1,10 +1,12 @@
 package org.kravbank.resource
 
-import org.kravbank.utils.product.dto.ProductFormUpdate
+import org.kravbank.utils.product.dto.ProductPutDTO
 import org.kravbank.service.ProductService
-import org.kravbank.utils.product.dto.ProductFormCreate
-import org.kravbank.utils.product.mapper.ProductMapper
-import org.kravbank.utils.product.mapper.ProductUpdateMapper
+import org.kravbank.utils.product.dto.ProductGetDTO
+import org.kravbank.utils.product.dto.ProductPostDTO
+import org.kravbank.utils.product.mapper.ProductGetMapper
+import org.kravbank.utils.product.mapper.ProductPostMapper
+import org.kravbank.utils.product.mapper.ProductPutMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
@@ -28,7 +30,7 @@ class ProductResource(val productService: ProductService) {
         @PathParam("projectRef") projectRef: String,
     ): Response {
         val product = productService.get(projectRef, productref)
-        val productDTO = ProductMapper().fromEntity(product)
+        val productDTO = ProductGetMapper().fromEntity(product)
         return Response.ok(productDTO).build()
     }
 
@@ -36,13 +38,13 @@ class ProductResource(val productService: ProductService) {
     fun listProducts(@PathParam("projectRef") projectRef: String): Response {
         val productsDTO = productService.list(projectRef)
             .stream()
-            .map(ProductMapper()::fromEntity).toList()
+            .map(ProductGetMapper()::fromEntity).toList()
         return Response.ok(productsDTO).build()
     }
 
     @Transactional
     @POST
-    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductFormCreate): Response {
+    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductPostDTO): Response {
         val product = productService.create(projectRef, newProduct)
         //returnerer nytt product ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref))
@@ -57,7 +59,7 @@ class ProductResource(val productService: ProductService) {
         @PathParam("productref") productref: String
     ): Response {
         val product = productService.delete(projectRef, productref)
-        val productDTO = ProductMapper().fromEntity(product)
+        val productDTO = ProductGetMapper().fromEntity(product)
         // returnerer slettet product ref i body
         return Response.ok(productDTO.ref).build()
     }
@@ -68,10 +70,10 @@ class ProductResource(val productService: ProductService) {
     fun updateProduct(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String,
-        updatedProduct: ProductFormUpdate
+        updatedProduct: ProductPutDTO
     ): Response {
         val product = productService.update(projectRef, productref, updatedProduct)
-        val productUpdateDTO = ProductUpdateMapper().fromEntity(product)
+        val productUpdateDTO = ProductPutMapper().fromEntity(product)
         return Response.ok(productUpdateDTO).build()
     }
 }

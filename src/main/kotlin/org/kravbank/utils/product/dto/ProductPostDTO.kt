@@ -3,7 +3,7 @@ package org.kravbank.utils.product.dto
 import org.kravbank.domain.Project
 
 
-data class ProductFormCreate(
+data class ProductPostDTO(
 
     var ref: String = "",
     var title: String = "",
