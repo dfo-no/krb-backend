@@ -71,7 +71,7 @@ jobs:
 
       - name: Push docker-image (main)
         if: "github.ref == 'refs/heads/main'"
-        run:
+        run: |
           make docker-tag version=main
           make docker-push version=main
 
