@@ -6,10 +6,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.codelist.dto.CodelistForm
-import org.kravbank.utils.codelist.dto.CodelistFormUpdate
-import org.kravbank.utils.codelist.mapper.CodelistMapper
-import org.kravbank.utils.codelist.mapper.CodelistUpdateMapper
+import org.kravbank.dao.CodelistForm
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -41,7 +38,7 @@ internal class CodelistResourceTest() {
         val codelist = CodelistForm()
         codelist.title = "CODELIST Integrasjonstest - Tittel 1"
         codelist.description = "CODELIST Integrasjonstest - Beskrivelse 1"
-        val codelistMapper = CodelistMapper().toEntity(codelist)
+        val codelistMapper = CodelistForm().toEntity(codelist)
 
         given()
             .`when`()
@@ -68,10 +65,10 @@ internal class CodelistResourceTest() {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val codelist = CodelistFormUpdate()
+        val codelist = CodelistForm()
         codelist.title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
         codelist.description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
-        val codelistMapper = CodelistUpdateMapper().toEntity(codelist)
+        val codelistMapper = CodelistForm().toEntity(codelist)
 
         given()
             .`when`()

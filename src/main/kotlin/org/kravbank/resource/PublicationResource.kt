@@ -1,10 +1,8 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.publication.dto.PublicationForm
-import org.kravbank.utils.publication.dto.PublicationFormUpdate
+
+import org.kravbank.dao.PublicationForm
 import org.kravbank.service.PublicationService
-import org.kravbank.utils.publication.mapper.PublicationMapper
-import org.kravbank.utils.publication.mapper.PublicationUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
@@ -25,16 +23,16 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
     ): Response {
         val publication = publicationService.get(projectRef, publicationRef)
-        val publicationDTO = PublicationMapper().fromEntity(publication)
-        return Response.ok(publicationDTO).build()
+        val form = PublicationForm().fromEntity(publication)
+        return Response.ok(form).build()
     }
 
     @GET
     fun listPublications(@PathParam("projectref") projectRef: String): Response {
-        val publicationsDTO = publicationService.list(projectRef)
+        val form = publicationService.list(projectRef)
             .stream()
-            .map(PublicationMapper()::fromEntity).toList()
-        return Response.ok(publicationsDTO).build()
+            .map(PublicationForm()::fromEntity).toList()
+        return Response.ok(form).build()
     }
 
     @Transactional
@@ -53,9 +51,10 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
     ): Response {
         val publication = publicationService.delete(projectRef, publicationRef)
-        val publicationDTO = PublicationMapper().fromEntity(publication)
+
+        //val form = PublicationForm().fromEntity(publication)
         // returnerer slettet publication ref i body
-        return Response.ok(publicationDTO.ref).build()
+        return Response.ok(publication.ref).build()
     }
 
     @PUT
@@ -67,7 +66,7 @@ class PublicationResource(val publicationService: PublicationService) {
         updatedPublication: PublicationForm
     ): Response {
         val publication = publicationService.update(projectRef, publicationRef, updatedPublication)
-        val publicationUpdateDTO = PublicationUpdateMapper().fromEntity(publication)
-        return Response.ok(publicationUpdateDTO).build()
+        val form = PublicationForm().fromEntity(publication)
+        return Response.ok(form).build()
     }
 }

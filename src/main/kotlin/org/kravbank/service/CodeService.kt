@@ -1,14 +1,11 @@
 package org.kravbank.service
 
+import org.kravbank.dao.CodeForm
 import org.kravbank.domain.Code
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.code.dto.CodeForm
-import org.kravbank.utils.code.dto.CodeFormUpdate
-import org.kravbank.utils.code.mapper.CodeMapper
-import org.kravbank.utils.code.mapper.CodeUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -20,8 +17,8 @@ class CodeService(
     // @CacheResult(cacheName = "code-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, codelistRef: String, codeRef: String): Code {
-        val project = projectRepository.findByRef(projectRef)
-        val foundCodelist = codelistRepository.findByRef(project.id, codelistRef)
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         return codeRepository.findByRef(foundCodelist.id, codeRef)
     }
 
@@ -35,10 +32,10 @@ class CodeService(
 
     @Throws(BackendException::class)
     fun create(projectRef: String, codelistRef: String, newCode: CodeForm): Code {
-        val project = projectRepository.findByRef(projectRef)
-        val codelist = codelistRepository.findByRef(project.id, codelistRef)
-        newCode.codelist = codelist
-        val code = CodeMapper().toEntity(newCode)
+        val foundProject = projectRepository.findByRef(projectRef)
+        val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+        val code = CodeForm().toEntity(newCode)
+        code.codelist = foundCodelist
         codeRepository.createCode(code)
         return code
     }
@@ -51,12 +48,13 @@ class CodeService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, codelistRef: String, codeRef: String, updatedCode: CodeFormUpdate): Code {
+    fun update(projectRef: String, codelistRef: String, codeRef: String, updatedCode: CodeForm): Code {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
-        val code = CodeUpdateMapper().toEntity(updatedCode)
-        codeRepository.updateCode(foundCode.id, code)
-        return code
+        val updated = CodeForm().toEntity(updatedCode)
+        codeRepository.updateCode(foundCode.id, updated)
+        //returnerer code inkludert ref for DAO
+        return updated.apply {ref = foundCode.ref }
     }
 }

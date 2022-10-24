@@ -8,6 +8,7 @@ import javax.persistence.*
 
 @Entity
 class Code : PanacheEntity() {
+
     var title: String = ""
 
     var description: String = ""

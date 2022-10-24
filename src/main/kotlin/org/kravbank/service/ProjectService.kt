@@ -3,9 +3,7 @@ package org.kravbank.service
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.project.dto.ProjectForm
 import org.kravbank.utils.project.dto.ProjectFormUpdate
-import org.kravbank.utils.project.mapper.ProjectMapper
 import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
@@ -19,15 +17,14 @@ class ProjectService(val projectRepository: ProjectRepository) {
         return projectRepository.findByRef(projcetRef)
     }
 
-    //    @CacheResult(cacheName = "project-cache-list")
-    //@Throws(BackendException::class)
+    //@CacheResult(cacheName = "project-cache-list")
     fun list(): List<Project> {
         return projectRepository.listAllProjects()
     }
 
     @Throws(BackendException::class)
-    fun create(newProject: ProjectForm): Project {
-        val project = ProjectMapper().toEntity(newProject)
+    fun create(newProject: org.kravbank.dao.ProjectForm): Project {
+        val project = org.kravbank.dao.ProjectForm().toEntity(newProject)
         projectRepository.createProject(project)
         return project
     }
@@ -39,10 +36,11 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     @Throws(BackendException::class)
-    fun update(projcetRef: String, updatedProject: ProjectFormUpdate): Project {
-        val foundProject = projectRepository.findByRef(projcetRef)
+    fun update(projectRef: String, updatedProject: ProjectFormUpdate): Project {
+        val foundProject = projectRepository.findByRef(projectRef)
         val project = ProjectUpdateMapper().toEntity(updatedProject)
         projectRepository.updateProject(foundProject.id, project)
-        return project
+        //returnerer project inkludert ref for DAO
+        return project.apply { ref = project.ref }
     }
 }

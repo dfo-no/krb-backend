@@ -1,10 +1,7 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.codelist.dto.CodelistForm
-import org.kravbank.utils.codelist.dto.CodelistFormUpdate
+import org.kravbank.dao.CodelistForm
 import org.kravbank.service.CodelistService
-import org.kravbank.utils.codelist.mapper.CodelistMapper
-import org.kravbank.utils.codelist.mapper.CodelistUpdateMapper
 import java.net.URI
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -24,18 +21,18 @@ class CodelistResource(val codelistService: CodelistService) {
          @PathParam("codelistRef") codelisRef: String
      ): Response {
          val codelist = codelistService.get(projectRef, codelisRef)
-         val codelistDTO = CodelistMapper().fromEntity(codelist)
-         return Response.ok(codelistDTO).build()
+         val form = CodelistForm().fromEntity(codelist)
+         return Response.ok(form).build()
      }
 
     @GET
     fun listCodelists(
         @PathParam("projectRef") projectRef: String
     ): Response {
-        val codelistsDTO = codelistService.list(projectRef).stream()
-            .map(CodelistMapper()::fromEntity)
+        val form = codelistService.list(projectRef).stream()
+            .map(CodelistForm()::fromEntity).toList()
             .toList()
-        return Response.ok(codelistsDTO).build()
+        return Response.ok(form).build()
     }
 
     @Transactional
@@ -57,8 +54,8 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("codelistRef") codelistRef: String
     ): Response {
         val codelist = codelistService.delete(projectRef, codelistRef)
-        val codelistDTO = CodelistMapper().fromEntity(codelist)
-        return Response.ok(codelistDTO.ref).build()
+        val form = CodelistForm().fromEntity(codelist)
+        return Response.ok(form.ref).build()
     }
 
     @PUT
@@ -67,10 +64,10 @@ class CodelistResource(val codelistService: CodelistService) {
     fun updateCodelist(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-        updateCodelist: CodelistFormUpdate
+        updateCodelist: CodelistForm
     ): Response {
         val codelist = codelistService.update(projectRef, codelistRef, updateCodelist)
-        val codelistUpdateDTO = CodelistUpdateMapper().fromEntity(codelist)
-        return Response.ok(codelistUpdateDTO).build()
+        val form = CodelistForm().fromEntity(codelist)
+        return Response.ok(form).build()
     }
 }

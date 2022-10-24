@@ -44,8 +44,9 @@ class PublicationRepository : PanacheRepository<Publication> {
     @Throws(BackendException::class)
     fun updatePublication(id: Long, publication: Publication) {
         val updated = update(
-            "comment = ?1 where id= ?2",
+            "comment = ?1, version =?2 where id= ?3",
             publication.comment,
+            publication.version,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }

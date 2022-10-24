@@ -9,10 +9,7 @@ import org.kravbank.domain.*
 import org.kravbank.lang.NotFoundException
 import org.kravbank.resource.ProjectResource
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.project.dto.ProjectForm
 import org.kravbank.utils.project.dto.ProjectFormUpdate
-import org.kravbank.utils.project.mapper.ProjectMapper
-import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -40,7 +37,6 @@ internal class ProjectResourceTestITMock {
 
     //list
     var projects: MutableList<Project> = mutableListOf()
-
     var codes: MutableList<Code> = mutableListOf()
     var codelists: MutableList<Codelist> = mutableListOf()
     var requirements: MutableList<Requirement> = mutableListOf()
@@ -114,8 +110,8 @@ internal class ProjectResourceTestITMock {
         //mock
         Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
         val response: Response = projectResource.getProject(projectRef)
-        val entity: Project = ProjectMapper()
-            .toEntity(response.entity as ProjectForm)
+        val entity: Project = org.kravbank.dao.ProjectForm()
+            .toEntity(response.entity as org.kravbank.dao.ProjectForm)
 
         //assert
         assertEquals("første prosjekt", entity.title)
@@ -154,17 +150,16 @@ internal class ProjectResourceTestITMock {
         val response: Response = projectResource.listProjects()
 
         //map
-        val entity: MutableList<Project> = mutableListOf()
-        for (p in response.entity as List<ProjectForm>) entity.add(
-            ProjectMapper().toEntity(p))
+        val entity: MutableList<org.kravbank.dao.ProjectForm> = response.entity as MutableList<org.kravbank.dao.ProjectForm>
+
 
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
         assertFalse(entity.isEmpty())
-        assertEquals("første prosjekt", entity.get(0).title)
-        assertEquals("første prosjekt beskrivelse", entity.get(0).description)
+        assertEquals("første prosjekt", entity[0].title)
+        assertEquals("første prosjekt beskrivelse", entity[0].description)
     }
 
     @Test
@@ -180,7 +175,7 @@ internal class ProjectResourceTestITMock {
 
 
         //map
-        val projectDTO = ProjectMapper().fromEntity(project)
+        val projectDTO = org.kravbank.dao.ProjectForm().fromEntity(project)
         val response: Response = projectResource.createProject(projectDTO)
 
         //assert
@@ -231,7 +226,7 @@ internal class ProjectResourceTestITMock {
         Mockito.`when`(projectRepository.findByRef(projectRef))
             .thenThrow(NotFoundException("Project not found"))
         try {
-            projectResource.deleteProjectByRef(projectRef).entity as NotFoundException
+            projectResource.deleteProject(projectRef).entity as NotFoundException
         } catch (e: Exception) {
             print(e.message)
             assertEquals("Project not found", e.message)
@@ -253,8 +248,8 @@ internal class ProjectResourceTestITMock {
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        val entity: Project = ProjectUpdateMapper()
-            .toEntity(response.entity as ProjectFormUpdate)
+        val entity: Project = org.kravbank.dao.ProjectForm()
+            .toEntity(response.entity as org.kravbank.dao.ProjectForm)
         assertEquals("Oppdatert tittel", entity.title);
     }
 
