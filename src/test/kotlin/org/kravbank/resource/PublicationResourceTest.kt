@@ -6,8 +6,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.publication.dto.PublicationForm
-import org.kravbank.utils.publication.dto.PublicationFormUpdate
+import org.kravbank.dao.PublicationForm
 
 
 @QuarkusTest
@@ -38,9 +37,12 @@ class PublicationResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects";
 
-        val publication = PublicationForm()
-        publication.comment = "Integrasjonstest publication - comment 1"
-        publication.version = 3
+        val form = PublicationForm()
+        form.comment = "Integrasjonstest publication - comment 1"
+        form.version = 3
+
+        val publication = PublicationForm().toEntity(form)
+
 
         given()
             .`when`()
@@ -57,8 +59,14 @@ class PublicationResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects";
 
-        val publication = PublicationFormUpdate()
-        publication.comment = "Oppdatert Integrasjonstest publication - comment 1"
+
+        val form = PublicationForm()
+        form.comment = "Oppdaterer --->>>> Integrasjonstest publication - comment 1"
+        form.version = 111
+
+        val publication = PublicationForm().toEntity(form)
+
+
 
         given()
             .`when`()

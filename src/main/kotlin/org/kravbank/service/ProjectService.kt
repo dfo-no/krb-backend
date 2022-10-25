@@ -1,10 +1,9 @@
 package org.kravbank.service
 
+import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.project.dto.ProjectFormUpdate
-import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 
@@ -36,11 +35,10 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, updatedProject: ProjectFormUpdate): Project {
+    fun update(projectRef: String, updatedProject: ProjectForm): Project {
         val foundProject = projectRepository.findByRef(projectRef)
-        val project = ProjectUpdateMapper().toEntity(updatedProject)
-        projectRepository.updateProject(foundProject.id, project)
-        //returnerer project inkludert ref for DAO
-        return project.apply { ref = project.ref }
+        val update = ProjectForm().toEntity(updatedProject)
+        projectRepository.updateProject(foundProject.id, update)
+        return update.apply { ref = update.ref }
     }
 }

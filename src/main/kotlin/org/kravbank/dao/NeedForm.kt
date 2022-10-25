@@ -1,10 +1,10 @@
 package org.kravbank.dao
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.kravbank.domain.Codelist
+import org.kravbank.domain.Need
 import org.kravbank.utils.Mapper
 
-class CodelistForm() : Mapper<CodelistForm, Codelist> {
+class NeedForm(): Mapper<NeedForm, Need> {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     lateinit var ref: String
@@ -13,12 +13,12 @@ class CodelistForm() : Mapper<CodelistForm, Codelist> {
 
     lateinit var description: String
 
-    override fun toEntity(domain: CodelistForm): Codelist = Codelist().apply {
+    override fun toEntity(domain: NeedForm): Need = Need().apply {
         title = domain.title
         description = domain.description
     }
 
-    override fun fromEntity(entity: Codelist): CodelistForm = CodelistForm().apply {
+    override fun fromEntity(entity: Need): NeedForm = NeedForm().apply {
         ref = entity.ref
         title = entity.title
         description = entity.description

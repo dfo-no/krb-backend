@@ -6,11 +6,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.*
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.resource.PublicationResource
-import org.kravbank.utils.publication.dto.PublicationForm
-import org.kravbank.utils.publication.mapper.PublicationMapper
 import org.mockito.Mockito
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -90,8 +89,7 @@ internal class PublicationResourceTestITOck {
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
 
-        val entity: Publication = PublicationMapper()
-            .toEntity(response.entity as PublicationForm)
+        val entity: Publication = PublicationForm().toEntity(response.entity as PublicationForm)
 
         assertEquals("En kommentar", entity.comment)
         assertEquals(10, entity.version)

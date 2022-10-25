@@ -52,9 +52,8 @@ class CodeService(
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
-        val updated = CodeForm().toEntity(updatedCode)
-        codeRepository.updateCode(foundCode.id, updated)
-        //returnerer code inkludert ref for DAO
-        return updated.apply {ref = foundCode.ref }
+        val update = CodeForm().toEntity(updatedCode)
+        codeRepository.updateCode(foundCode.id, update)
+        return update.apply {ref = foundCode.ref }
     }
 }

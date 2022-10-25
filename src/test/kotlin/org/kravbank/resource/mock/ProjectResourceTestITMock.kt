@@ -5,11 +5,11 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.*
 import org.kravbank.lang.NotFoundException
 import org.kravbank.resource.ProjectResource
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.project.dto.ProjectFormUpdate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -238,7 +238,7 @@ internal class ProjectResourceTestITMock {
 
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
-        val updateProject = ProjectFormUpdate()
+        val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
 
         Mockito.`when`(projectRepository.findByRef(projectRef))
@@ -258,7 +258,7 @@ internal class ProjectResourceTestITMock {
 
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
-        val updateProject = ProjectFormUpdate()
+        val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
 
         Mockito.`when`(projectRepository.findByRef(projectRef))

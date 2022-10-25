@@ -2,8 +2,9 @@ package org.kravbank.dao
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.kravbank.domain.Code
+import org.kravbank.utils.Mapper
 
-class CodeForm() {
+class CodeForm() : Mapper<CodeForm, Code> {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     lateinit var ref: String
@@ -12,12 +13,12 @@ class CodeForm() {
 
     lateinit var description: String
 
-    fun toEntity(domain: CodeForm): Code = Code().apply {
+    override fun toEntity(domain: CodeForm): Code = Code().apply {
         title = domain.title
         description = domain.description
     }
 
-    fun fromEntity(entity: Code): CodeForm = CodeForm().apply {
+    override fun fromEntity(entity: Code): CodeForm = CodeForm().apply {
         ref = entity.ref
         title = entity.title
         description = entity.description

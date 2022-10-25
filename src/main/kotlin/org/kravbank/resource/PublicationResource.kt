@@ -1,6 +1,5 @@
 package org.kravbank.resource;
 
-
 import org.kravbank.dao.PublicationForm
 import org.kravbank.service.PublicationService
 import java.net.URI

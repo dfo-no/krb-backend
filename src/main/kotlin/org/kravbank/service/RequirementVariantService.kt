@@ -1,14 +1,11 @@
 package org.kravbank.service
 
+import org.kravbank.dao.RequirementVariantForm
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
-import org.kravbank.utils.requirementvariant.dto.RequirementVariantForm
-import org.kravbank.utils.requirementvariant.dto.RequirementVariantFormUpdate
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.requirementvariant.mapper.RequirementVariantMapper
-import org.kravbank.utils.requirementvariant.mapper.RequirementVariantUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -37,8 +34,8 @@ class RequirementVariantService(
     fun create(projectRef: String, requirementRef: String, newReqVariant: RequirementVariantForm): RequirementVariant {
         val project = projectRepository.findByRef(projectRef)
         val requirement = requirementRepository.findByRef(project.id, requirementRef)
-        newReqVariant.requirement = requirement
-        val reqVariant = RequirementVariantMapper().toEntity(newReqVariant)
+        val reqVariant = RequirementVariantForm().toEntity(newReqVariant)
+        reqVariant.requirement = requirement
         requirementVariantRepository.createRequirementVariant(reqVariant)
         return reqVariant
     }
@@ -55,13 +52,13 @@ class RequirementVariantService(
         projectRef: String,
         requirementRef: String,
         reqVariantRef: String,
-        updatedReqVariant: RequirementVariantFormUpdate
+        updatedReqVariant: RequirementVariantForm
     ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
         val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
-        val reqVariant = RequirementVariantUpdateMapper().toEntity(updatedReqVariant)
-        requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, reqVariant)
-        return reqVariant
+        val update = RequirementVariantForm().toEntity(updatedReqVariant)
+        requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, update)
+        return update.apply { ref = foundReqVariant.ref }
     }
 }

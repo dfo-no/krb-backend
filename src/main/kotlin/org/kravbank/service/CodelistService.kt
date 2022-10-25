@@ -45,10 +45,8 @@ class CodelistService(
     fun update(projectRef: String, codelistRef: String, updatedCodelist: CodelistForm): Codelist {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
-        val updated = CodelistForm().toEntity(updatedCodelist)
-        codelistRepository.updateCodelist(foundCodelist.id, updated)
-
-        //returnerer codelist inkludert ref for DAO
-        return updated.apply {ref = foundCodelist.ref }
+        val update = CodelistForm().toEntity(updatedCodelist)
+        codelistRepository.updateCodelist(foundCodelist.id, update)
+        return update.apply {ref = foundCodelist.ref }
     }
 }

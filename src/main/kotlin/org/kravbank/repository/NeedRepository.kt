@@ -29,7 +29,7 @@ class NeedRepository : PanacheRepository<Need> {
                 "ref = ?1",
                 ref
             ).firstResult<Need>()
-        //println("from repo ${need.ref}")
+       // println("from repo ${need.ref}")
         return Optional.ofNullable(need).orElseThrow { NotFoundException("Need not found via requirement service!") }
     }
 

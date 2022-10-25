@@ -1,7 +1,6 @@
 package org.kravbank.resource
 
 import org.kravbank.dao.ProjectForm
-import org.kravbank.utils.project.dto.ProjectFormUpdate
 import org.kravbank.service.ProjectService
 import java.net.URI
 import javax.enterprise.context.RequestScoped
@@ -55,10 +54,9 @@ class ProjectResource(val projectService: ProjectService) {
     @PUT
     @Path("{projcetRef}")
     @Transactional
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectFormUpdate): Response {
+    fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectForm): Response {
         val project = projectService.update(projcetRef, updatedProject)
         val form = ProjectForm().fromEntity(project)
         return Response.ok(form).build()
-
     }
 }

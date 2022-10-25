@@ -6,8 +6,8 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.requirementvariant.dto.RequirementVariantForm
-import org.kravbank.utils.requirementvariant.dto.RequirementVariantFormUpdate
+import org.kravbank.dao.RequirementVariantForm
+
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -68,7 +68,7 @@ class RequirementVariantResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val rv = RequirementVariantFormUpdate()
+        val rv = RequirementVariantForm()
         rv.description = "Integrasjonstest rv desc"
         rv.requirementText = "Integrasjonstest rv reqtext"
         rv.instruction = "Integrasjonstest rv instruction"

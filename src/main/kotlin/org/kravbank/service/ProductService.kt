@@ -1,14 +1,11 @@
 package org.kravbank.service
 
+import org.kravbank.dao.ProductForm
 import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
-import org.kravbank.utils.product.dto.ProductPutDTO
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.product.dto.ProductPostDTO
-import org.kravbank.utils.product.mapper.ProductPostMapper
-import org.kravbank.utils.product.mapper.ProductPutMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -33,11 +30,11 @@ class ProductService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, newProduct: ProductPostDTO): Product {
+    fun create(projectRef: String, newProduct: ProductForm): Product {
         val foundProject = projectRepository.findByRef(projectRef)
-        newProduct.project = foundProject
-        val product = ProductPostMapper().toEntity(newProduct)
-        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementvariant)
+        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementVariantRef)
+        val product = ProductForm().toEntity(newProduct)
+        product.project = foundProject
         product.requirementvariant = foundReqVariant
         productRepository.createProduct(product)
         return product
@@ -52,11 +49,11 @@ class ProductService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, productRef: String, updatedProduct: ProductPutDTO): Product {
+    fun update(projectRef: String, productRef: String, updatedProduct: ProductForm): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
-        val product = ProductPutMapper().toEntity(updatedProduct)
-        productRepository.updateProduct(foundProduct.id, product)
-        return product
+        val update = ProductForm().toEntity(updatedProduct)
+        productRepository.updateProduct(foundProduct.id, update)
+        return update.apply { ref = foundProduct.ref }
     }
 }

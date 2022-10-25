@@ -51,7 +51,6 @@ class CodelistRepository : PanacheRepository<Codelist> {
             "title = ?1, description = ?2 where id= ?3",
             codelist.title,
             codelist.description,
-            //codelist.deletedDate,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Codelist did not update") }

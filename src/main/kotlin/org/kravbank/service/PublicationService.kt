@@ -48,8 +48,8 @@ class PublicationService(
     fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        val updated = PublicationForm().toEntity(updatedPublication)
-        publicationRepository.updatePublication(foundPublication.id, updated)
-        return updated.apply { ref = foundPublication.ref}
+        val update = PublicationForm().toEntity(updatedPublication)
+        publicationRepository.updatePublication(foundPublication.id, update)
+        return update.apply { ref = foundPublication.ref}
     }
 }
