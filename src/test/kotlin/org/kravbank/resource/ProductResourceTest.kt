@@ -6,10 +6,8 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.product.dto.ProductGetDTO
-import org.kravbank.utils.product.dto.ProductPostDTO
-import org.kravbank.utils.product.dto.ProductPutDTO
-import org.kravbank.utils.product.mapper.ProductPutMapper
+import org.kravbank.dao.ProductForm
+
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -38,16 +36,30 @@ class ProductResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val postDTO = ProductPostDTO()
-        postDTO.title = "PRODUCT Integrasjonstest - Tittel 1"
-        postDTO.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
-        postDTO.requirementvariant = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+        val form = ProductForm()
+        form.title = "PRODUCT Integrasjonstest - Tittel 1"
+        form.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
+        form.requirementVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
 
+/*
+        val product = ProductForm().toEntity(form)
+        val rv = RequirementVariant()
+        rv.description = "Integrasjonstest rv desc"
+        rv.requirementText = "Integrasjonstest rv reqtext"
+        rv.instruction = "Integrasjonstest rv instruction"
+        rv.useProduct = true
+        rv.useSpesification = true
+        rv.useQualification = true
+
+        product.requirementvariant = rv
+
+
+ */
         given()
             .`when`()
-            .body(postDTO)
+            .body(form)
             .header("Content-type", "application/json")
-            .post("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
+            .post("/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
             .then()
             .statusCode(201)
     }
@@ -67,13 +79,15 @@ class ProductResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val putDTO = ProductPutDTO()
-        putDTO.title = "Oppdatert integrasjonstest produkt - Tittel 1"
-        putDTO.description = "Oppdatert integrasjonstest produkt - Beskrivelse 1"
+        val form = ProductForm()
+        form.title = "PUT Integrasjonstest - Tittel 1"
+        form.description = "PUT Integrasjonstest - Beskrivelse 1"
+
+        val product = ProductForm().toEntity(form)
 
         given()
             .`when`()
-            .body(putDTO)
+            .body(product)
             .header("Content-type", "application/json")
             .put("/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()

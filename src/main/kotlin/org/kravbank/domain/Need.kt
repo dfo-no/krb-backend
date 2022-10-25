@@ -36,8 +36,10 @@ class Need : PanacheEntity() {
     @JsonBackReference(value = "val-need-requirement")
     var requirements = mutableListOf<Requirement>()
 
-    override fun toString(): String {
+  /*  override fun toString(): String {
         return "need project to string: ${project?.toString()} \n" +
                 "need requirements to string : ${requirements.size}"
     }
+
+   */
 }

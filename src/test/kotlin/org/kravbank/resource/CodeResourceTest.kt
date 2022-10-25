@@ -6,10 +6,8 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.code.dto.CodeForm
-import org.kravbank.utils.code.dto.CodeFormUpdate
-import org.kravbank.utils.code.mapper.CodeMapper
-import org.kravbank.utils.code.mapper.CodeUpdateMapper
+import org.kravbank.dao.CodeForm
+
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -42,7 +40,7 @@ class CodeResourceTest {
         val code = CodeForm()
         code.title = "CODE Integrasjonstest tittel"
         code.description = "CODE Integrasjonstest code desc"
-        val codeMapper = CodeMapper().toEntity(code)
+        val codeMapper = CodeForm().toEntity(code)
 
         given()
             .`when`()
@@ -68,10 +66,10 @@ class CodeResourceTest {
         RestAssured.baseURI = "/api/v1/projects"
         RestAssured.basePath = "/api/v1/projects";
 
-        val code = CodeFormUpdate()
+        val code = CodeForm()
         code.title = "CODE Integrasjonstest tittel"
         code.description = "CODE Integrasjonstest code desc"
-        val codeMapper = CodeUpdateMapper().toEntity(code)
+        val codeMapper = CodeForm().toEntity(code)
 
         given()
             .`when`()

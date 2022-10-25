@@ -1,13 +1,10 @@
 package org.kravbank.service
 
+import org.kravbank.dao.NeedForm
 import org.kravbank.domain.Need
 import org.kravbank.lang.BackendException
-import org.kravbank.utils.need.dto.NeedForm
-import org.kravbank.utils.need.dto.NeedFormUpdate
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.need.mapper.NeedMapper
-import org.kravbank.utils.need.mapper.NeedUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -32,8 +29,8 @@ class NeedService(
     @Throws(BackendException::class)
     fun create(projectRef: String, newNeed: NeedForm): Need {
         val project = projectRepository.findByRef(projectRef)
-        newNeed.project = project
-        val need = NeedMapper().toEntity(newNeed)
+        val need = NeedForm().toEntity(newNeed)
+        need.project = project
         needRepository.createNeed(need)
         return need
     }
@@ -45,11 +42,11 @@ class NeedService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, needRef: String, updatedNeed: NeedFormUpdate): Need {
+    fun update(projectRef: String, needRef: String, updatedNeed: NeedForm): Need {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundNeed = needRepository.findByRef(foundProject.id, needRef)
-        val need = NeedUpdateMapper().toEntity(updatedNeed)
-        needRepository.updateNeed(foundNeed.id, need)
-        return need
+        val update = NeedForm().toEntity(updatedNeed)
+        needRepository.updateNeed(foundNeed.id, update)
+        return update.apply { ref = foundNeed.ref }
     }
 }

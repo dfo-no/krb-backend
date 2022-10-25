@@ -6,9 +6,8 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test;
-import org.kravbank.utils.requirement.dto.RequirementFormCreate
-import org.kravbank.utils.requirement.dto.RequirementFormUpdate
-import org.kravbank.utils.requirement.mapper.RequirementUpdateMapper
+import org.kravbank.dao.RequirementForm
+
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -38,16 +37,24 @@ class RequirementResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val requirementDTO = RequirementFormCreate()
-        requirementDTO.title = "Integrasjonstest requirement - tittel 1"
-        requirementDTO.description = "Integrasjonstest requirement - beskrivelse 1"
-        requirementDTO.need = "need1b69-edb2-431f-855a-4368e2bcddd1"
+        val form = RequirementForm()
+        form.title = "Integrasjonstest requirement - tittel 1"
+        form.description = "Integrasjonstest requirement - beskrivelse 1"
+        form.needRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
+
+       //val requirement = RequirementFormDAO().toEntity(form)
+
+    /*    val form = NeedForm()
+        form.title = "POST Integrasjonstest need - tittel 1"
+        form.description = "POST Integrasjonstest need - beskrivelse 1"
+     */
+
 
         given()
             .`when`()
-            .body(requirementDTO)
+            .body(form)
             .header("Content-type", "application/json")
-            .post("/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/")
+            .post("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements")
             .then()
             .statusCode(201)
     }
@@ -58,14 +65,15 @@ class RequirementResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects";
 
-        val requirement = RequirementFormUpdate()
-        requirement.title = "Oppdatert Integrasjonstest requirement - tittel 1"
-        requirement.description = "Oppdatert Integrasjonstest requirement - beskrivelse 1"
-        val requirementMapper = RequirementUpdateMapper().toEntity(requirement)
+        val form = RequirementForm()
+        form.title = "Integrasjonstest requirement - tittel 1"
+        form.description = "Integrasjonstest requirement - beskrivelse 1"
+
+        //val requirement = RequirementFormDAO().toEntity(form)
 
         given()
             .`when`()
-            .body(requirementMapper)
+            .body(form)
             .header("Content-type", "application/json")
             .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1")
             .then()

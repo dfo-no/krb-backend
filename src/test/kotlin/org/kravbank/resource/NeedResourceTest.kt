@@ -6,8 +6,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.need.dto.NeedForm
-import org.kravbank.utils.need.dto.NeedFormUpdate
+import org.kravbank.dao.NeedForm
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -36,17 +35,19 @@ class NeedResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects";
 
-        val needDTO = NeedForm()
-        needDTO.title = "POST Integrasjonstest need - tittel 1"
-        needDTO.description = "POST Integrasjonstest need - beskrivelse 1"
+        val form = NeedForm()
+        form.title = "POST Integrasjonstest need - tittel 1"
+        form.description = "POST Integrasjonstest need - beskrivelse 1"
+
+        val need = NeedForm().toEntity(form)
 
         given()
             .`when`()
-            .body(needDTO)
+            .body(need)
             .header("Content-type", "application/json")
             .post("/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
             .then()
-            .statusCode(201) //envt 200
+            .statusCode(201)
     }
 
     @Test
@@ -55,17 +56,19 @@ class NeedResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects";
 
-        val needDTO = NeedFormUpdate()
-        needDTO.title = "PUT Integrasjonstest need - tittel 1"
-        needDTO.description = "PUT Integrasjonstest need - beskrivelse 1"
+        val form = NeedForm()
+        form.title = "PUT Integrasjonstest need - tittel 1"
+        form.description = "PUT Integrasjonstest need - beskrivelse 1"
 
+
+        val need = NeedForm().toEntity(form)
         given()
             .`when`()
-            .body(needDTO)
+            .body(need)
             .header("Content-type", "application/json")
             .put("/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(200) //envt 200
+            .statusCode(200)
     }
 
     @Test

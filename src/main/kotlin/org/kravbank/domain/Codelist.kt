@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -13,7 +14,7 @@ class Codelist : PanacheEntity() {
     var description: String = ""
 
     @Column(unique = true)
-    var ref: String = ""
+    var ref: String = UUID.randomUUID().toString()
 
     @OneToMany(
         mappedBy = ("codelist"),

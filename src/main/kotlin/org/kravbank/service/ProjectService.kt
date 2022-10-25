@@ -1,12 +1,10 @@
 package org.kravbank.service
 
+import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.project.dto.ProjectForm
-import org.kravbank.utils.project.dto.ProjectFormUpdate
-import org.kravbank.utils.project.mapper.ProjectMapper
-import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 
@@ -19,30 +17,31 @@ class ProjectService(val projectRepository: ProjectRepository) {
         return projectRepository.findByRef(projcetRef)
     }
 
-    //    @CacheResult(cacheName = "project-cache-list")
-    //@Throws(BackendException::class)
+    //@CacheResult(cacheName = "project-cache-list")
     fun list(): List<Project> {
         return projectRepository.listAllProjects()
     }
 
     @Throws(BackendException::class)
     fun create(newProject: ProjectForm): Project {
-        val project = ProjectMapper().toEntity(newProject)
+        val project = ProjectForm().toEntity(newProject)
         projectRepository.createProject(project)
         return project
     }
 
+    @Throws(BackendException::class)
     fun delete(projcetRef: String): Project {
         val foundProject = projectRepository.findByRef(projcetRef)
-        projectRepository.deleteProject(foundProject.id)
-        return foundProject
+        val deleted = projectRepository.deleteProject(foundProject.id)
+        if (deleted) return foundProject
+        throw BadRequestException("Bad request! Did not delete project")
     }
 
     @Throws(BackendException::class)
-    fun update(projcetRef: String, updatedProject: ProjectFormUpdate): Project {
-        val foundProject = projectRepository.findByRef(projcetRef)
-        val project = ProjectUpdateMapper().toEntity(updatedProject)
-        projectRepository.updateProject(foundProject.id, project)
-        return project
+    fun update(projectRef: String, updatedProject: ProjectForm): Project {
+        val foundProject = projectRepository.findByRef(projectRef)
+        val update = ProjectForm().toEntity(updatedProject)
+        projectRepository.updateProject(foundProject.id, update)
+        return update.apply { ref = update.ref }
     }
 }

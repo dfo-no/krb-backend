@@ -24,9 +24,7 @@ class ProductRepository : PanacheRepository<Product> {
         } else throw NotFoundException("Product not found")
     }
 
-    //@Throws(BackendException::class)
     fun listAllProducts(id: Long): List<Product> {
-        //returerer bare elementer som ikke er soft deleted
         return find("project_id_fk", id).list<Product>().filter { p -> p.deletedDate == null }
     }
 
@@ -42,7 +40,7 @@ class ProductRepository : PanacheRepository<Product> {
     fun deleteProduct(id: Long){
         val deletedDate = LocalDateTime.now()
         update("deleteddate = ?1 where id = ?2", deletedDate,id)
-        //
+
     }
 
     @Throws(BackendException::class)

@@ -5,21 +5,18 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.*
 import org.kravbank.lang.NotFoundException
 import org.kravbank.resource.ProjectResource
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.project.dto.ProjectForm
-import org.kravbank.utils.project.dto.ProjectFormUpdate
-import org.kravbank.utils.project.mapper.ProjectMapper
-import org.kravbank.utils.project.mapper.ProjectUpdateMapper
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-internal class ProjectResourceTestITMock {
+internal class ProjectResourceMockTest {
 
     @InjectMock
     lateinit var projectRepository: ProjectRepository
@@ -40,7 +37,6 @@ internal class ProjectResourceTestITMock {
 
     //list
     var projects: MutableList<Project> = mutableListOf()
-
     var codes: MutableList<Code> = mutableListOf()
     var codelists: MutableList<Codelist> = mutableListOf()
     var requirements: MutableList<Requirement> = mutableListOf()
@@ -114,8 +110,8 @@ internal class ProjectResourceTestITMock {
         //mock
         Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
         val response: Response = projectResource.getProject(projectRef)
-        val entity: Project = ProjectMapper()
-            .toEntity(response.entity as ProjectForm)
+        val entity: Project = org.kravbank.dao.ProjectForm()
+            .toEntity(response.entity as org.kravbank.dao.ProjectForm)
 
         //assert
         assertEquals("første prosjekt", entity.title)
@@ -154,17 +150,16 @@ internal class ProjectResourceTestITMock {
         val response: Response = projectResource.listProjects()
 
         //map
-        val entity: MutableList<Project> = mutableListOf()
-        for (p in response.entity as List<ProjectForm>) entity.add(
-            ProjectMapper().toEntity(p))
+        val entity: MutableList<org.kravbank.dao.ProjectForm> = response.entity as MutableList<org.kravbank.dao.ProjectForm>
+
 
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
         assertFalse(entity.isEmpty())
-        assertEquals("første prosjekt", entity.get(0).title)
-        assertEquals("første prosjekt beskrivelse", entity.get(0).description)
+        assertEquals("første prosjekt", entity[0].title)
+        assertEquals("første prosjekt beskrivelse", entity[0].description)
     }
 
     @Test
@@ -180,7 +175,7 @@ internal class ProjectResourceTestITMock {
 
 
         //map
-        val projectDTO = ProjectMapper().fromEntity(project)
+        val projectDTO = org.kravbank.dao.ProjectForm().fromEntity(project)
         val response: Response = projectResource.createProject(projectDTO)
 
         //assert
@@ -199,28 +194,24 @@ internal class ProjectResourceTestITMock {
     @Test
     fun deleteProject_OK() {
 
-        assertTrue(false)
-
-        /*
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        //arrange
+        val projectId = 1L
+        val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val ref = "dsfdsgs<'fåowi39543tdsf"
 
-
-        Mockito.`when`(projectRepository.deleteProject(projectId)).then { Any() }
+        //Mock
+       Mockito.`when`(projectRepository.deleteProject(projectId)).thenReturn(true)
        // Mockito.`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java))).thenReturn(false)
 
-        //map
-
-        val response: Response = projectResource.deleteProjectByRef(projectRef)
-        val entity: Project = ProjectMapper().toEntity(response.entity as ProjectForm)
+        val response: Response = projectResource.deleteProject(projectRef)
+        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
 
         //assert
         assertNotNull(entity)
-        assertEquals("bbb4db69-edb2-431f-855a-4368e2bcddd1", entity);
+        assertEquals("bbb4db69-edb2-431f-855a-4368e2bcddd1", entity.ref)
 
-         */
+        print(entity)
     }
 
     @Test
@@ -231,7 +222,7 @@ internal class ProjectResourceTestITMock {
         Mockito.`when`(projectRepository.findByRef(projectRef))
             .thenThrow(NotFoundException("Project not found"))
         try {
-            projectResource.deleteProjectByRef(projectRef).entity as NotFoundException
+            projectResource.deleteProject(projectRef).entity as NotFoundException
         } catch (e: Exception) {
             print(e.message)
             assertEquals("Project not found", e.message)
@@ -243,18 +234,17 @@ internal class ProjectResourceTestITMock {
 
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
-        val updateProject = ProjectFormUpdate()
+        val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
+        updateProject.description = "Oppdatert desc"
 
-        Mockito.`when`(projectRepository.findByRef(projectRef))
-            .thenReturn(project)
+        Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
 
         val response: Response = projectResource.updateProject(projectRef, updateProject)
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        val entity: Project = ProjectUpdateMapper()
-            .toEntity(response.entity as ProjectFormUpdate)
+        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
         assertEquals("Oppdatert tittel", entity.title);
     }
 
@@ -263,7 +253,7 @@ internal class ProjectResourceTestITMock {
 
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
-        val updateProject = ProjectFormUpdate()
+        val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
 
         Mockito.`when`(projectRepository.findByRef(projectRef))

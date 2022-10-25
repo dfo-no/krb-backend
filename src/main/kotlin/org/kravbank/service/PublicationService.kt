@@ -2,13 +2,11 @@ package org.kravbank.service
 
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
-import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
-import org.kravbank.utils.publication.dto.PublicationForm
-import org.kravbank.utils.publication.dto.PublicationFormUpdate
-import org.kravbank.utils.publication.mapper.PublicationMapper
-import org.kravbank.utils.publication.mapper.PublicationUpdateMapper
+import org.kravbank.dao.PublicationForm
+import org.kravbank.lang.BadRequestException
+import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -32,8 +30,9 @@ class PublicationService(
     @Throws(BackendException::class)
     fun create(projectRef: String, newPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
-        newPublication.project = foundProject
-        val publication = PublicationMapper().toEntity(newPublication)
+        val publication = PublicationForm().toEntity(newPublication)
+        publication.project = foundProject
+        publication.date = LocalDateTime.now()
         publicationRepository.createPublication(publication)
         return publication
     }
@@ -42,16 +41,17 @@ class PublicationService(
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(foundProject.id,publicationRef)
-       publicationRepository.deletePublication(publication.id)
-        return publication
+        val deleted = publicationRepository.deletePublication(publication.id)
+        if (deleted) return publication
+        throw BadRequestException("Bad request! Did not delete publication")
     }
 
     @Throws(BackendException::class)
     fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        val publication = PublicationMapper().toEntity(updatedPublication)
-        publicationRepository.updatePublication(foundPublication.id, publication)
-        return publication
+        val update = PublicationForm().toEntity(updatedPublication)
+        publicationRepository.updatePublication(foundPublication.id, update)
+        return update.apply { ref = foundPublication.ref}
     }
 }

@@ -36,16 +36,19 @@ class PublicationRepository : PanacheRepository<Publication> {
         }
     }
 
-    fun deletePublication(id: Long){
+    fun deletePublication(id: Long) : Boolean{
         val deletedDate = LocalDateTime.now()
-        update("deleteddate = ?1 where id = ?2", deletedDate,id)
+        val updates = update("deleteddate = ?1 where id = ?2", deletedDate,id)
+        if (updates>0) return true
+        return false
     }
 
     @Throws(BackendException::class)
     fun updatePublication(id: Long, publication: Publication) {
         val updated = update(
-            "comment = ?1 where id= ?2",
+            "comment = ?1, version =?2 where id= ?3",
             publication.comment,
+            publication.version,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }

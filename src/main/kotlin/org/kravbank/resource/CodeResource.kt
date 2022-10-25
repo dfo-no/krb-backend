@@ -1,10 +1,7 @@
 package org.kravbank.resource;
 
+import org.kravbank.dao.CodeForm
 import org.kravbank.service.CodeService
-import org.kravbank.utils.code.dto.CodeForm
-import org.kravbank.utils.code.dto.CodeFormUpdate
-import org.kravbank.utils.code.mapper.CodeMapper
-import org.kravbank.utils.code.mapper.CodeUpdateMapper
 import java.net.URI
 import javax.transaction.Transactional
 import javax.ws.rs.*
@@ -26,8 +23,8 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("codeRef") codeRef: String
     ): Response {
         val code = codeService.get(projectRef, codelistRef, codeRef)
-        val codeDTO = CodeMapper().fromEntity(code)
-        return Response.ok(codeDTO).build()
+        val form = CodeForm().fromEntity(code)
+        return Response.ok(form).build()
     }
 
     @GET
@@ -35,10 +32,11 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
     ): Response {
-        val codesDTO = codeService.list(projectRef, codelistRef)
+        val form = codeService.list(projectRef, codelistRef)
             .stream()
-            .map(CodeMapper()::fromEntity).toList()
-        return Response.ok(codesDTO).build()
+            .map(CodeForm()::fromEntity).toList()
+        return Response.ok(form).build()
+
     }
 
     @Transactional
@@ -62,9 +60,8 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("codeRef") codeRef: String
     ): Response {
         val code = codeService.delete(projectRef, codelistRef, codeRef)
-        val codeDTO = CodeMapper().fromEntity(code)
-        // returnerer slettet publication ref i body
-        return Response.ok(codeDTO.ref).build()
+        val form = CodeForm().fromEntity(code)
+        return Response.ok(form.ref).build()
     }
 
     @PUT
@@ -74,10 +71,10 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String,
-        updatedCode: CodeFormUpdate
+        updatedCode: CodeForm
     ): Response {
-        val code = codeService.update(projectRef, codelistRef, codeRef, updatedCode)
-        val codeUpdateDTO = CodeUpdateMapper().fromEntity(code)
-        return Response.ok(codeUpdateDTO).build()
+        val updated = codeService.update(projectRef, codelistRef, codeRef, updatedCode)
+        val form = CodeForm().fromEntity(updated)
+        return Response.ok(form).build()
     }
 }
