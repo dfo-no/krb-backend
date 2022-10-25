@@ -16,7 +16,7 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-internal class ProjectResourceTestITMock {
+internal class ProjectResourceMockTest {
 
     @InjectMock
     lateinit var projectRepository: ProjectRepository
@@ -194,28 +194,24 @@ internal class ProjectResourceTestITMock {
     @Test
     fun deleteProject_OK() {
 
-        assertTrue(false)
-
-        /*
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        //arrange
+        val projectId = 1L
+        val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val ref = "dsfdsgs<'fåowi39543tdsf"
 
-
-        Mockito.`when`(projectRepository.deleteProject(projectId)).then { Any() }
+        //Mock
+       Mockito.`when`(projectRepository.deleteProject(projectId)).thenReturn(true)
        // Mockito.`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java))).thenReturn(false)
 
-        //map
-
-        val response: Response = projectResource.deleteProjectByRef(projectRef)
-        val entity: Project = ProjectMapper().toEntity(response.entity as ProjectForm)
+        val response: Response = projectResource.deleteProject(projectRef)
+        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
 
         //assert
         assertNotNull(entity)
-        assertEquals("bbb4db69-edb2-431f-855a-4368e2bcddd1", entity);
+        assertEquals("bbb4db69-edb2-431f-855a-4368e2bcddd1", entity.ref)
 
-         */
+        print(entity)
     }
 
     @Test
@@ -240,16 +236,15 @@ internal class ProjectResourceTestITMock {
 
         val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
+        updateProject.description = "Oppdatert desc"
 
-        Mockito.`when`(projectRepository.findByRef(projectRef))
-            .thenReturn(project)
+        Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
 
         val response: Response = projectResource.updateProject(projectRef, updateProject)
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        val entity: Project = org.kravbank.dao.ProjectForm()
-            .toEntity(response.entity as org.kravbank.dao.ProjectForm)
+        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
         assertEquals("Oppdatert tittel", entity.title);
     }
 

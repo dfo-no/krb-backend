@@ -7,8 +7,7 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.ProductForm
-import org.kravbank.dao.RequirementVariantForm
-import org.kravbank.domain.RequirementVariant
+
 
 @QuarkusTest
 @QuarkusIntegrationTest

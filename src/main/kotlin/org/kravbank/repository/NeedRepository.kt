@@ -21,7 +21,6 @@ class NeedRepository : PanacheRepository<Need> {
         return Optional.ofNullable(need).orElseThrow { NotFoundException("Need not found") }
     }
 
-
     @Throws(BackendException::class)
     fun findByRefRequirement(ref: String): Need {
         val need =
@@ -29,8 +28,7 @@ class NeedRepository : PanacheRepository<Need> {
                 "ref = ?1",
                 ref
             ).firstResult<Need>()
-       // println("from repo ${need.ref}")
-        return Optional.ofNullable(need).orElseThrow { NotFoundException("Need not found via requirement service!") }
+        return Optional.ofNullable(need).orElseThrow { NotFoundException("Need not found via requirement!") }
     }
 
 
@@ -62,10 +60,9 @@ class NeedRepository : PanacheRepository<Need> {
             "title = ?1, description = ?2 where id= ?3",
             need.title,
             need.description,
-            //need.deletedDate,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Fail! Need did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Need did not update") }
     }
 
 }

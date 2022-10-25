@@ -17,7 +17,7 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-internal class CodelistResourceTestTMock {
+internal class CodelistResourceMockTest {
 
     @InjectMock
     lateinit var codelistRepository: CodelistRepository
@@ -160,14 +160,6 @@ internal class CodelistResourceTestTMock {
         //map
         val entity: MutableList<CodelistForm> = response.entity as MutableList<CodelistForm>
 
-
-/*
-        for (r in response.entity as List<CodelistForm>) entity.add(
-            CodelistMapper().toEntity(r)
-        )
-
- */
-
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
@@ -192,7 +184,7 @@ internal class CodelistResourceTestTMock {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
     @Test

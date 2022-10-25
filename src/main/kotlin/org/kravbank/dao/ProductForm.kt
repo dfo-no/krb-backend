@@ -13,7 +13,7 @@ class ProductForm() : Mapper<ProductForm, Product> {
 
     lateinit var description: String
 
-   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // denne gir feil i integrasjonstesten pga. den ikke deserialiserer
     var requirementVariantRef: String = ""
 
     override fun toEntity(domain: ProductForm): Product = Product().apply {

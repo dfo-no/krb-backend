@@ -28,7 +28,7 @@ class NeedResource(val needService: NeedService) {
     }
 
     @GET
-    fun listPublications(@PathParam("projectRef") projectRef: String): Response {
+    fun listNeeds(@PathParam("projectRef") projectRef: String): Response {
         val form = needService.list(projectRef)
             .stream()
             .map(NeedForm()::fromEntity).toList()

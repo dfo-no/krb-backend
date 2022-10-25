@@ -36,9 +36,11 @@ class PublicationRepository : PanacheRepository<Publication> {
         }
     }
 
-    fun deletePublication(id: Long){
+    fun deletePublication(id: Long) : Boolean{
         val deletedDate = LocalDateTime.now()
-        update("deleteddate = ?1 where id = ?2", deletedDate,id)
+        val updates = update("deleteddate = ?1 where id = ?2", deletedDate,id)
+        if (updates>0) return true
+        return false
     }
 
     @Throws(BackendException::class)

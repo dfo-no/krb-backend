@@ -3,6 +3,7 @@ package org.kravbank.service
 import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import javax.enterprise.context.ApplicationScoped
 
@@ -22,16 +23,18 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     @Throws(BackendException::class)
-    fun create(newProject: org.kravbank.dao.ProjectForm): Project {
-        val project = org.kravbank.dao.ProjectForm().toEntity(newProject)
+    fun create(newProject: ProjectForm): Project {
+        val project = ProjectForm().toEntity(newProject)
         projectRepository.createProject(project)
         return project
     }
 
+    @Throws(BackendException::class)
     fun delete(projcetRef: String): Project {
         val foundProject = projectRepository.findByRef(projcetRef)
-        projectRepository.deleteProject(foundProject.id)
-        return foundProject
+        val deleted = projectRepository.deleteProject(foundProject.id)
+        if (deleted) return foundProject
+        throw BadRequestException("Bad request! Did not delete project")
     }
 
     @Throws(BackendException::class)

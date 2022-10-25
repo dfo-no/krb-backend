@@ -50,10 +50,9 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
     ): Response {
         val publication = publicationService.delete(projectRef, publicationRef)
-
-        //val form = PublicationForm().fromEntity(publication)
+        val form = PublicationForm().fromEntity(publication)
         // returnerer slettet publication ref i body
-        return Response.ok(publication.ref).build()
+        return Response.ok(form.ref).build()
     }
 
     @PUT

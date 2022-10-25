@@ -32,10 +32,10 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
     ): Response {
-        val codesDTO = codeService.list(projectRef, codelistRef)
+        val form = codeService.list(projectRef, codelistRef)
             .stream()
             .map(CodeForm()::fromEntity).toList()
-        return Response.ok(codesDTO).build()
+        return Response.ok(form).build()
 
     }
 

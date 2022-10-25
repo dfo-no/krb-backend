@@ -7,15 +7,14 @@ import org.kravbank.utils.Mapper
 class RequirementForm() : Mapper<RequirementForm, Requirement> {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-     var ref: String = ""
+    var ref: String = ""
 
     lateinit var title: String
 
     lateinit var description: String
 
-   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // denne gir feil i integrasjonstesten pga. den ikke deserialiserer
     var needRef: String = ""
-
 
     override fun toEntity(domain: RequirementForm): Requirement = Requirement().apply {
         title = domain.title
