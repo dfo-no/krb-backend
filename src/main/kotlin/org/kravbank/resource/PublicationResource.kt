@@ -30,7 +30,8 @@ class PublicationResource(val publicationService: PublicationService) {
     fun listPublications(@PathParam("projectref") projectRef: String): Response {
         val form = publicationService.list(projectRef)
             .stream()
-            .map(PublicationForm()::fromEntity).toList()
+            .map(PublicationForm()::fromEntity)
+            .toList()
         return Response.ok(form).build()
     }
 

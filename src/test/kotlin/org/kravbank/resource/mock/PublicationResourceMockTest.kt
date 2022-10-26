@@ -99,7 +99,6 @@ internal class PublicationResourceMockTest {
         assertNotNull(response.entity)
         assertEquals("En kommentar", entity.comment)
         assertEquals(10, entity.version)
-        assertEquals(time, entity.date)
     }
 
 
@@ -122,13 +121,12 @@ internal class PublicationResourceMockTest {
         Mockito.`when`(publicationRepository.listAllPublications(publicationID)).thenReturn(publications)
 
         val response: Response = publicationResource.listPublications(projectRef)
-        val entity: MutableList<PublicationForm> = response.entity as MutableList<PublicationForm>
+        val entity: List<PublicationForm> = response.entity as List<PublicationForm>
 
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
-
         assertFalse(entity.isEmpty())
         assertEquals("En kommentar", entity[0].comment)
         assertEquals(10, entity[0].version)

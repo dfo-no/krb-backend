@@ -27,9 +27,6 @@ internal class CodelistResourceMockTest {
 
     //entity
     var codelist: Codelist = Codelist()
-    var codelist_2: Codelist = Codelist()
-    var codelist_3: Codelist = Codelist()
-
     var project: Project = Project()
     var code: Code = Code()
     var publication: Publication = Publication()
@@ -45,15 +42,24 @@ internal class CodelistResourceMockTest {
     var publications: MutableList<Publication> = mutableListOf()
     var products: MutableList<Product> = mutableListOf()
 
+    //
+
+
     @BeforeEach
     fun setUp() {
 
+
         //arrange
+
+        val projectId: Long = 120L
+        val projectRef: String = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
+        val codelistRef: String = "hello243567"
+
         project = Project()
         project.title = "første prosjekt"
         project.description = "første prosjekt beskrivelse"
-        project.ref = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
-        project.id = 120
+        project.ref = projectRef
+        project.id = projectId
         project.codelist = codelists
         project.requirements = requirements
         project.publications = publications
@@ -68,7 +74,7 @@ internal class CodelistResourceMockTest {
         codelist = Codelist()
         codelist.title = "Første codelist"
         codelist.description = "første codelist beskrivelse"
-        codelist.ref = "hello243567"
+        codelist.ref = codelistRef
         codelist.project = project
         codelist.codes = codes
         codelist.id = (1L)
@@ -89,12 +95,10 @@ internal class CodelistResourceMockTest {
         publication = Publication()
         requirement = Requirement()
 
-        //add to list
         codelists.add(codelist)
         codes.add(code)
         products.add(product)
         needs.add(need)
-
     }
 
     @Test
@@ -111,8 +115,7 @@ internal class CodelistResourceMockTest {
         )
             .thenReturn(codelist)
 
-        val response: Response =
-            codelistResource.getCodelistByRef(projectRef, codelistRef)
+        val response: Response = codelistResource.getCodelistByRef(projectRef, codelistRef)
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
@@ -149,16 +152,17 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun listCodelists_OK() {
+
         //arrange
-        val id = 1L
-        val ref = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
+        val projectId = 3L
+        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
         //mock
-        Mockito.`when`(codelistRepository.listAllCodelists(id)).thenReturn(codelists)
-        val response: Response = codelistResource.listCodelists(ref)
+        Mockito.`when`(codelistRepository.listAllCodelists(projectId)).thenReturn(codelists)
+        val response: Response = codelistResource.listCodelists(projectRef)
 
         //map
-        val entity: MutableList<CodelistForm> = response.entity as MutableList<CodelistForm>
+        val entity: List<CodelistForm> = response.entity as List<CodelistForm>
 
         //assert
         assertNotNull(response)
@@ -171,6 +175,7 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun createCodelist_OK() {
+
         //arrange
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
 
@@ -189,6 +194,7 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun createCodelist_KO() {
+
         //arrange
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val form = CodelistForm()
@@ -230,12 +236,13 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun deleteCodelist_OK() {
+
         val projectId = 3L
         val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val ref = "dsfdsgs<'fåowi39543tdsf"
 
-        codelist_3 = Codelist()
+        val codelist_3 = Codelist()
         codelist_3.title = "Første codelist"
         codelist_3.description = "første codelist beskrivelse"
         codelist_3.ref = ref

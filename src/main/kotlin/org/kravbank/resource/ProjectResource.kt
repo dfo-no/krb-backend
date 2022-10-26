@@ -28,10 +28,11 @@ class ProjectResource(val projectService: ProjectService) {
 
     @GET
     fun listProjects(): Response {
-        val formList = projectService.list()
+        val form = projectService.list()
             .stream()
-            .map(ProjectForm()::fromEntity).toList()
-        return Response.ok(formList).build()
+            .map(ProjectForm()::fromEntity)
+            .toList()
+        return Response.ok(form).build()
     }
 
     @Transactional

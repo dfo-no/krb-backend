@@ -21,8 +21,8 @@ class ProductResource(val productService: ProductService) {
     @GET
     @Path("/{productref}")
     fun getProduct(
-        @PathParam("productref") productref: String,
         @PathParam("projectRef") projectRef: String,
+        @PathParam("productref") productref: String,
     ): Response {
         val product = productService.get(projectRef, productref)
         val form = ProductForm().fromEntity(product)
@@ -31,10 +31,11 @@ class ProductResource(val productService: ProductService) {
 
     @GET
     fun listProducts(@PathParam("projectRef") projectRef: String): Response {
-        val productsDTO = productService.list(projectRef)
+        val form = productService.list(projectRef)
             .stream()
-            .map(ProductForm()::fromEntity).toList()
-        return Response.ok(productsDTO).build()
+            .map(ProductForm()::fromEntity)
+            .toList()
+        return Response.ok(form).build()
     }
 
     @Transactional
@@ -49,14 +50,14 @@ class ProductResource(val productService: ProductService) {
     @DELETE
     @Path("/{productref}")
     @Transactional
-    fun deleteProdudctById(
+    fun deleteProduct(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String
     ): Response {
         val product = productService.delete(projectRef, productref)
-        val productDTO = ProductForm().fromEntity(product)
+        val form = ProductForm().fromEntity(product)
         // returnerer slettet product ref i body
-        return Response.ok(productDTO.ref).build()
+        return Response.ok(form.ref).build()
     }
 
     @PUT

@@ -25,7 +25,7 @@ class CodelistRepository : PanacheRepository<Codelist> {
 
     @Throws(BackendException::class)
     fun listAllCodelists(id: Long): List<Codelist> {
-        return find("project_id_fk", id).stream<Codelist?>().toList()
+        return find("project_id_fk", id).list<Codelist>()
     }
 
     @Throws(BackendException::class)

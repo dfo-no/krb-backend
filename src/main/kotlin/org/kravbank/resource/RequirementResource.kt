@@ -30,7 +30,8 @@ class RequirementResource(val requirementService: RequirementService) {
     fun listRequirements(@PathParam("projectRef") projectRef: String): Response {
         val form = requirementService.list(projectRef)
             .stream()
-            .map(RequirementForm()::fromEntity).toList()
+            .map(RequirementForm()::fromEntity)
+            .toList()
         return Response.ok(form).build()
     }
 

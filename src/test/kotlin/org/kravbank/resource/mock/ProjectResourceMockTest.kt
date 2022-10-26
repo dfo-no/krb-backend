@@ -141,7 +141,6 @@ internal class ProjectResourceMockTest {
         }
     }
 
-
     @Test
     fun listProjects_OK() {
 
@@ -150,8 +149,7 @@ internal class ProjectResourceMockTest {
         val response: Response = projectResource.listProjects()
 
         //map
-        val entity: MutableList<org.kravbank.dao.ProjectForm> = response.entity as MutableList<org.kravbank.dao.ProjectForm>
-
+        val entity: List<ProjectForm> = response.entity as List<ProjectForm>
 
         //assert
         assertNotNull(response)
@@ -183,6 +181,7 @@ internal class ProjectResourceMockTest {
         assertEquals(Response.Status.CREATED.statusCode, response.status);
     }
 
+    /*
     @Test
     fun createProject_KO() {
 
@@ -190,6 +189,7 @@ internal class ProjectResourceMockTest {
 
     }
 
+     */
 
     @Test
     fun deleteProject_OK() {

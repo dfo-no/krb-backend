@@ -139,7 +139,7 @@ internal class NeedResourceMockTest {
         Mockito.`when`(needRepository.listAllNeeds(projectId)).thenReturn(needs)
 
         val response: Response = needResource.listNeeds(projectRef)
-        val entity: MutableList<NeedForm> = response.entity as MutableList<NeedForm>
+        val entity: List<NeedForm> = response.entity as List<NeedForm>
 
         //assert
         assertNotNull(response)

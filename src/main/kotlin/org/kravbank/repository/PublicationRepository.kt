@@ -8,6 +8,7 @@ import org.kravbank.lang.NotFoundException
 import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import kotlin.streams.toList
 
 @ApplicationScoped
 class PublicationRepository : PanacheRepository<Publication> {
@@ -25,7 +26,10 @@ class PublicationRepository : PanacheRepository<Publication> {
     }
 
     fun listAllPublications(id: Long): List<Publication> {
-        return find("project_id_fk", id).list<Publication>().filter { p -> p.deletedDate == null }
+        return find("project_id_fk", id)
+            .stream<Publication>()
+            .filter { p -> p.deletedDate == null }
+            .toList()
     }
 
     @Throws(BackendException::class)

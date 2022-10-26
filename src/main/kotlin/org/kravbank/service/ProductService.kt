@@ -3,6 +3,7 @@ package org.kravbank.service
 import org.kravbank.dao.ProductForm
 import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementVariantRepository
@@ -44,8 +45,9 @@ class ProductService(
     fun delete(projectRef: String, productRef: String): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
-        productRepository.deleteProduct(foundProduct.id)
-        return foundProduct
+        val deleted = productRepository.deleteProduct(foundProduct.id)
+        if (deleted) return foundProduct
+        else throw BadRequestException("Bad request! Product was not deleted!")
     }
 
     @Throws(BackendException::class)

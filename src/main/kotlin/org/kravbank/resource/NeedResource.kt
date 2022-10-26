@@ -31,7 +31,8 @@ class NeedResource(val needService: NeedService) {
     fun listNeeds(@PathParam("projectRef") projectRef: String): Response {
         val form = needService.list(projectRef)
             .stream()
-            .map(NeedForm()::fromEntity).toList()
+            .map(NeedForm()::fromEntity)
+            .toList()
         return Response.ok(form).build()
     }
 

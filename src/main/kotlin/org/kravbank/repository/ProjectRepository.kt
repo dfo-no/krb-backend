@@ -21,7 +21,10 @@ class ProjectRepository : PanacheRepository<Project> {
     }
 
     fun listAllProjects(): List<Project> {
-       return findAll().stream<Project?>().filter {p -> p.deletedDate == null }.toList()
+       return findAll()
+           .stream<Project>()
+           .filter {p -> p.deletedDate == null }
+           .toList()
     }
 
     @Throws(BackendException::class)

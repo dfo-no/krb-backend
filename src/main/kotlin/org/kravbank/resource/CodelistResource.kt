@@ -29,8 +29,9 @@ class CodelistResource(val codelistService: CodelistService) {
     fun listCodelists(
         @PathParam("projectRef") projectRef: String
     ): Response {
-        val form = codelistService.list(projectRef).stream()
-            .map(CodelistForm()::fromEntity).toList()
+        val form = codelistService.list(projectRef)
+            .stream()
+            .map(CodelistForm()::fromEntity)
             .toList()
         return Response.ok(form).build()
     }

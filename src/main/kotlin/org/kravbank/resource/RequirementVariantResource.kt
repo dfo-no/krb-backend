@@ -35,7 +35,8 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     ): Response {
         val form = requirementVariantService.list(projectRef, requirementRef)
             .stream()
-            .map(RequirementVariantForm()::fromEntity).toList()
+            .map(RequirementVariantForm()::fromEntity)
+            .toList()
         return Response.ok(form).build()
     }
 

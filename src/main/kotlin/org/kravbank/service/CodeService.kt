@@ -24,7 +24,7 @@ class CodeService(
 
     // @CacheResult(cacheName = "code-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String, codelistRef: String): MutableList<Code> {
+    fun list(projectRef: String, codelistRef: String): List<Code> {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         return codeRepository.listAllCodes(foundCodelist.id)

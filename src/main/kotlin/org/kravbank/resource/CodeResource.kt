@@ -9,7 +9,6 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 import kotlin.streams.toList
 
-
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
@@ -34,7 +33,8 @@ class CodeResource(val codeService: CodeService) {
     ): Response {
         val form = codeService.list(projectRef, codelistRef)
             .stream()
-            .map(CodeForm()::fromEntity).toList()
+            .map(CodeForm()::fromEntity)
+            .toList()
         return Response.ok(form).build()
 
     }

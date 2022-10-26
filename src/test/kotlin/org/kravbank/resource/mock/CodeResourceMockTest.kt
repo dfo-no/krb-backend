@@ -59,6 +59,7 @@ internal class CodeResourceMockTest {
 
         code = Code()
         code.id = 101
+        code.ref = "dsafdsjkl823jhkfkjdhkjl"
         code.title = "Tittel kode"
         code.description = "beskrivelse kode"
         code.codelist = codelist
@@ -136,12 +137,9 @@ internal class CodeResourceMockTest {
         val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
         //mock
-        Mockito.`when`(
-            codeRepository.findByRef(
-                projectId,
-                codelistRef
-            )
-        ).thenThrow(NotFoundException("Code was not found!"))
+        Mockito
+            .`when`(codeRepository.findByRef(projectId, codelistRef))
+            .thenThrow(NotFoundException("Code was not found!"))
         try {
             codeResource.listCodes(projectRef, codelistRef).entity as NotFoundException
         } catch (e: Exception) {
@@ -166,7 +164,7 @@ internal class CodeResourceMockTest {
         val response: Response = codeResource.listCodes(projectRef, codelistRef)
 
         //map
-        val entity: MutableList<CodeForm> = response.entity as MutableList<CodeForm>
+        val entity: List<CodeForm> = response.entity as List<CodeForm>
 
         //assert
         assertNotNull(response)
@@ -240,12 +238,15 @@ internal class CodeResourceMockTest {
         val codeRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
 
         //mock
-        Mockito.`when`(codeRepository.deleteCode(codelistId, codeRef)).thenReturn(code)
+        Mockito
+            .`when`(codeRepository.deleteCode(codelistId, codeRef))
+            .thenReturn(code)
+
         val response: Response = codeResource.deleteCode(projectRef, codelistRef, codeRef)
 
         //assert
         assertNotNull(response)
-        assertEquals("4ca84e9e-f396-4fcc-81b2-1a021b52395b", response.entity.toString())
+        assertEquals("dsafdsjkl823jhkfkjdhkjl", response.entity.toString())
     }
 
 

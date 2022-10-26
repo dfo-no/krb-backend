@@ -23,7 +23,7 @@ class RequirementService(
 
     // @CacheResult(cacheName = "requirement-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String): MutableList<Requirement> {
+    fun list(projectRef: String): List<Requirement> {
         val foundProject = projectRepository.findByRef(projectRef)
         return requirementRepository.listAllRequirements(foundProject.id)
     }
