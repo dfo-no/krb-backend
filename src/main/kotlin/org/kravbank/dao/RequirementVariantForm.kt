@@ -22,7 +22,8 @@ class RequirementVariantForm() : Mapper<RequirementVariantForm, RequirementVaria
     var useQualification: Boolean = false
 
 
-    override fun toEntity(domain: RequirementVariantForm): RequirementVariant = RequirementVariant().apply {
+    override fun toEntity(domain: RequirementVariantForm): RequirementVariant =
+        RequirementVariant().apply {
         description = domain.description
         requirementText = domain.requirementText
         instruction = domain.instruction

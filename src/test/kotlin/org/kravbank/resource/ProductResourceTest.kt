@@ -8,7 +8,6 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.ProductForm
 
-
 @QuarkusTest
 @QuarkusIntegrationTest
 class ProductResourceTest {
@@ -41,20 +40,6 @@ class ProductResourceTest {
         form.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
         form.requirementVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
 
-/*
-        val product = ProductForm().toEntity(form)
-        val rv = RequirementVariant()
-        rv.description = "Integrasjonstest rv desc"
-        rv.requirementText = "Integrasjonstest rv reqtext"
-        rv.instruction = "Integrasjonstest rv instruction"
-        rv.useProduct = true
-        rv.useSpesification = true
-        rv.useQualification = true
-
-        product.requirementvariant = rv
-
-
- */
         given()
             .`when`()
             .body(form)

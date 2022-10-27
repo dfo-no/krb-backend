@@ -1,4 +1,3 @@
-
 --PROJECT
 insert into Project("id",title, description, deleteddate, ref)
 values(1,'Prosjekt1', 'Beskrivelse1',null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
@@ -13,9 +12,7 @@ values(24,'ScriptProsjekt5', 'Beskrivelse3',null, 'prosjekt5-edb2-431f-855a-4368
 insert into Project("id",title, description, deleteddate, ref)
 values(26,'ScriptProsjekt6', 'Beskrivelse3',null, 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
 
-
 --CODELIST
-
 insert into Codelist("id",title, description,  ref, project_id_fk)
 values(4,'CodelistTittel1', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
 insert into Codelist("id",title, description,  ref, project_id_fk)
@@ -27,28 +24,11 @@ values(25,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-
 insert into Codelist("id",title, description,  ref, project_id_fk)
 values(27,'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist33333db69-edb2-431f-855a-4368e2bcddd1', 26);
 
-
--- insert into project_codelist(project_id, codelist_id)
--- values(3,4);
--- insert into project_codelist(project_id, codelist_id)
--- values(3,5);
--- insert into project_codelist(project_id, codelist_id)
--- values(22,21);
--- insert into project_codelist(project_id, codelist_id)
--- values(24,25);
--- insert into project_codelist(project_id, codelist_id)
--- values(26,27);
-
 -- PUBLICATION
 insert into Publication("id",comment, version, date,  ref, deleteddate, project_id_fk)
 values(8,'comment1', 2, '2020-09-29 21:17:30.23195','zzz4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
 insert into Publication("id",comment, version, date,  ref, deleteddate, project_id_fk)
 values(9,'comment2', 4, '1999-09-10 21:17:30.23195','xxx4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
-
--- insert into project_publication(project_id, publications_id)
--- values(3,8);
--- insert into project_publication(project_id, publications_id)
--- values(3,9);
 
 -- NEED
 insert into Need("id",title, description, ref, project_id_fk)
@@ -56,22 +36,11 @@ values(10,'Need tittel fra script', 'Need beskrivelse fra script','need1b69-edb2
 insert into Need("id",title, description, ref, project_id_fk )
 values(11,'Need tittel fra script #2', 'Need beskrivelse fra script #2','need2b69-edb2-431f-855a-4368e2bcddd1', 2);
 
--- insert into project_need(project_id, needs_id)
--- values(2,10);
--- insert into project_need(project_id, needs_id)
--- values(2,11);
-
 -- REQUIREMENT
 insert into Requirement("id",title, description, ref, project_id_fk, need_id_fk)
 values(12,'Requirement tittel fra script', 'Requirement beskrivelse fra script','req1b69-edb2-431f-855a-4368e2bcddd1', 2, 10);
 insert into Requirement("id",title, description, ref, project_id_fk, need_id_fk)
 values(13,'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2','reqd2b69-edb2-431f-855a-4368e2bcddd1', 2, 10);
-
--- insert into project_requirement(project_id, requirements_id)
--- values(2,12);
--- insert into project_requirement(project_id, requirements_id)
--- values(2,13);
-
 
 --REQUIREMENT VARIANT
 insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification, requirement_id_fk)
@@ -81,16 +50,6 @@ values(15,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv2b
 insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespesification, requirement_id_fk)
 values(16,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv3b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
 
--- insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
--- values(12,14);
--- insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
--- values(12,15);
--- insert into requirement_requirementvariant(requirement_id, requirementvariants_id)
--- values(12,16);
-
-
-
-
 -- PRODUCT
 insert into product("id",title, description,  ref, deleteddate, project_id_fk, requirementvariant_id_fk)
 values(5,'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', null, 3, 14);
@@ -98,17 +57,6 @@ insert into Product("id",title, description,  ref, deleteddate, project_id_fk,re
 values(6,'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', null, 3, 14);
 insert into Product("id",title, description,  ref, deleteddate, project_id_fk, requirementvariant_id_fk)
 values(7,'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', null, 1, 14);
-
-
---insert into project_product(project_id, products_id)
---values(3,5);
---insert into project_product(project_id, products_id)
---values(3,6);
--- insert into project_product(project_id, products_id)
--- values(1,7);
-
-
-
 
 -- CODE
 insert into Code("id", title, description, ref, codelist_id_fk)

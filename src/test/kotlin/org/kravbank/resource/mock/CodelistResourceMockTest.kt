@@ -197,10 +197,10 @@ internal class CodelistResourceMockTest {
 
         //arrange
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+
         val form = CodelistForm()
         form.title = "Oppdatert tittel"
         form.description = "desc"
-        //createCodelistDTO.project = project
         form.ref = "8yuhitd6sa5"
 
         val codelist_4 = Codelist()
