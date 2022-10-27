@@ -12,7 +12,7 @@ class Publication : PanacheEntity() {
 
     var comment: String = ""
 
-    var date: LocalDateTime? = null
+    var date: LocalDateTime = LocalDateTime.now()
 
     var version: Long = 0
 
@@ -23,7 +23,6 @@ class Publication : PanacheEntity() {
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-publication")

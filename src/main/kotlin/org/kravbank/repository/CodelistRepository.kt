@@ -7,6 +7,7 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import kotlin.streams.toList
 
 @ApplicationScoped
 class CodelistRepository : PanacheRepository<Codelist> {
@@ -23,8 +24,8 @@ class CodelistRepository : PanacheRepository<Codelist> {
     }
 
     @Throws(BackendException::class)
-    fun listAllCodelists(id: Long): MutableList<Codelist> {
-        return find("project_id_fk", id).list()
+    fun listAllCodelists(id: Long): List<Codelist> {
+        return find("project_id_fk", id).list<Codelist>()
     }
 
     @Throws(BackendException::class)
@@ -50,7 +51,6 @@ class CodelistRepository : PanacheRepository<Codelist> {
             "title = ?1, description = ?2 where id= ?3",
             codelist.title,
             codelist.description,
-            //codelist.deletedDate,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException("Bad request! Codelist did not update") }

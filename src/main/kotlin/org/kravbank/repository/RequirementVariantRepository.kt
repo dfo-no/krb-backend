@@ -7,6 +7,7 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import kotlin.streams.toList
 
 @ApplicationScoped
 class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
@@ -33,8 +34,10 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
 
 
     @Throws(BackendException::class)
-    fun listAllRequirementVariants(id: Long): MutableList<RequirementVariant> {
-        return find("requirement_id_fk", id).list()
+    fun listAllRequirementVariants(id: Long): List<RequirementVariant> {
+        return find("requirement_id_fk", id)
+            .stream<RequirementVariant>()
+            .toList()
     }
 
     @Throws(BackendException::class)
@@ -46,9 +49,9 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
     }
 
     @Throws(BackendException::class)
-    fun deleteRequirementVariant(codelistId: Long, codeRef: String): RequirementVariant {
+    fun deleteRequirementVariant(requirementId: Long, requirementVariantRef: String): RequirementVariant {
         val deleted: Boolean
-        val found = findByRef(codelistId, codeRef)
+        val found = findByRef(requirementId, requirementVariantRef)
         deleted = deleteById(found.id)
         if (!deleted) throw BadRequestException("Bad request! RequirementVariant was not deleted")
         return found

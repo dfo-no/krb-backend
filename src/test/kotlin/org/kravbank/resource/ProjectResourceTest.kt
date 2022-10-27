@@ -6,10 +6,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.form.project.ProjectForm
-import org.kravbank.utils.form.project.ProjectFormUpdate
-import org.kravbank.utils.mapper.project.ProjectMapper
-import org.kravbank.utils.mapper.project.ProjectUpdateMapper
+import org.kravbank.dao.ProjectForm
 
 
 @QuarkusTest
@@ -38,14 +35,15 @@ class ProjectResourceTest {
         RestAssured.baseURI = "http://localhost:8080";
         RestAssured.basePath = "/api/v1/";
 
-        val project = ProjectForm()
-        project.title = "Oppdatert integrasjonstest - Tittel 1"
-        project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
-        val projectMappedForm = ProjectMapper().toEntity(project)
+        val form = ProjectForm()
+        form.title = "POST integrasjonstest - Tittel 1"
+        form.description = "POST integrasjonstest - Beskrivelse 1"
+
+        val project = ProjectForm().toEntity(form)
 
         given()
             .`when`()
-            .body(projectMappedForm)
+            .body(project)
             .header("Content-type", "application/json")
             .post("/projects")
             .then()
@@ -66,14 +64,15 @@ class ProjectResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects";
 
-        val project = ProjectFormUpdate()
-        project.title = "Oppdatert integrasjonstest - Tittel 1"
-        project.description = "Oppdatert integrasjonstest - Beskrivelse 1"
+        val form = ProjectForm()
+        form.title = "Oppdatert integrasjonstest - Tittel 1"
+        form.description = "Oppdatert integrasjonstest - Beskrivelse 1"
 
-        val projectMappedForm = ProjectUpdateMapper().toEntity(project)
+        val project = ProjectForm().toEntity(form)
+
         given()
             .`when`()
-            .body(projectMappedForm)
+            .body(project)
             .header("Content-type", "application/json")
             .put("/bbb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()

@@ -6,9 +6,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.utils.form.product.ProductFormCreate
-import org.kravbank.utils.form.product.ProductFormUpdate
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
+import org.kravbank.dao.ProductForm
 
 @QuarkusTest
 @QuarkusIntegrationTest
@@ -37,16 +35,16 @@ class ProductResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val productDTO = ProductFormCreate()
-        productDTO.title = "PRODUCT Integrasjonstest - Tittel 1"
-        productDTO.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
-        productDTO.requirementvariant = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+        val form = ProductForm()
+        form.title = "PRODUCT Integrasjonstest - Tittel 1"
+        form.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
+        form.requirementVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
 
         given()
             .`when`()
-            .body(productDTO)
+            .body(form)
             .header("Content-type", "application/json")
-            .post("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
+            .post("/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
             .then()
             .statusCode(201)
     }
@@ -66,14 +64,15 @@ class ProductResourceTest {
         RestAssured.baseURI = "http://localhost:8080"
         RestAssured.basePath = "/api/v1/projects"
 
-        val product = ProductFormUpdate()
-        product.title = "Oppdatert integrasjonstest produkt - Tittel 1"
-        product.description = "Oppdatert integrasjonstest produkt - Beskrivelse 1"
-        val productMapper = ProductUpdateMapper().toEntity(product)
+        val form = ProductForm()
+        form.title = "PUT Integrasjonstest - Tittel 1"
+        form.description = "PUT Integrasjonstest - Beskrivelse 1"
+
+        val product = ProductForm().toEntity(form)
 
         given()
             .`when`()
-            .body(productMapper)
+            .body(product)
             .header("Content-type", "application/json")
             .put("/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()

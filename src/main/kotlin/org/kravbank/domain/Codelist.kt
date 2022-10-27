@@ -14,7 +14,7 @@ class Codelist : PanacheEntity() {
     var description: String = ""
 
     @Column(unique = true)
-    var ref: String = ""
+    var ref: String = UUID.randomUUID().toString()
 
     @OneToMany(
         mappedBy = ("codelist"),
@@ -27,8 +27,7 @@ class Codelist : PanacheEntity() {
 
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-codelist")

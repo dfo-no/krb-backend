@@ -1,10 +1,7 @@
 package org.kravbank.resource;
 
-import org.kravbank.utils.form.need.NeedForm
-import org.kravbank.utils.form.need.NeedFormUpdate
+import org.kravbank.dao.NeedForm
 import org.kravbank.service.NeedService
-import org.kravbank.utils.mapper.need.NeedMapper
-import org.kravbank.utils.mapper.need.NeedUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional;
@@ -26,16 +23,17 @@ class NeedResource(val needService: NeedService) {
         @PathParam("needRef") needRef: String
     ): Response {
         val need = needService.get(projectRef, needRef)
-        val needDTO = NeedMapper().fromEntity(need)
-        return Response.ok(needDTO).build()
+        val form = NeedForm().fromEntity(need)
+        return Response.ok(form).build()
     }
 
     @GET
-    fun listPublications(@PathParam("projectRef") projectRef: String): Response {
-        val needsDTO = needService.list(projectRef)
+    fun listNeeds(@PathParam("projectRef") projectRef: String): Response {
+        val form = needService.list(projectRef)
             .stream()
-            .map(NeedMapper()::fromEntity).toList()
-        return Response.ok(needsDTO).build()
+            .map(NeedForm()::fromEntity)
+            .toList()
+        return Response.ok(form).build()
     }
 
     @Transactional
@@ -55,9 +53,9 @@ class NeedResource(val needService: NeedService) {
         @PathParam("needRef") needRef: String
     ): Response {
         val need = needService.delete(projectRef, needRef)
-        val needDTO = NeedMapper().fromEntity(need)
+        val form = NeedForm().fromEntity(need)
         // returnerer slettet need ref i body
-        return Response.ok(needDTO.ref).build()
+        return Response.ok(form.ref).build()
     }
 
     @PUT
@@ -66,10 +64,10 @@ class NeedResource(val needService: NeedService) {
     fun updateNeed(
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String,
-        updatedNeed: NeedFormUpdate
+        updatedNeed: NeedForm
     ): Response {
         val need = needService.update(projectRef, needRef, updatedNeed)
-        val needUpdateDTO = NeedUpdateMapper().fromEntity(need)
-        return Response.ok(needUpdateDTO).build()
+        val form = NeedForm().fromEntity(need)
+        return Response.ok(form).build()
     }
 }

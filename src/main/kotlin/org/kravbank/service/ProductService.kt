@@ -1,18 +1,12 @@
 package org.kravbank.service
 
-import io.quarkus.cache.CacheResult
+import org.kravbank.dao.ProductForm
 import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
-import org.kravbank.utils.form.product.ProductForm
-import org.kravbank.utils.form.product.ProductFormUpdate
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
-import org.kravbank.utils.form.product.ProductFormCreate
-import org.kravbank.utils.mapper.product.ProductCreateMapper
-import org.kravbank.utils.mapper.product.ProductMapper
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -20,9 +14,6 @@ class ProductService(
     val productRepository: ProductRepository,
     val projectRepository: ProjectRepository,
     val requirementVariantRepository: RequirementVariantRepository,
-    val requirementService: RequirementService,
-    val requirementVariantService: RequirementVariantService
-
 ) {
 
     // @CacheResult(cacheName = "product-cache-get")
@@ -40,11 +31,11 @@ class ProductService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, newProduct: ProductFormCreate): Product {
+    fun create(projectRef: String, newProduct: ProductForm): Product {
         val foundProject = projectRepository.findByRef(projectRef)
-        newProduct.project = foundProject
-        val product = ProductCreateMapper().toEntity(newProduct)
-        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementvariant)
+        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementVariantRef)
+        val product = ProductForm().toEntity(newProduct)
+        product.project = foundProject
         product.requirementvariant = foundReqVariant
         productRepository.createProduct(product)
         return product
@@ -54,16 +45,17 @@ class ProductService(
     fun delete(projectRef: String, productRef: String): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
-        productRepository.deleteProduct(foundProduct.id)
-        return foundProduct
+        val deleted = productRepository.deleteProduct(foundProduct.id)
+        if (deleted) return foundProduct
+        else throw BadRequestException("Bad request! Product was not deleted!")
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, productRef: String, updatedProduct: ProductFormUpdate): Product {
+    fun update(projectRef: String, productRef: String, updatedProduct: ProductForm): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
-        val product = ProductUpdateMapper().toEntity(updatedProduct)
-        productRepository.updateProduct(foundProduct.id, product)
-        return product
+        val update = ProductForm().toEntity(updatedProduct)
+        productRepository.updateProduct(foundProduct.id, update)
+        return update.apply { ref = foundProduct.ref }
     }
 }

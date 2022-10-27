@@ -1,10 +1,7 @@
 package org.kravbank.resource
 
-import org.kravbank.utils.form.product.ProductFormUpdate
+import org.kravbank.dao.ProductForm
 import org.kravbank.service.ProductService
-import org.kravbank.utils.form.product.ProductFormCreate
-import org.kravbank.utils.mapper.product.ProductMapper
-import org.kravbank.utils.mapper.product.ProductUpdateMapper
 import java.net.URI
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
@@ -24,25 +21,26 @@ class ProductResource(val productService: ProductService) {
     @GET
     @Path("/{productref}")
     fun getProduct(
-        @PathParam("productref") productref: String,
         @PathParam("projectRef") projectRef: String,
+        @PathParam("productref") productref: String,
     ): Response {
         val product = productService.get(projectRef, productref)
-        val productDTO = ProductMapper().fromEntity(product)
-        return Response.ok(productDTO).build()
+        val form = ProductForm().fromEntity(product)
+        return Response.ok(form).build()
     }
 
     @GET
     fun listProducts(@PathParam("projectRef") projectRef: String): Response {
-        val productsDTO = productService.list(projectRef)
+        val form = productService.list(projectRef)
             .stream()
-            .map(ProductMapper()::fromEntity).toList()
-        return Response.ok(productsDTO).build()
+            .map(ProductForm()::fromEntity)
+            .toList()
+        return Response.ok(form).build()
     }
 
     @Transactional
     @POST
-    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductFormCreate): Response {
+    fun createProduct(@PathParam("projectRef") projectRef: String, newProduct: ProductForm): Response {
         val product = productService.create(projectRef, newProduct)
         //returnerer nytt product ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/products/" + product.ref))
@@ -52,14 +50,14 @@ class ProductResource(val productService: ProductService) {
     @DELETE
     @Path("/{productref}")
     @Transactional
-    fun deleteProdudctById(
+    fun deleteProduct(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String
     ): Response {
         val product = productService.delete(projectRef, productref)
-        val productDTO = ProductMapper().fromEntity(product)
+        val form = ProductForm().fromEntity(product)
         // returnerer slettet product ref i body
-        return Response.ok(productDTO.ref).build()
+        return Response.ok(form.ref).build()
     }
 
     @PUT
@@ -68,10 +66,10 @@ class ProductResource(val productService: ProductService) {
     fun updateProduct(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String,
-        updatedProduct: ProductFormUpdate
+        updatedProduct: ProductForm
     ): Response {
         val product = productService.update(projectRef, productref, updatedProduct)
-        val productUpdateDTO = ProductUpdateMapper().fromEntity(product)
+        val productUpdateDTO = ProductForm().fromEntity(product)
         return Response.ok(productUpdateDTO).build()
     }
 }

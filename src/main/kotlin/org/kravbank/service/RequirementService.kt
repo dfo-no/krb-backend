@@ -1,19 +1,12 @@
 package org.kravbank.service
 
+import org.kravbank.dao.RequirementForm
 import org.kravbank.domain.Requirement
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.form.requirement.RequirementForm
-import org.kravbank.utils.form.requirement.RequirementFormUpdate
 import org.kravbank.repository.RequirementRepository
-import org.kravbank.utils.form.requirement.RequirementFormCreate
-import org.kravbank.utils.mapper.requirement.RequirementCreateMapper
-import org.kravbank.utils.mapper.requirement.RequirementMapper
-import org.kravbank.utils.mapper.requirement.RequirementUpdateMapper
-import java.net.URI
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class RequirementService(
@@ -30,18 +23,22 @@ class RequirementService(
 
     // @CacheResult(cacheName = "requirement-cache-list")
     @Throws(BackendException::class)
-    fun list(projectRef: String): MutableList<Requirement> {
+    fun list(projectRef: String): List<Requirement> {
         val foundProject = projectRepository.findByRef(projectRef)
         return requirementRepository.listAllRequirements(foundProject.id)
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, newRequirement: RequirementFormCreate): Requirement {
+    fun create(projectRef: String, newRequirement: RequirementForm): Requirement {
         val project = projectRepository.findByRef(projectRef)
-        newRequirement.project = project
-        val need = newRequirement.need
-        val foundNeed = needRepository.findByRefRequirement(need)
-        val requirement = RequirementCreateMapper().toEntity(newRequirement)
+        print("NEED FROM SERVICE-FORM-DAO ${newRequirement.needRef}\n\n\n")
+
+        val foundNeed = needRepository.findByRefRequirement(newRequirement.needRef)
+
+        println("NEED FROM SERVICE-REPO: $foundNeed\n\n\n")
+
+        val requirement = RequirementForm().toEntity(newRequirement)
+        requirement.project = project
         requirement.need = foundNeed
         requirementRepository.createRequirement(requirement)
         return requirement
@@ -54,11 +51,11 @@ class RequirementService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, requirementRef: String, updatedRequirement: RequirementFormUpdate): Requirement {
+    fun update(projectRef: String, requirementRef: String, updatedRequirement: RequirementForm): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
-        val requirement = RequirementUpdateMapper().toEntity(updatedRequirement)
-        requirementRepository.updateRequirement(foundRequirement.id, requirement)
-        return requirement
+        val update = RequirementForm().toEntity(updatedRequirement)
+        requirementRepository.updateRequirement(foundRequirement.id, update)
+        return update.apply { ref = foundRequirement.ref }
     }
 }

@@ -8,6 +8,7 @@ import javax.persistence.*
 
 @Entity
 class Code : PanacheEntity() {
+
     var title: String = ""
 
     var description: String = ""
@@ -16,8 +17,7 @@ class Code : PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        //optional = false,
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY
     )
     @JsonManagedReference(value = "value-codes")

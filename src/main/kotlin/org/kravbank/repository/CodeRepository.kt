@@ -7,6 +7,7 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import kotlin.streams.toList
 
 @ApplicationScoped
 class CodeRepository : PanacheRepository<Code> {
@@ -22,8 +23,8 @@ class CodeRepository : PanacheRepository<Code> {
     }
 
     @Throws(BackendException::class)
-    fun listAllCodes(id: Long): MutableList<Code> {
-        return find("codelist_id_fk", id).list()
+    fun listAllCodes(id: Long): List<Code> {
+        return find("codelist_id_fk", id).stream<Code>().toList()
     }
 
     @Throws(BackendException::class)

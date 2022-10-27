@@ -7,6 +7,7 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import kotlin.streams.toList
 
 @ApplicationScoped
 class RequirementRepository : PanacheRepository<Requirement> {
@@ -22,8 +23,10 @@ class RequirementRepository : PanacheRepository<Requirement> {
     }
 
     @Throws(BackendException::class)
-    fun listAllRequirements(id: Long): MutableList<Requirement> {
-        return find("project_id_fk", id).list()
+    fun listAllRequirements(id: Long): List<Requirement> {
+        return find("project_id_fk", id)
+            .stream<Requirement>()
+            .toList()
     }
 
     @Throws(BackendException::class)
@@ -51,7 +54,6 @@ class RequirementRepository : PanacheRepository<Requirement> {
             requirement.description,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Fail! Requirement did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }
     }
-
 }
