@@ -1,7 +1,4 @@
-# README KRAVBANK-BACKEND project
-
-
-## Kjør applikasjon i dev mode
+## Dev mode
 
 Kjør quarkus applikasjonen i dev mode
 
@@ -9,16 +6,15 @@ Kjør quarkus applikasjonen i dev mode
 ./mvnw compile quarkus:dev
 ```
 
+## Bruk av opp lokal PostgreSQL docker som database
 
-## Set opp postgres docker container
-
-Spin opp en postgres container database med samsvarende application.properties fil
+Spin opp en postgres container som samsvarer application.properties configs
+Eksempelvis:
 
 ```shell script
 docker run --name my_db -e POSTGRES_USER=username -e POSTGRES_PASSWORD=password -e POSTGRES_DB=my_db -p 5432:5432 postgres:10.5
 ```
 
+## Bruk av Azure Database for PostgreSQL
 
-## Bruk av postman 
-
-For å teste endpunktene i Postman: Importer DFØ.postman_collection.json fra root i prosjektet
+Opprett .env fil i root med credentials i henhold til applications.properties configs
