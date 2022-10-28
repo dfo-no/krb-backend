@@ -1,11 +1,11 @@
 package org.kravbank.service
 
+import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
-import org.kravbank.dao.PublicationForm
-import org.kravbank.lang.BadRequestException
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 
@@ -14,13 +14,11 @@ class PublicationService(
     val publicationRepository: PublicationRepository,
     val projectRepository: ProjectRepository
 ) {
-    //@CacheResult(cacheName = "publication-cache-get")
     fun get(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
-        return publicationRepository.findByRef(foundProject.id,publicationRef)
+        return publicationRepository.findByRef(foundProject.id, publicationRef)
     }
 
-    //@CacheResult(cacheName = "publication-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): List<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -40,7 +38,7 @@ class PublicationService(
     @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
-        val publication = publicationRepository.findByRef(foundProject.id,publicationRef)
+        val publication = publicationRepository.findByRef(foundProject.id, publicationRef)
         val deleted = publicationRepository.deletePublication(publication.id)
         if (deleted) return publication
         throw BadRequestException("Bad request! Did not delete publication")
@@ -52,6 +50,6 @@ class PublicationService(
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
         val update = PublicationForm().toEntity(updatedPublication)
         publicationRepository.updatePublication(foundPublication.id, update)
-        return update.apply { ref = foundPublication.ref}
+        return update.apply { ref = foundPublication.ref }
     }
 }

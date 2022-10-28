@@ -3,7 +3,8 @@ package org.kravbank.resource.mock
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.NeedForm
@@ -122,11 +123,6 @@ internal class NeedResourceMockTest {
     }
 
     @Test
-    fun getNeed_KO() {
-        assertFalse(true)
-    }
-
-    @Test
     fun listNeeds_OK() {
 
         //arrange
@@ -169,10 +165,6 @@ internal class NeedResourceMockTest {
         assertEquals(Response.Status.CREATED.statusCode, response.status);
     }
 
-    @Test
-    fun createNeed_KO() {
-        assertFalse(true)
-    }
 
     @Test
     fun deleteNeed_OK() {
@@ -188,13 +180,6 @@ internal class NeedResourceMockTest {
 
         assertNotNull(response)
         assertEquals("ewdsfsada567", response.entity.toString())
-
-    }
-
-    @Test
-    fun deleteNeed_KO() {
-
-        assertFalse(true)
 
     }
 
@@ -227,8 +212,36 @@ internal class NeedResourceMockTest {
 
     }
 
-    @Test
-    fun updateNeed_KO() {
+
+    /*
+Todo:
+         Testen(e) kan være nyttig for å teste at feilmeldingene som kastes, behandles på riktig måte.
+         Kommer tilbake til den når jeg finner ut av hvorfor mocking ikke gir riktig verdi / ikke-null
+
+
+     @Test
+     fun createNeed_KO() {
+         assertFalse(true)
+     }
+
+
+     @Test
+     fun getNeed_KO() {
+         assertFalse(true)
+     }
+
+
+     @Test
+     fun deleteNeed_KO() {
         assertFalse(true)
-    }
+     }
+
+
+     @Test
+     fun updateNeed_KO() {
+         assertFalse(true)
+     }
+
+
+      */
 }

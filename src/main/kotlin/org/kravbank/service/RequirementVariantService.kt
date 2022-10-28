@@ -14,7 +14,6 @@ class RequirementVariantService(
     val requirementRepository: RequirementRepository,
     val projectRepository: ProjectRepository
 ) {
-    // @CacheResult(cacheName = "requirementvariant-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, requirementRef: String, reqVariantRef: String): RequirementVariant {
         val project = projectRepository.findByRef(projectRef)
@@ -22,7 +21,6 @@ class RequirementVariantService(
         return requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
     }
 
-    //@CacheResult(cacheName = "requirementvariant-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String, requirementRef: String): List<RequirementVariant> {
         val foundProject = projectRepository.findByRef(projectRef)

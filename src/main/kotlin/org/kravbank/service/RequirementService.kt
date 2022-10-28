@@ -14,14 +14,12 @@ class RequirementService(
     val projectRepository: ProjectRepository,
     val needRepository: NeedRepository
 ) {
-    // @CacheResult(cacheName = "requirement-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, requirementRef: String): Requirement {
         val project = projectRepository.findByRef(projectRef)
         return requirementRepository.findByRef(project.id, requirementRef)
     }
 
-    // @CacheResult(cacheName = "requirement-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): List<Requirement> {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -31,12 +29,7 @@ class RequirementService(
     @Throws(BackendException::class)
     fun create(projectRef: String, newRequirement: RequirementForm): Requirement {
         val project = projectRepository.findByRef(projectRef)
-        print("NEED FROM SERVICE-FORM-DAO ${newRequirement.needRef}\n\n\n")
-
         val foundNeed = needRepository.findByRefRequirement(newRequirement.needRef)
-
-        println("NEED FROM SERVICE-REPO: $foundNeed\n\n\n")
-
         val requirement = RequirementForm().toEntity(newRequirement)
         requirement.project = project
         requirement.need = foundNeed

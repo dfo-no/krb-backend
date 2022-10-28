@@ -5,7 +5,6 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.dao.CodelistForm
 import org.kravbank.dao.RequirementForm
 import org.kravbank.domain.*
 import org.kravbank.lang.NotFoundException
@@ -48,6 +47,14 @@ internal class RequirementResourceMockTest {
 
     val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
 
+    //arrange
+    val projectId = 2L
+    val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+    val requirementId = 12L
+    val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+    val needId = 10L
+    val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
+
     @BeforeEach
     fun setUp() {
 
@@ -68,7 +75,6 @@ internal class RequirementResourceMockTest {
         need.id = 122L
         need.title = "tittel"
         need.description = "desv"
-
 
         requirement = Requirement()
         requirement.ref = "23chgvjkhty87"
@@ -99,16 +105,6 @@ internal class RequirementResourceMockTest {
 
     @Test
     fun getRequirement_OK() {
-
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val needId = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
-
-
         //mock
         Mockito
             .`when`(requirementRepository.findByRef(projectId, requirementRef))
@@ -123,21 +119,11 @@ internal class RequirementResourceMockTest {
         assertNotNull(response.entity)
         assertEquals("Requirement tittel", entity.title)
         assertEquals("Requirement beskrivelse", entity.description)
-        //assertEquals(project, entity.project)
-        //assertEquals(reqVariants, entity.requirementvariants)
-
     }
 
 
     @Test
     fun getRequirement_KO() {
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val needId = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         //mock
         Mockito
@@ -147,22 +133,12 @@ internal class RequirementResourceMockTest {
             requirementResource.getRequirement(projectRef, requirementRef).entity as NotFoundException
         } catch (e: Exception) {
             //assert
-
-            print(e.message)
             assertEquals("Requirement not found!", e.message)
         }
     }
 
     @Test
     fun listRequirements_OK() {
-
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val needId = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
-
         //mock
         Mockito.`when`(requirementRepository.listAllRequirements(projectId)).thenReturn(requirements)
 
@@ -178,25 +154,16 @@ internal class RequirementResourceMockTest {
         assertEquals("Requirement beskrivelse", entity[0].description)
     }
 
-
     @Test
     fun createRequirement_OK() {
-
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val needId = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
-
-
         //mock
-        Mockito.doNothing().`when`(requirementRepository).persist(ArgumentMatchers.any(Requirement::class.java))
-        Mockito.`when`(requirementRepository.isPersistent(ArgumentMatchers.any(Requirement::class.java)))
+        Mockito
+            .doNothing()
+            .`when`(requirementRepository).persist(ArgumentMatchers.any(Requirement::class.java))
+        Mockito
+            .`when`(requirementRepository.isPersistent(ArgumentMatchers.any(Requirement::class.java)))
             .thenReturn(true)
 
-        //map
         val form = RequirementForm().fromEntity(requirement)
         form.needRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
         val response: Response = requirementResource.createRequirement(projectRef, form)
@@ -208,21 +175,8 @@ internal class RequirementResourceMockTest {
 
 
     @Test
-    fun createRequirement_KO() {
-        assertFalse(true)
-    }
-
-    @Test
     fun deleteRequirement_OK() {
-
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val needId = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
-
+        //mock
         Mockito
             .`when`(requirementRepository.deleteRequirement(projectId, requirementRef))
             .thenReturn(requirement)
@@ -231,43 +185,25 @@ internal class RequirementResourceMockTest {
 
         assertNotNull(response)
         assertEquals("23chgvjkhty87", response.entity.toString())
-
     }
-
 
     @Test
     fun deleteRequirement_KO() {
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val needId = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
-
-
-        Mockito.`when`(requirementRepository.deleteRequirement(projectId, requirementRef))
+        //mock
+        Mockito
+            .`when`(requirementRepository.deleteRequirement(projectId, requirementRef))
             .thenThrow(BadRequestException("Bad request! Requirement was not deleted"))
         try {
             requirementResource.deleteRequirement(projectRef, requirementRef).entity as BadRequestException
         } catch (e: Exception) {
-
-            print(e.message)
+            //assert
             assertEquals("Bad request! Requirement was not deleted", e.message)
         }
     }
 
-
     @Test
     fun updateRequirement_OK() {
-
         //arrange
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementID = 8L
-        val requirementRef = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
-        val ref = "dsfdsgs<'fåowi39543tdsf"
-
         val form = RequirementForm()
         form.ref = requirementRef
         form.title = "Oppdatert tittel"
@@ -286,17 +222,9 @@ internal class RequirementResourceMockTest {
         assertEquals("Oppdatert beskrivelse", entity.description)
     }
 
-
     @Test
     fun updateRequirement_KO() {
-
         //arrange
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementID = 8L
-        val requirementRef = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
-        val ref = "dsfdsgs<'fåowi39543tdsf"
-
         val form = RequirementForm()
         form.title = "Oppdatert tittel"
         form.description = "Oppdatert beskrivelse"
@@ -311,4 +239,21 @@ internal class RequirementResourceMockTest {
             assertEquals("Requirement not found", e.message)
         }
     }
+
+    /*
+
+      Todo:
+         KO-testen kan være nyttig for å teste at feilmeldingene som kastes, behandles på riktig måte.
+         Kommer tilbake til den når jeg finner ut av hvorfor mocking ikke gir riktig verdi / ikke-null
+
+
+    @Test
+    fun createRequirement_KO() {
+        assertFalse(true)
+    }
+
+
+ */
+
+
 }

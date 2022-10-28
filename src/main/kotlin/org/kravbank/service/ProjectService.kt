@@ -11,13 +11,11 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
-    // @CacheResult(cacheName = "project-cache-get")
     @Throws(BackendException::class)
     fun get(projcetRef: String): Project {
         return projectRepository.findByRef(projcetRef)
     }
 
-    //@CacheResult(cacheName = "project-cache-list")
     fun list(): List<Project> {
         return projectRepository.listAllProjects()
     }

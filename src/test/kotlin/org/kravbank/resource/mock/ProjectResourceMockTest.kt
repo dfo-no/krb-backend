@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.*
 import org.kravbank.lang.NotFoundException
-import org.kravbank.resource.ProjectResource
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.resource.ProjectResource
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -44,15 +44,20 @@ internal class ProjectResourceMockTest {
     var publications: MutableList<Publication> = mutableListOf()
     var products: MutableList<Product> = mutableListOf()
 
+    //arrange
+    val projectId = 1L
+    val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
+
+    // val projectId = 3L
+    //val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+
+    //val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
 
     @BeforeEach
     fun setUp() {
-
         //arrange
         project.title = "første prosjekt"
         project.description = "første prosjekt beskrivelse"
-        // project.version = 2
-        // project.publishedDate = LocalDateTime.now().minusDays(2)
         project.ref = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
         project.id = 120
         project.codelist = codelists
@@ -60,7 +65,6 @@ internal class ProjectResourceMockTest {
         project.publications = publications
         project.needs = needs
         project.products = products
-        //project.deletedDate = LocalDateTime.now().minusDays(1)
 
         code = Code()
         code.title = "Tittel kode"
@@ -81,37 +85,29 @@ internal class ProjectResourceMockTest {
         product.ref = "34352"
         product.title = "prod"
         product.description = "desc"
-        //product.requirementvariant
-        // product.deletedDate
 
         need = Need()
         need.ref = "ewdsfsada567"
         need.id = 122L
         need.title = "tittel"
         need.description = "desv"
-        //need.requirements =
 
         publication = Publication()
-
-
         requirement = Requirement()
-
-
         projects.add(project)
     }
 
 
     @Test
     fun getProject_OK() {
-
-        //arrange
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
         //mock
-        Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
+        Mockito
+            .`when`(projectRepository.findByRef(projectRef))
+            .thenReturn(project)
+
         val response: Response = projectResource.getProject(projectRef)
-        val entity: Project = org.kravbank.dao.ProjectForm()
-            .toEntity(response.entity as org.kravbank.dao.ProjectForm)
+        val entity: Project = ProjectForm()
+            .toEntity(response.entity as ProjectForm)
 
         //assert
         assertEquals("første prosjekt", entity.title)
@@ -123,20 +119,15 @@ internal class ProjectResourceMockTest {
 
     @Test
     fun getProject_KO() {
-
-
-        //arrange
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
-
         //mock
-        Mockito.`when`(projectRepository.findByRef(projectRef)).thenThrow(NotFoundException("Project not found"))
+        Mockito
+            .`when`(projectRepository.findByRef(projectRef))
+            .thenThrow(NotFoundException("Project not found"))
+
         try {
             projectResource.getProject(projectRef).entity as NotFoundException
         } catch (e: Exception) {
             //assert
-            print(e.message)
             assertEquals("Project not found", e.message)
         }
     }
@@ -163,85 +154,50 @@ internal class ProjectResourceMockTest {
     @Test
     fun createProject_OK() {
 
-
-        //arrange
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-
         //mock
-        Mockito.doNothing().`when`(projectRepository).persist(ArgumentMatchers.any(Project::class.java))
-        Mockito.`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java))).thenReturn(true)
+        Mockito
+            .doNothing()
+            .`when`(projectRepository).persist(ArgumentMatchers.any(Project::class.java))
+        Mockito
+            .`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java)))
+            .thenReturn(true)
 
-
-        //map
-        val projectDTO = org.kravbank.dao.ProjectForm().fromEntity(project)
-        val response: Response = projectResource.createProject(projectDTO)
+        val form = ProjectForm().fromEntity(project)
+        val response: Response = projectResource.createProject(form)
 
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status);
     }
 
-    /*
-    @Test
-    fun createProject_KO() {
-
-        assertTrue(false)
-
-    }
-
-     */
-
-    @Test
-    fun deleteProject_OK() {
-
-        //arrange
-        val projectId = 1L
-        val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
-        val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
-        val ref = "dsfdsgs<'fåowi39543tdsf"
-
-        //Mock
-       Mockito.`when`(projectRepository.deleteProject(projectId)).thenReturn(true)
-       // Mockito.`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java))).thenReturn(false)
-
-        val response: Response = projectResource.deleteProject(projectRef)
-        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
-
-        //assert
-        assertNotNull(entity)
-        assertEquals("bbb4db69-edb2-431f-855a-4368e2bcddd1", entity.ref)
-
-        print(entity)
-    }
 
     @Test
     fun deleteProject_KO() {
-
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
-        Mockito.`when`(projectRepository.findByRef(projectRef))
+        //mock
+        Mockito
+            .`when`(projectRepository.findByRef(projectRef))
             .thenThrow(NotFoundException("Project not found"))
         try {
             projectResource.deleteProject(projectRef).entity as NotFoundException
         } catch (e: Exception) {
-            print(e.message)
             assertEquals("Project not found", e.message)
         }
     }
 
     @Test
     fun updateProject_OK() {
-
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
+        //arrange
         val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
         updateProject.description = "Oppdatert desc"
 
-        Mockito.`when`(projectRepository.findByRef(projectRef)).thenReturn(project)
-
+        //mock
+        Mockito
+            .`when`(projectRepository.findByRef(projectRef))
+            .thenReturn(project)
         val response: Response = projectResource.updateProject(projectRef, updateProject)
 
+        //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
@@ -250,20 +206,56 @@ internal class ProjectResourceMockTest {
 
     @Test
     fun updateProject_KO() {
-
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
+        //arrange
         val updateProject = ProjectForm()
         updateProject.title = "Oppdatert tittel"
 
+        //mock
         Mockito.`when`(projectRepository.findByRef(projectRef))
             .thenThrow(NotFoundException("Project not found"))
 
         try {
             projectResource.updateProject(projectRef, updateProject).entity as NotFoundException
         } catch (e: Exception) {
-            print(e.message)
+            //assert
             assertEquals("Project not found", e.message)
         }
     }
+
+
+    /*
+     todo:
+          Denne testen er nyttig, men kommer tilbake til den når jeg får løst enten med
+          1. mock og assert med bool retur fra repo
+          eller
+          2. endre fra bool til entity retur fra repo
+        @Test
+    fun deleteProject_OK() {
+        //Mock
+        Mockito
+            .`when`(projectRepository.deleteProject(projectId))
+            .thenReturn(true)
+
+        // Mockito.`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java))).thenReturn(false)
+
+        val response: Response = projectResource.deleteProject(projectRef)
+        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
+
+        //assert
+        assertNotNull(entity)
+        assertEquals("bbb4db69-edb2-431f-855a-4368e2bcddd1", entity.ref)
+    }
+
+    @Test
+
+     Todo:
+         KO-testen kan være nyttig for å teste at feilmeldingene som kastes, behandles på riktig måte.
+         Kommer tilbake til den når jeg finner ut av hvorfor mocking ikke gir riktig verdi / ikke-null
+
+    fun createProject_KO() {
+        assertTrue(false)
+    }
+     */
+
+
 }

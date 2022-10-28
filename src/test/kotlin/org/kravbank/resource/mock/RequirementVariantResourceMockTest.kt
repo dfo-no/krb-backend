@@ -45,6 +45,15 @@ internal class RequirementVariantResourceMockTest {
 
     val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
 
+
+    //arrange
+    val projectId = 2L
+    val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+    val requirementId = 12L
+    val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+    val reqVariantId = 14L
+    val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+
     @BeforeEach
     fun setUp() {
 
@@ -104,15 +113,6 @@ internal class RequirementVariantResourceMockTest {
 
     @Test
     fun getProduct_OK() {
-
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val reqVariantId = 14L
-        val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
-
         //mock
         Mockito
             .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
@@ -164,13 +164,6 @@ internal class RequirementVariantResourceMockTest {
 
     @Test
     fun listProducts_OK() {
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val reqVariantId = 14L
-        val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
         //mock
         Mockito
@@ -196,16 +189,6 @@ internal class RequirementVariantResourceMockTest {
 
     @Test
     fun createRequirement_OK() {
-
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val reqVariantId = 14L
-        val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
-
-
         //mock
         Mockito
             .doNothing()
@@ -226,32 +209,24 @@ internal class RequirementVariantResourceMockTest {
         assertEquals(Response.Status.CREATED.statusCode, response.status);
     }
 
-/*
-    @Test
-    fun createRequirement_KO() {
-        assertFalse(true)
-    }
+    /*
+        @Test
+        fun createRequirement_KO() {
+            assertFalse(true)
+        }
 
 
- */
+     */
 
     @Test
     fun deleteProduct_OK() {
-
-        //arrange
-        val projectId = 2L
-        val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementId = 12L
-        val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val reqVariantId = 14L
-        val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
-
         //mock
         Mockito
             .`when`(requirementVariantRepository.deleteRequirementVariant(requirementId, reqVariantRef))
             .thenReturn(reqVariant)
 
-        val response: Response = requirementVariantResource.deleteRequirementVariant(projectRef, requirementRef, reqVariantRef)
+        val response: Response =
+            requirementVariantResource.deleteRequirementVariant(projectRef, requirementRef, reqVariantRef)
 
         //assert
         assertNotNull(response)
@@ -259,61 +234,53 @@ internal class RequirementVariantResourceMockTest {
 
     }
 
-/*
-    @Test
-    fun deleteRequirement_KO() {
-        //arrange
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val productId = 5L
-        val productRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val reqVariantId = 14
-        val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+    /*
+        @Test
+        fun deleteRequirement_KO() {
+            //arrange
+            val projectId = 3L
+            val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+            val productId = 5L
+            val productRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+            val reqVariantId = 14
+            val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
-        Mockito
-            .`when`(requirementVariantRepository.findByRef(productId, productRef))
-            .thenThrow(NotFoundException("Product not found"))
+            Mockito
+                .`when`(requirementVariantRepository.findByRef(productId, productRef))
+                .thenThrow(NotFoundException("Product not found"))
 
-        try {
-            requirementVariantResource.deleteProduct(projectRef, productRef).entity as NotFoundException
-        } catch (e: Exception) {
-            //print(e.message)
-            assertEquals("Product not found", e.message)
+            try {
+                requirementVariantResource.deleteProduct(projectRef, productRef).entity as NotFoundException
+            } catch (e: Exception) {
+                //print(e.message)
+                assertEquals("Product not found", e.message)
+            }
         }
-    }
 
-*/
+    */
     @Test
     fun updateProduct_OK() {
+        //arrange
+        val form = RequirementVariantForm()
+        form.ref = reqVariantRef
+        form.instruction = "Oppdatert instruksjon"
+        form.description = "Oppdatert beskrivelse"
 
-    //arrange
-    val projectId = 2L
-    val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    val requirementId = 12L
-    val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-    val reqVariantId = 14L
-    val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+        //mock
+        Mockito
+            .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
+            .thenReturn(reqVariant)
 
+        val response: Response =
+            requirementVariantResource.updateRequirementVariant(projectRef, requirementRef, reqVariantRef, form)
+        val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
 
-    val form = RequirementVariantForm()
-    form.ref = reqVariantRef
-    form.instruction = "Oppdatert instruksjon"
-    form.description = "Oppdatert beskrivelse"
-
-    //mock
-    Mockito
-        .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
-        .thenReturn(reqVariant)
-
-    val response: Response = requirementVariantResource.updateRequirementVariant(projectRef, requirementRef, reqVariantRef, form)
-    val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
-
-    //assert
-    assertNotNull(response)
-    assertEquals(Response.Status.OK.statusCode, response.status)
-    assertEquals("Oppdatert instruksjon", entity.instruction)
-    assertEquals("Oppdatert beskrivelse", entity.description)
-}
+        //assert
+        assertNotNull(response)
+        assertEquals(Response.Status.OK.statusCode, response.status)
+        assertEquals("Oppdatert instruksjon", entity.instruction)
+        assertEquals("Oppdatert beskrivelse", entity.description)
+    }
 
     /*
 

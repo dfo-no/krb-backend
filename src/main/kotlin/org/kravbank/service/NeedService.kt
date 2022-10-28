@@ -12,14 +12,12 @@ class NeedService(
     val needRepository: NeedRepository,
     val projectRepository: ProjectRepository
 ) {
-    //  @CacheResult(cacheName = "need-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, needRef: String): Need {
         val project = projectRepository.findByRef(projectRef)
         return needRepository.findByRef(project.id, needRef)
     }
 
-    //@CacheResult(cacheName = "need-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): List<Need> {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -36,7 +34,7 @@ class NeedService(
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, needRef: String): Need{
+    fun delete(projectRef: String, needRef: String): Need {
         val foundProject = projectRepository.findByRef(projectRef)
         return needRepository.deleteNeed(foundProject.id, needRef)
     }

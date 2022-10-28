@@ -14,7 +14,6 @@ class CodeService(
     val codelistRepository: CodelistRepository,
     val projectRepository: ProjectRepository
 ) {
-    // @CacheResult(cacheName = "code-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, codelistRef: String, codeRef: String): Code {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -22,7 +21,6 @@ class CodeService(
         return codeRepository.findByRef(foundCodelist.id, codeRef)
     }
 
-    // @CacheResult(cacheName = "code-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String, codelistRef: String): List<Code> {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -54,6 +52,6 @@ class CodeService(
         val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
         val update = CodeForm().toEntity(updatedCode)
         codeRepository.updateCode(foundCode.id, update)
-        return update.apply {ref = foundCode.ref }
+        return update.apply { ref = foundCode.ref }
     }
 }

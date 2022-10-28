@@ -16,14 +16,12 @@ class ProductService(
     val requirementVariantRepository: RequirementVariantRepository,
 ) {
 
-    // @CacheResult(cacheName = "product-cache-get")
     @Throws(BackendException::class)
     fun get(projectRef: String, productRef: String): Product {
         val foundProject = projectRepository.findByRef(projectRef)
         return productRepository.findByRef(foundProject.id, productRef)
     }
 
-    //@CacheResult(cacheName = "product-cache-list")
     @Throws(BackendException::class)
     fun list(projectRef: String): List<Product> {
         val foundProject = projectRepository.findByRef(projectRef)
