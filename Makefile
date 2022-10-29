@@ -4,7 +4,13 @@ COMMIT := $$(git rev-parse --short HEAD)
 version ?= $(COMMIT)
 
 build:
-	@mvn -B --no-transfer-progress clean package
+	@mvn -B --no-transfer-progress clean package -DskipTests
+
+user_jar:
+	@mvn -B --no-transfer-progress clean install -Dquarkus.package.type=uber-jar -DskipTests
+
+test:
+	@mvn -B --no-transfer-progress clean test
 
 docker:
 	@docker build \
