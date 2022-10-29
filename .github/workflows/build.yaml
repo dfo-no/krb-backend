@@ -40,6 +40,7 @@ jobs:
         with:
           name: target
           path: target
+          if-no-files-found: error
           retention-days: 1
 
   uber-jar:
@@ -70,7 +71,42 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: uber-jar
-          path: "${{ github.workspace }}/target/*.jar"
+          path: target/*.jar
+          if-no-files-found: error
+          retention-days: 1
+
+  native:
+    name: Native
+    runs-on: ubuntu-latest
+
+    needs: tests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: latest
+          java-version: '17'
+          components: native-image
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v.4.5
+        with:
+          maven-version: 3.8.5
+
+      - name: Build native distribution
+        run: make native
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: native-linux-x86_64
+          path: target/*-runner
+          if-no-files-found: error
           retention-days: 1
 
   # Testing
@@ -97,13 +133,13 @@ jobs:
         with:
           maven-version: 3.8.5
 
-      - name: Build with Maven
+      - name: Run tests
         run: make test
 
   # Publishing
 
   docker:
-    name: Docker
+    name: Docker (JVM)
     runs-on: ubuntu-latest
 
     needs: tests
