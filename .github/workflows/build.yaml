@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
       - krb-*
       - KRB-*
     tags:
@@ -12,6 +13,37 @@ on:
 jobs:
   build:
     name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # Build
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 17
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.5
+
+      - name: Build with Maven
+        run: make build  -DskipTests
+
+      - name: Upload target
+        uses: actions/upload-artifact@v3
+        with:
+          name: target
+          path: target
+          retention-days: 1
+
+  uber-jar:
+    name: Über-JAR
     runs-on: ubuntu-latest
 
     steps:
@@ -25,23 +57,49 @@ jobs:
           java-version: 17
 
       - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.3
+        uses: stCarolas/setup-maven@v4.5
         with:
           maven-version: 3.8.5
 
       - name: Build with Maven
-        run: make build
+        run: mvn clean install -Dquarkus.package.type=uber-jar -DskipTests
 
-      - name: Upload target
-        uses: actions/upload-artifact@v3
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
         with:
-          name: target
-          path: target
-          retention-days: 1
+          name: uber-jar
+          path: "${{ github.workspace }}/target/*.jar"
+
+  # Testing
+
+  tests:
+    name: Tests
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 17
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.5
+
+      - name: Build with Maven
+        run: make test
+
+  # Publishing
 
   docker:
     name: Docker
-    needs: build
+    needs: tests
     runs-on: ubuntu-latest
 
     steps:
@@ -80,3 +138,28 @@ jobs:
         run: |
           make docker-tag version=latest
           make docker-push version=latest
+
+  # Deploy
+
+  deploy_production:
+    runs-on: ubuntu-latest
+    needs: uber-jar
+
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: uber-jar
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "krb-backend-api"
+          slot-name: "Production"
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6101935B50D04C189440CA355B835067 }}
+          package: "*.jar"
