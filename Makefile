@@ -6,11 +6,17 @@ version ?= $(COMMIT)
 build:
 	@mvn -B --no-transfer-progress clean package -DskipTests
 
+test:
+	@mvn -B --no-transfer-progress clean test
+
 user_jar:
 	@mvn -B --no-transfer-progress clean install -Dquarkus.package.type=uber-jar -DskipTests
 
-test:
-	@mvn -B --no-transfer-progress clean test
+native:
+	@mvn -B --no-transfer-progress clean package -DskipTests -Pnative
+
+native_docker:
+	@mvn -B --no-transfer-progress clean package -DskipTests -Pnative -Dquarkus.native.container-build=true
 
 docker:
 	@docker build \
