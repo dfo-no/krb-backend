@@ -10,13 +10,14 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import kotlin.streams.toList
 
+
 @Path("/api/v1/projects")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-//@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
-//@Authenticated
 class ProjectResource(val projectService: ProjectService) {
+
+    //@RolesAllowed("user")
 
     @GET
     @Path("/{projcetRef}")
