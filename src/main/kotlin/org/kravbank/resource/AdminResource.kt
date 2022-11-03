@@ -9,11 +9,10 @@ import javax.ws.rs.core.MediaType
 @Path("/api/admin")
 @Authenticated
 class AdminResource {
-    
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     fun admin(): String {
         return "granted"
     }
-
 }

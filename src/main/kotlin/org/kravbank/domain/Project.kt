@@ -3,21 +3,17 @@ package org.kravbank.domain
 import com.fasterxml.jackson.annotation.JsonBackReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.time.LocalDateTime
-import java.util.UUID
-import javax.persistence.*
-import javax.validation.constraints.*
+import java.util.*
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.OneToMany
 
 @Entity
 class Project : PanacheEntity() {
 
-    @NotBlank
-    @NotEmpty(message = "Title may not be empty")
-    @Size(min = 2, max = 32, message = "Title must be between 2 and 32 characters long")
     lateinit var title: String
 
-    @NotBlank
-    @NotEmpty(message = "Description may not be empty")
-    @Size(min = 4, max = 140, message = "Description must be between 4 and 140 characters long")
     lateinit var description: String
 
     @Column(
