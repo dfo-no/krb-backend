@@ -1,5 +1,6 @@
 package org.kravbank.resource
 
+import io.quarkus.oidc.UserInfo
 import io.quarkus.security.identity.SecurityIdentity
 import org.jboss.resteasy.annotations.cache.NoCache
 import org.kravbank.domain.User
@@ -14,6 +15,10 @@ class UserResource {
     @Inject
     lateinit var identity: SecurityIdentity
 
+    @Inject
+    lateinit var userInfo: UserInfo
+
+
     @GET
     @Path("/user")
     @NoCache
@@ -26,7 +31,10 @@ class UserResource {
         //print(identity.roles)
         //print(identity.credentials.toString())
 
-        return "User role =>> ${user.id()}"
+        val id = identity.roles
+
+        return "User role =>> ${user.id()} \n" +
+                "With ${id} "
     }
 
     @GET
@@ -40,6 +48,17 @@ class UserResource {
         //print(identity.credentials.toString())
 
         return "Admin role =>> ${identity.principal.name}"
+    }
+
+    @GET
+    @Path("/info")
+    @RolesAllowed("user")
+    @NoCache
+    fun info(): Any {
+
+        return userInfo.toString()
+
+
     }
 
 }
