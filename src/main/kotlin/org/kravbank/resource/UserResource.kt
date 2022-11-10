@@ -1,5 +1,6 @@
 package org.kravbank.resource
 
+import io.quarkus.oidc.OidcConfigurationMetadata
 import io.quarkus.oidc.UserInfo
 import io.quarkus.security.identity.SecurityIdentity
 import org.jboss.resteasy.annotations.cache.NoCache
@@ -9,6 +10,7 @@ import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 
+
 @Path("/api/users")
 class UserResource {
 
@@ -17,6 +19,13 @@ class UserResource {
 
     @Inject
     lateinit var userInfo: UserInfo
+
+    @Inject
+    lateinit var configMetadata: OidcConfigurationMetadata
+
+
+    //@Inject
+    //lateinit var requestContext: ContainerRequestContext
 
 
     @GET
@@ -32,6 +41,11 @@ class UserResource {
         //print(identity.credentials.toString())
 
         val id = identity.roles
+
+        print(configMetadata.issuer.toString())
+
+        //print(requestContext.request.method)
+
 
         return "User role =>> ${user.id()} \n" +
                 "With ${id} "

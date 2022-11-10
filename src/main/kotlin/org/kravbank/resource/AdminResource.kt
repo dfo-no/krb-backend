@@ -15,10 +15,12 @@ class AdminResource {
     @Inject
     lateinit var jwt: JsonWebToken
 
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     fun admin(): String {
-        print("printer raw token admin --> ${jwt.rawToken}")
+        //print("printer raw token admin --> ${jwt.rawToken}")
+        print(jwt.subject)
         return "granted"
     }
 }

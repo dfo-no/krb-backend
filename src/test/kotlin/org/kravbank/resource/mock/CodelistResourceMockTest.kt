@@ -4,6 +4,7 @@ import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.*
@@ -15,6 +16,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
 import javax.ws.rs.core.Response
+
 
 @QuarkusTest
 internal class CodelistResourceMockTest {
@@ -98,6 +100,7 @@ internal class CodelistResourceMockTest {
     }
 
     @Test
+    @Order(1)
     fun getCodelist_OK() {
         //mock
         Mockito
