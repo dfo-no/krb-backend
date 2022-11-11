@@ -10,8 +10,14 @@ import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 
-
+/*
+Todo
+Slettes senere
+Denne klassen er kun for illustrasjon
+ */
 @Path("/api/users")
+//@Authenticated
+@RolesAllowed("user")
 class UserResource {
 
     @Inject
@@ -23,56 +29,30 @@ class UserResource {
     @Inject
     lateinit var configMetadata: OidcConfigurationMetadata
 
-
     //@Inject
     //lateinit var requestContext: ContainerRequestContext
 
-
     @GET
     @Path("/user")
+    // @RolesAllowed("user")
     @NoCache
-    @RolesAllowed("user")
     fun me(): String {
-
         var user = User(identity)
-
-        //println(identity.principal.name)
-        //print(identity.roles)
-        //print(identity.credentials.toString())
 
         val id = identity.roles
 
         print(configMetadata.issuer.toString())
-
-        //print(requestContext.request.method)
-
 
         return "User role =>> ${user.id()} \n" +
                 "With ${id} "
     }
 
     @GET
-    @Path("/admin")
-    @NoCache
-    @RolesAllowed("admin")
-    fun me2(): String {
-
-        //println(identity.principal.name)
-        //print(identity.roles)
-        //print(identity.credentials.toString())
-
-        return "Admin role =>> ${identity.principal.name}"
-    }
-
-    @GET
     @Path("/info")
-    @RolesAllowed("user")
+    // @RolesAllowed("user")
     @NoCache
     fun info(): Any {
-
         return userInfo.toString()
-
-
     }
 
 }
