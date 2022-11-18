@@ -12,7 +12,6 @@ import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM
 import javax.ws.rs.core.Response
@@ -25,7 +24,7 @@ class DownloadResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_OCTET_STREAM)
     @NoCache
-    fun generateSpecification(@RequestBody jsonNode: JsonNode?): Response {
+    fun generateSpecification(@RequestBody jsonNode: JsonNode): Response {
         val bis: ByteArrayInputStream = PdfService.generateSpecification(jsonNode)
 
         /**
@@ -38,18 +37,28 @@ class DownloadResource {
         headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
         .body(new InputStreamResource(bis));
+         *
          */
+
+        /*
+                val header = HashMap<String, String>()
+                header[HttpHeaders.CONTENT_DISPOSITION] = "attachment; filename=report.pdf"
+                header[HttpHeaders.ALLOW] = "*"
+                headers().addAll(header)
+         */
+
         headers().add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf")
         headers().add(HttpHeaders.ALLOW, "*")
+
         return Response.ok(Base64.InputStream(bis)).build() //todo: blir headers satt i Responsen?
     }
 
     @POST
     @Path(value = "/generateResponse")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_OCTET_STREAM)
     @NoCache
-    fun generateResponse(@RequestBody jsonNode: JsonNode?): Response {
+    fun generateResponse(@RequestBody jsonNode: JsonNode): Response {
         val bis: ByteArrayInputStream = PdfService.generateResponse(jsonNode)
         headers().add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf")
         headers().add(HttpHeaders.ALLOW, "*")
@@ -58,10 +67,10 @@ class DownloadResource {
 
     @POST
     @Path(value = "/generatePrefilledResponse")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_OCTET_STREAM)
     @NoCache
-    fun generatePrefilledResponse(@RequestBody jsonNode: JsonNode?): Response {
+    fun generatePrefilledResponse(@RequestBody jsonNode: JsonNode): Response {
         val bis: ByteArrayInputStream = PdfService.generatePrefilledResponse(jsonNode)
         headers().add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf")
         headers().add(HttpHeaders.ALLOW, "*")
