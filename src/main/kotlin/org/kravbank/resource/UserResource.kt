@@ -4,7 +4,7 @@ import io.quarkus.oidc.OidcConfigurationMetadata
 import io.quarkus.oidc.UserInfo
 import io.quarkus.security.identity.SecurityIdentity
 import org.jboss.resteasy.annotations.cache.NoCache
-import org.kravbank.domain.User
+import java.security.Principal
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -15,8 +15,7 @@ Todo
 Slettes senere
 Denne klassen er kun for illustrasjon
  */
-@Path("/api/users")
-//@Authenticated
+@Path("/test/api/v1/users")
 @RolesAllowed("user")
 class UserResource {
 
@@ -34,25 +33,25 @@ class UserResource {
 
     @GET
     @Path("/user")
-    // @RolesAllowed("user")
     @NoCache
-    fun me(): String {
-        var user = User(identity)
 
-        val id = identity.roles
+    fun me(): MutableMap<String, Principal> {
+        // var user = User(identity)
+        // val id = identity.roles
+        //print(configMetadata.issuer.toString())
+        // return "User role =>> ${user.id()} with ${id} "
 
-        print(configMetadata.issuer.toString())
-
-        return "User role =>> ${user.id()} \n" +
-                "With ${id} "
+        return mutableMapOf("username" to identity.principal)
     }
 
     @GET
     @Path("/info")
-    // @RolesAllowed("user")
     @NoCache
-    fun info(): Any {
-        return userInfo.toString()
+    fun info(): MutableMap<String, String> {
+        //return userInfo.toString()
+        return mutableMapOf(
+            "sub" to userInfo.getString("sub"),
+            "email" to userInfo.getString("email")
+        )
     }
-
 }

@@ -15,8 +15,7 @@ Slettes senere
 Denne klassen er kun for illustrasjon
  */
 
-@Path("/api/admin")
-//@Authenticated
+@Path("/test/api/v1/admin")
 @RolesAllowed("admin")
 class AdminResource {
 
@@ -28,10 +27,12 @@ class AdminResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    fun admin(): String {
-        print("printer raw token admin --> ${jwt.rawToken}")
-        print(jwt.subject)
-        return "Granted! Admin role =>> ${identity.principal.name}"
+    //print(identity.hasRole("admin"))
+    fun admin(): MutableMap<String, String> {
+        val map = mutableMapOf(
+            "subject" to jwt.subject,
+            "preferred_username" to jwt.getClaim("preferred_username")
+        )
+        return map
     }
-
 }
