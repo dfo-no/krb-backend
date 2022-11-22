@@ -1,20 +1,45 @@
-## Dev mode
+# Kravbank backend README
 
-Kjør quarkus applikasjonen i dev mode
+## Prerequisites
 
-```shell script
-./mvnw compile quarkus:dev
-```
+* In order to run the application locally, you need a .env file
+* Create (or copy from someone else in the team) the .env file in the kravbank-backend root directory:
+  DB_USER=<LIVE USERNAME>
+  DB_PASSWORD=<LIVE PASSWORD>
+  KC_CRED_SECRET=<KEYCLOAK SECRET>
 
-## Bruk av opp lokal PostgreSQL docker som database
+## Installation
 
-Spin opp en postgres container som samsvarer application.properties configs
-Eksempelvis:
+* Make sure you have added a SSH key to your GitHub settings to be able to clone the repository securely.
+* Clone the repository
+  ``git clone git@github.com:dfo-no/krb-backend.git``
+* Make sure you have installed Maven and Java 16 or higher with relevant PATH environment variables. If you use
+  powershell you could install Java JDK/openJDK and Maven with Chocolatey
+  ``choco install openjdk``
+  ``choco install maven``
+* Launch application from CLI
+  ``quarkus dev``
+* Launch application from IntelliJ
+  Run kravbank-backend (Shift+F10)
 
-```shell script
-docker run --name my_db -e POSTGRES_USER=username -e POSTGRES_PASSWORD=password -e POSTGRES_DB=my_db -p 5432:5432 postgres:10.5
-```
+## Information regarding live version on Azure Portal
 
-## Bruk av Azure Database for PostgreSQL
+## API
 
-Opprett .env fil i root med credentials i henhold til applications.properties configs
+* URL: https://krb-backend-api.azurewebsites.net
+
+## API PostreSQL
+
+* URL: krb-auth-postgres.postgres.database.azure.com
+
+## Keycloak
+
+* URL: https://krb-backend-auth.azurewebsites.net/
+* The keycloak server is build by a Keycloak docker image on Azure Container Registry (ACR) server:
+    * krbkeycloakauth.azurecr.io
+    * Instructions how to pull and push Docker images to ACR are I.e found on "Quick Start" in the Azure Portal resource
+    * Credentials can be found under "Access Keys" in the Azure Portal resource
+
+## Keycloak PostreSQL Live
+
+* URL: krb-auth-postgres.postgres.database.azure.com

@@ -2,6 +2,7 @@ package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
+import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,6 +17,7 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 @QuarkusTest
+@TestSecurity(authorizationEnabled = false)
 internal class ProjectResourceMockTest {
 
     @InjectMock

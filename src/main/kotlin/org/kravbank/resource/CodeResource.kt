@@ -1,5 +1,6 @@
 package org.kravbank.resource;
 
+import io.quarkus.security.Authenticated
 import org.kravbank.dao.CodeForm
 import org.kravbank.service.CodeService
 import java.net.URI
@@ -12,6 +13,7 @@ import kotlin.streams.toList
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
+@Authenticated
 class CodeResource(val codeService: CodeService) {
 
     @GET
@@ -47,7 +49,8 @@ class CodeResource(val codeService: CodeService) {
         val code = codeService.create(projectRef, codelistRef, newCode)
         //returnerer ny code ref i response header
         return Response.created(
-            URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref))
+            URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref)
+        )
             .build()
     }
 

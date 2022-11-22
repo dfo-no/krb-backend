@@ -1,5 +1,6 @@
 package org.kravbank.resource
 
+import io.quarkus.security.Authenticated
 import org.kravbank.dao.ProductForm
 import org.kravbank.service.ProductService
 import java.net.URI
@@ -14,8 +15,7 @@ import kotlin.streams.toList
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-//@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
-//@Authenticated
+@Authenticated
 class ProductResource(val productService: ProductService) {
 
     @GET

@@ -1,8 +1,10 @@
 package org.kravbank.resource
 
+import io.quarkus.security.Authenticated
 import org.kravbank.dao.ProjectForm
 import org.kravbank.service.ProjectService
 import java.net.URI
+import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
@@ -10,15 +12,16 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import kotlin.streams.toList
 
+
 @Path("/api/v1/projects")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-//@SecurityScheme(securitySchemeName = "jwt", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
-//@Authenticated
+@Authenticated
 class ProjectResource(val projectService: ProjectService) {
 
     @GET
+    @RolesAllowed("user")
     @Path("/{projcetRef}")
     fun getProject(@PathParam("projcetRef") projcetRef: String): Response {
         val project = projectService.get(projcetRef)
@@ -27,6 +30,7 @@ class ProjectResource(val projectService: ProjectService) {
     }
 
     @GET
+    @RolesAllowed("user")
     fun listProjects(): Response {
         val form = projectService.list()
             .stream()
@@ -37,15 +41,17 @@ class ProjectResource(val projectService: ProjectService) {
 
     @Transactional
     @POST
+    @RolesAllowed("user")
     fun createProject(newProject: ProjectForm): Response {
         val project = projectService.create(newProject)
         return Response.created(URI.create("/api/v1/projects/" + project.ref))
-            .build();
+            .build()
     }
 
     @DELETE
     @Path("{projcetRef}")
     @Transactional
+    @RolesAllowed("user")
     fun deleteProject(@PathParam("projcetRef") projcetRef: String): Response {
         val project = projectService.delete(projcetRef)
         val form = ProjectForm().fromEntity(project)
@@ -55,6 +61,7 @@ class ProjectResource(val projectService: ProjectService) {
     @PUT
     @Path("{projcetRef}")
     @Transactional
+    @RolesAllowed("user")
     fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectForm): Response {
         val project = projectService.update(projcetRef, updatedProject)
         val form = ProjectForm().fromEntity(project)
