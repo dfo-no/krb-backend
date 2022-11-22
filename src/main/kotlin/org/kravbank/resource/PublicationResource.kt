@@ -1,5 +1,6 @@
-package org.kravbank.resource;
+package org.kravbank.resource
 
+import io.quarkus.security.Authenticated
 import org.kravbank.dao.PublicationForm
 import org.kravbank.service.PublicationService
 import java.net.URI
@@ -14,6 +15,7 @@ import kotlin.streams.toList
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 @RequestScoped
+@Authenticated
 class PublicationResource(val publicationService: PublicationService) {
 
     @GET

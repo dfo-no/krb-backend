@@ -1,19 +1,21 @@
-package org.kravbank.resource;
+package org.kravbank.resource
 
+import io.quarkus.security.Authenticated
 import org.kravbank.dao.NeedForm
 import org.kravbank.service.NeedService
 import java.net.URI
 import javax.enterprise.context.RequestScoped
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.transaction.Transactional
+import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/needs")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 class NeedResource(val needService: NeedService) {
 
     @GET

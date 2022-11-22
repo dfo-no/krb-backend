@@ -1,19 +1,21 @@
-package org.kravbank.resource;
+package org.kravbank.resource
 
+import io.quarkus.security.Authenticated
 import org.kravbank.dao.RequirementForm
 import org.kravbank.service.RequirementService
 import java.net.URI
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.enterprise.context.RequestScoped
+import javax.transaction.Transactional
+import javax.ws.rs.*
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/requirements")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
+@Authenticated
 class RequirementResource(val requirementService: RequirementService) {
     @GET
     @Path("/{requirementRef}")
