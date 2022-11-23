@@ -1,0 +1,1285 @@
+{
+  "id": "235f6f42-c300-413a-92d7-f980feac65af",
+  "bank": {
+    "id": "fb7d1130-f80b-45fc-9453-61c471d7c331",
+    "title": "Kjøretøy til hjemmetjenesten",
+    "description": "",
+    "needs": [
+      {
+        "id": "2376e4df-070b-480b-9254-7f3d6d999868",
+        "title": "Tjenester",
+        "description": "",
+        "requirements": [],
+        "type": "need",
+        "parent": "",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "f992f93a-3b78-4463-b5a3-ab5d8652d649",
+        "title": "Levering",
+        "description": "",
+        "requirements": [
+          {
+            "id": "5c4ba703-c12b-4b9b-9311-26a1cb398dc5",
+            "title": "Leveringstid",
+            "description": "",
+            "needId": "f992f93a-3b78-4463-b5a3-ab5d8652d649",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "3080766a-3432-4b03-93b4-1ad04c49340a",
+                "requirementText": "Oppgi hvor mange dager man maksimalt må påregne fra bestilling til leveranse.",
+                "instruction": "",
+                "useProduct": false,
+                "useSpesification": true,
+                "useQualification": false,
+                "products": [],
+                "questions": [
+                  {
+                    "id": "3ef1eaef-7ade-40fb-a379-9906840d7bdf",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 0,
+                      "max": 90,
+                      "step": 1,
+                      "unit": "dag(er)",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": 0
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Maksimal forventet leveringstid"
+              },
+              {
+                "id": "1c13f326-2717-4c82-a449-28430ef44884",
+                "requirementText": "Oppgi hvor mange dager man gjennomsnittlig må påregne fra bestilling til leveranse.",
+                "instruction": "",
+                "useProduct": false,
+                "useSpesification": true,
+                "useQualification": false,
+                "products": [],
+                "questions": [
+                  {
+                    "id": "93aa56c0-3940-4ce8-a8b0-94896de5cbbb",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 0,
+                      "max": 90,
+                      "step": 1,
+                      "unit": "dag(er)",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": 0
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Gjennomsnittlig forventet leveringstid"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          },
+          {
+            "id": "97ccfc65-a1c6-4091-8bd7-03cd5f321511",
+            "title": "Leveringssted",
+            "description": "",
+            "needId": "f992f93a-3b78-4463-b5a3-ab5d8652d649",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "3fe6a9b9-76c9-48a3-bf13-138dcc100a3b",
+                "requirementText": "Kjøretøy må leveres på følgende sted for å kunne regnes som levert:",
+                "instruction": "Brukes dersom man ønsker at kjøretøy skal leveres i stedet for å hentes hos leverandør.",
+                "useProduct": false,
+                "useSpesification": true,
+                "useQualification": false,
+                "products": [],
+                "questions": [
+                  {
+                    "id": "a1341758-a55f-48b0-9f04-70022c7aae1a",
+                    "type": "Q_TEXT",
+                    "config": {
+                      "max": 400,
+                      "defaultPoint": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "text": ""
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "info",
+                "description": "Leveringssted "
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "2376e4df-070b-480b-9254-7f3d6d999868",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "051d0699-e767-497a-9885-64a96a69865a",
+        "title": "Vedlikehold",
+        "description": "",
+        "requirements": [
+          {
+            "id": "bb07d56f-312c-4195-aae9-ed2aa9126fd5",
+            "title": "Avstand til godkjent verksted",
+            "description": "",
+            "needId": "051d0699-e767-497a-9885-64a96a69865a",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "ebcdb9e8-40bb-46c5-a2e5-76e705bf203b",
+                "requirementText": "Oppgi avstand fra leveringssted til nærmeste godkjente verksted.\n\nBenytt Google Maps til å beregne kjørelengde, benytt korteste kjørelengde. Avrundes oppover til nærmeste 0,1 km.",
+                "instruction": "",
+                "useProduct": false,
+                "useSpesification": true,
+                "useQualification": false,
+                "products": [],
+                "questions": [
+                  {
+                    "id": "981877b7-093e-42d5-90ac-5badea45d128",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 0,
+                      "max": 1000,
+                      "step": 0.1,
+                      "unit": "km",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": 0
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Avstand"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "2376e4df-070b-480b-9254-7f3d6d999868",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "title": "Kjøretøy",
+        "description": "",
+        "requirements": [],
+        "type": "need",
+        "parent": "",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "11674baa-8f9b-44bb-b2fd-bdf4f7b0e606",
+        "title": "Tilstand",
+        "description": "",
+        "requirements": [
+          {
+            "id": "37f7f2e8-9963-4b64-9cd6-d75caa4e753a",
+            "title": "Fabrikk-ny",
+            "description": "",
+            "needId": "11674baa-8f9b-44bb-b2fd-bdf4f7b0e606",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "9f1ecb6e-90f2-49c7-8bbd-7d0842d72340",
+                "requirementText": "Kommer kjøretøyet direkte fra fabrikk til forhandler?",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1",
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a"
+                ],
+                "questions": [
+                  {
+                    "id": "61acc870-13c5-425b-8e77-87984cc668ce",
+                    "type": "Q_CHECKBOX",
+                    "config": {
+                      "pointsNonPrefered": 0,
+                      "defaultPoint": 1,
+                      "preferedAlternative": true
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Helt ny bil"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "445ef81a-06ca-4dda-9c29-d87c1adc3c76",
+        "title": "Kjøreegenskaper",
+        "description": "",
+        "requirements": [
+          {
+            "id": "293d0d46-ddef-4d8d-8e9b-ba1c8ca9f33d",
+            "title": "Type gir",
+            "description": "",
+            "needId": "445ef81a-06ca-4dda-9c29-d87c1adc3c76",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "db610fcc-c760-49c0-8fbe-2e7b7dd034f3",
+                "requirementText": "Kjøretøyet har automatgir.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "91730e0f-984d-4889-b371-a7bf4b2b3d33",
+                    "type": "Q_CONFIRMATION",
+                    "config": {
+                      "pointsUnconfirmed": 0,
+                      "defaultPoint": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Automatgir"
+              },
+              {
+                "id": "46ead1b3-ff3e-47a7-95af-565de915d917",
+                "requirementText": "Kjøretøyet har manuelt gir.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "ccbcde12-5c25-4dc0-be53-a36fda48528b",
+                    "type": "Q_CONFIRMATION",
+                    "config": {
+                      "pointsUnconfirmed": 0,
+                      "defaultPoint": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Manuelt gir"
+              },
+              {
+                "id": "f2c5a15d-f13c-4f16-a486-0012eda48c05",
+                "requirementText": "Oppgi type gir i kjøretøyet.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "44c32f6c-17eb-45dc-ac2c-2544a02ff614",
+                    "type": "Q_CODELIST",
+                    "config": {
+                      "mandatoryCodes": [],
+                      "optionalCodes": [],
+                      "codelist": "a9c304ba-1e07-4cb2-ad9c-cf5375f33656",
+                      "codes": [],
+                      "defaultPoint": 1,
+                      "optionalCodeMinAmount": 0,
+                      "optionalCodeMaxAmount": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "codes": []
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Oppgi type"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "7c7631a7-eacb-4c3a-82ca-e3096c50e71d",
+        "title": "Inventar",
+        "description": "",
+        "requirements": [
+          {
+            "id": "11fa06ac-8257-47a3-8dff-89fa82bcb833",
+            "title": "Tilbehør i kupé",
+            "description": "",
+            "needId": "7c7631a7-eacb-4c3a-82ca-e3096c50e71d",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "3c973b6e-2f10-4914-98a6-eec7d9212f3c",
+                "requirementText": "Oppgi tilgjengelig tilbehør i kupéen.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "2b9fe78e-2c74-4d61-bb65-b9fb609ab7a0",
+                    "type": "Q_CODELIST",
+                    "config": {
+                      "mandatoryCodes": [],
+                      "optionalCodes": [],
+                      "codelist": "8c5e2ae0-66e2-4c0a-8702-cd065925b101",
+                      "codes": [],
+                      "defaultPoint": 1,
+                      "optionalCodeMinAmount": 0,
+                      "optionalCodeMaxAmount": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "codes": []
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Tilbehør i kupéen"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          },
+          {
+            "id": "1d44e888-b624-47e2-8dcc-eea12af39d4e",
+            "title": "Seter foran",
+            "description": "",
+            "needId": "7c7631a7-eacb-4c3a-82ca-e3096c50e71d",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "b1d22e3d-5fbe-47df-807c-14a378d1a5a3",
+                "requirementText": "Oppgi antall seter foran i kjøretøyet inkludert sjåførens sete.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "2f975346-7f8f-4684-8879-d2b663be79ab",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 1,
+                      "max": 3,
+                      "step": 1,
+                      "unit": "sete(r)",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": "1"
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Antall"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          },
+          {
+            "id": "8654537f-5c0e-40e5-afcb-ebadd7538f6d",
+            "title": "Seter bak",
+            "description": "",
+            "needId": "7c7631a7-eacb-4c3a-82ca-e3096c50e71d",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "00f081ee-f787-4419-9eb7-52fcfe8f2d01",
+                "requirementText": "Oppgi antall seter bak i kjøretøyet.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "3de86915-dbbd-4fe3-88d9-b18cc747616d",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 0,
+                      "max": 7,
+                      "step": 1,
+                      "unit": "",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": "0"
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Antall"
+              },
+              {
+                "id": "a6eaca9b-3b29-43a3-b374-fda756536b6f",
+                "requirementText": "Kjøretøyet har ikke seter bak sjåfør.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "9e692a53-2e72-4064-9d51-a836ab4ca606",
+                    "type": "Q_CONFIRMATION",
+                    "config": {
+                      "pointsUnconfirmed": 0,
+                      "defaultPoint": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Ingen seter bak"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "ca08b990-55c0-4683-9428-97a53a727ccf",
+        "title": "Bagasjerom",
+        "description": "",
+        "requirements": [
+          {
+            "id": "0784e425-5cfd-4c4f-af01-5216211c6bd3",
+            "title": "Volum",
+            "description": "",
+            "needId": "ca08b990-55c0-4683-9428-97a53a727ccf",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "74ad87c5-1ccb-403f-8a21-364ece821b22",
+                "requirementText": "Godsrommet eller planet må kunne romme en rettvinklet kasse (også kalt \"statskassa\") med lengde/bredde/høyde 140 x 90 x 105 cm.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "e3412818-88cf-4fa6-880f-3685e234441f",
+                    "type": "Q_CONFIRMATION",
+                    "config": {
+                      "pointsUnconfirmed": 0,
+                      "defaultPoint": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Støtte for \"statsakassa\""
+              },
+              {
+                "id": "64e9a281-02c1-436d-9f82-e44e01708e31",
+                "requirementText": "Oppgi basjerommets volum.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "06c7b134-30f7-4ccb-8baf-1616f46d6758",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 0,
+                      "max": 8,
+                      "step": 0.1,
+                      "unit": "m³",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": 0
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Volum"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "3f7076c6-d54c-4733-a480-6ab95fcb1ab4",
+        "title": "Sikring",
+        "description": "",
+        "requirements": [
+          {
+            "id": "c2bfc159-dcd2-4d3e-8585-bc02605e2423",
+            "title": "Sentrallås",
+            "description": "",
+            "needId": "3f7076c6-d54c-4733-a480-6ab95fcb1ab4",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "e6cd46fd-0371-4e16-9be0-451204dca112",
+                "requirementText": "Kjøretøyet er utstyrt med sentrallås.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "1f20d46b-ff70-4fe5-8a2f-eac0c453eb5c",
+                    "type": "Q_CONFIRMATION",
+                    "config": {
+                      "pointsUnconfirmed": 0,
+                      "defaultPoint": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Med sentrallås"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "b07a677e-0e0e-4ad2-82fa-8a756f29fe7c",
+        "title": "Sikkerhet",
+        "description": "",
+        "requirements": [],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "6bddecaf-dce4-4942-ab64-7bc439f75b25",
+        "title": "Utseende",
+        "description": "",
+        "requirements": [
+          {
+            "id": "0e5086cb-e4fc-493c-8286-e524dd925ab8",
+            "title": "Karosserifarge",
+            "description": "",
+            "needId": "6bddecaf-dce4-4942-ab64-7bc439f75b25",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "4c27a656-1f39-45cd-9757-cd3605500597",
+                "requirementText": "Oppgi kjøretøyets primære farge på karosseriet.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "d56195e3-ee4e-403c-8687-1ebcac80c94d",
+                    "type": "Q_CODELIST",
+                    "config": {
+                      "mandatoryCodes": [],
+                      "optionalCodes": [],
+                      "codelist": "322ffb17-c74d-4da3-8827-d6bbdbe241ff",
+                      "codes": [],
+                      "defaultPoint": 1,
+                      "optionalCodeMinAmount": 0,
+                      "optionalCodeMaxAmount": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "codes": []
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Farge"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        ],
+        "type": "need",
+        "parent": "5c331890-cae1-4a69-8956-c964c3ad701d",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      }
+    ],
+    "codelist": [
+      {
+        "id": "8c5e2ae0-66e2-4c0a-8702-cd065925b101",
+        "title": "Tilbehør, kupé",
+        "description": "",
+        "codes": [
+          {
+            "id": "ea5095d0-6e3a-497f-ad22-d2fb86db3433",
+            "title": "Koppholder for sjåfør",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "aa465e7e-36ef-487a-a415-a0afa3da456f",
+            "title": "Koppholder for passasjer foran",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "718f0944-9082-453c-b71e-56b9d8b1857e",
+            "title": "Mobilholder",
+            "description": "Holder for mobiltelefon med tilhørende USB-ladepunkt",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "22ecc9e1-020a-4bf5-bc2c-9471ed39c618",
+            "title": "Nettbrettholder",
+            "description": "Holder for nettbrett med tilhørender USB-ladepunkt",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          }
+        ],
+        "type": "codelist",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "a9c304ba-1e07-4cb2-ad9c-cf5375f33656",
+        "title": "Gir",
+        "description": "",
+        "codes": [
+          {
+            "id": "26230250-0ab2-416d-abdd-b2acbb0a4b14",
+            "title": "Manuelt gir",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "076fda24-a7f3-4d06-869a-e030740bc42e",
+            "title": "Automatgir",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          }
+        ],
+        "type": "codelist",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "cf09deaf-d1ce-404e-81a2-f41c4d095cba",
+        "title": "Trekk",
+        "description": "",
+        "codes": [
+          {
+            "id": "2fba46b3-26d1-483b-80f9-456d9298c61c",
+            "title": "Forhjuls-trekk",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "324b481b-3b78-4f08-989e-068006b52092",
+            "title": "Bakhjuls-trekk",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "175e3dbd-8a8f-4368-90bd-b25665e5c4fe",
+            "title": "Trekk på alle hjul",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          }
+        ],
+        "type": "codelist",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      },
+      {
+        "id": "322ffb17-c74d-4da3-8827-d6bbdbe241ff",
+        "title": "Farger",
+        "description": "",
+        "codes": [
+          {
+            "id": "f9935288-7729-4ae0-bbb5-465684f9773f",
+            "title": "Hvit",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "aecee155-92cd-4f81-a878-20910e0307ab",
+            "title": "Svart",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "79c4461f-1c53-4038-a620-3146170df0e6",
+            "title": "Rød",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "b324b109-a78a-40cf-a131-ea82aaaffcfa",
+            "title": "Gul",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "f10b5c7e-e7fe-47b5-b479-9fd410c7bdb4",
+            "title": "Orange",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "b2da9b1e-d48f-4994-a89a-f14b44c34660",
+            "title": "Sølv",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          },
+          {
+            "id": "205c9c23-4d07-43e3-842e-fbfa303df76d",
+            "title": "Blå",
+            "description": "",
+            "type": "code",
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null,
+            "parent": ""
+          }
+        ],
+        "type": "codelist",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null
+      }
+    ],
+    "products": [
+      {
+        "id": "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+        "title": "Bil",
+        "description": "",
+        "type": "product",
+        "parent": "",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null,
+        "deletedDate": null,
+        "unit": "Stk"
+      },
+      {
+        "id": "aacfeb2e-811b-4f21-8229-7399e04f9125",
+        "title": "El-bil",
+        "description": "",
+        "type": "product",
+        "parent": "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null,
+        "deletedDate": null,
+        "unit": "Stk"
+      },
+      {
+        "id": "b15d3434-ff76-4676-b9d7-183438c1e6b1",
+        "title": "Fossil-bil",
+        "description": "",
+        "type": "product",
+        "parent": "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null,
+        "deletedDate": null,
+        "unit": "Stk"
+      }
+    ],
+    "publications": [],
+    "tags": [],
+    "version": 4,
+    "publishedDate": "2022-09-29T06:21:05.218Z",
+    "type": "bank",
+    "inheritedBanks": [],
+    "sourceOriginal": null,
+    "sourceRel": null,
+    "projectId": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+    "deletedDate": null
+  },
+  "title": "Test",
+  "organization": "Test",
+  "organizationNumber": "123123123",
+  "products": [
+    {
+      "id": "f52554bb-8ddb-4e16-8efb-e0b25f7efd69",
+      "title": "El-bil",
+      "description": "",
+      "originProduct": {
+        "id": "aacfeb2e-811b-4f21-8229-7399e04f9125",
+        "title": "El-bil",
+        "description": "",
+        "type": "product",
+        "parent": "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+        "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+        "sourceRel": null,
+        "deletedDate": null,
+        "unit": "Stk"
+      },
+      "weight": 50,
+      "amount": 1,
+      "requirements": [
+        "37f7f2e8-9963-4b64-9cd6-d75caa4e753a",
+        "1d44e888-b624-47e2-8dcc-eea12af39d4e",
+        "0e5086cb-e4fc-493c-8286-e524dd925ab8"
+      ],
+      "requirementAnswers": [
+        {
+          "id": "fe54587e-be12-4c20-bd6f-33adf32afadb",
+          "questionId": "61acc870-13c5-425b-8e77-87984cc668ce",
+          "weight": 50,
+          "variantId": "9f1ecb6e-90f2-49c7-8bbd-7d0842d72340",
+          "question": {
+            "id": "61acc870-13c5-425b-8e77-87984cc668ce",
+            "type": "Q_CHECKBOX",
+            "config": {
+              "pointsNonPrefered": 30,
+              "defaultPoint": 1,
+              "preferedAlternative": true
+            },
+            "answer": {
+              "point": 0,
+              "value": false
+            },
+            "sourceRel": null,
+            "sourceOriginal": null
+          },
+          "type": "requirementAnswer",
+          "requirement": {
+            "id": "37f7f2e8-9963-4b64-9cd6-d75caa4e753a",
+            "title": "Fabrikk-ny",
+            "description": "",
+            "needId": "11674baa-8f9b-44bb-b2fd-bdf4f7b0e606",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "9f1ecb6e-90f2-49c7-8bbd-7d0842d72340",
+                "requirementText": "Kommer kjøretøyet direkte fra fabrikk til forhandler?",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1",
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a"
+                ],
+                "questions": [
+                  {
+                    "id": "61acc870-13c5-425b-8e77-87984cc668ce",
+                    "type": "Q_CHECKBOX",
+                    "config": {
+                      "pointsNonPrefered": 0,
+                      "defaultPoint": 1,
+                      "preferedAlternative": true
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": false
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Helt ny bil"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        },
+        {
+          "id": "072519b1-849d-4cd5-be3f-62c0dbb8389b",
+          "questionId": "2f975346-7f8f-4684-8879-d2b663be79ab",
+          "weight": 50,
+          "variantId": "b1d22e3d-5fbe-47df-807c-14a378d1a5a3",
+          "question": {
+            "id": "2f975346-7f8f-4684-8879-d2b663be79ab",
+            "type": "Q_SLIDER",
+            "config": {
+              "min": 1,
+              "max": 2,
+              "step": 1,
+              "unit": "sete(r)",
+              "defaultPoint": 1,
+              "scoreValues": [
+                {
+                  "id": "cb469ae0-9a7a-40bc-808c-612c14b85c16",
+                  "value": 1,
+                  "score": 80
+                },
+                {
+                  "id": "dfafb111-77fd-48f1-8df3-f5f087d801b7",
+                  "value": 2,
+                  "score": 100
+                }
+              ]
+            },
+            "answer": {
+              "point": 0,
+              "value": 1
+            },
+            "sourceRel": null,
+            "sourceOriginal": null
+          },
+          "type": "requirementAnswer",
+          "requirement": {
+            "id": "1d44e888-b624-47e2-8dcc-eea12af39d4e",
+            "title": "Seter foran",
+            "description": "",
+            "needId": "7c7631a7-eacb-4c3a-82ca-e3096c50e71d",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "b1d22e3d-5fbe-47df-807c-14a378d1a5a3",
+                "requirementText": "Oppgi antall seter foran i kjøretøyet inkludert sjåførens sete.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "2f975346-7f8f-4684-8879-d2b663be79ab",
+                    "type": "Q_SLIDER",
+                    "config": {
+                      "min": 1,
+                      "max": 3,
+                      "step": 1,
+                      "unit": "sete(r)",
+                      "defaultPoint": 1,
+                      "scoreValues": []
+                    },
+                    "answer": {
+                      "point": 0,
+                      "value": "1"
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Antall"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        },
+        {
+          "id": "9f2f6e0b-2b20-4ed8-8e19-cfc2ee1c6156",
+          "questionId": "d56195e3-ee4e-403c-8687-1ebcac80c94d",
+          "weight": 50,
+          "variantId": "4c27a656-1f39-45cd-9757-cd3605500597",
+          "question": {
+            "id": "d56195e3-ee4e-403c-8687-1ebcac80c94d",
+            "type": "Q_CODELIST",
+            "config": {
+              "mandatoryCodes": [],
+              "optionalCodes": [],
+              "codelist": "322ffb17-c74d-4da3-8827-d6bbdbe241ff",
+              "codes": [
+                {
+                  "code": "f9935288-7729-4ae0-bbb5-465684f9773f",
+                  "mandatory": false,
+                  "score": 20
+                },
+                {
+                  "code": "b324b109-a78a-40cf-a131-ea82aaaffcfa",
+                  "mandatory": false,
+                  "score": 100
+                },
+                {
+                  "code": "b2da9b1e-d48f-4994-a89a-f14b44c34660",
+                  "mandatory": false,
+                  "score": 70
+                }
+              ],
+              "defaultPoint": 1,
+              "optionalCodeMinAmount": 1,
+              "optionalCodeMaxAmount": 1
+            },
+            "answer": {
+              "point": 0,
+              "codes": []
+            },
+            "sourceRel": null,
+            "sourceOriginal": null
+          },
+          "type": "requirementAnswer",
+          "requirement": {
+            "id": "0e5086cb-e4fc-493c-8286-e524dd925ab8",
+            "title": "Karosserifarge",
+            "description": "",
+            "needId": "6bddecaf-dce4-4942-ab64-7bc439f75b25",
+            "type": "requirement",
+            "variants": [
+              {
+                "id": "4c27a656-1f39-45cd-9757-cd3605500597",
+                "requirementText": "Oppgi kjøretøyets primære farge på karosseriet.",
+                "instruction": "",
+                "useProduct": true,
+                "useSpesification": false,
+                "useQualification": false,
+                "products": [
+                  "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
+                  "aacfeb2e-811b-4f21-8229-7399e04f9125",
+                  "b15d3434-ff76-4676-b9d7-183438c1e6b1"
+                ],
+                "questions": [
+                  {
+                    "id": "d56195e3-ee4e-403c-8687-1ebcac80c94d",
+                    "type": "Q_CODELIST",
+                    "config": {
+                      "mandatoryCodes": [],
+                      "optionalCodes": [],
+                      "codelist": "322ffb17-c74d-4da3-8827-d6bbdbe241ff",
+                      "codes": [],
+                      "defaultPoint": 1,
+                      "optionalCodeMinAmount": 0,
+                      "optionalCodeMaxAmount": 1
+                    },
+                    "answer": {
+                      "point": 0,
+                      "codes": []
+                    },
+                    "sourceRel": null,
+                    "sourceOriginal": null
+                  }
+                ],
+                "type": "requirement",
+                "description": "Farge"
+              }
+            ],
+            "tags": [],
+            "sourceOriginal": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
+            "sourceRel": null
+          }
+        }
+      ],
+      "type": "specificationProduct",
+      "sourceOriginal": null,
+      "sourceRel": null,
+      "unit": "Stk"
+    }
+  ],
+  "requirements": [],
+  "requirementAnswers": [],
+  "caseNumber": "",
+  "currencyUnit": "NOK"
+}
