@@ -1,7 +1,7 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.security.TestSecurity
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
@@ -10,7 +10,7 @@ import org.kravbank.dao.PublicationForm
 
 
 @QuarkusTest
-@QuarkusIntegrationTest
+@TestSecurity(authorizationEnabled = false)
 class PublicationResourceTest {
 
     @Test
@@ -35,7 +35,7 @@ class PublicationResourceTest {
     fun createPublication() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects";
+        RestAssured.basePath = "/api/v1/projects"
 
         val form = PublicationForm()
         form.comment = "Integrasjonstest publication - comment 1"
@@ -57,7 +57,7 @@ class PublicationResourceTest {
     fun updatePublication() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects";
+        RestAssured.basePath = "/api/v1/projects"
 
 
         val form = PublicationForm()

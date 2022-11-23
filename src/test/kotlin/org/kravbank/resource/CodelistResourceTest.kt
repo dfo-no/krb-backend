@@ -1,7 +1,7 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.security.TestSecurity
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodelistForm
 
 @QuarkusTest
-@QuarkusIntegrationTest
+@TestSecurity(authorizationEnabled = false)
 internal class CodelistResourceTest() {
 
     @Test
@@ -33,7 +33,7 @@ internal class CodelistResourceTest() {
     fun createCodelist() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects";
+        RestAssured.basePath = "/api/v1/projects"
 
         val codelist = CodelistForm()
         codelist.title = "CODELIST Integrasjonstest - Tittel 1"

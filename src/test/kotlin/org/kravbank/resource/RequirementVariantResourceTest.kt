@@ -1,7 +1,7 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.security.TestSecurity
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
@@ -10,7 +10,7 @@ import org.kravbank.dao.RequirementVariantForm
 
 
 @QuarkusTest
-@QuarkusIntegrationTest
+@TestSecurity(authorizationEnabled = false)
 class RequirementVariantResourceTest {
 
     @Test
@@ -25,7 +25,8 @@ class RequirementVariantResourceTest {
     @Test
     fun listRequirementVariants() {
         given()
-            .`when`().get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
+            .`when`()
+            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
             .then()
             .statusCode(200)
     }

@@ -1,7 +1,7 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.security.TestSecurity
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.NeedForm
 
 @QuarkusTest
-@QuarkusIntegrationTest
+@TestSecurity(authorizationEnabled = false)
 class NeedResourceTest {
 
     @Test
@@ -33,7 +33,7 @@ class NeedResourceTest {
     fun createNeed() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects";
+        RestAssured.basePath = "/api/v1/projects"
 
         val form = NeedForm()
         form.title = "POST Integrasjonstest need - tittel 1"
@@ -54,7 +54,7 @@ class NeedResourceTest {
     fun updateNeed() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects";
+        RestAssured.basePath = "/api/v1/projects"
 
         val form = NeedForm()
         form.title = "PUT Integrasjonstest need - tittel 1"

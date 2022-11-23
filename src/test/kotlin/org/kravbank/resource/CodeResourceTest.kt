@@ -1,7 +1,7 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.security.TestSecurity
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
@@ -10,7 +10,7 @@ import org.kravbank.dao.CodeForm
 
 
 @QuarkusTest
-@QuarkusIntegrationTest
+@TestSecurity(authorizationEnabled = false)
 class CodeResourceTest {
 
     @Test
@@ -64,7 +64,7 @@ class CodeResourceTest {
     fun updateCode() {
         RestAssured.defaultParser = Parser.JSON
         RestAssured.baseURI = "/api/v1/projects"
-        RestAssured.basePath = "/api/v1/projects";
+        RestAssured.basePath = "/api/v1/projects"
 
         val code = CodeForm()
         code.title = "CODE Integrasjonstest tittel"
