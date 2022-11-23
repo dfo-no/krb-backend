@@ -66,17 +66,3 @@ class DownloadResource {
             .build()
     }
 }
-
-
-/**
- * Todo: Utkommentert kode er fra den originale java-filen. Slettes hvis migrering ok.
-var headers = new HttpHeaders();
-headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf");
-headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
-headers.setCacheControl(CacheControl.noCache());
-headers.add(HttpHeaders.PRAGMA, "public");
-headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-.body(new InputStreamResource(bis));
- *
- */

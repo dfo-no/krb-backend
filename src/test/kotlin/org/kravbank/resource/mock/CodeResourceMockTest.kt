@@ -133,9 +133,7 @@ internal class CodeResourceMockTest {
         Mockito.`when`(codeRepository.listAllCodes(codelistId)).thenReturn(codes)
         val response: Response = codeResource.listCodes(projectRef, codelistRef)
 
-
         val entity: List<CodeResponse> = response.entity as List<CodeResponse>
-
 
         //val entity: List<CodeForm> = response.entity as List<CodeForm>
 

@@ -2,10 +2,9 @@ package org.kravbank.dao.code
 
 import org.kravbank.domain.Code
 
-/** TODO:
- * Alternativ måte til CodeForm og Mapping å håndtere responses
- * Kotlin extension functions
- * Istedenfor å arve fra klasse eller bruke design patterns
+/**
+ * Alternativ måte til CodeForm og Mapping med:
+ * Kotlin extension funksjoner
  */
 data class CodeResponse(
     val ref: String,
