@@ -143,6 +143,7 @@ internal class CodelistResourceMockTest {
 
         val response: Response = codelistResource.listCodelists(projectRef)
 
+        @Suppress("UNCHECKED_CAST")
         val entity: List<CodelistForm> = response.entity as List<CodelistForm>
 
         //assert
@@ -227,7 +228,7 @@ internal class CodelistResourceMockTest {
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        assertEquals("Oppdatert tittel", entity.title);
+        assertEquals("Oppdatert tittel", entity.title)
     }
 
     @Test

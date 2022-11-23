@@ -12,7 +12,6 @@ import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.RequirementVariantResource
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
@@ -28,7 +27,6 @@ internal class RequirementVariantResourceMockTest {
 
     //entity
     var project: Project = Project()
-    var code: Code = Code()
     var publication: Publication = Publication()
     var product: Product = Product()
     var requirement: Requirement = Requirement()
@@ -37,7 +35,6 @@ internal class RequirementVariantResourceMockTest {
     var reqVariant: RequirementVariant = RequirementVariant()
 
     //lists
-    var codes: MutableList<Code> = mutableListOf()
     var codelists: MutableList<Codelist> = mutableListOf()
     var requirements: MutableList<Requirement> = mutableListOf()
     var needs: MutableList<Need> = mutableListOf()
@@ -45,15 +42,11 @@ internal class RequirementVariantResourceMockTest {
     var products: MutableList<Product> = mutableListOf()
     var reqVariants: MutableList<RequirementVariant> = mutableListOf()
 
-    val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
-
 
     //arrange
-    val projectId = 2L
     val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
     val requirementId = 12L
     val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-    val reqVariantId = 14L
     val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
     @BeforeEach
@@ -114,7 +107,7 @@ internal class RequirementVariantResourceMockTest {
     }
 
     @Test
-    fun getProduct_OK() {
+    fun getReqVariant_OK() {
         //mock
         Mockito
             .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
@@ -165,7 +158,7 @@ internal class RequirementVariantResourceMockTest {
     */
 
     @Test
-    fun listProducts_OK() {
+    fun listReqVariant_OK() {
 
         //mock
         Mockito
@@ -173,6 +166,9 @@ internal class RequirementVariantResourceMockTest {
             .thenReturn(reqVariants)
 
         val response: Response = requirementVariantResource.listRequirementVariants(projectRef, requirementRef)
+
+        // val entity = listOf(response.entity).filterIsInstance<RequirementVariantForm>().takeIf { it.size == listOf(response.entity).size }!!
+        @Suppress("UNCHECKED_CAST")
         val entity: List<RequirementVariantForm> = response.entity as List<RequirementVariantForm>
 
         //assert
@@ -208,7 +204,7 @@ internal class RequirementVariantResourceMockTest {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
     /*
@@ -221,7 +217,7 @@ internal class RequirementVariantResourceMockTest {
      */
 
     @Test
-    fun deleteProduct_OK() {
+    fun deleteReqVariant_OK() {
         //mock
         Mockito
             .`when`(requirementVariantRepository.deleteRequirementVariant(requirementId, reqVariantRef))
@@ -261,7 +257,7 @@ internal class RequirementVariantResourceMockTest {
 
     */
     @Test
-    fun updateProduct_OK() {
+    fun updateReqVariant_OK() {
         //arrange
         val form = RequirementVariantForm()
         form.ref = reqVariantRef

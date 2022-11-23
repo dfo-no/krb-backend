@@ -13,7 +13,6 @@ import org.kravbank.repository.RequirementRepository
 import org.kravbank.resource.RequirementResource
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.BadRequestException
 import javax.ws.rs.core.Response
@@ -30,16 +29,12 @@ internal class RequirementResourceMockTest {
 
     //entity
     var project: Project = Project()
-    var code: Code = Code()
     var publication: Publication = Publication()
-    var product: Product = Product()
     var requirement: Requirement = Requirement()
     var need: Need = Need()
-
     var reqVariant: RequirementVariant = RequirementVariant()
 
     //lists
-    var codes: MutableList<Code> = mutableListOf()
     var codelists: MutableList<Codelist> = mutableListOf()
     var requirements: MutableList<Requirement> = mutableListOf()
     var needs: MutableList<Need> = mutableListOf()
@@ -47,15 +42,10 @@ internal class RequirementResourceMockTest {
     var products: MutableList<Product> = mutableListOf()
     var reqVariants: MutableList<RequirementVariant> = mutableListOf()
 
-    val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
-
     //arrange
     val projectId = 2L
     val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    val requirementId = 12L
     val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-    val needId = 10L
-    val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
     @BeforeEach
     fun setUp() {
@@ -123,7 +113,6 @@ internal class RequirementResourceMockTest {
         assertEquals("Requirement beskrivelse", entity.description)
     }
 
-
     @Test
     fun getRequirement_KO() {
 
@@ -145,6 +134,11 @@ internal class RequirementResourceMockTest {
         Mockito.`when`(requirementRepository.listAllRequirements(projectId)).thenReturn(requirements)
 
         val response: Response = requirementResource.listRequirements(projectRef)
+
+        // val entity = listOf(response.entity).filterIsInstance<RequirementForm>()
+        //.takeIf { it.size == listOf(response.entity).size }!!
+
+        @Suppress("UNCHECKED_CAST")
         val entity: List<RequirementForm> = response.entity as List<RequirementForm>
 
         //assert
@@ -172,7 +166,7 @@ internal class RequirementResourceMockTest {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
 

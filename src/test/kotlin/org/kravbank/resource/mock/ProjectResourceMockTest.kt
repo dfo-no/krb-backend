@@ -47,13 +47,7 @@ internal class ProjectResourceMockTest {
     var products: MutableList<Product> = mutableListOf()
 
     //arrange
-    val projectId = 1L
     val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
-
-    // val projectId = 3L
-    //val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-
-    //val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
 
     @BeforeEach
     fun setUp() {
@@ -142,6 +136,11 @@ internal class ProjectResourceMockTest {
         val response: Response = projectResource.listProjects()
 
         //map
+        //val entity =
+        //    listOf(response.entity).filterIsInstance<ProjectForm>()
+        //.takeIf { it.size == listOf(response.entity).size }!!
+
+        @Suppress("UNCHECKED_CAST")
         val entity: List<ProjectForm> = response.entity as List<ProjectForm>
 
         //assert
@@ -169,7 +168,7 @@ internal class ProjectResourceMockTest {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
 
@@ -203,7 +202,7 @@ internal class ProjectResourceMockTest {
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
-        assertEquals("Oppdatert tittel", entity.title);
+        assertEquals("Oppdatert tittel", entity.title)
     }
 
     @Test

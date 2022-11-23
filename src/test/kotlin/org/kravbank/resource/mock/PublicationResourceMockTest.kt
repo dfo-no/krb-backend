@@ -12,7 +12,6 @@ import org.kravbank.repository.PublicationRepository
 import org.kravbank.resource.PublicationResource
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
@@ -28,7 +27,6 @@ internal class PublicationResourceMockTest {
 
     //entity
     var project: Project = Project()
-    var code: Code = Code()
     var publication: Publication = Publication()
     var product: Product = Product()
     var requirement: Requirement = Requirement()
@@ -37,7 +35,6 @@ internal class PublicationResourceMockTest {
     var reqVariant: RequirementVariant = RequirementVariant()
 
     //lists
-    var codes: MutableList<Code> = mutableListOf()
     var codelists: MutableList<Codelist> = mutableListOf()
     var requirements: MutableList<Requirement> = mutableListOf()
     var needs: MutableList<Need> = mutableListOf()
@@ -45,13 +42,9 @@ internal class PublicationResourceMockTest {
     var products: MutableList<Product> = mutableListOf()
     var reqVariants: MutableList<RequirementVariant> = mutableListOf()
 
-    val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
-
-
     //arrange
     val projectId = 3L
     val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-    val publicationId = 8L
     val publicationRef = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
 
 
@@ -144,6 +137,12 @@ internal class PublicationResourceMockTest {
             .thenReturn(publications)
 
         val response: Response = publicationResource.listPublications(projectRef)
+
+        //val entity =
+        //   listOf(response.entity).filterIsInstance<PublicationForm>()
+        //.takeIf { it.size == listOf(response.entity).size }!!
+
+        @Suppress("UNCHECKED_CAST")
         val entity: List<PublicationForm> = response.entity as List<PublicationForm>
 
         //assert
@@ -169,7 +168,7 @@ internal class PublicationResourceMockTest {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
     @Test
@@ -192,7 +191,7 @@ internal class PublicationResourceMockTest {
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         val entity: Publication = PublicationForm().toEntity(response.entity as PublicationForm)
-        assertEquals("Oppdatert Comment", entity.comment);
+        assertEquals("Oppdatert Comment", entity.comment)
     }
 
 

@@ -130,13 +130,17 @@ internal class NeedResourceMockTest {
         //arrange
         val projectId = 2L
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val needID = 10L
-        val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         //mock
         Mockito.`when`(needRepository.listAllNeeds(projectId)).thenReturn(needs)
 
         val response: Response = needResource.listNeeds(projectRef)
+
+        //val entity =
+        // listOf(response.entity).filterIsInstance<NeedForm>()
+        //.takeIf { it.size == listOf(response.entity).size }!!
+
+        @Suppress("UNCHECKED_CAST")
         val entity: List<NeedForm> = response.entity as List<NeedForm>
 
         //assert
@@ -164,7 +168,7 @@ internal class NeedResourceMockTest {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
 
@@ -174,7 +178,6 @@ internal class NeedResourceMockTest {
         //arrange
         val projectId = 2L
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val needID = 10L
         val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         Mockito.`when`(needRepository.deleteNeed(projectId, needRef)).thenReturn(need)
@@ -191,7 +194,6 @@ internal class NeedResourceMockTest {
         //arrange
         val projectId = 2L
         val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val needID = 10L
         val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         val form = NeedForm()
@@ -210,7 +212,7 @@ internal class NeedResourceMockTest {
         val entity: Need = NeedForm().toEntity(response.entity as NeedForm)
 
         assertEquals("Oppdatert tittel", entity.title)
-        assertEquals("Oppdatert beskrivelse", entity.description);
+        assertEquals("Oppdatert beskrivelse", entity.description)
 
     }
 

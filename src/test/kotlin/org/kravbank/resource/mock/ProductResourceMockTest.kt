@@ -13,7 +13,6 @@ import org.kravbank.repository.ProductRepository
 import org.kravbank.resource.ProductResource
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.BadRequestException
 import javax.ws.rs.core.Response
@@ -30,16 +29,13 @@ internal class ProductResourceMockTest {
 
     //entity
     var project: Project = Project()
-    var code: Code = Code()
     var publication: Publication = Publication()
     var product: Product = Product()
     var requirement: Requirement = Requirement()
     var need: Need = Need()
-
     var reqVariant: RequirementVariant = RequirementVariant()
 
     //lists
-    var codes: MutableList<Code> = mutableListOf()
     var codelists: MutableList<Codelist> = mutableListOf()
     var requirements: MutableList<Requirement> = mutableListOf()
     var needs: MutableList<Need> = mutableListOf()
@@ -47,15 +43,10 @@ internal class ProductResourceMockTest {
     var products: MutableList<Product> = mutableListOf()
     var reqVariants: MutableList<RequirementVariant> = mutableListOf()
 
-    val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
-
     //arrange
     val projectId = 3L
     val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-    val productId = 5L
     val productRef = "edb4db69-edb2-431f-855a-4368e2bcddd1"
-    val reqVariantId = 14
-    val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
     @BeforeEach
     fun setUp() {
@@ -142,6 +133,12 @@ internal class ProductResourceMockTest {
             .thenReturn(products)
 
         val response: Response = productResource.listProducts(projectRef)
+
+        // val entity =
+        //   listOf(response.entity).filterIsInstance<ProductForm>()
+        //.takeIf { it.size == listOf(response.entity).size }!!
+
+        @Suppress("UNCHECKED_CAST")
         val entity: List<ProductForm> = response.entity as List<ProductForm>
 
         //assert
@@ -172,7 +169,7 @@ internal class ProductResourceMockTest {
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
 
