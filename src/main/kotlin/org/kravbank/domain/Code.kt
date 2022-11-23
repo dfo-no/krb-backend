@@ -1,20 +1,19 @@
-package org.kravbank.domain;
+package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
 
 @Entity
-class Code : PanacheEntity() {
+class Code(
+    var title: String = "",
 
-    var title: String = ""
-
-    var description: String = ""
+    var description: String = "",
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
@@ -24,4 +23,5 @@ class Code : PanacheEntity() {
     @JsonIgnore
     @JoinColumn(name = "codelist_id_fk")
     var codelist: Codelist? = null
-}
+) : PanacheEntity()
+

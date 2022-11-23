@@ -6,7 +6,9 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.dao.CodeForm
+import org.kravbank.dao.code.CodeCreateRequest
+import org.kravbank.dao.code.CodeResponse
+import org.kravbank.dao.code.CodeUpdateRequest
 import org.kravbank.domain.*
 import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.CodeRepository
@@ -27,12 +29,10 @@ internal class CodeResourceMockTest {
     lateinit var codeResource: CodeResource
 
     //arrange
-    val projectId = 3L
     val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
     val codelistId = 4L
     val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
     val codeRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
-    //val codeId = 17L
 
 
     //entity
@@ -114,7 +114,9 @@ internal class CodeResourceMockTest {
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
 
-        val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
+
+        val entity: CodeResponse = response.entity as CodeResponse
+        //val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
 
         assertEquals("Tittel kode", entity.title)
         assertEquals("beskrivelse kode", entity.description)
@@ -131,7 +133,11 @@ internal class CodeResourceMockTest {
         Mockito.`when`(codeRepository.listAllCodes(codelistId)).thenReturn(codes)
         val response: Response = codeResource.listCodes(projectRef, codelistRef)
 
-        val entity: List<CodeForm> = response.entity as List<CodeForm>
+
+        val entity: List<CodeResponse> = response.entity as List<CodeResponse>
+
+
+        //val entity: List<CodeForm> = response.entity as List<CodeForm>
 
         //assert
         assertNotNull(response)
@@ -148,12 +154,13 @@ internal class CodeResourceMockTest {
         Mockito.doNothing().`when`(codeRepository).persist(ArgumentMatchers.any(Code::class.java))
         Mockito.`when`(codeRepository.isPersistent(ArgumentMatchers.any(Code::class.java))).thenReturn(true)
 
-        val form = CodeForm().fromEntity(code)
+        val form = CodeCreateRequest(code.title, code.description)
+
         val response: Response = codeResource.createCode(projectRef, codelistRef, form)
 
         //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
 
@@ -189,10 +196,10 @@ internal class CodeResourceMockTest {
     fun updateCode_OK() {
 
         //arrange
-        val form = CodeForm()
-        form.ref = codeRef
-        form.title = "Oppdatert tittel"
-        form.description = "Oppdatert beskrivelse"
+        val form = CodeUpdateRequest(
+            "Oppdatert tittel",
+            "Oppdatert beskrivelse"
+        )
 
         //mock
         Mockito
@@ -204,9 +211,13 @@ internal class CodeResourceMockTest {
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
+
+
+        val entity: CodeResponse = response.entity as CodeResponse
+        //val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
+
         assertEquals("Oppdatert tittel", entity.title)
-        assertEquals("Oppdatert beskrivelse", entity.description);
+        assertEquals("Oppdatert beskrivelse", entity.description)
     }
 
     /*
