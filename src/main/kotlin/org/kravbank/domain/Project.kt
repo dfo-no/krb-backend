@@ -37,7 +37,6 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value = "val-publication")
     var publications = mutableListOf<Publication>()
 
@@ -46,7 +45,6 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value = "val-requirement")
     var requirements = mutableListOf<Requirement>()
 
@@ -55,7 +53,6 @@ class Project : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value = "val-need-project")
     var needs = mutableListOf<Need>()
 
@@ -65,6 +62,5 @@ class Project : PanacheEntity() {
         orphanRemoval = true,
     )
     @JsonBackReference(value = "val-codelist")
-    //@JsonIgnore
     var codelist = mutableListOf<Codelist>()
 }

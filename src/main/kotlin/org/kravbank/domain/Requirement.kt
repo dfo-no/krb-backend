@@ -1,9 +1,9 @@
-package org.kravbank.domain;
+package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
 
@@ -18,7 +18,6 @@ class Requirement : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value = "val-requirementVariant")
     var requirementvariants = mutableListOf<RequirementVariant>()
 

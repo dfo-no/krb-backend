@@ -11,9 +11,9 @@ import javax.persistence.*
 @Entity
 class Product : PanacheEntity() {
 
-    var title: String = ""
+    lateinit var title: String
 
-    var description: String = ""
+    lateinit var description: String
 
     var deletedDate: LocalDateTime? = null
 
