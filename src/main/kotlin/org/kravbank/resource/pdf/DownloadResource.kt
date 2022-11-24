@@ -1,11 +1,11 @@
 package org.kravbank.resource.pdf
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.itextpdf.text.pdf.codec.Base64
+import com.google.common.io.ByteStreams
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
-import org.jboss.resteasy.annotations.cache.NoCache
-import org.kravbank.service.pdf.PdfService
-import java.io.ByteArrayInputStream
+import org.kravbank.service.WrapperService
+import java.io.InputStream
+import java.util.*
+import javax.inject.Inject
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -14,69 +14,54 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM
 import javax.ws.rs.core.Response
 
-@Path("/api/v1/pdf")
+@Path("/api/v1/wrap")
 class DownloadResource {
 
+    @Inject
+    lateinit var wrapperService: WrapperService
+
     @POST
-    @Path(value = "/generateSpecification")
+    @Path(value = "/specification")
     @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_OCTET_STREAM) //PDF
-    @NoCache
-    fun generateSpecification(@RequestBody jsonNode: JsonNode): Response {
-        val bis: ByteArrayInputStream = PdfService.generateSpecification(jsonNode)
+    @Produces(APPLICATION_OCTET_STREAM)
+    fun generateSpecification(@RequestBody json: InputStream): Response {
+        val pdf: InputStream = wrapperService.createPdf(json)
 
         return Response
-            .ok(Base64.InputStream(bis))
-            .header("CONTENT_DISPOSITION", "attachment; filename=report.pdf") // Headers for Swagger UI.
-            .header("CONTENT_TYPE", "APPLICATION_PDF_VALUE")
-            .header("PRAGMA", "public")
-            .header("ACCESS_CONTROL_ALLOW_ORIGIN", "*")
+            .ok(Base64.getEncoder().encode(ByteStreams.toByteArray(pdf)))
+            .header("Content-Disposition", "attachment; filename=specification.pdf")
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Pragma", "public")
             .build()
     }
 
     @POST
-    @Path(value = "/generateResponse")
+    @Path(value = "/report")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_OCTET_STREAM)
-    @NoCache
-    fun generateResponse(@RequestBody jsonNode: JsonNode): Response {
-        val bis: ByteArrayInputStream = PdfService.generateResponse(jsonNode)
+    fun generateResponse(@RequestBody json: InputStream): Response {
+        val pdf: InputStream = wrapperService.createPdf(json)
+
         return Response
-            .ok(Base64.InputStream(bis))
-            .header("CONTENT_DISPOSITION", "attachment; filename=report.pdf") // Headers for Swagger UI.
-            .header("CONTENT_TYPE", "APPLICATION_PDF_VALUE")
-            .header("PRAGMA", "public")
-            .header("ACCESS_CONTROL_ALLOW_ORIGIN", "*")
+            .ok(Base64.getEncoder().encode(ByteStreams.toByteArray(pdf)))
+            .header("Content-Disposition", "attachment; filename=report.pdf")
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Pragma", "public")
             .build()
     }
 
     @POST
-    @Path(value = "/generatePrefilledResponse")
+    @Path(value = "/prefilled")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_OCTET_STREAM)
-    @NoCache
-    fun generatePrefilledResponse(@RequestBody jsonNode: JsonNode): Response {
-        val bis: ByteArrayInputStream = PdfService.generatePrefilledResponse(jsonNode)
+    fun generatePrefilledResponse(@RequestBody json: InputStream): Response {
+        val pdf: InputStream = wrapperService.createPdf(json)
+
         return Response
-            .ok(Base64.InputStream(bis))
-            .header("CONTENT_DISPOSITION", "attachment; filename=report.pdf") // Headers for Swagger UI.
-            .header("CONTENT_TYPE", "APPLICATION_PDF_VALUE")
-            .header("PRAGMA", "public")
-            .header("ACCESS_CONTROL_ALLOW_ORIGIN", "*")
+            .ok(Base64.getEncoder().encode(ByteStreams.toByteArray(pdf)))
+            .header("Content-Disposition", "attachment; filename=prefilled.pdf")
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Pragma", "public")
             .build()
     }
 }
-
-
-/**
- * Todo: Utkommentert kode er fra den originale java-filen. Slettes hvis migrering ok.
-var headers = new HttpHeaders();
-headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf");
-headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
-headers.setCacheControl(CacheControl.noCache());
-headers.add(HttpHeaders.PRAGMA, "public");
-headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-.body(new InputStreamResource(bis));
- *
- */

@@ -1,50 +1,90 @@
-package org.kravbank.service;
+package org.kravbank.service
 
-import kotlin.io.ByteStreamsKt;
-import net.sf.saxon.s9api.*;
-import org.kravbank.lang.BackendException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.google.common.io.ByteStreams
+import com.lowagie.text.pdf.PdfFileSpecification
+import net.sf.saxon.s9api.*
+import org.eclipse.microprofile.config.inject.ConfigProperty
+import org.kravbank.lang.BackendException
+import org.xhtmlrenderer.pdf.ITextRenderer
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
+import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
+import javax.xml.transform.stream.StreamSource
 
 @ApplicationScoped
-public class WrapperService {
+class WrapperService
+@Inject @Throws(BackendException::class) constructor() {
 
-    private Processor processor;
+    // Saxon processor
+    private final var processor: Processor = Processor(false)
 
-    private XsltExecutable executable;
+    private final var executable: XsltExecutable
 
-    @Inject
-    public void init() throws BackendException {
-        // Initiate a Saxon processor
-        this.processor = new Processor(false);
+    @ConfigProperty(name = "kravbank.frontend.link")
+    lateinit var krbLink: String
 
-        // Load the XSLT used to create HTML for wrapper
-        try (InputStream inputStream = getClass().getResourceAsStream("/xslt/wrapper.xslt")) {
-            this.executable = this.processor.newXsltCompiler().compile(new StreamSource(inputStream));
-        } catch (SaxonApiException | IOException e) {
-            throw new BackendException("Unable to load XSLT parser.", e);
+    init {
+        try {
+            // Load the XSLT used to create HTML for wrapper
+            javaClass.getResourceAsStream("/xslt/wrapper.xslt").use { inputStream ->
+                executable = processor.newXsltCompiler().compile(
+                    StreamSource(inputStream)
+                )
+            }
+        } catch (e: SaxonApiException) {
+            throw BackendException("Unable to load XSLT parser.", e)
+        } catch (e: IOException) {
+            throw BackendException("Unable to load XSLT parser.", e)
         }
     }
 
-    public InputStream createHtml(InputStream jsonSource) throws BackendException {
-        try {
-            var baos = new ByteArrayOutputStream();
+    @Throws(BackendException::class)
+    fun createPdf(jsonSource: InputStream): InputStream {
+        // Read json content for reuse
+        val json = ByteArrayOutputStream()
+        ByteStreams.copy(jsonSource, json)
 
-            var transformer = executable.load();
-            transformer.setSource(new StreamSource(new ByteArrayInputStream("<Input />".getBytes())));
-            transformer.setDestination(processor.newSerializer(baos));
-            transformer.setParameter(new QName("json"), new XdmAtomicValue(new String(ByteStreamsKt.readBytes(jsonSource))));
-            transformer.transform();
+        // Create HTML
+        val html = createHtml(ByteArrayInputStream(json.toByteArray()))
 
-            return new ByteArrayInputStream(baos.toByteArray());
-        } catch (SaxonApiException e) {
-            throw new BackendException("Unable to create HTML from JSON.", e);
+        val pdf = ByteArrayOutputStream()
+        val renderer = ITextRenderer()
+
+        // Render HTML as PDF
+        renderer.sharedContext.isPrint = true
+        renderer.sharedContext.isInteractive = false
+        renderer.setDocumentFromString(String(ByteStreams.toByteArray(html)))
+        renderer.layout()
+        renderer.createPDF(pdf, false)
+
+        // Add attachment
+        renderer.writer.addFileAttachment(
+            PdfFileSpecification.fileEmbedded(renderer.writer, null, "bank.json", json.toByteArray()))
+
+        // Close file
+        renderer.finishPDF()
+
+        return ByteArrayInputStream(pdf.toByteArray());
+    }
+
+    @Throws(BackendException::class)
+    fun createHtml(jsonSource: InputStream): InputStream {
+        return try {
+            val baos = ByteArrayOutputStream()
+
+            val transformer = executable.load()
+            transformer.setSource(StreamSource(ByteArrayInputStream("<Input />".toByteArray())))
+            transformer.destination = processor.newSerializer(baos)
+            transformer.setParameter(QName("json"), XdmAtomicValue(String(jsonSource.readBytes())))
+            transformer.setParameter(QName("krb_link"), XdmAtomicValue(krbLink))
+            transformer.transform()
+
+            ByteArrayInputStream(baos.toByteArray())
+        } catch (e: SaxonApiException) {
+            throw BackendException("Unable to create HTML from JSON.", e)
         }
     }
 }

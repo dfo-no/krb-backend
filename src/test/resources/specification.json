@@ -1005,9 +1005,9 @@
     "projectId": "ebe7af77-dba5-4e5f-ba9b-8b4601182e9c",
     "deletedDate": null
   },
-  "title": "Test",
-  "organization": "Test",
-  "organizationNumber": "123123123",
+  "title": "Kjøp av elbiler til kommunen",
+  "organization": "Test kommune",
+  "organizationNumber": "991991736",
   "products": [
     {
       "id": "f52554bb-8ddb-4e16-8efb-e0b25f7efd69",
@@ -1280,6 +1280,6 @@
   ],
   "requirements": [],
   "requirementAnswers": [],
-  "caseNumber": "",
+  "caseNumber": "2022/404",
   "currencyUnit": "NOK"
 }

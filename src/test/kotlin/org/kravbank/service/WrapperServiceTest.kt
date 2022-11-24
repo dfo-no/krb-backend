@@ -1,29 +1,48 @@
-package org.kravbank.resource.wrapper;
+package org.kravbank.service
 
-import com.google.common.io.ByteStreams;
-import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.Test;
-import org.kravbank.lang.BackendException;
-import org.kravbank.service.WrapperService;
-
-import javax.inject.Inject;
-import java.io.IOException;
+import com.google.common.io.ByteStreams
+import io.quarkus.test.junit.QuarkusTest
+import org.junit.jupiter.api.Test
+import org.kravbank.lang.BackendException
+import java.io.FileOutputStream
+import java.io.IOException
+import javax.inject.Inject
 
 @QuarkusTest
-public class WrapperServiceTest {
+class WrapperServiceTest {
 
     @Inject
-    WrapperService wrapperService;
+    lateinit var wrapperService: WrapperService
 
     @Test
-    public void testCreateHtml() throws BackendException {
-        try (var inputStream = getClass().getResourceAsStream("/specification.json")) {
-            var result = wrapperService.createHtml(inputStream);
+    @Throws(BackendException::class)
+    fun testCreateHtml() {
+        try {
+            // TODO Write somewhere else
+            FileOutputStream("target/wrapper.html").use { outputStream ->
+                javaClass.getResourceAsStream("/specification.json").use { inputStream ->
+                    val result = wrapperService.createHtml(inputStream!!)
+                    ByteStreams.copy(result, outputStream)
+                }
+            }
+        } catch (e: IOException) {
+            throw BackendException(e.message!!, e)
+        }
+    }
 
-            ByteStreams.copy(result, System.out);
-
-        } catch (IOException e) {
-            throw new BackendException(e.getMessage(), e);
+    @Test
+    @Throws(BackendException::class)
+    fun testCreatePdf() {
+        try {
+            // TODO Write somewhere else
+            FileOutputStream("target/wrapper.pdf").use { outputStream ->
+                javaClass.getResourceAsStream("/specification.json").use { inputStream ->
+                    val result = wrapperService.createPdf(inputStream!!)
+                    ByteStreams.copy(result, outputStream)
+                }
+            }
+        } catch (e: IOException) {
+            throw BackendException(e.message!!, e)
         }
     }
 }
