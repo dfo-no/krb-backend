@@ -1,3 +1,5 @@
+package org.kravbank.resource
+
 import com.lowagie.text.pdf.PRStream
 import com.lowagie.text.pdf.PdfDictionary
 import com.lowagie.text.pdf.PdfName
@@ -13,7 +15,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/api/v1/unwrap")
-class UploadResource {
+class UnwrapResource {
 
     @POST
     @Path(value = "/uploadPdf")

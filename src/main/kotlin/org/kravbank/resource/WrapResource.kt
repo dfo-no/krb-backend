@@ -1,4 +1,4 @@
-package org.kravbank.resource.pdf
+package org.kravbank.resource
 
 import com.google.common.io.ByteStreams
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM
 import javax.ws.rs.core.Response
 
 @Path("/api/v1/wrap")
-class DownloadResource {
+class WrapResource {
 
     @Inject
     lateinit var wrapperService: WrapperService
