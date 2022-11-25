@@ -161,14 +161,13 @@ internal class RequirementResourceMockTest {
             .thenReturn(true)
 
         val form = RequirementForm().fromEntity(requirement)
-        form.needRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
+        form.needRef = "need210291111-edb2-431f-855a-4368e2bcddd1"
         val response: Response = requirementResource.createRequirement(projectRef, form)
 
         //assert
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
-
 
     @Test
     fun deleteRequirement_OK() {

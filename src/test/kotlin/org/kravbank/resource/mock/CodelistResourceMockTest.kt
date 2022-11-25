@@ -51,7 +51,6 @@ internal class CodelistResourceMockTest {
     val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
     val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
-
     @BeforeEach
     fun setUp() {
         //arrange

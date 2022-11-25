@@ -1,6 +1,5 @@
 package org.kravbank.resource
 
-import io.quarkus.security.identity.SecurityIdentity
 import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
@@ -9,12 +8,6 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-/*
-Todo
-Slettes senere
-Denne klassen er kun for illustrasjon
- */
-
 @Path("/test/api/v1/admin")
 @RolesAllowed("admin")
 class AdminResource {
@@ -22,17 +15,12 @@ class AdminResource {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @Inject
-    lateinit var identity: SecurityIdentity
-
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    //print(identity.hasRole("admin"))
     fun admin(): MutableMap<String, String> {
-        val map = mutableMapOf(
+        return mutableMapOf(
             "subject" to jwt.subject,
             "preferred_username" to jwt.getClaim("preferred_username")
         )
-        return map
     }
 }

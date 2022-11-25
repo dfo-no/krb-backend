@@ -133,8 +133,10 @@ internal class CodeResourceMockTest {
         Mockito.`when`(codeRepository.listAllCodes(codelistId)).thenReturn(codes)
         val response: Response = codeResource.listCodes(projectRef, codelistRef)
 
+        @Suppress("UNCHECKED_CAST")
         val entity: List<CodeResponse> = response.entity as List<CodeResponse>
 
+        //beholder inntill videre i påventa av om bruk av kotlin extensions skal erstatte DAO Form
         //val entity: List<CodeForm> = response.entity as List<CodeForm>
 
         //assert

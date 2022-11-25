@@ -151,7 +151,7 @@ internal class ProductResourceMockTest {
     }
 
     @Test
-    fun createRequirement_OK() {
+    fun createProduct_OK() {
         //mock
         Mockito
             .doNothing()
@@ -163,7 +163,7 @@ internal class ProductResourceMockTest {
             .thenReturn(true)
 
         val form = ProductForm().fromEntity(product)
-        form.requirementVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+        form.requirementVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
 
         val response: Response = productResource.createProduct(projectRef, form)
 
@@ -171,7 +171,6 @@ internal class ProductResourceMockTest {
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
-
 
     @Test
     fun updateProduct_OK() {
