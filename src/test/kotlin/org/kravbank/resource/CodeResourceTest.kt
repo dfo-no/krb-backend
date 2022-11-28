@@ -5,9 +5,9 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.dao.CodeForm
+import org.kravbank.dao.code.CodeCreateRequest
+import org.kravbank.dao.code.CodeUpdateRequest
 import org.kravbank.resource.utils.KeycloakAccess
-
 
 @QuarkusTest
 class CodeResourceTest {
@@ -39,16 +39,17 @@ class CodeResourceTest {
     @Test
     fun createCode() {
         RestAssured.defaultParser = Parser.JSON
-        val code = CodeForm()
-        code.title = "CODE Integrasjonstest tittel"
-        code.description = "CODE Integrasjonstest code desc"
-        val codeMapper = CodeForm().toEntity(code)
+        val code =
+            CodeCreateRequest(title = "CODE Integrasjonstest tittel", description = "CODE Integrasjonstest code desc")
+        // code.title = "CODE Integrasjonstest tittel"
+        // code.description = "CODE Integrasjonstest code desc"
+        //val codeMapper = CodeForm().toEntity(code)
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(codeMapper)
+            .body(code)
             .header("Content-type", "application/json")
             .post("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes")
             .then()
@@ -69,19 +70,22 @@ class CodeResourceTest {
     @Test
     fun updateCode() {
         RestAssured.defaultParser = Parser.JSON
-        val code = CodeForm()
-        code.title = "CODE Integrasjonstest tittel"
-        code.description = "CODE Integrasjonstest code desc"
-        val codeMapper = CodeForm().toEntity(code)
+        val code =
+            CodeUpdateRequest(title = "CODE Integrasjonstest tittel", description = "CODE Integrasjonstest code desc")
+        //code.title = "CODE Integrasjonstest tittel"
+        // code.description = "CODE Integrasjonstest code desc"
+        // val codeMapper = CodeUpdateRequest().toEntity(code)
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(codeMapper)
+            .body(code)
             .header("Content-type", "application/json")
             .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
+
+
 }
