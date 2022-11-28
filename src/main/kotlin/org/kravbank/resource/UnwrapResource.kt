@@ -1,7 +1,9 @@
-import com.itextpdf.text.pdf.PRStream
-import com.itextpdf.text.pdf.PdfDictionary
-import com.itextpdf.text.pdf.PdfName
-import com.itextpdf.text.pdf.PdfReader
+package org.kravbank.resource
+
+import com.lowagie.text.pdf.PRStream
+import com.lowagie.text.pdf.PdfDictionary
+import com.lowagie.text.pdf.PdfName
+import com.lowagie.text.pdf.PdfReader
 import org.jboss.resteasy.annotations.providers.multipart.PartType
 import java.io.IOException
 import java.io.InputStream
@@ -12,8 +14,8 @@ import javax.ws.rs.Path
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-@Path("/api/v1/pdf")
-class UploadResource {
+@Path("/api/v1/unwrap")
+class UnwrapResource {
 
     @POST
     @Path(value = "/uploadPdf")
