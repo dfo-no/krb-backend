@@ -5,6 +5,7 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.TestSetup
 import org.kravbank.domain.Project
 import org.kravbank.repository.ProjectRepository
 import org.mockito.ArgumentMatchers
