@@ -1,7 +1,9 @@
 package org.kravbank
 
 import org.kravbank.dao.ProjectForm
+import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.*
+import java.time.LocalDateTime
 
 class TestSetup {
 
@@ -28,7 +30,21 @@ class TestSetup {
 
         lateinit var projectForm: ProjectForm
 
+        lateinit var publicationForm: PublicationForm
+
         lateinit var updatedProjectForm: ProjectForm
+
+        lateinit var updatedPublicationForm: PublicationForm
+
+        val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
+
+        val publication_projectRef: String = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
+        val project_publicationId: Long = 3L
+        val project_publicationRef: String = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+
+        val project_needRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+        val project_needId = 2L
+        val need_projectRef: String = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         fun arrange() {
             //DOMAIN
@@ -67,12 +83,20 @@ class TestSetup {
             need.id = 122L
             need.title = "tittel"
             need.description = "desv"
+            need.requirements = requirements
+            need.project = project
+
 
             publication = Publication()
+            publication.id = 200
+            publication.ref = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
+            publication.project = project
+            publication.date = dateTime
+            publication.comment = "En publicationskommentar"
+
             requirement = Requirement()
             projects.add(project)
 
-            // FORM
             val newProject = Project()
             newProject.title = "andre prosjekt"
             newProject.description = "andre prosjektbeskrivelse"
@@ -86,12 +110,26 @@ class TestSetup {
 
             projectForm = ProjectForm().fromEntity(newProject)
 
-            //FORM Update
+            val newPublication = Publication()
+            newPublication.id = 201
+            newPublication.ref = "asdsa-fdsf-34-fsd-dsgf-35463fd"
+            newPublication.project = project
+            newPublication.date = dateTime
+            newPublication.comment = "En ny publicationskommentar"
+
+            publicationForm = PublicationForm().fromEntity(newPublication)
+
+            //FORM Update Project
             updatedProjectForm = ProjectForm()
             updatedProjectForm.title = "Oppdatert tittel"
             updatedProjectForm.description = "Oppdatert beskrivelse"
 
 
+            //FORM Update Project
+            updatedPublicationForm = PublicationForm()
+            updatedPublicationForm.ref = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
+            updatedPublicationForm.comment = "Oppdatert tittel"
+            updatedPublicationForm.date = LocalDateTime.of(2018, 2, 21, 10, 10, 10)
         }
     }
 }

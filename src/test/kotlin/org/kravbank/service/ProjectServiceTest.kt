@@ -78,8 +78,8 @@ internal class ProjectServiceTest {
         Assertions.assertNotNull(mockedProject)
         Assertions.assertEquals("andre prosjekt", mockedProject.title)
         Assertions.assertEquals("andre prosjektbeskrivelse", mockedProject.description)
-        // todo: ref endres for hver testkjøring
-        //Assertions.assertEquals(setup.project.ref, mockedProject.ref)
+        // todo: ref endres for hver testkjøring - se autogen domain
+        //  Assertions.assertEquals(setup.project.ref, mockedProject.ref)
         Assertions.assertEquals(setup.project.codelist, mockedProject.codelist)
         Assertions.assertEquals(setup.project.publications, mockedProject.publications)
         Assertions.assertEquals(setup.project.products, mockedProject.products)
