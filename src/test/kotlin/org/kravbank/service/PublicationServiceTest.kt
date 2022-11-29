@@ -37,7 +37,7 @@ internal class PublicationServiceTest {
         val mockedPublication: Publication =
             publicationService.get(setup.project_publicationRef, setup.publication_projectRef)
 
-        Assertions.assertEquals("En publicationskommentar", mockedPublication.comment)
+        Assertions.assertEquals(setup.publication.comment, mockedPublication.comment)
         // todo: ref endres for hver testkjøring - se autogen domain
         // Assertions.assertEquals("fdsfgds6783423-32524365-32432fds-354354", mockedPublication.ref)
         Assertions.assertEquals(200, mockedPublication.id)
@@ -54,7 +54,7 @@ internal class PublicationServiceTest {
 
         val mockedPublications: List<Publication> = publicationService.list(setup.project_publicationRef)
 
-        Assertions.assertEquals("En publicationskommentar", mockedPublications[0].comment)
+        Assertions.assertEquals(setup.publication.comment, mockedPublications[0].comment)
         // todo: ref endres for hver testkjøring - se autogen domain
         //Assertions.assertEquals(setup.project.ref, mockedPublications[0].ref)
         Assertions.assertEquals(200, mockedPublications[0].id)
@@ -76,14 +76,8 @@ internal class PublicationServiceTest {
             publicationService.create(setup.publication.project!!.ref, setup.publicationForm)
 
         Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals("En ny publicationskommentar", mockedPublication.comment)
-
-        //todo: attributtene blir null
-
-        /* Assertions.assertEquals(setup.publication.id, mockedPublication.id)
-         Assertions.assertEquals(setup.publication.project, mockedPublication.project)
-         Assertions.assertEquals(setup.publication.date, mockedPublication.date)
-         */
+        Assertions.assertEquals(setup.newPublication.comment, mockedPublication.comment)
+        Assertions.assertEquals(setup.newPublication.version, mockedPublication.version)
     }
 
     @Test
@@ -121,11 +115,9 @@ internal class PublicationServiceTest {
             setup.publication_projectRef,
             setup.updatedPublicationForm
         )
+
         Assertions.assertNotNull(mockedPublication)
         Assertions.assertEquals(setup.updatedPublicationForm.comment, mockedPublication.comment)
-        //Assertions.assertEquals(setup.updatedPublicationForm.date, mockedPublication.date)
-        //Assertions.assertEquals(setup.publication.id, mockedPublication.id)
-        //Assertions.assertEquals(setup.publication.project, mockedPublication.project)
     }
 
 }
