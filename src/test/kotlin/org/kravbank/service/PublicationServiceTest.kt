@@ -21,45 +21,48 @@ internal class PublicationServiceTest {
     @Inject
     lateinit var publicationService: PublicationService
 
-    val setup = TestSetup.SetDomains
+    val arrangeSetup = TestSetup.Arrange
 
     @BeforeEach
     fun setUp() {
-        setup.arrange()
+        arrangeSetup.start()
     }
 
     @Test
     fun get() {
         Mockito
-            .`when`(publicationRepository.findByRef(setup.project_publicationId, setup.publication_projectRef))
-            .thenReturn(setup.publication)
+            .`when`(
+                publicationRepository.findByRef(
+                    arrangeSetup.project_publicationId,
+                    arrangeSetup.publication_projectRef
+                )
+            )
+            .thenReturn(arrangeSetup.publication)
 
         val mockedPublication: Publication =
-            publicationService.get(setup.project_publicationRef, setup.publication_projectRef)
+            publicationService.get(arrangeSetup.project_publicationRef, arrangeSetup.publication_projectRef)
 
-        Assertions.assertEquals(setup.publication.comment, mockedPublication.comment)
+        Assertions.assertEquals(arrangeSetup.publication.comment, mockedPublication.comment)
         // todo: ref endres for hver testkjøring - se autogen domain
         // Assertions.assertEquals("fdsfgds6783423-32524365-32432fds-354354", mockedPublication.ref)
         Assertions.assertEquals(200, mockedPublication.id)
-        Assertions.assertEquals(setup.publication.project, mockedPublication.project)
-        Assertions.assertEquals(setup.publication.date, mockedPublication.date)
+        Assertions.assertEquals(arrangeSetup.publication.project, mockedPublication.project)
+        Assertions.assertEquals(arrangeSetup.publication.date, mockedPublication.date)
     }
 
     @Test
     fun list() {
         Mockito.`when`(
             publicationRepository
-                .listAllPublications(setup.project_publicationId)
-        ).thenReturn(setup.publications)
+                .listAllPublications(arrangeSetup.project_publicationId)
+        ).thenReturn(arrangeSetup.publications)
 
-        val mockedPublications: List<Publication> = publicationService.list(setup.project_publicationRef)
+        val mockedPublications: List<Publication> = publicationService.list(arrangeSetup.project_publicationRef)
 
-        Assertions.assertEquals(setup.publication.comment, mockedPublications[0].comment)
-        // todo: ref endres for hver testkjøring - se autogen domain
-        //Assertions.assertEquals(setup.project.ref, mockedPublications[0].ref)
+        Assertions.assertEquals(arrangeSetup.publication.comment, mockedPublications[0].comment)
         Assertions.assertEquals(200, mockedPublications[0].id)
-        Assertions.assertEquals(setup.publication.project, mockedPublications[0].project)
-        Assertions.assertEquals(setup.publication.date, mockedPublications[0].date)
+        Assertions.assertEquals(arrangeSetup.publication.project, mockedPublications[0].project)
+        Assertions.assertEquals(arrangeSetup.publication.date, mockedPublications[0].date)
     }
 
     @Test
@@ -73,11 +76,11 @@ internal class PublicationServiceTest {
             .thenReturn(true)
 
         val mockedPublication: Publication =
-            publicationService.create(setup.publication.project!!.ref, setup.publicationForm)
+            publicationService.create(arrangeSetup.publication.project!!.ref, arrangeSetup.publicationForm)
 
         Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(setup.newPublication.comment, mockedPublication.comment)
-        Assertions.assertEquals(setup.newPublication.version, mockedPublication.version)
+        Assertions.assertEquals(arrangeSetup.newPublication.comment, mockedPublication.comment)
+        Assertions.assertEquals(arrangeSetup.newPublication.version, mockedPublication.version)
     }
 
     @Test
@@ -107,17 +110,17 @@ internal class PublicationServiceTest {
     fun update() {
         Mockito
             .`when`(
-                publicationRepository.findByRef(setup.project_publicationId, setup.publication_projectRef)
-            ).thenReturn(setup.publication)
+                publicationRepository.findByRef(arrangeSetup.project_publicationId, arrangeSetup.publication_projectRef)
+            ).thenReturn(arrangeSetup.publication)
 
         val mockedPublication: Publication = publicationService.update(
-            setup.project_publicationRef,
-            setup.publication_projectRef,
-            setup.updatedPublicationForm
+            arrangeSetup.project_publicationRef,
+            arrangeSetup.publication_projectRef,
+            arrangeSetup.updatedPublicationForm
         )
 
         Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(setup.updatedPublicationForm.comment, mockedPublication.comment)
+        Assertions.assertEquals(arrangeSetup.updatedPublicationForm.comment, mockedPublication.comment)
     }
 
 }
