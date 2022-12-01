@@ -52,10 +52,8 @@ internal class RequirementResourceMockTest {
     //arrange
     val projectId = 2L
     val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    val requirementId = 12L
     val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-    val needId = 10L
-    val needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
+
 
     @BeforeEach
     fun setUp() {
