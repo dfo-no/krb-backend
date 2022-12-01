@@ -1,8 +1,6 @@
 package org.kravbank
 
-import org.kravbank.dao.NeedForm
-import org.kravbank.dao.ProjectForm
-import org.kravbank.dao.PublicationForm
+import org.kravbank.dao.*
 import org.kravbank.domain.*
 import java.time.LocalDateTime
 
@@ -17,6 +15,14 @@ class TestSetup {
         //code
         var code = Code()
         var codes: MutableList<Code> = mutableListOf()
+        lateinit var newCode: Code
+        lateinit var codeForm: CodeForm
+        lateinit var updatedCodeForm: CodeForm
+        val project_codeId = 3L
+        val project_codeRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val codelist_codeId = 4L
+        val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
+        val code_projectRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
 
         //publication
         var publication = Publication()
@@ -31,10 +37,36 @@ class TestSetup {
         //product
         var product = Product()
         var products: MutableList<Product> = mutableListOf()
+        lateinit var newProduct: Product
+        lateinit var productForm: ProductForm
+        lateinit var updatedProductForm: ProductForm
+        val project_productRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val project_productId = 3L
+        val product_projectRef = "edb4db69-edb2-431f-855a-4368e2bcddd1"
+        val reqVariant_productRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
         //requirement
         var requirement = Requirement()
         var requirements: MutableList<Requirement> = mutableListOf()
+        lateinit var newRequirement: Requirement
+        lateinit var requirementForm: RequirementForm
+        lateinit var updatedRequirementForm: RequirementForm
+        val project_requirementRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+        val project_requirementId = 2L
+        val requirement_projectRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+
+
+        //requirement variant
+        var requirementVariant = RequirementVariant()
+        var requirementVariants: MutableList<RequirementVariant> = mutableListOf()
+        lateinit var newRequirementVariant: RequirementVariant
+        lateinit var requirementVariantForm: RequirementVariantForm
+        lateinit var updatedRequirementVariantForm: RequirementVariantForm
+        val project_requirementVariantRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
+        val requirement_requirementVariantId = 12L
+        val requirement_project_requirementVariantRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+        val requirementVariant_requirementRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+
 
         //need
         var need = Need()
@@ -49,6 +81,12 @@ class TestSetup {
         //codelist
         var codelist = Codelist()
         var codelists: MutableList<Codelist> = mutableListOf()
+        lateinit var newCodelist: Codelist
+        lateinit var codelistForm: CodelistForm
+        lateinit var updatedCodelistForm: CodelistForm
+        val project_codelistRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+        val project_codelistId = 3L
+        val codelist_projectRef: String = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
         val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
 
@@ -89,6 +127,22 @@ class TestSetup {
             code.title = "Tittel kode"
             code.description = "beskrivelse kode"
             code.codelist = codelist
+            code.id = 506
+
+            newCode = Code()
+            newCode.title = "Ny kodelist tittel"
+            newCode.description = "Ny beskrivelse"
+            newCode.codelist = codelist
+            newCode.id = 507
+
+            codeForm = CodeForm().fromEntity(newCode)
+
+            updatedCodeForm = CodeForm()
+            updatedCodeForm.title = "Endre tittel som need"
+            updatedCodeForm.description = "Endre beskrivelse som need"
+
+            codes.add(code)
+            codes.add(newCode)
 
             //codelist
             codelist = Codelist()
@@ -99,6 +153,22 @@ class TestSetup {
             codelist.codes = codes
             codelist.id = (1L)
 
+            newCodelist = Codelist()
+            newCodelist.project = project
+            newCodelist.title = "Ny kodelist tittel"
+            newCodelist.description = "Ny beskrivelse"
+            newCodelist.codes = codes
+            newCodelist.id = 505
+
+            codelistForm = CodelistForm().fromEntity(newCodelist)
+
+            updatedCodelistForm = CodelistForm()
+            updatedCodelistForm.title = "Endre tittel som need"
+            updatedCodelistForm.description = "Endre beskrivelse som need"
+
+            codelists.add(codelist)
+            codelists.add(newCodelist)
+
             //product
             product = Product()
             product.project = project
@@ -106,6 +176,22 @@ class TestSetup {
             product.ref = "34352"
             product.title = "prod"
             product.description = "desc"
+
+            newProduct = Product()
+            newProduct.project = project
+            newProduct.id = 121L
+            newProduct.title = "Nytt produkt"
+            newProduct.description = "Ny beskrivelse av produkt"
+
+            productForm = ProductForm().fromEntity(newProduct)
+            productForm.requirementVariantRef = reqVariant_productRef
+
+            updatedProductForm = ProductForm()
+            updatedProductForm.title = "Endre tittel som need"
+            updatedProductForm.description = "Endre beskrivelse som need"
+
+            products.add(product)
+            products.add(newProduct)
 
             //need
             need = Need()
@@ -159,6 +245,62 @@ class TestSetup {
 
             //requirement
             requirement = Requirement()
+            requirement.id = 1000L
+            requirement.title = "Tittel requirement"
+            requirement.description = "Beskrivelse requirement"
+            requirement.project = project
+            requirement.need = need
+            requirement.requirementvariants = requirementVariants
+
+            newRequirement = Requirement()
+            newRequirement.title = "Ny requirement tittel"
+            newRequirement.description = "Ny requirement beskrivelse"
+            newRequirement.project = project
+            newRequirement.need = need
+            newRequirement.requirementvariants = requirementVariants
+            newRequirement.id = 1001L
+
+            requirementForm = RequirementForm().fromEntity(newRequirement)
+            requirementForm.needRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
+
+            updatedRequirementForm = RequirementForm()
+            updatedRequirementForm.title = "Oppdatert tittel for requirement"
+            updatedRequirementForm.description = "Oppdatert requirement beskrivelse"
+
+            requirements.add(requirement)
+            requirements.add(newRequirement)
+
+            //requirementvariant
+            requirementVariant = RequirementVariant()
+            requirementVariant.description = "En beskrivelse"
+            requirementVariant.instruction = "Instruksjon"
+            requirementVariant.useProduct = true
+            requirementVariant.useSpesification = true
+            requirementVariant.useQualification = true
+            requirementVariant.product = products
+            requirementVariant.requirement = requirement
+
+            newRequirementVariant = RequirementVariant()
+            newRequirementVariant.description = "Ny beskrivelse"
+            newRequirementVariant.instruction = "Ny Instruksjon"
+            newRequirementVariant.useProduct = false
+            newRequirementVariant.useSpesification = false
+            newRequirementVariant.useQualification = false
+            newRequirementVariant.product = products
+            newRequirementVariant.requirement = requirement
+
+
+            requirementVariants.add(requirementVariant)
+            requirementVariants.add(newRequirementVariant)
+
+            requirementVariantForm = RequirementVariantForm().fromEntity(newRequirementVariant)
+
+            updatedRequirementVariantForm = RequirementVariantForm()
+            updatedRequirementVariantForm.instruction = "Oppdatert instruksjon for requirement"
+            updatedRequirementVariantForm.description = "Oppdatert requirement variant beskrivelse"
+            updatedRequirementVariantForm.useProduct = false
+            updatedRequirementVariantForm.useSpesification = false
+            updatedRequirementVariantForm.useQualification = false
 
         }
     }

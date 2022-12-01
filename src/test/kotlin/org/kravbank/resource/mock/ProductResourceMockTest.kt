@@ -52,10 +52,8 @@ internal class ProductResourceMockTest {
     //arrange
     val projectId = 3L
     val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-    val productId = 5L
     val productRef = "edb4db69-edb2-431f-855a-4368e2bcddd1"
-    val reqVariantId = 14
-    val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+
 
     @BeforeEach
     fun setUp() {
@@ -116,7 +114,6 @@ internal class ProductResourceMockTest {
 
     @Test
     fun getProduct_OK() {
-        //mock
         Mockito
             .`when`(productRepository.findByRef(projectId, productRef))
             .thenReturn(product)
@@ -124,7 +121,6 @@ internal class ProductResourceMockTest {
         val response: Response = productResource.getProduct(projectRef, productRef)
         val entity: Product = ProductForm().toEntity(response.entity as ProductForm)
 
-        //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)

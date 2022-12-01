@@ -32,8 +32,6 @@ internal class CodeResourceMockTest {
     val codelistId = 4L
     val codelistRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
     val codeRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
-    //val codeId = 17L
-
 
     //entity
     var codelist: Codelist = Codelist()
