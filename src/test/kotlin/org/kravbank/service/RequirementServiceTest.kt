@@ -28,7 +28,6 @@ internal class RequirementServiceTest {
         arrangeSetup.start()
     }
 
-
     @Test
     fun get() {
         Mockito

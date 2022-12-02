@@ -78,7 +78,6 @@ internal class NeedServiceTest {
         Assertions.assertNotNull(mockedNeed)
         Assertions.assertEquals(arrangeSetup.newNeed.title, mockedNeed.title)
         Assertions.assertEquals(arrangeSetup.newNeed.description, mockedNeed.description)
-        Assertions.assertEquals(arrangeSetup.newNeed.requirements, mockedNeed.requirements)
     }
 
     @Test

@@ -86,7 +86,10 @@ internal class CodeServiceTest {
         Mockito
             .`when`(
                 codeRepository
-                    .findByRef(arrangeSetup.codelist_codeId, arrangeSetup.code_projectRef)
+                    .findByRef(
+                        arrangeSetup.codelist_codeId,
+                        arrangeSetup.code_projectRef
+                    )
             ).thenReturn(arrangeSetup.code)
 
         val mockedCode: Code = codeService.update(

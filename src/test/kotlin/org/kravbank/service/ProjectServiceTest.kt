@@ -77,11 +77,6 @@ internal class ProjectServiceTest {
         Assertions.assertNotNull(mockedProject)
         Assertions.assertEquals("andre prosjekt", mockedProject.title)
         Assertions.assertEquals("andre prosjektbeskrivelse", mockedProject.description)
-        Assertions.assertEquals(arrangeSetup.project.codelist, mockedProject.codelist)
-        // Assertions.assertEquals(setup.project.publications, mockedProject.publications)
-        Assertions.assertEquals(arrangeSetup.project.products, mockedProject.products)
-        // Assertions.assertEquals(setup.project.needs, mockedProject.needs)
-        Assertions.assertEquals(arrangeSetup.project.requirements, mockedProject.requirements)
     }
 
     @Test

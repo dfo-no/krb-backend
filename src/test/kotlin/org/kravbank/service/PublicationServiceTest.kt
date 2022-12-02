@@ -43,8 +43,6 @@ internal class PublicationServiceTest {
             publicationService.get(arrangeSetup.project_publicationRef, arrangeSetup.publication_projectRef)
 
         Assertions.assertEquals(arrangeSetup.publication.comment, mockedPublication.comment)
-        // todo: ref endres for hver testkjøring - se autogen domain
-        // Assertions.assertEquals("fdsfgds6783423-32524365-32432fds-354354", mockedPublication.ref)
         Assertions.assertEquals(200, mockedPublication.id)
         Assertions.assertEquals(arrangeSetup.publication.project, mockedPublication.project)
         Assertions.assertEquals(arrangeSetup.publication.date, mockedPublication.date)

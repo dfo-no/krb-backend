@@ -87,7 +87,10 @@ internal class ProductServiceTest {
         Mockito
             .`when`(
                 productRepository
-                    .findByRef(arrangeSetup.project_productId, arrangeSetup.product_projectRef)
+                    .findByRef(
+                        arrangeSetup.project_productId,
+                        arrangeSetup.product_projectRef
+                    )
             ).thenReturn(arrangeSetup.product)
 
         val mockedProduct: Product = productService.update(

@@ -18,7 +18,6 @@ class TestSetup {
         lateinit var newCode: Code
         lateinit var codeForm: CodeForm
         lateinit var updatedCodeForm: CodeForm
-        val project_codeId = 3L
         val project_codeRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelist_codeId = 4L
         val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
@@ -55,7 +54,6 @@ class TestSetup {
         val project_requirementId = 2L
         val requirement_projectRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
 
-
         //requirement variant
         var requirementVariant = RequirementVariant()
         var requirementVariants: MutableList<RequirementVariant> = mutableListOf()
@@ -65,8 +63,7 @@ class TestSetup {
         val project_requirementVariantRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val requirement_requirementVariantId = 12L
         val requirement_project_requirementVariantRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val requirementVariant_requirementRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
-
+        val requirementVariant_requirementRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
 
         //need
         var need = Need()
@@ -290,17 +287,18 @@ class TestSetup {
             newRequirementVariant.requirement = requirement
 
 
-            requirementVariants.add(requirementVariant)
-            requirementVariants.add(newRequirementVariant)
-
             requirementVariantForm = RequirementVariantForm().fromEntity(newRequirementVariant)
 
             updatedRequirementVariantForm = RequirementVariantForm()
+            //updatedRequirementVariantForm.ref = requirementVariant_requirementRef
             updatedRequirementVariantForm.instruction = "Oppdatert instruksjon for requirement"
             updatedRequirementVariantForm.description = "Oppdatert requirement variant beskrivelse"
             updatedRequirementVariantForm.useProduct = false
             updatedRequirementVariantForm.useSpesification = false
             updatedRequirementVariantForm.useQualification = false
+
+            requirementVariants.add(requirementVariant)
+            requirementVariants.add(newRequirementVariant)
 
         }
     }
