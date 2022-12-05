@@ -33,11 +33,11 @@ internal class CodeServiceTest {
         Mockito
             .`when`(
                 codeRepository
-                    .findByRef(arrangeSetup.codelist_codeId, arrangeSetup.code_projectRef)
+                    .findByRef(arrangeSetup.codelist_codeId, arrangeSetup.code_codelistRef)
             ).thenReturn(arrangeSetup.code)
 
         val mockedCode: Code =
-            codeService.get(arrangeSetup.project_codeRef, arrangeSetup.codelist_codeRef, arrangeSetup.code_projectRef)
+            codeService.get(arrangeSetup.project_codeRef, arrangeSetup.codelist_codeRef, arrangeSetup.code_codelistRef)
 
         Assertions.assertEquals(arrangeSetup.code.title, mockedCode.title)
         Assertions.assertEquals(arrangeSetup.code.id, mockedCode.id)
@@ -88,14 +88,14 @@ internal class CodeServiceTest {
                 codeRepository
                     .findByRef(
                         arrangeSetup.codelist_codeId,
-                        arrangeSetup.code_projectRef
+                        arrangeSetup.code_codelistRef
                     )
             ).thenReturn(arrangeSetup.code)
 
         val mockedCode: Code = codeService.update(
             arrangeSetup.project_codeRef,
             arrangeSetup.codelist_codeRef,
-            arrangeSetup.code_projectRef,
+            arrangeSetup.code_codelistRef,
             arrangeSetup.updatedCodeForm
         )
 

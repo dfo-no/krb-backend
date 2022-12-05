@@ -21,7 +21,7 @@ class TestSetup {
         val project_codeRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
         val codelist_codeId = 4L
         val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
-        val code_projectRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
+        val code_codelistRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
 
         //publication
         var publication = Publication()
@@ -79,6 +79,7 @@ class TestSetup {
         var codelist = Codelist()
         var codelists: MutableList<Codelist> = mutableListOf()
         lateinit var newCodelist: Codelist
+        lateinit var newCodelist_2: Codelist
         lateinit var codelistForm: CodelistForm
         lateinit var updatedCodelistForm: CodelistForm
         val project_codelistRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
@@ -125,12 +126,14 @@ class TestSetup {
             code.description = "beskrivelse kode"
             code.codelist = codelist
             code.id = 506
+            code.ref = "dsafdsjkl823jhkfkjdhkjl"
 
             newCode = Code()
             newCode.title = "Ny kodelist tittel"
             newCode.description = "Ny beskrivelse"
             newCode.codelist = codelist
             newCode.id = 507
+            code.ref = "6rtrsad5678-sadsa-34-dsfsd-sxdsf"
 
             codeForm = CodeForm().fromEntity(newCode)
 
@@ -151,6 +154,7 @@ class TestSetup {
             codelist.id = (1L)
 
             newCodelist = Codelist()
+            //newCodelist.ref = "dsfdsgs<'fåowi39543tdsf"
             newCodelist.project = project
             newCodelist.title = "Ny kodelist tittel"
             newCodelist.description = "Ny beskrivelse"
@@ -158,6 +162,15 @@ class TestSetup {
             newCodelist.id = 505
 
             codelistForm = CodelistForm().fromEntity(newCodelist)
+
+
+            newCodelist_2 = Codelist()
+            newCodelist_2.ref = "dsfdsgs<'fåowi39543tdsf"
+            newCodelist_2.project = project
+            newCodelist_2.title = "Ny kodelist tittel"
+            newCodelist_2.description = "Ny beskrivelse"
+            newCodelist_2.codes = codes
+            newCodelist_2.id = 506
 
             updatedCodelistForm = CodelistForm()
             updatedCodelistForm.title = "Endre tittel som need"
@@ -285,7 +298,6 @@ class TestSetup {
             newRequirementVariant.useQualification = false
             newRequirementVariant.product = products
             newRequirementVariant.requirement = requirement
-
 
             requirementVariantForm = RequirementVariantForm().fromEntity(newRequirementVariant)
 

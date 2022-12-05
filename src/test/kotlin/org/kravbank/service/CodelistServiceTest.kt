@@ -58,7 +58,6 @@ internal class CodelistServiceTest {
         Assertions.assertEquals(arrangeSetup.codelist.description, mockedCodelists[0].description)
         //Assertions.assertEquals(arrangeSetup.codelist.ref, mockedCodelists[0].ref)
         Assertions.assertEquals(arrangeSetup.codelist.project, mockedCodelists[0].project)
-
     }
 
     @Test
@@ -81,7 +80,20 @@ internal class CodelistServiceTest {
 
     @Test
     fun delete() {
-        //TODO("Kommer tilbake her senere")
+        Mockito
+            .`when`(
+                codelistRepository.deleteCodelist(
+                    arrangeSetup.project_codelistId,
+                    arrangeSetup.codelist_projectRef
+                )
+            )
+            .thenReturn(arrangeSetup.newCodelist_2)
+
+        val mockedCodelist: Codelist =
+            codelistService.delete(arrangeSetup.project_codelistRef, arrangeSetup.codelist_projectRef)
+
+        Assertions.assertNotNull(mockedCodelist)
+        Assertions.assertEquals(TestSetup.newCodelist_2, mockedCodelist)
     }
 
     @Test
