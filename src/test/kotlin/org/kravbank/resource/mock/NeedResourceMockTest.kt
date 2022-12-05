@@ -30,16 +30,17 @@ internal class NeedResourceMockTest {
     @Inject
     lateinit var needResource: NeedResource
 
-    final val arrangeSetup = TestSetup.Arrange
+    private final val arrangeSetup = TestSetup.Arrange
+
+    private val projectId: Long = arrangeSetup.project_needId
+    private val projectRef: String = arrangeSetup.project_needRef
+    private val needRef: String = arrangeSetup.need_projectRef
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
     }
 
-    val projectId = arrangeSetup.project_needId
-    val projectRef = arrangeSetup.project_needRef
-    val needRef = arrangeSetup.need_projectRef
 
     @Test
     fun getNeed_OK() {

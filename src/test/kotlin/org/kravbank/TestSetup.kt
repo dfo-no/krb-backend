@@ -11,6 +11,7 @@ class TestSetup {
         var projects: MutableList<Project> = mutableListOf()
         lateinit var projectForm: ProjectForm
         lateinit var updatedProjectForm: ProjectForm
+        val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
 
         //code
         var code = Code()
@@ -53,6 +54,7 @@ class TestSetup {
         val project_requirementRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val project_requirementId = 2L
         val requirement_projectRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+        val need_requirementRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
 
         //requirement variant
         var requirementVariant = RequirementVariant()
@@ -92,7 +94,7 @@ class TestSetup {
             //project
             project.title = "første prosjekt"
             project.description = "første prosjektbeskrivelse"
-            project.ref = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
+            project.ref = projectRef
             project.id = 120
             project.codelist = codelists
             project.requirements = requirements
@@ -249,6 +251,7 @@ class TestSetup {
 
             updatedPublicationForm = PublicationForm()
             updatedPublicationForm.comment = "Oppdatert tittel"
+            updatedPublicationForm.version = 11
 
             publications.add(publication)
             publications.add(newPublication)
@@ -271,7 +274,7 @@ class TestSetup {
             newRequirement.id = 1001L
 
             requirementForm = RequirementForm().fromEntity(newRequirement)
-            requirementForm.needRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
+            requirementForm.needRef = need_requirementRef
 
             updatedRequirementForm = RequirementForm()
             updatedRequirementForm.title = "Oppdatert tittel for requirement"

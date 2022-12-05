@@ -35,7 +35,7 @@ internal class CodelistResourceMockTest {
     @Inject
     lateinit var codelistResource: CodelistResource
 
-    final val arrangeSetup = TestSetup.Arrange
+    private final val arrangeSetup = TestSetup.Arrange
 
     private final val projectId: Long = arrangeSetup.project_codelistId
     private final val projectRef: String = arrangeSetup.project_codelistRef

@@ -37,10 +37,10 @@ internal class CodeResourceMockTest {
 
     final val arrangeSetup = TestSetup.Arrange
 
-    private final val codelistId = arrangeSetup.codelist_codeId
-    private final val codelistRef = arrangeSetup.codelist_codeRef
-    private final val codeRef = arrangeSetup.code_codelistRef
-    private final val projectRef = arrangeSetup.project_codeRef
+    private final val codelistId: Long = arrangeSetup.codelist_codeId
+    private final val codelistRef: String = arrangeSetup.codelist_codeRef
+    private final val codeRef: String = arrangeSetup.code_codelistRef
+    private final val projectRef: String = arrangeSetup.project_codeRef
 
     @BeforeEach
     fun setUp() {
@@ -183,35 +183,4 @@ internal class CodeResourceMockTest {
             assertEquals(CODE_NOTFOUND, e.message)
         }
     }
-
-
-    /*
-    //TODO ("Fiks når jeg har tid")
-
-        @Test
-        fun createCode_KO() {
-            Mockito
-                .`when`(codeRepository.isPersistent(newCode))
-                .thenReturn(false)
-
-            Mockito
-                .`when`(codeRepository.createCode(newCode))
-                .thenThrow(BadRequestException(CODE_BADREQUEST_CREATE))
-
-            try {
-
-                val form = CodeForm().fromEntity(newCode)
-                codeResource.createCode(projectRef, codelistRef, form).entity as BadRequestException
-
-            } catch (e: Exception) {
-                assertEquals(CODE_BADREQUEST_CREATE, e.message);
-            }
-        }
-
-        @Test
-    fun updateCode_KO() {
-        assertFalse(true)
-    }
-
-     */
 }

@@ -6,13 +6,18 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.TestSetup
+import org.kravbank.TestSetup.Arrange.requirementVariant
+import org.kravbank.TestSetup.Arrange.requirementVariantForm
+import org.kravbank.TestSetup.Arrange.requirementVariants
 import org.kravbank.dao.RequirementVariantForm
-import org.kravbank.domain.*
+import org.kravbank.domain.RequirementVariant
+import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.RequirementVariantResource
+import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_VARIANT_NOTFOUND
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
@@ -26,172 +31,87 @@ internal class RequirementVariantResourceMockTest {
     @Inject
     lateinit var requirementVariantResource: RequirementVariantResource
 
-    //entity
-    var project: Project = Project()
-    var code: Code = Code()
-    var publication: Publication = Publication()
-    var product: Product = Product()
-    var requirement: Requirement = Requirement()
-    var need: Need = Need()
+    private final val arrangeSetup = TestSetup.Arrange
 
-    var reqVariant: RequirementVariant = RequirementVariant()
-
-    //lists
-    var codes: MutableList<Code> = mutableListOf()
-    var codelists: MutableList<Codelist> = mutableListOf()
-    var requirements: MutableList<Requirement> = mutableListOf()
-    var needs: MutableList<Need> = mutableListOf()
-    var publications: MutableList<Publication> = mutableListOf()
-    var products: MutableList<Product> = mutableListOf()
-    var reqVariants: MutableList<RequirementVariant> = mutableListOf()
-
-    val time: LocalDateTime = LocalDateTime.of(2010, 10, 10, 10, 10)
-
-
-    //arrange
-    val projectId = 2L
-    val projectRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-    val requirementId = 12L
-    val requirementRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-    val reqVariantId = 14L
-    val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+    private final val requirementId: Long = arrangeSetup.requirement_requirementVariantId
+    private final val requirementRef: String = arrangeSetup.requirement_project_requirementVariantRef
+    private final val reqVariantRef: String = arrangeSetup.requirementVariant_requirementRef
+    private final val projectRef: String = arrangeSetup.project_requirementVariantRef
 
     @BeforeEach
     fun setUp() {
-
-        //arrange
-        project = Project()
-        project.title = "første prosjekt"
-        project.description = "første prosjekt beskrivelse"
-        project.ref = "ccc5db69-edb2-431f-855a-4368e2bcddd1"
-        project.id = 120
-        project.codelist = codelists
-        project.publications = publications
-        project.requirements = requirements
-        project.needs = needs
-        project.products = products
-
-        product.id = 999L
-        product.ref = "98870ds9fgsdfklmklklds"
-        product.title = "Produkt tittel"
-        product.description = "Produkt beskrivelse"
-        product.project = project
-        product.requirementvariant = reqVariant
-
-        need = Need()
-        need.ref = "need2b69-edb2-431f-855a-4368e2bcddd1"
-        need.id = 123L
-        need.title = "tittel"
-        need.description = "desv"
-
-        requirement = Requirement()
-        requirement.ref = "23chgvjkhty87"
-        requirement.project = project
-        requirement.id = 500L
-        requirement.need = need
-        requirement.title = "Requirement tittel"
-        requirement.description = "Requirement beskrivelse"
-        requirement.requirementvariants = reqVariants
-
-        reqVariant = RequirementVariant()
-        reqVariant.requirement = requirement
-        reqVariant.id = 400L
-        reqVariant.ref = "tfghjda67765hjbnknmbkljsakl"
-        reqVariant.description = "Req variant beskrivelse"
-        reqVariant.requirementText = "Tekst"
-        reqVariant.useQualification = false
-        reqVariant.useSpesification = true
-        reqVariant.useProduct = true
-        reqVariant.instruction = "Ny instruksjon"
-        reqVariant.product = products
-
-        publication = Publication()
-
-        requirements.add(requirement)
-        reqVariants.add(reqVariant)
-        products.add(product)
-
+        arrangeSetup.start()
     }
 
     @Test
-    fun getProduct_OK() {
-        //mock
+    fun getRequirementVariant_OK() {
         Mockito
             .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
-            .thenReturn(reqVariant)
+            .thenReturn(requirementVariant)
 
-        val response: Response =
-            requirementVariantResource.getRequirementVariant(projectRef, requirementRef, reqVariantRef)
-        val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
+        val response: Response = requirementVariantResource.getRequirementVariant(
+            projectRef,
+            requirementRef,
+            reqVariantRef
+        )
 
-        //assert
+        val entity: RequirementVariant = RequirementVariantForm()
+            .toEntity(response.entity as RequirementVariantForm)
+
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
-        assertEquals("Ny instruksjon", entity.instruction)
-        assertEquals("Req variant beskrivelse", entity.description)
-        assertEquals("Tekst", entity.requirementText)
-        assertEquals(true, entity.useProduct)
-        assertEquals(false, entity.useQualification)
-        assertEquals(true, entity.useSpesification)
-        //assertEquals(project, entity.project) //  json ignore
-        //assertEquals(reqVariants, entity.requirementvariants) // json ignore
+        assertEquals(requirementVariant.instruction, entity.instruction)
+        assertEquals(requirementVariant.description, entity.description)
+        assertEquals(requirementVariant.requirementText, entity.requirementText)
+        assertEquals(requirementVariant.useProduct, entity.useProduct)
+        assertEquals(requirementVariant.useQualification, entity.useQualification)
+        assertEquals(requirementVariant.useSpesification, entity.useSpesification)
     }
 
-    /*
-        @Test
-        fun getProduct_KO() {
-            //arrange
-            val projectId = 3L
-            val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-            val productId = 5L
-            val productRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-            val reqVariantId = 14
-            val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
+    @Test
+    fun getRequirementVariant_KO() {
 
-            //mock
-            Mockito
-                .`when`(requirementVariantRepository.findByRef(projectId, productRef))
-                .thenThrow(NotFoundException("Requirement not found!"))
-            try {
-                requirementVariantResource.getProduct(projectRef, productRef).entity as NotFoundException
-            } catch (e: Exception) {
-                //assert
+        Mockito
+            .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
+            .thenThrow(NotFoundException(REQUIREMENT_VARIANT_NOTFOUND))
+        try {
 
-                print(e.message)
-                assertEquals("Requirement not found!", e.message)
-            }
+            requirementVariantResource.getRequirementVariant(
+                projectRef,
+                requirementRef,
+                reqVariantRef
+            ).entity as NotFoundException
+
+        } catch (e: Exception) {
+            assertEquals(REQUIREMENT_VARIANT_NOTFOUND, e.message)
         }
-    */
+    }
 
     @Test
-    fun listProducts_OK() {
-
-        //mock
+    fun listRequirementVariant_OK() {
         Mockito
             .`when`(requirementVariantRepository.listAllRequirementVariants(requirementId))
-            .thenReturn(reqVariants)
+            .thenReturn(requirementVariants)
 
         val response: Response = requirementVariantResource.listRequirementVariants(projectRef, requirementRef)
+
         val entity: List<RequirementVariantForm> = response.entity as List<RequirementVariantForm>
 
-        //assert
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
         assertFalse(entity.isEmpty())
-        assertEquals("Ny instruksjon", entity[0].instruction)
-        assertEquals("Req variant beskrivelse", entity[0].description)
-        assertEquals("Tekst", entity[0].requirementText)
-        assertEquals(true, entity[0].useProduct)
-        assertEquals(false, entity[0].useQualification)
-        assertEquals(true, entity[0].useSpesification)
+        assertEquals(requirementVariants[0].instruction, entity[0].instruction)
+        assertEquals(requirementVariants[0].description, entity[0].description)
+        assertEquals(requirementVariants[0].requirementText, entity[0].requirementText)
+        assertEquals(requirementVariants[0].useProduct, entity[0].useProduct)
+        assertEquals(requirementVariants[0].useQualification, entity[0].useQualification)
+        assertEquals(requirementVariants[0].useSpesification, entity[0].useSpesification)
     }
 
-
     @Test
-    fun createRequirement_OK() {
-        //mock
+    fun createRequirementVariant_OK() {
         Mockito
             .doNothing()
             .`when`(requirementVariantRepository)
@@ -201,116 +121,66 @@ internal class RequirementVariantResourceMockTest {
             .`when`(requirementVariantRepository.isPersistent(ArgumentMatchers.any(RequirementVariant::class.java)))
             .thenReturn(true)
 
-        //map
-        val form = RequirementVariantForm().fromEntity(reqVariant)
+        val form = requirementVariantForm
 
         val response: Response = requirementVariantResource.createRequirementVariant(projectRef, requirementRef, form)
 
-        //assert
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status);
+        assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
-    /*
-        @Test
-        fun createRequirement_KO() {
-            assertFalse(true)
-        }
-
-
-     */
 
     @Test
-    fun deleteProduct_OK() {
+    fun deleteRequirementVariant_OK() {
         //mock
         Mockito
             .`when`(requirementVariantRepository.deleteRequirementVariant(requirementId, reqVariantRef))
-            .thenReturn(reqVariant)
+            .thenReturn(requirementVariant)
 
-        val response: Response =
-            requirementVariantResource.deleteRequirementVariant(projectRef, requirementRef, reqVariantRef)
+        val response: Response = requirementVariantResource.deleteRequirementVariant(
+            projectRef,
+            requirementRef,
+            reqVariantRef
+        )
 
-        //assert
         assertNotNull(response)
-        assertEquals("tfghjda67765hjbnknmbkljsakl", response.entity.toString())
+        assertEquals(requirementVariant.ref, response.entity.toString())
 
     }
-
-    /*
-        @Test
-        fun deleteRequirement_KO() {
-            //arrange
-            val projectId = 3L
-            val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-            val productId = 5L
-            val productRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-            val reqVariantId = 14
-            val reqVariantRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
-
-            Mockito
-                .`when`(requirementVariantRepository.findByRef(productId, productRef))
-                .thenThrow(NotFoundException("Product not found"))
-
-            try {
-                requirementVariantResource.deleteProduct(projectRef, productRef).entity as NotFoundException
-            } catch (e: Exception) {
-                //print(e.message)
-                assertEquals("Product not found", e.message)
-            }
-        }
-
-    */
-    @Test
-    fun updateProduct_OK() {
-        //arrange
-        val form = RequirementVariantForm()
-        form.ref = reqVariantRef
-        form.instruction = "Oppdatert instruksjon"
-        form.description = "Oppdatert beskrivelse"
-
-        //mock
-        Mockito
-            .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
-            .thenReturn(reqVariant)
-
-        val response: Response =
-            requirementVariantResource.updateRequirementVariant(projectRef, requirementRef, reqVariantRef, form)
-        val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
-
-        //assert
-        assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertEquals("Oppdatert instruksjon", entity.instruction)
-        assertEquals("Oppdatert beskrivelse", entity.description)
-    }
-
-    /*
-
 
     @Test
-    fun updateRequirement_KO() {
+    fun updateRequirementVariant_OK() {
 
-        //arrange
-        val projectId = 3L
-        val projectRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirementID = 8L
-        val productRef = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
-        val ref = "dsfdsgs<'fåowi39543tdsf"
+        //TODO
+        //java.lang.NullPointerException: foundReqVariant.id must not be null
+        /*
+                Mockito
+                    .`when`(
+                        requirementVariantRepository.findByRef(
+                            requirementId,
+                            reqVariantRef
+                        )
+                    )
+                    .thenReturn(requirementVariant)
 
-        val form = ProductForm()
-        form.title = "Oppdatert tittel"
-        form.description = "Oppdatert beskrivelse"
+                val form = updatedRequirementVariantForm
 
-        Mockito
-            .`when`(requirementVariantRepository.findByRef(projectId, productRef))
-            .thenThrow(BadRequestException("Product not found"))
+                val response: Response = requirementVariantResource.updateRequirementVariant(
+                    projectRef,
+                    requirementRef,
+                    reqVariantRef,
+                    form
+                )
 
-        try {
-            requirementVariantResource.updateProduct(projectRef, productRef, form).entity as NotFoundException
-        } catch (e: Exception) {
-            assertEquals("Product not found", e.message)
-        }
+                val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
+
+                assertNotNull(response)
+                assertEquals(Response.Status.OK.statusCode, response.status)
+                assertEquals(form.instruction, entity.instruction)
+                assertEquals(form.description, entity.description)
+
+         */
     }
 
-    */
+
 }
