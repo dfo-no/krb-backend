@@ -12,8 +12,8 @@ import javax.enterprise.context.ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
     @Throws(BackendException::class)
-    fun get(projcetRef: String): Project {
-        return projectRepository.findByRef(projcetRef)
+    fun get(projectRef: String): Project {
+        return projectRepository.findByRef(projectRef)
     }
 
     fun list(): List<Project> {
@@ -28,8 +28,8 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     @Throws(BackendException::class)
-    fun delete(projcetRef: String): Project {
-        val foundProject = projectRepository.findByRef(projcetRef)
+    fun delete(projectRef: String): Project {
+        val foundProject = projectRepository.findByRef(projectRef)
         val deleted = projectRepository.deleteProject(foundProject.id)
         if (deleted) return foundProject
         throw BadRequestException("Bad request! Did not delete project")
