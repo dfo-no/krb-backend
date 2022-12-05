@@ -112,6 +112,8 @@ internal class NeedResourceMockTest {
 
     @Test
     fun updateNeed_OK() {
+
+
         Mockito
             .`when`(needRepository.findByRef(projectId, needRef))
             .thenReturn(newNeed)
@@ -129,36 +131,4 @@ internal class NeedResourceMockTest {
         assertEquals(updatedNeedForm.title, entity.title)
         assertEquals(updatedNeedForm.description, entity.description)
     }
-
-
-    /*
-Todo:
-         Testen(e) kan være nyttig for å teste at feilmeldingene som kastes, behandles på riktig måte.
-         Kommer tilbake til den når jeg finner ut av hvorfor mocking ikke gir riktig verdi / ikke-null
-
-
-     @Test
-     fun createNeed_KO() {
-         assertFalse(true)
-     }
-
-
-     @Test
-     fun getNeed_KO() {
-         assertFalse(true)
-     }
-
-
-     @Test
-     fun deleteNeed_KO() {
-        assertFalse(true)
-     }
-
-
-     @Test
-     fun updateNeed_KO() {
-         assertFalse(true)
-     }
-
-      */
 }
