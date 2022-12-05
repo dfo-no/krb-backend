@@ -129,6 +129,8 @@ internal class RequirementVariantServiceTest {
     fun update() {
         // TODO("requirementVariantService.update med param requirementVariant_requirementRef returnerer nulll-verdi , samme funksjon for get() fungerer, denne eksisterer. men ikke på get(). Undersøkes senere")
         /*
+        java.lang.NullPointerException: foundReqVariant.id must not be null
+
                 Mockito
 
                     .`when`(

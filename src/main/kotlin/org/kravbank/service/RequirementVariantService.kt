@@ -53,13 +53,9 @@ class RequirementVariantService(
         updatedReqVariant: RequirementVariantForm
     ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
-        //println("FOUND PROJECT ${foundProject}")
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
-        //println("FOUND foundRequirement ${foundRequirement}")
         val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, reqVariantRef)
-        //println("FOUND foundReqVariant ${foundReqVariant}")
         val update = RequirementVariantForm().toEntity(updatedReqVariant)
-        //println("FOUND update ${update}")
         requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, update)
         return update.apply { ref = foundReqVariant.ref }
     }

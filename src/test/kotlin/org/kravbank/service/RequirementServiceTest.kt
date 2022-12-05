@@ -41,7 +41,6 @@ internal class RequirementServiceTest {
 
         Assertions.assertEquals(arrangeSetup.requirement.title, mockedRequirement.title)
         Assertions.assertEquals(arrangeSetup.requirement.description, mockedRequirement.description)
-        //Assertions.assertEquals(arrangeSetup.requirement.id, mockedRequirement.id)
         Assertions.assertEquals(arrangeSetup.requirement.project, mockedRequirement.project)
         Assertions.assertEquals(arrangeSetup.requirement.need, mockedRequirement.need)
         Assertions.assertEquals(arrangeSetup.requirement.requirementvariants, mockedRequirement.requirementvariants)
