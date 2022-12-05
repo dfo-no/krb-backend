@@ -10,6 +10,7 @@ import org.kravbank.TestSetup
 import org.kravbank.TestSetup.Arrange.requirementVariant
 import org.kravbank.TestSetup.Arrange.requirementVariantForm
 import org.kravbank.TestSetup.Arrange.requirementVariants
+import org.kravbank.TestSetup.Arrange.updatedRequirementVariantForm
 import org.kravbank.dao.RequirementVariantForm
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.NotFoundException
@@ -33,15 +34,17 @@ internal class RequirementVariantResourceMockTest {
 
     private final val arrangeSetup = TestSetup.Arrange
 
-    private final val requirementId: Long = arrangeSetup.requirement_requirementVariantId
-    private final val requirementRef: String = arrangeSetup.requirement_project_requirementVariantRef
-    private final val reqVariantRef: String = arrangeSetup.requirementVariant_requirementRef
-    private final val projectRef: String = arrangeSetup.project_requirementVariantRef
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
     }
+
+    private final val requirementId: Long = arrangeSetup.requirement_requirementVariantId
+    private final val requirementRef: String = arrangeSetup.requirement_project_requirementVariantRef
+    private final val reqVariantRef: String = arrangeSetup.requirementVariant_requirementRef
+    private final val projectRef: String = arrangeSetup.project_requirementVariantRef
+
 
     @Test
     fun getRequirementVariant_OK() {
@@ -129,7 +132,6 @@ internal class RequirementVariantResourceMockTest {
         assertEquals(Response.Status.CREATED.statusCode, response.status)
     }
 
-
     @Test
     fun deleteRequirementVariant_OK() {
         //mock
@@ -151,35 +153,30 @@ internal class RequirementVariantResourceMockTest {
     @Test
     fun updateRequirementVariant_OK() {
 
-        //TODO
-        //java.lang.NullPointerException: foundReqVariant.id must not be null
-        /*
-                Mockito
-                    .`when`(
-                        requirementVariantRepository.findByRef(
-                            requirementId,
-                            reqVariantRef
-                        )
-                    )
-                    .thenReturn(requirementVariant)
-
-                val form = updatedRequirementVariantForm
-
-                val response: Response = requirementVariantResource.updateRequirementVariant(
-                    projectRef,
-                    requirementRef,
-                    reqVariantRef,
-                    form
+        Mockito
+            .`when`(
+                requirementVariantRepository.findByRef(
+                    requirementId,
+                    reqVariantRef
                 )
+            )
+            .thenReturn(requirementVariant)
 
-                val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
+        val form = updatedRequirementVariantForm
 
-                assertNotNull(response)
-                assertEquals(Response.Status.OK.statusCode, response.status)
-                assertEquals(form.instruction, entity.instruction)
-                assertEquals(form.description, entity.description)
+        val response: Response = requirementVariantResource.updateRequirementVariant(
+            projectRef,
+            requirementRef,
+            reqVariantRef,
+            form
+        )
 
-         */
+        val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
+
+        assertNotNull(response)
+        assertEquals(Response.Status.OK.statusCode, response.status)
+        assertEquals(form.instruction, entity.instruction)
+        assertEquals(form.description, entity.description)
     }
 
 

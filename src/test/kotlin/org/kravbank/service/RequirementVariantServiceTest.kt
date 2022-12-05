@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.TestSetup
 import org.kravbank.TestSetup.Arrange.requirementVariant_requirementRef
+import org.kravbank.TestSetup.Arrange.requirement_requirementVariantId
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.repository.RequirementVariantRepository
 import org.mockito.ArgumentMatchers
@@ -127,49 +128,43 @@ internal class RequirementVariantServiceTest {
 
     @Test
     fun update() {
-        // TODO("requirementVariantService.update med param requirementVariant_requirementRef returnerer nulll-verdi , samme funksjon for get() fungerer, denne eksisterer. men ikke på get(). Undersøkes senere")
-        /*
-        java.lang.NullPointerException: foundReqVariant.id must not be null
-
-                Mockito
-
-                    .`when`(
-                        requirementVariantRepository
-                            .findByRef(
-                                requirement_requirementVariantId,
-                                requirementVariant_requirementRef
-                            )
-                    ).thenReturn(arrangeSetup.requirementVariant)
-
-                val mockedRequirementVariant: RequirementVariant =
-                    requirementVariantService.update(
-                        arrangeSetup.project_requirementVariantRef,
-                        arrangeSetup.requirement_project_requirementVariantRef,
-                        requirementVariant_requirementRef,
-                        arrangeSetup.updatedRequirementVariantForm
+        Mockito
+            .`when`(
+                requirementVariantRepository
+                    .findByRef(
+                        requirement_requirementVariantId,
+                        requirementVariant_requirementRef
                     )
+            ).thenReturn(arrangeSetup.requirementVariant)
 
-                Assertions.assertNotNull(mockedRequirementVariant)
-                Assertions.assertEquals(
-                    arrangeSetup.updatedRequirementVariantForm.instruction,
-                    mockedRequirementVariant.instruction
-                )
-                Assertions.assertEquals(
-                    arrangeSetup.updatedRequirementVariantForm.description,
-                    mockedRequirementVariant.description
-                )
-                Assertions.assertEquals(
-                    arrangeSetup.updatedRequirementVariantForm.useProduct,
-                    mockedRequirementVariant.useProduct
-                )
-                Assertions.assertEquals(
-                    arrangeSetup.updatedRequirementVariantForm.useSpesification,
-                    mockedRequirementVariant.useSpesification
-                )
-                Assertions.assertEquals(
-                    arrangeSetup.updatedRequirementVariantForm.useQualification,
-                    mockedRequirementVariant.useQualification
-                )
-         */
+        val mockedRequirementVariant: RequirementVariant =
+            requirementVariantService.update(
+                arrangeSetup.project_requirementVariantRef,
+                arrangeSetup.requirement_project_requirementVariantRef,
+                requirementVariant_requirementRef,
+                arrangeSetup.updatedRequirementVariantForm
+            )
+
+        Assertions.assertNotNull(mockedRequirementVariant)
+        Assertions.assertEquals(
+            arrangeSetup.updatedRequirementVariantForm.instruction,
+            mockedRequirementVariant.instruction
+        )
+        Assertions.assertEquals(
+            arrangeSetup.updatedRequirementVariantForm.description,
+            mockedRequirementVariant.description
+        )
+        Assertions.assertEquals(
+            arrangeSetup.updatedRequirementVariantForm.useProduct,
+            mockedRequirementVariant.useProduct
+        )
+        Assertions.assertEquals(
+            arrangeSetup.updatedRequirementVariantForm.useSpesification,
+            mockedRequirementVariant.useSpesification
+        )
+        Assertions.assertEquals(
+            arrangeSetup.updatedRequirementVariantForm.useQualification,
+            mockedRequirementVariant.useQualification
+        )
     }
 }

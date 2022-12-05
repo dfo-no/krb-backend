@@ -65,7 +65,7 @@ class TestSetup {
         val project_requirementVariantRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val requirement_requirementVariantId = 12L
         val requirement_project_requirementVariantRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
-        val requirementVariant_requirementRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+        val requirementVariant_requirementRef = "rvrv3b69-edb2-431f-855a-4368e2bcddd1"
 
         //need
         var need = Need()
@@ -285,6 +285,7 @@ class TestSetup {
 
             //requirementvariant
             requirementVariant = RequirementVariant()
+            requirementVariant.id = 89
             requirementVariant.description = "En beskrivelse"
             requirementVariant.instruction = "Instruksjon"
             requirementVariant.useProduct = true
@@ -294,6 +295,7 @@ class TestSetup {
             requirementVariant.requirement = requirement
 
             newRequirementVariant = RequirementVariant()
+            requirementVariant.id = 88
             newRequirementVariant.description = "Ny beskrivelse"
             newRequirementVariant.instruction = "Ny Instruksjon"
             newRequirementVariant.useProduct = false
@@ -305,7 +307,7 @@ class TestSetup {
             requirementVariantForm = RequirementVariantForm().fromEntity(newRequirementVariant)
 
             updatedRequirementVariantForm = RequirementVariantForm()
-            //updatedRequirementVariantForm.ref = requirementVariant_requirementRef
+            updatedRequirementVariantForm.ref = requirementVariant_requirementRef
             updatedRequirementVariantForm.instruction = "Oppdatert instruksjon for requirement"
             updatedRequirementVariantForm.description = "Oppdatert requirement variant beskrivelse"
             updatedRequirementVariantForm.useProduct = false
