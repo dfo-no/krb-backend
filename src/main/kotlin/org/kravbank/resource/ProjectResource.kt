@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import kotlin.streams.toList
 
-
 @Path("/api/v1/projects")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,9 +21,9 @@ class ProjectResource(val projectService: ProjectService) {
 
     @GET
     @RolesAllowed("user")
-    @Path("/{projcetRef}")
-    fun getProject(@PathParam("projcetRef") projcetRef: String): Response {
-        val project = projectService.get(projcetRef)
+    @Path("/{projectRef}")
+    fun getProject(@PathParam("projectRef") projectRef: String): Response {
+        val project = projectService.get(projectRef)
         val form = ProjectForm().fromEntity(project)
         return Response.ok(form).build()
     }
@@ -49,21 +48,21 @@ class ProjectResource(val projectService: ProjectService) {
     }
 
     @DELETE
-    @Path("{projcetRef}")
+    @Path("{projectRef}")
     @Transactional
     @RolesAllowed("user")
-    fun deleteProject(@PathParam("projcetRef") projcetRef: String): Response {
-        val project = projectService.delete(projcetRef)
+    fun deleteProject(@PathParam("projectRef") projectRef: String): Response {
+        val project = projectService.delete(projectRef)
         val form = ProjectForm().fromEntity(project)
         return Response.ok(form.ref).build()
     }
 
     @PUT
-    @Path("{projcetRef}")
+    @Path("{projectRef}")
     @Transactional
     @RolesAllowed("user")
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectForm): Response {
-        val project = projectService.update(projcetRef, updatedProject)
+    fun updateProject(@PathParam("projectRef") projectRef: String, updatedProject: ProjectForm): Response {
+        val project = projectService.update(projectRef, updatedProject)
         val form = ProjectForm().fromEntity(project)
         return Response.ok(form).build()
     }
