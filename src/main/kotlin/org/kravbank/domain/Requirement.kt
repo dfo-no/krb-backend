@@ -9,9 +9,9 @@ import javax.persistence.*
 
 @Entity
 class Requirement : PanacheEntity() {
-    lateinit var title: String
+    var title: String = ""
 
-    lateinit var description: String
+    var description: String = ""
 
     @OneToMany(
         mappedBy = ("requirement"),

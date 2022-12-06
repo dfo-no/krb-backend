@@ -5,6 +5,9 @@ import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_UPDATE
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_NOTFOUND
 import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
@@ -22,7 +25,7 @@ class PublicationRepository : PanacheRepository<Publication> {
             ).firstResult<Publication>()
         if (publication?.deletedDate == null) {
             return publication
-        } else throw NotFoundException("Publication not found")
+        } else throw NotFoundException(PUBLICATION_NOTFOUND)
     }
 
     fun listAllPublications(id: Long): List<Publication> {
@@ -36,14 +39,14 @@ class PublicationRepository : PanacheRepository<Publication> {
     fun createPublication(publication: Publication) {
         persistAndFlush(publication)
         if (!publication.isPersistent) {
-            throw BadRequestException("Bad request! Publication was not created")
+            throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
         }
     }
 
-    fun deletePublication(id: Long) : Boolean{
+    fun deletePublication(id: Long): Boolean {
         val deletedDate = LocalDateTime.now()
-        val updates = update("deleteddate = ?1 where id = ?2", deletedDate,id)
-        if (updates>0) return true
+        val updates = update("deleteddate = ?1 where id = ?2", deletedDate, id)
+        if (updates > 0) return true
         return false
     }
 
@@ -55,7 +58,7 @@ class PublicationRepository : PanacheRepository<Publication> {
             publication.version,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException(PUBLICATION_BADREQUEST_UPDATE) }
     }
 
 }
