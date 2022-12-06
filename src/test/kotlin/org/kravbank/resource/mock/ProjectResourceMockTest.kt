@@ -11,7 +11,7 @@ import org.kravbank.domain.Project
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.ProjectResource
-import org.kravbank.utils.ErrorMessage.RepoError.PROJECT_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.project
 import org.kravbank.utils.TestSetup.Arrange.projectForm

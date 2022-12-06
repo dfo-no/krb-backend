@@ -12,8 +12,8 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.resource.CodeResource
-import org.kravbank.utils.ErrorMessage.RepoError.CODE_BADREQUEST_DELETE
-import org.kravbank.utils.ErrorMessage.RepoError.CODE_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.code
 import org.kravbank.utils.TestSetup.Arrange.codeForm

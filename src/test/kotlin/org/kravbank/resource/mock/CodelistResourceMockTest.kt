@@ -12,8 +12,8 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.resource.CodelistResource
-import org.kravbank.utils.ErrorMessage.RepoError.CODELIST_BADREQUEST_DELETE
-import org.kravbank.utils.ErrorMessage.RepoError.CODELIST_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.codelist
 import org.kravbank.utils.TestSetup.Arrange.codelists

@@ -5,6 +5,10 @@ import org.kravbank.domain.Requirement
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_UPDATE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_NOTFOUND
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.toList
@@ -19,7 +23,7 @@ class RequirementRepository : PanacheRepository<Requirement> {
                 ref,
                 projectId
             ).firstResult<Requirement>()
-        return Optional.ofNullable(requirement).orElseThrow { NotFoundException("Requirement not found") }
+        return Optional.ofNullable(requirement).orElseThrow { NotFoundException(REQUIREMENT_NOTFOUND) }
     }
 
     @Throws(BackendException::class)
@@ -33,16 +37,16 @@ class RequirementRepository : PanacheRepository<Requirement> {
     fun createRequirement(requirement: Requirement) {
         persistAndFlush(requirement)
         if (!requirement.isPersistent) {
-            throw BadRequestException("Bad request! Requirement was not created")
+            throw BadRequestException(REQUIREMENT_BADREQUEST_CREATE)
         }
     }
 
     @Throws(BackendException::class)
-    fun deleteRequirement(projectId: Long, requirementRef: String): Requirement{
+    fun deleteRequirement(projectId: Long, requirementRef: String): Requirement {
         val deleted: Boolean
         val found = findByRef(projectId, requirementRef)
         deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Requirement was not deleted")
+        if (!deleted) throw BadRequestException(REQUIREMENT_BADREQUEST_DELETE)
         return found
     }
 
@@ -54,6 +58,6 @@ class RequirementRepository : PanacheRepository<Requirement> {
             requirement.description,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Requirement did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException(REQUIREMENT_BADREQUEST_UPDATE) }
     }
 }

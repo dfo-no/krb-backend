@@ -5,6 +5,11 @@ import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_UPDATE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_NOTFOUND_PRODUCT
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.toList
@@ -19,7 +24,7 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
                 ref,
                 requirementId
             ).firstResult<RequirementVariant>()
-        return Optional.ofNullable(reqVariant).orElseThrow { NotFoundException("RequirementVariant was not found!") }
+        return Optional.ofNullable(reqVariant).orElseThrow { NotFoundException(REQUIREMENTVARIANT_NOTFOUND) }
     }
 
     @Throws(BackendException::class)
@@ -29,7 +34,7 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
                 "ref = ?1",
                 ref
             ).firstResult<RequirementVariant>()
-        return Optional.ofNullable(reqVariant).orElseThrow { NotFoundException("RequirementVariant was not found!") }
+        return Optional.ofNullable(reqVariant).orElseThrow { NotFoundException(REQUIREMENTVARIANT_NOTFOUND_PRODUCT) }
     }
 
 
@@ -44,7 +49,7 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
     fun createRequirementVariant(reqVariant: RequirementVariant) {
         persistAndFlush(reqVariant)
         if (!reqVariant.isPersistent) {
-            throw BadRequestException("Bad request! RequirementVariant was not created")
+            throw BadRequestException(REQUIREMENTVARIANT_BADREQUEST_CREATE)
         }
     }
 
@@ -53,7 +58,7 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
         val deleted: Boolean
         val found = findByRef(requirementId, requirementVariantRef)
         deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! RequirementVariant was not deleted")
+        if (!deleted) throw BadRequestException(REQUIREMENTVARIANT_BADREQUEST_DELETE)
         return found
     }
 
@@ -69,6 +74,6 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
             reqVariant.useQualification,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Bad request! RequirementVariants did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException(REQUIREMENTVARIANT_BADREQUEST_UPDATE) }
     }
 }

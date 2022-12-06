@@ -5,6 +5,10 @@ import org.kravbank.domain.Codelist
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_UPDATE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
@@ -19,19 +23,22 @@ class CodelistRepository : PanacheRepository<Codelist> {
                 ref,
                 projectId
             ).firstResult<Codelist>()
-        return Optional.ofNullable(codelist).orElseThrow { NotFoundException("Codelist was not found!") }
+
+        return Optional.ofNullable(codelist).orElseThrow { NotFoundException(CODELIST_NOTFOUND) }
+
     }
 
     @Throws(BackendException::class)
     fun listAllCodelists(id: Long): List<Codelist> {
-        return find("project_id_fk", id).list<Codelist>()
+
+        return find("project_id_fk", id).list()
     }
 
     @Throws(BackendException::class)
     fun createCodelist(codelist: Codelist) {
         persistAndFlush(codelist)
         if (!codelist.isPersistent) {
-            throw BadRequestException("Bad request! Codelist was not created")
+            throw BadRequestException(CODELIST_BADREQUEST_CREATE)
         }
     }
 
@@ -40,7 +47,7 @@ class CodelistRepository : PanacheRepository<Codelist> {
         val deleted: Boolean
         val found = findByRef(projectId, codelistRef)
         deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Codelist was not deleted")
+        if (!deleted) throw BadRequestException(CODELIST_BADREQUEST_DELETE)
         return found
     }
 
@@ -52,6 +59,6 @@ class CodelistRepository : PanacheRepository<Codelist> {
             codelist.description,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Codelist did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException(CODELIST_BADREQUEST_UPDATE) }
     }
 }

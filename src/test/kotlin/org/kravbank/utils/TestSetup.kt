@@ -6,9 +6,7 @@ import java.time.LocalDateTime
 
 class TestSetup {
 
-
     companion object Arrange {
-
 
         //project
         var project = Project()

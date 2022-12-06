@@ -11,7 +11,7 @@ import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.RequirementVariantResource
-import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_VARIANT_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.requirementVariant
 import org.kravbank.utils.TestSetup.Arrange.requirementVariantForm
@@ -79,7 +79,7 @@ internal class RequirementVariantResourceMockTest {
 
         Mockito
             .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
-            .thenThrow(NotFoundException(REQUIREMENT_VARIANT_NOTFOUND))
+            .thenThrow(NotFoundException(REQUIREMENTVARIANT_NOTFOUND))
         try {
 
             requirementVariantResource.getRequirementVariant(
@@ -89,7 +89,7 @@ internal class RequirementVariantResourceMockTest {
             ).entity as NotFoundException
 
         } catch (e: Exception) {
-            assertEquals(REQUIREMENT_VARIANT_NOTFOUND, e.message)
+            assertEquals(REQUIREMENTVARIANT_NOTFOUND, e.message)
         }
     }
 

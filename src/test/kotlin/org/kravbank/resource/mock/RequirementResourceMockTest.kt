@@ -12,9 +12,8 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.RequirementRepository
 import org.kravbank.resource.RequirementResource
-import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_BADREQUEST_DELETE
-import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_NOTFOUND
-import org.kravbank.utils.ErrorMessage.RepoError.RREQUIREMENT_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.need_requirementRef
 import org.kravbank.utils.TestSetup.Arrange.newRequirement
@@ -172,14 +171,14 @@ internal class RequirementResourceMockTest {
     fun updateRequirement_KO() {
         Mockito
             .`when`(requirementRepository.findByRef(projectId, requirementRef))
-            .thenThrow(BadRequestException(RREQUIREMENT_NOTFOUND))
+            .thenThrow(BadRequestException(REQUIREMENT_NOTFOUND))
 
         val form = updatedRequirementForm
 
         try {
             requirementResource.updateRequirement(projectRef, requirementRef, form).entity as NotFoundException
         } catch (e: Exception) {
-            assertEquals(RREQUIREMENT_NOTFOUND, e.message)
+            assertEquals(REQUIREMENT_NOTFOUND, e.message)
         }
     }
 }

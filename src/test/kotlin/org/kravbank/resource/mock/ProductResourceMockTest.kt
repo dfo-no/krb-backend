@@ -11,7 +11,7 @@ import org.kravbank.domain.Product
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.resource.ProductResource
-import org.kravbank.utils.ErrorMessage.RepoError.PRODUCT_NOTFOUND
+import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.product
 import org.kravbank.utils.TestSetup.Arrange.productForm
