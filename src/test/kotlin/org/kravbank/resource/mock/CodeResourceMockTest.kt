@@ -6,7 +6,8 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.dao.CodeForm
+import org.kravbank.dao.code.CodeResponse
+import org.kravbank.dao.code.CodeUpdateRequest
 import org.kravbank.domain.Code
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
@@ -16,10 +17,10 @@ import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.code
-import org.kravbank.utils.TestSetup.Arrange.codeForm
+import org.kravbank.utils.TestSetup.Arrange.codeCreateRequest
+import org.kravbank.utils.TestSetup.Arrange.codeUpdateRequest
 import org.kravbank.utils.TestSetup.Arrange.codes
 import org.kravbank.utils.TestSetup.Arrange.newCode
-import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -49,7 +50,6 @@ internal class CodeResourceMockTest {
 
     }
 
-
     @Test
     fun getCode_OK() {
         Mockito
@@ -66,14 +66,13 @@ internal class CodeResourceMockTest {
             codeRef
         )
 
+        val entityToResponse: CodeResponse = response.entity as CodeResponse
+
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
-
-        val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
-
-        assertEquals(code.title, entity.title)
-        assertEquals(code.description, entity.description)
+        assertEquals(code.title, entityToResponse.title)
+        assertEquals(code.description, entityToResponse.description)
     }
 
     @Test
@@ -81,19 +80,20 @@ internal class CodeResourceMockTest {
         Mockito
             .`when`(codeRepository.listAllCodes(codelistId))
             .thenReturn(codes)
+
         val response: Response = codeResource.listCodes(
             projectRef,
             codelistRef
         )
 
-        val entity: List<CodeForm> = response.entity as List<CodeForm>
+        val entitiesToResponse: ArrayList<CodeResponse> = response.entity as ArrayList<CodeResponse>
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
         assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(codes[0].title, entity[0].title)
-        assertEquals(codes[0].description, entity[0].description)
+        assertFalse(entitiesToResponse.isEmpty())
+        assertEquals(codes[0].title, entitiesToResponse[0].title)
+        assertEquals(codes[0].description, entitiesToResponse[0].description)
     }
 
     @Test
@@ -102,14 +102,17 @@ internal class CodeResourceMockTest {
             .doNothing()
             .`when`(codeRepository)
             .persist(ArgumentMatchers.any(Code::class.java))
+
         Mockito
             .`when`(codeRepository.isPersistent(ArgumentMatchers.any(Code::class.java)))
             .thenReturn(true)
 
+        val form = codeCreateRequest
+
         val response: Response = codeResource.createCode(
             projectRef,
             codelistRef,
-            codeForm
+            form
         )
 
         assertNotNull(response)
@@ -152,19 +155,21 @@ internal class CodeResourceMockTest {
             )
             .thenReturn(arrangeSetup.newCode)
 
+        val form: CodeUpdateRequest = codeUpdateRequest
+
         val response: Response = codeResource.updateCode(
             projectRef,
             codelistRef,
             codeRef,
-            updatedCodeForm
+            form
         )
 
-        val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
+        val entityToResponse: CodeResponse = response.entity as CodeResponse
 
         assertNotNull(response)
         assertEquals(Response.Status.OK.statusCode, response.status)
-        assertEquals(updatedCodeForm.title, entity.title)
-        assertEquals(updatedCodeForm.description, entity.description)
+        assertEquals(form.title, entityToResponse.title)
+        assertEquals(form.description, entityToResponse.description)
     }
 
     @Test

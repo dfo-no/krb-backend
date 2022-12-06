@@ -9,9 +9,9 @@ import org.kravbank.domain.Code
 import org.kravbank.repository.CodeRepository
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.code
-import org.kravbank.utils.TestSetup.Arrange.codeForm
+import org.kravbank.utils.TestSetup.Arrange.codeCreateRequest
+import org.kravbank.utils.TestSetup.Arrange.codeUpdateRequest
 import org.kravbank.utils.TestSetup.Arrange.codes
-import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -83,7 +83,7 @@ internal class CodeServiceTest {
             .`when`(codeRepository.isPersistent(ArgumentMatchers.any(Code::class.java)))
             .thenReturn(true)
 
-        val form = codeForm
+        val form = codeCreateRequest
 
         val mockedCode: Code =
             codeService.create(
@@ -124,7 +124,7 @@ internal class CodeServiceTest {
                     )
             ).thenReturn(code)
 
-        val form = updatedCodeForm
+        val form = codeUpdateRequest
 
         val mockedCode: Code = codeService.update(
             projectRef,

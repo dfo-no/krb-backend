@@ -1,6 +1,8 @@
 package org.kravbank.utils
 
 import org.kravbank.dao.*
+import org.kravbank.dao.code.CodeCreateRequest
+import org.kravbank.dao.code.CodeUpdateRequest
 import org.kravbank.domain.*
 import java.time.LocalDateTime
 
@@ -27,6 +29,15 @@ class TestSetup {
         val codelist_codeId = 4L
         val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val code_codelistRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
+
+        val codeUpdateRequest = CodeUpdateRequest(
+            title = "Oppdatert kode tittel fra Code update request",
+            description = "Oppdatert kode beskrivelse fra Code update request"
+        )
+        val codeCreateRequest = CodeCreateRequest(
+            title = "Ny kode tittel fra Code create request",
+            description = "Ny kode beskrivelse fra Code create request"
+        )
 
 
         //publication
@@ -154,6 +165,10 @@ class TestSetup {
             updatedCodeForm = CodeForm()
             updatedCodeForm.title = "Endre tittel som need"
             updatedCodeForm.description = "Endre beskrivelse som need"
+
+
+
+
 
             codes.add(code)
             codes.add(newCode)
@@ -306,6 +321,7 @@ class TestSetup {
             requirementVariant.useProduct = true
             requirementVariant.useSpesification = true
             requirementVariant.useQualification = true
+            requirementVariant.requirementText = "Variant tekst"
             requirementVariant.product = products
             requirementVariant.requirement = requirement
 
@@ -317,6 +333,7 @@ class TestSetup {
             newRequirementVariant.useSpesification = false
             newRequirementVariant.useQualification = false
             newRequirementVariant.product = products
+            newRequirementVariant.requirementText = "Variant tekst"
             newRequirementVariant.requirement = requirement
 
             requirementVariantForm = RequirementVariantForm().fromEntity(newRequirementVariant)
