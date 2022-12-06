@@ -6,17 +6,17 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.project
-import org.kravbank.TestSetup.Arrange.projectForm
-import org.kravbank.TestSetup.Arrange.projects
-import org.kravbank.TestSetup.Arrange.updatedProjectForm
 import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.Project
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.ProjectResource
 import org.kravbank.utils.ErrorMessage.RepoError.PROJECT_NOTFOUND
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.project
+import org.kravbank.utils.TestSetup.Arrange.projectForm
+import org.kravbank.utils.TestSetup.Arrange.projects
+import org.kravbank.utils.TestSetup.Arrange.updatedProjectForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -38,7 +38,9 @@ internal class ProjectResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test

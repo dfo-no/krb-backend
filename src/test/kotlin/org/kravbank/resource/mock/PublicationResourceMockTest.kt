@@ -6,15 +6,15 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.publication
-import org.kravbank.TestSetup.Arrange.publicationForm
-import org.kravbank.TestSetup.Arrange.publications
-import org.kravbank.TestSetup.Arrange.updatedPublicationForm
 import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.Publication
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.resource.PublicationResource
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.publication
+import org.kravbank.utils.TestSetup.Arrange.publicationForm
+import org.kravbank.utils.TestSetup.Arrange.publications
+import org.kravbank.utils.TestSetup.Arrange.updatedPublicationForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -38,7 +38,9 @@ internal class PublicationResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test

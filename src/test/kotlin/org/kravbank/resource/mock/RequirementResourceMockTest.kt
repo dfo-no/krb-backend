@@ -6,13 +6,6 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.need_requirementRef
-import org.kravbank.TestSetup.Arrange.newRequirement
-import org.kravbank.TestSetup.Arrange.requirement
-import org.kravbank.TestSetup.Arrange.requirementForm
-import org.kravbank.TestSetup.Arrange.requirements
-import org.kravbank.TestSetup.Arrange.updatedRequirementForm
 import org.kravbank.dao.RequirementForm
 import org.kravbank.domain.Requirement
 import org.kravbank.lang.BadRequestException
@@ -22,6 +15,13 @@ import org.kravbank.resource.RequirementResource
 import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_BADREQUEST_DELETE
 import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_NOTFOUND
 import org.kravbank.utils.ErrorMessage.RepoError.RREQUIREMENT_NOTFOUND
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.need_requirementRef
+import org.kravbank.utils.TestSetup.Arrange.newRequirement
+import org.kravbank.utils.TestSetup.Arrange.requirement
+import org.kravbank.utils.TestSetup.Arrange.requirementForm
+import org.kravbank.utils.TestSetup.Arrange.requirements
+import org.kravbank.utils.TestSetup.Arrange.updatedRequirementForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -45,7 +45,9 @@ internal class RequirementResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test

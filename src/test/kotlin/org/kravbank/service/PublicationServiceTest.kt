@@ -5,9 +5,12 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
 import org.kravbank.domain.Publication
 import org.kravbank.repository.PublicationRepository
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.publication
+import org.kravbank.utils.TestSetup.Arrange.publications
+import org.kravbank.utils.TestSetup.Arrange.updatedPublicationForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -21,11 +24,20 @@ internal class PublicationServiceTest {
     @Inject
     lateinit var publicationService: PublicationService
 
-    val arrangeSetup = TestSetup.Arrange
+    private final val arrangeSetup = TestSetup.Arrange
+
+    private final val projectId: Long = arrangeSetup.project_publicationId
+
+    private final val projectRef: String = arrangeSetup.project_publicationRef
+
+    private final val publicationRef: String = arrangeSetup.publication_projectRef
+
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test
@@ -33,34 +45,34 @@ internal class PublicationServiceTest {
         Mockito
             .`when`(
                 publicationRepository.findByRef(
-                    arrangeSetup.project_publicationId,
-                    arrangeSetup.publication_projectRef
+                    projectId,
+                    publicationRef
                 )
             )
-            .thenReturn(arrangeSetup.publication)
+            .thenReturn(publication)
 
         val mockedPublication: Publication =
             publicationService.get(arrangeSetup.project_publicationRef, arrangeSetup.publication_projectRef)
 
-        Assertions.assertEquals(arrangeSetup.publication.comment, mockedPublication.comment)
-        Assertions.assertEquals(200, mockedPublication.id)
-        Assertions.assertEquals(arrangeSetup.publication.project, mockedPublication.project)
-        Assertions.assertEquals(arrangeSetup.publication.date, mockedPublication.date)
+        Assertions.assertEquals(publication.comment, mockedPublication.comment)
+        Assertions.assertEquals(publication.id, mockedPublication.id)
+        Assertions.assertEquals(publication.project, mockedPublication.project)
+        Assertions.assertEquals(publication.date, mockedPublication.date)
     }
 
     @Test
     fun list() {
         Mockito.`when`(
             publicationRepository
-                .listAllPublications(arrangeSetup.project_publicationId)
-        ).thenReturn(arrangeSetup.publications)
+                .listAllPublications(projectId)
+        ).thenReturn(publications)
 
         val mockedPublications: List<Publication> = publicationService.list(arrangeSetup.project_publicationRef)
 
-        Assertions.assertEquals(arrangeSetup.publication.comment, mockedPublications[0].comment)
-        Assertions.assertEquals(200, mockedPublications[0].id)
-        Assertions.assertEquals(arrangeSetup.publication.project, mockedPublications[0].project)
-        Assertions.assertEquals(arrangeSetup.publication.date, mockedPublications[0].date)
+        Assertions.assertEquals(publications[0].comment, mockedPublications[0].comment)
+        Assertions.assertEquals(publications[0].id, mockedPublications[0].id)
+        Assertions.assertEquals(publications[0].project, mockedPublications[0].project)
+        Assertions.assertEquals(publications[0].date, mockedPublications[0].date)
     }
 
     @Test
@@ -69,6 +81,7 @@ internal class PublicationServiceTest {
             .doNothing()
             .`when`(publicationRepository)
             .persist(ArgumentMatchers.any(Publication::class.java))
+
         Mockito
             .`when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
             .thenReturn(true)
@@ -84,23 +97,27 @@ internal class PublicationServiceTest {
     @Test
     fun delete() {
 
-        /*
+
         //todo: Kommer tilbake til denne testen senere
+        /*
+                Mockito
+                    .`when`(publicationRepository.deletePublication(publication_projectId))
+                    .thenReturn(false)
 
-        Mockito
-            .`when`(publicationRepository.deletePublication(setup.publication.id))
-            .thenReturn(true)
-        Mockito
-            .`when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
-            .thenReturn(false)
+                /*
+                Mockito
+                    .`when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
+                    .thenReturn(false)
+                 */
 
-        val mockedProject: Publication =
-            publicationService.delete(setup.project_publicationRef, setup.publication.ref) //setup.projectref
+                val mockedPublication: Publication =
+                    publicationService.delete("bbb4db69-edb2-431f-855a-4368e2bcddd1", "zzz4db69-edb2-431f-855a-4368e2bcddd1")
 
-        //assert
-        Assertions.assertNotNull(mockedProject)
-        Assertions.assertEquals(setup.project.ref, mockedProject.ref)
-        Assertions.assertEquals("første prosjekt", mockedProject.ref)
+                //Ikke-null på grunn av soft delete
+                Assertions.assertNotNull(mockedPublication)
+
+                Assertions.assertEquals(newPublication.ref, mockedPublication.ref)
+
          */
     }
 
@@ -108,17 +125,25 @@ internal class PublicationServiceTest {
     fun update() {
         Mockito
             .`when`(
-                publicationRepository.findByRef(arrangeSetup.project_publicationId, arrangeSetup.publication_projectRef)
-            ).thenReturn(arrangeSetup.publication)
+                publicationRepository.findByRef(
+                    projectId,
+                    publicationRef
+                )
+            ).thenReturn(publication)
+
+        val form = updatedPublicationForm
 
         val mockedPublication: Publication = publicationService.update(
-            arrangeSetup.project_publicationRef,
-            arrangeSetup.publication_projectRef,
-            arrangeSetup.updatedPublicationForm
+            projectRef,
+            publicationRef,
+            form
         )
 
         Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(arrangeSetup.updatedPublicationForm.comment, mockedPublication.comment)
+        Assertions.assertEquals(form.comment, mockedPublication.comment)
+        Assertions.assertEquals(form.version, mockedPublication.version)
+
+
     }
 
 }

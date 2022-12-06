@@ -5,9 +5,14 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
 import org.kravbank.domain.Codelist
 import org.kravbank.repository.CodelistRepository
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.codelist
+import org.kravbank.utils.TestSetup.Arrange.codelistForm
+import org.kravbank.utils.TestSetup.Arrange.codelists
+import org.kravbank.utils.TestSetup.Arrange.newCodelist_2
+import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -21,11 +26,20 @@ internal class CodelistServiceTest {
     @Inject
     lateinit var codelistService: CodelistService
 
-    val arrangeSetup = TestSetup.Arrange
+    private final val arrangeSetup = TestSetup.Arrange
+
+    private final val projectId: Long = arrangeSetup.project_codelistId
+
+    private final val codelistRef: String = arrangeSetup.codelist_projectRef
+
+    private final val projectRef: String = arrangeSetup.project_codelistRef
+
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test
@@ -33,31 +47,29 @@ internal class CodelistServiceTest {
         Mockito
             .`when`(
                 codelistRepository
-                    .findByRef(arrangeSetup.project_codelistId, arrangeSetup.codelist_projectRef)
-            ).thenReturn(arrangeSetup.codelist)
+                    .findByRef(projectId, codelistRef)
+            ).thenReturn(codelist)
 
         val mockedCodelist: Codelist =
-            codelistService.get(arrangeSetup.project_codelistRef, arrangeSetup.codelist_projectRef)
+            codelistService.get(projectRef, codelistRef)
 
-        Assertions.assertEquals(arrangeSetup.codelist.title, mockedCodelist.title)
-        Assertions.assertEquals(arrangeSetup.codelist.id, mockedCodelist.id)
-        Assertions.assertEquals(arrangeSetup.codelist.project, mockedCodelist.project)
-        Assertions.assertEquals(arrangeSetup.codelist.description, mockedCodelist.description)
+        Assertions.assertEquals(codelist.title, mockedCodelist.title)
+        Assertions.assertEquals(codelist.id, mockedCodelist.id)
+        Assertions.assertEquals(codelist.project, mockedCodelist.project)
+        Assertions.assertEquals(codelist.description, mockedCodelist.description)
     }
 
     @Test
     fun list() {
-        Mockito.`when`(
-            codelistRepository
-                .listAllCodelists(arrangeSetup.project_codelistId)
-        ).thenReturn(arrangeSetup.codelists)
+        Mockito
+            .`when`(codelistRepository.listAllCodelists(projectId))
+            .thenReturn(codelists)
 
-        val mockedCodelists: List<Codelist> = codelistService.list(arrangeSetup.project_codelistRef)
+        val mockedCodelists: List<Codelist> = codelistService.list(projectRef)
 
-        Assertions.assertEquals(arrangeSetup.codelist.title, mockedCodelists[0].title)
-        Assertions.assertEquals(arrangeSetup.codelist.description, mockedCodelists[0].description)
-        //Assertions.assertEquals(arrangeSetup.codelist.ref, mockedCodelists[0].ref)
-        Assertions.assertEquals(arrangeSetup.codelist.project, mockedCodelists[0].project)
+        Assertions.assertEquals(codelists[0].title, mockedCodelists[0].title)
+        Assertions.assertEquals(codelists[0].description, mockedCodelists[0].description)
+        Assertions.assertEquals(codelists[0].project, mockedCodelists[0].project)
     }
 
     @Test
@@ -66,16 +78,22 @@ internal class CodelistServiceTest {
             .doNothing()
             .`when`(codelistRepository)
             .persist(ArgumentMatchers.any(Codelist::class.java))
+
         Mockito
             .`when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
+        val form = codelistForm
+
         val mockedCodelist: Codelist =
-            codelistService.create(arrangeSetup.codelist.project!!.ref, arrangeSetup.codelistForm)
+            codelistService.create(
+                arrangeSetup.codelist.project!!.ref,
+                form
+            )
 
         Assertions.assertNotNull(mockedCodelist)
-        Assertions.assertEquals(arrangeSetup.newCodelist.title, mockedCodelist.title)
-        Assertions.assertEquals(arrangeSetup.newCodelist.description, mockedCodelist.description)
+        Assertions.assertEquals(form.title, mockedCodelist.title)
+        Assertions.assertEquals(form.description, mockedCodelist.description)
     }
 
     @Test
@@ -83,35 +101,35 @@ internal class CodelistServiceTest {
         Mockito
             .`when`(
                 codelistRepository.deleteCodelist(
-                    arrangeSetup.project_codelistId,
-                    arrangeSetup.codelist_projectRef
+                    projectId,
+                    codelistRef
                 )
             )
-            .thenReturn(arrangeSetup.newCodelist_2)
+            .thenReturn(newCodelist_2)
 
         val mockedCodelist: Codelist =
-            codelistService.delete(arrangeSetup.project_codelistRef, arrangeSetup.codelist_projectRef)
+            codelistService.delete(projectRef, codelistRef)
 
         Assertions.assertNotNull(mockedCodelist)
-        Assertions.assertEquals(TestSetup.newCodelist_2, mockedCodelist)
+        Assertions.assertEquals(newCodelist_2, mockedCodelist)
     }
 
     @Test
     fun update() {
         Mockito
-            .`when`(
-                codelistRepository
-                    .findByRef(arrangeSetup.project_codelistId, arrangeSetup.codelist_projectRef)
-            ).thenReturn(arrangeSetup.codelist)
+            .`when`(codelistRepository.findByRef(projectId, codelistRef))
+            .thenReturn(arrangeSetup.codelist)
+
+        val form = updatedCodelistForm
 
         val mockedCodelist: Codelist = codelistService.update(
-            arrangeSetup.project_codelistRef,
-            arrangeSetup.codelist_projectRef,
-            arrangeSetup.updatedCodelistForm
+            projectRef,
+            codelistRef,
+            form
         )
 
         Assertions.assertNotNull(mockedCodelist)
-        Assertions.assertEquals(arrangeSetup.updatedCodelistForm.title, mockedCodelist.title)
-        Assertions.assertEquals(arrangeSetup.updatedCodelistForm.description, mockedCodelist.description)
+        Assertions.assertEquals(form.title, mockedCodelist.title)
+        Assertions.assertEquals(form.description, mockedCodelist.description)
     }
 }

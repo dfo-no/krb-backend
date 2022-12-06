@@ -6,12 +6,6 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.code
-import org.kravbank.TestSetup.Arrange.codeForm
-import org.kravbank.TestSetup.Arrange.codes
-import org.kravbank.TestSetup.Arrange.newCode
-import org.kravbank.TestSetup.Arrange.updatedCodeForm
 import org.kravbank.dao.CodeForm
 import org.kravbank.domain.Code
 import org.kravbank.lang.BadRequestException
@@ -20,6 +14,12 @@ import org.kravbank.repository.CodeRepository
 import org.kravbank.resource.CodeResource
 import org.kravbank.utils.ErrorMessage.RepoError.CODE_BADREQUEST_DELETE
 import org.kravbank.utils.ErrorMessage.RepoError.CODE_NOTFOUND
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.code
+import org.kravbank.utils.TestSetup.Arrange.codeForm
+import org.kravbank.utils.TestSetup.Arrange.codes
+import org.kravbank.utils.TestSetup.Arrange.newCode
+import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -44,7 +44,9 @@ internal class CodeResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
 

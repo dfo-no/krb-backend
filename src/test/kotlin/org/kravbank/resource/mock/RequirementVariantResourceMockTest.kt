@@ -6,17 +6,17 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.requirementVariant
-import org.kravbank.TestSetup.Arrange.requirementVariantForm
-import org.kravbank.TestSetup.Arrange.requirementVariants
-import org.kravbank.TestSetup.Arrange.updatedRequirementVariantForm
 import org.kravbank.dao.RequirementVariantForm
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.RequirementVariantResource
 import org.kravbank.utils.ErrorMessage.RepoError.REQUIREMENT_VARIANT_NOTFOUND
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.requirementVariant
+import org.kravbank.utils.TestSetup.Arrange.requirementVariantForm
+import org.kravbank.utils.TestSetup.Arrange.requirementVariants
+import org.kravbank.utils.TestSetup.Arrange.updatedRequirementVariantForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -37,11 +37,13 @@ internal class RequirementVariantResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     private final val requirementId: Long = arrangeSetup.requirement_requirementVariantId
-    private final val requirementRef: String = arrangeSetup.requirement_project_requirementVariantRef
+    private final val requirementRef: String = arrangeSetup.requirement_requirementVariantRef
     private final val reqVariantRef: String = arrangeSetup.requirementVariant_requirementRef
     private final val projectRef: String = arrangeSetup.project_requirementVariantRef
 
@@ -134,7 +136,6 @@ internal class RequirementVariantResourceMockTest {
 
     @Test
     fun deleteRequirementVariant_OK() {
-        //mock
         Mockito
             .`when`(requirementVariantRepository.deleteRequirementVariant(requirementId, reqVariantRef))
             .thenReturn(requirementVariant)

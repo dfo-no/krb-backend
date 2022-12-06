@@ -6,18 +6,18 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.product
-import org.kravbank.TestSetup.Arrange.productForm
-import org.kravbank.TestSetup.Arrange.products
-import org.kravbank.TestSetup.Arrange.reqVariant_productRef
-import org.kravbank.TestSetup.Arrange.updatedProductForm
 import org.kravbank.dao.ProductForm
 import org.kravbank.domain.Product
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.resource.ProductResource
 import org.kravbank.utils.ErrorMessage.RepoError.PRODUCT_NOTFOUND
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.product
+import org.kravbank.utils.TestSetup.Arrange.productForm
+import org.kravbank.utils.TestSetup.Arrange.products
+import org.kravbank.utils.TestSetup.Arrange.reqVariant_productRef
+import org.kravbank.utils.TestSetup.Arrange.updatedProductForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -41,7 +41,9 @@ internal class ProductResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test

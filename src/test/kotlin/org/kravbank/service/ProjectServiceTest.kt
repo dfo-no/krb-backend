@@ -5,9 +5,13 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
 import org.kravbank.domain.Project
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.project
+import org.kravbank.utils.TestSetup.Arrange.projectForm
+import org.kravbank.utils.TestSetup.Arrange.projects
+import org.kravbank.utils.TestSetup.Arrange.updatedProjectForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -21,45 +25,51 @@ internal class ProjectServiceTest {
     @Inject
     lateinit var projectService: ProjectService
 
-    val arrangeSetup = TestSetup.Arrange
+    private final val arrangeSetup = TestSetup.Arrange
+
+    private final val projectRef: String = arrangeSetup.projectRef
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test
     fun get() {
         Mockito
-            .`when`(projectRepository.findByRef(arrangeSetup.project.ref))
-            .thenReturn(arrangeSetup.project)
+            .`when`(projectRepository.findByRef(projectRef))
+            .thenReturn(project)
 
-        val mockedProject: Project = projectService.get(arrangeSetup.project.ref)
+        val mockedProject: Project = projectService.get(projectRef)
 
-        Assertions.assertEquals("første prosjekt", mockedProject.title)
-        Assertions.assertEquals("første prosjektbeskrivelse", mockedProject.description)
-        Assertions.assertEquals(arrangeSetup.project.ref, mockedProject.ref)
-        Assertions.assertEquals(arrangeSetup.project.codelist, mockedProject.codelist)
-        Assertions.assertEquals(arrangeSetup.project.publications, mockedProject.publications)
-        Assertions.assertEquals(arrangeSetup.project.products, mockedProject.products)
-        Assertions.assertEquals(arrangeSetup.project.needs, mockedProject.needs)
-        Assertions.assertEquals(arrangeSetup.project.requirements, mockedProject.requirements)
+        Assertions.assertEquals(project.title, mockedProject.title)
+        Assertions.assertEquals(project.description, mockedProject.description)
+        Assertions.assertEquals(project.ref, mockedProject.ref)
+        Assertions.assertEquals(project.codelist, mockedProject.codelist)
+        Assertions.assertEquals(project.publications, mockedProject.publications)
+        Assertions.assertEquals(project.products, mockedProject.products)
+        Assertions.assertEquals(project.needs, mockedProject.needs)
+        Assertions.assertEquals(project.requirements, mockedProject.requirements)
     }
 
     @Test
     fun list() {
-        Mockito.`when`(projectRepository.listAllProjects()).thenReturn(arrangeSetup.projects)
+        Mockito
+            .`when`(projectRepository.listAllProjects())
+            .thenReturn(projects)
 
         val mockedProjects: List<Project> = projectService.list()
 
-        Assertions.assertEquals("første prosjekt", mockedProjects[0].title)
-        Assertions.assertEquals("første prosjektbeskrivelse", mockedProjects[0].description)
-        Assertions.assertEquals(arrangeSetup.project.ref, mockedProjects[0].ref)
-        Assertions.assertEquals(arrangeSetup.project.codelist, mockedProjects[0].codelist)
-        Assertions.assertEquals(arrangeSetup.project.publications, mockedProjects[0].publications)
-        Assertions.assertEquals(arrangeSetup.project.products, mockedProjects[0].products)
-        Assertions.assertEquals(arrangeSetup.project.needs, mockedProjects[0].needs)
-        Assertions.assertEquals(arrangeSetup.project.requirements, mockedProjects[0].requirements)
+        Assertions.assertEquals(projects[0].title, mockedProjects[0].title)
+        Assertions.assertEquals(projects[0].description, mockedProjects[0].description)
+        Assertions.assertEquals(projects[0].ref, mockedProjects[0].ref)
+        Assertions.assertEquals(projects[0].codelist, mockedProjects[0].codelist)
+        Assertions.assertEquals(projects[0].publications, mockedProjects[0].publications)
+        Assertions.assertEquals(projects[0].products, mockedProjects[0].products)
+        Assertions.assertEquals(projects[0].needs, mockedProjects[0].needs)
+        Assertions.assertEquals(projects[0].requirements, mockedProjects[0].requirements)
     }
 
     @Test
@@ -68,20 +78,24 @@ internal class ProjectServiceTest {
             .doNothing()
             .`when`(projectRepository)
             .persist(ArgumentMatchers.any(Project::class.java))
+
         Mockito
             .`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java)))
             .thenReturn(true)
 
-        val mockedProject: Project = projectService.create(arrangeSetup.projectForm)
+        val form = projectForm
+
+        val mockedProject: Project = projectService.create(form)
 
         Assertions.assertNotNull(mockedProject)
-        Assertions.assertEquals("andre prosjekt", mockedProject.title)
-        Assertions.assertEquals("andre prosjektbeskrivelse", mockedProject.description)
+        Assertions.assertEquals(form.title, mockedProject.title)
+        Assertions.assertEquals(form.description, mockedProject.description)
     }
 
     @Test
     fun delete() {
 
+        //soft delete
         //todo: Kommer tilbake til denne testen senere
         /*
         Mockito
@@ -107,10 +121,15 @@ internal class ProjectServiceTest {
             .`when`(projectRepository.findByRef(arrangeSetup.project.ref))
             .thenReturn(arrangeSetup.project)
 
-        val mockedProject: Project = projectService.update(arrangeSetup.project.ref, arrangeSetup.updatedProjectForm)
+        val form = updatedProjectForm
+
+        val mockedProject: Project = projectService.update(
+            projectRef,
+            form
+        )
 
         Assertions.assertNotNull(mockedProject)
-        Assertions.assertEquals(arrangeSetup.updatedProjectForm.title, mockedProject.title)
-        Assertions.assertEquals(arrangeSetup.updatedProjectForm.description, mockedProject.description)
+        Assertions.assertEquals(form.title, mockedProject.title)
+        Assertions.assertEquals(form.description, mockedProject.description)
     }
 }

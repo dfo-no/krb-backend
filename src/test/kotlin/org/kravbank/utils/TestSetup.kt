@@ -1,17 +1,23 @@
-package org.kravbank
+package org.kravbank.utils
 
 import org.kravbank.dao.*
 import org.kravbank.domain.*
 import java.time.LocalDateTime
 
 class TestSetup {
+
+
     companion object Arrange {
+
+
         //project
         var project = Project()
+        var newProject = Project()
         var projects: MutableList<Project> = mutableListOf()
         lateinit var projectForm: ProjectForm
         lateinit var updatedProjectForm: ProjectForm
         val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
+
 
         //code
         var code = Code()
@@ -24,6 +30,7 @@ class TestSetup {
         val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val code_codelistRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
 
+
         //publication
         var publication = Publication()
         var publications: MutableList<Publication> = mutableListOf()
@@ -33,6 +40,7 @@ class TestSetup {
         val publication_projectRef: String = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
         val project_publicationId: Long = 3L
         val project_publicationRef: String = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
+
 
         //product
         var product = Product()
@@ -45,6 +53,7 @@ class TestSetup {
         val product_projectRef = "edb4db69-edb2-431f-855a-4368e2bcddd1"
         val reqVariant_productRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
+
         //requirement
         var requirement = Requirement()
         var requirements: MutableList<Requirement> = mutableListOf()
@@ -56,6 +65,7 @@ class TestSetup {
         val requirement_projectRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
         val need_requirementRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
 
+
         //requirement variant
         var requirementVariant = RequirementVariant()
         var requirementVariants: MutableList<RequirementVariant> = mutableListOf()
@@ -64,8 +74,9 @@ class TestSetup {
         lateinit var updatedRequirementVariantForm: RequirementVariantForm
         val project_requirementVariantRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val requirement_requirementVariantId = 12L
-        val requirement_project_requirementVariantRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
+        val requirement_requirementVariantRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
         val requirementVariant_requirementRef = "rvrv3b69-edb2-431f-855a-4368e2bcddd1"
+
 
         //need
         var need = Need()
@@ -76,6 +87,7 @@ class TestSetup {
         val project_needRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
         val project_needId = 2L
         val need_projectRef: String = "need1b69-edb2-431f-855a-4368e2bcddd1"
+
 
         //codelist
         var codelist = Codelist()
@@ -88,9 +100,10 @@ class TestSetup {
         val project_codelistId = 3L
         val codelist_projectRef: String = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
 
-        val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
+        private val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
 
         fun start() {
+
             //project
             project.title = "første prosjekt"
             project.description = "første prosjektbeskrivelse"
@@ -102,7 +115,7 @@ class TestSetup {
             project.needs = needs
             project.products = products
 
-            val newProject = Project()
+            newProject = Project()
             newProject.title = "andre prosjekt"
             newProject.description = "andre prosjektbeskrivelse"
             newProject.ref = "dfs245678ivcbcccdsgfgdsf5db69-edb2-431f-855a-4368e2bcddd1"
@@ -121,6 +134,7 @@ class TestSetup {
 
             projects.add(project)
             projects.add(newProject)
+
 
             //code
             code = Code()
@@ -146,6 +160,7 @@ class TestSetup {
             codes.add(code)
             codes.add(newCode)
 
+
             //codelist
             codelist = Codelist()
             codelist.title = "Første codelist"
@@ -156,7 +171,6 @@ class TestSetup {
             codelist.id = (1L)
 
             newCodelist = Codelist()
-            //newCodelist.ref = "dsfdsgs<'fåowi39543tdsf"
             newCodelist.project = project
             newCodelist.title = "Ny kodelist tittel"
             newCodelist.description = "Ny beskrivelse"
@@ -164,7 +178,6 @@ class TestSetup {
             newCodelist.id = 505
 
             codelistForm = CodelistForm().fromEntity(newCodelist)
-
 
             newCodelist_2 = Codelist()
             newCodelist_2.ref = "dsfdsgs<'fåowi39543tdsf"
@@ -180,6 +193,7 @@ class TestSetup {
 
             codelists.add(codelist)
             codelists.add(newCodelist)
+
 
             //product
             product = Product()
@@ -204,6 +218,7 @@ class TestSetup {
 
             products.add(product)
             products.add(newProduct)
+
 
             //need
             need = Need()
@@ -231,6 +246,7 @@ class TestSetup {
             needs.add(need)
             needs.add(newNeed)
 
+
             //publication
             publication = Publication()
             publication.id = 200
@@ -243,8 +259,7 @@ class TestSetup {
             newPublication = Publication()
             newPublication.id = 201
             newPublication.ref = "asdsa-fdsf-34-fsd-dsgf-35463fd"
-            newPublication.project = project
-            //newPublication.date = dateTime
+            newPublication.project = newProject
             newPublication.comment = "En ny kommentar"
 
             publicationForm = PublicationForm().fromEntity(newPublication)
@@ -255,6 +270,7 @@ class TestSetup {
 
             publications.add(publication)
             publications.add(newPublication)
+
 
             //requirement
             requirement = Requirement()
@@ -283,7 +299,8 @@ class TestSetup {
             requirements.add(requirement)
             requirements.add(newRequirement)
 
-            //requirementvariant
+
+            //requirement variant
             requirementVariant = RequirementVariant()
             requirementVariant.id = 89
             requirementVariant.description = "En beskrivelse"

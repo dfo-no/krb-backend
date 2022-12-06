@@ -6,15 +6,15 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.need
-import org.kravbank.TestSetup.Arrange.needs
-import org.kravbank.TestSetup.Arrange.newNeed
-import org.kravbank.TestSetup.Arrange.updatedNeedForm
 import org.kravbank.dao.NeedForm
 import org.kravbank.domain.Need
 import org.kravbank.repository.NeedRepository
 import org.kravbank.resource.NeedResource
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.need
+import org.kravbank.utils.TestSetup.Arrange.needs
+import org.kravbank.utils.TestSetup.Arrange.newNeed
+import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -38,7 +38,9 @@ internal class NeedResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
 
@@ -112,8 +114,6 @@ internal class NeedResourceMockTest {
 
     @Test
     fun updateNeed_OK() {
-
-
         Mockito
             .`when`(needRepository.findByRef(projectId, needRef))
             .thenReturn(newNeed)

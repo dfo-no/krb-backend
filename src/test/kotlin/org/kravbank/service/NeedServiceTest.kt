@@ -5,9 +5,13 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
 import org.kravbank.domain.Need
 import org.kravbank.repository.NeedRepository
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.need
+import org.kravbank.utils.TestSetup.Arrange.needForm
+import org.kravbank.utils.TestSetup.Arrange.needs
+import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -21,11 +25,20 @@ internal class NeedServiceTest {
     @Inject
     lateinit var needService: NeedService
 
-    val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup.Arrange
+
+    private val projectId: Long = arrangeSetup.project_needId
+
+    private val needRef: String = arrangeSetup.need_projectRef
+
+    private val projectRef: String = arrangeSetup.project_needRef
+
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test
@@ -33,33 +46,32 @@ internal class NeedServiceTest {
         Mockito
             .`when`(
                 needRepository
-                    .findByRef(arrangeSetup.project_needId, arrangeSetup.need_projectRef)
-            ).thenReturn(arrangeSetup.need)
+                    .findByRef(projectId, needRef)
+            ).thenReturn(need)
 
         val mockedNeed: Need =
-            needService.get(arrangeSetup.project_needRef, arrangeSetup.need_projectRef)
+            needService.get(projectRef, needRef)
 
-        Assertions.assertEquals(arrangeSetup.need.title, mockedNeed.title)
-        Assertions.assertEquals(arrangeSetup.need.id, mockedNeed.id)
-        Assertions.assertEquals(arrangeSetup.need.project, mockedNeed.project)
-        Assertions.assertEquals(arrangeSetup.need.description, mockedNeed.description)
+        Assertions.assertEquals(need.title, mockedNeed.title)
+        Assertions.assertEquals(need.id, mockedNeed.id)
+        Assertions.assertEquals(need.project, mockedNeed.project)
+        Assertions.assertEquals(need.description, mockedNeed.description)
     }
 
     @Test
     fun list() {
-        Mockito.`when`(
-            needRepository
-                .listAllNeeds(arrangeSetup.project_needId)
-        ).thenReturn(arrangeSetup.needs)
+        Mockito
+            .`when`(needRepository.listAllNeeds(projectId))
+            .thenReturn(needs)
 
-        val mockedNeeds: List<Need> = needService.list(arrangeSetup.project_needRef)
+        val mockedNeeds: List<Need> = needService.list(projectRef)
 
-        Assertions.assertEquals(arrangeSetup.need.title, mockedNeeds[0].title)
-        Assertions.assertEquals(arrangeSetup.need.description, mockedNeeds[0].description)
-        Assertions.assertEquals(arrangeSetup.need.ref, mockedNeeds[0].ref)
-        Assertions.assertEquals(arrangeSetup.need.requirements, mockedNeeds[0].requirements)
-        Assertions.assertEquals(arrangeSetup.need.project, mockedNeeds[0].project)
-        Assertions.assertEquals(arrangeSetup.project.requirements, mockedNeeds[0].requirements)
+        Assertions.assertEquals(needs[0].title, mockedNeeds[0].title)
+        Assertions.assertEquals(needs[0].description, mockedNeeds[0].description)
+        Assertions.assertEquals(needs[0].ref, mockedNeeds[0].ref)
+        Assertions.assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
+        Assertions.assertEquals(needs[0].project, mockedNeeds[0].project)
+        Assertions.assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
     }
 
     @Test
@@ -72,17 +84,33 @@ internal class NeedServiceTest {
             .`when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
             .thenReturn(true)
 
+        val form = needForm
+
         val mockedNeed: Need =
-            needService.create(arrangeSetup.need.project!!.ref, arrangeSetup.needForm)
+            needService.create(arrangeSetup.need.project!!.ref, form)
 
         Assertions.assertNotNull(mockedNeed)
-        Assertions.assertEquals(arrangeSetup.newNeed.title, mockedNeed.title)
-        Assertions.assertEquals(arrangeSetup.newNeed.description, mockedNeed.description)
+        Assertions.assertEquals(form.title, mockedNeed.title)
+        Assertions.assertEquals(form.description, mockedNeed.description)
     }
 
     @Test
     fun delete() {
-        //todo: Kommer tilbake til denne testen senere
+        Mockito
+            .`when`(needRepository.deleteNeed(projectId, needRef))
+            .thenReturn(need)
+
+        val mockedNeed: Need = needService.delete(
+            projectRef,
+            needRef
+        )
+
+        Assertions.assertNotNull(mockedNeed)
+        Assertions.assertEquals(need.ref, mockedNeed.ref)
+        Assertions.assertEquals(need.title, mockedNeed.title)
+        Assertions.assertEquals(need.description, mockedNeed.description)
+        Assertions.assertEquals(need.project, mockedNeed.project)
+        Assertions.assertEquals(need.requirements, mockedNeed.requirements)
     }
 
     @Test
@@ -90,17 +118,19 @@ internal class NeedServiceTest {
         Mockito
             .`when`(
                 needRepository
-                    .findByRef(arrangeSetup.project_needId, arrangeSetup.need_projectRef)
+                    .findByRef(projectId, needRef)
             ).thenReturn(arrangeSetup.need)
 
+        val form = updatedNeedForm
+
         val mockedNeed: Need = needService.update(
-            arrangeSetup.project_needRef,
-            arrangeSetup.need_projectRef,
-            arrangeSetup.updatedNeedForm
+            projectRef,
+            needRef,
+            form
         )
 
         Assertions.assertNotNull(mockedNeed)
-        Assertions.assertEquals(arrangeSetup.updatedNeedForm.title, mockedNeed.title)
-        Assertions.assertEquals(arrangeSetup.updatedNeedForm.description, mockedNeed.description)
+        Assertions.assertEquals(form.title, mockedNeed.title)
+        Assertions.assertEquals(form.description, mockedNeed.description)
     }
 }

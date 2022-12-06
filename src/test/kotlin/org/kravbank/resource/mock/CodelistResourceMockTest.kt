@@ -5,13 +5,7 @@ import io.quarkus.test.junit.mockito.InjectMock
 import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
-import org.kravbank.TestSetup.Arrange.codelist
-import org.kravbank.TestSetup.Arrange.codelists
-import org.kravbank.TestSetup.Arrange.newCodelist_2
-import org.kravbank.TestSetup.Arrange.updatedCodelistForm
 import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.Codelist
 import org.kravbank.lang.BadRequestException
@@ -20,6 +14,11 @@ import org.kravbank.repository.CodelistRepository
 import org.kravbank.resource.CodelistResource
 import org.kravbank.utils.ErrorMessage.RepoError.CODELIST_BADREQUEST_DELETE
 import org.kravbank.utils.ErrorMessage.RepoError.CODELIST_NOTFOUND
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.codelist
+import org.kravbank.utils.TestSetup.Arrange.codelists
+import org.kravbank.utils.TestSetup.Arrange.newCodelist_2
+import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -43,11 +42,12 @@ internal class CodelistResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
+
     }
 
     @Test
-    @Order(1)
     fun getCodelist_OK() {
         Mockito
             .`when`(

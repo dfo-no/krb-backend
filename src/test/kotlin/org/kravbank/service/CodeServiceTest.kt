@@ -5,9 +5,13 @@ import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.kravbank.TestSetup
 import org.kravbank.domain.Code
 import org.kravbank.repository.CodeRepository
+import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.code
+import org.kravbank.utils.TestSetup.Arrange.codeForm
+import org.kravbank.utils.TestSetup.Arrange.codes
+import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -21,10 +25,20 @@ internal class CodeServiceTest {
     @Inject
     lateinit var codeService: CodeService
 
-    val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup.Arrange
+
+    private val codelistId: Long = arrangeSetup.codelist_codeId
+
+    private val codelistRef: String = arrangeSetup.codelist_codeRef
+
+    private val codeRef: String = arrangeSetup.code_codelistRef
+
+    private val projectRef: String = arrangeSetup.project_codeRef
+
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
     }
 
@@ -33,29 +47,29 @@ internal class CodeServiceTest {
         Mockito
             .`when`(
                 codeRepository
-                    .findByRef(arrangeSetup.codelist_codeId, arrangeSetup.code_codelistRef)
-            ).thenReturn(arrangeSetup.code)
+                    .findByRef(codelistId, codeRef)
+            ).thenReturn(code)
 
         val mockedCode: Code =
-            codeService.get(arrangeSetup.project_codeRef, arrangeSetup.codelist_codeRef, arrangeSetup.code_codelistRef)
+            codeService.get(projectRef, codelistRef, codeRef)
 
-        Assertions.assertEquals(arrangeSetup.code.title, mockedCode.title)
-        Assertions.assertEquals(arrangeSetup.code.id, mockedCode.id)
-        Assertions.assertEquals(arrangeSetup.code.description, mockedCode.description)
+        Assertions.assertEquals(code.title, mockedCode.title)
+        Assertions.assertEquals(code.id, mockedCode.id)
+        Assertions.assertEquals(code.description, mockedCode.description)
     }
 
     @Test
     fun list() {
         Mockito.`when`(
             codeRepository
-                .listAllCodes(arrangeSetup.codelist_codeId)
-        ).thenReturn(arrangeSetup.codes)
+                .listAllCodes(codelistId)
+        ).thenReturn(codes)
 
-        val mockedCodes: List<Code> = codeService.list(arrangeSetup.project_codeRef, arrangeSetup.codelist_codeRef)
+        val mockedCodes: List<Code> = codeService.list(projectRef, codelistRef)
 
-        Assertions.assertEquals(arrangeSetup.code.title, mockedCodes[0].title)
-        Assertions.assertEquals(arrangeSetup.code.id, mockedCodes[0].id)
-        Assertions.assertEquals(arrangeSetup.code.description, mockedCodes[0].description)
+        Assertions.assertEquals(codes[0].title, mockedCodes[0].title)
+        Assertions.assertEquals(codes[0].id, mockedCodes[0].id)
+        Assertions.assertEquals(codes[0].description, mockedCodes[0].description)
     }
 
     @Test
@@ -64,21 +78,39 @@ internal class CodeServiceTest {
             .doNothing()
             .`when`(codeRepository)
             .persist(ArgumentMatchers.any(Code::class.java))
+
         Mockito
             .`when`(codeRepository.isPersistent(ArgumentMatchers.any(Code::class.java)))
             .thenReturn(true)
 
+        val form = codeForm
+
         val mockedCode: Code =
-            codeService.create(arrangeSetup.project_codeRef, arrangeSetup.codelist_codeRef, arrangeSetup.codeForm)
+            codeService.create(
+                projectRef,
+                codelistRef,
+                form
+            )
 
         Assertions.assertNotNull(mockedCode)
-        Assertions.assertEquals(arrangeSetup.newCode.title, mockedCode.title)
-        Assertions.assertEquals(arrangeSetup.newCode.description, mockedCode.description)
+        Assertions.assertEquals(form.title, mockedCode.title)
+        Assertions.assertEquals(form.description, mockedCode.description)
     }
 
     @Test
     fun delete() {
-        //TODO("Kommer tilbake her senere")
+        Mockito
+            .`when`(codeRepository.deleteCode(codelistId, codeRef))
+            .thenReturn(code)
+
+        val mockedCode: Code = codeService.delete(
+            projectRef,
+            codelistRef,
+            codeRef
+        )
+
+        Assertions.assertNotNull(mockedCode)
+        Assertions.assertEquals(code.ref, mockedCode.ref)
     }
 
     @Test
@@ -87,20 +119,22 @@ internal class CodeServiceTest {
             .`when`(
                 codeRepository
                     .findByRef(
-                        arrangeSetup.codelist_codeId,
-                        arrangeSetup.code_codelistRef
+                        codelistId,
+                        codeRef
                     )
-            ).thenReturn(arrangeSetup.code)
+            ).thenReturn(code)
+
+        val form = updatedCodeForm
 
         val mockedCode: Code = codeService.update(
-            arrangeSetup.project_codeRef,
-            arrangeSetup.codelist_codeRef,
-            arrangeSetup.code_codelistRef,
-            arrangeSetup.updatedCodeForm
+            projectRef,
+            codelistRef,
+            codeRef,
+            form
         )
 
         Assertions.assertNotNull(mockedCode)
-        Assertions.assertEquals(arrangeSetup.updatedCodeForm.title, mockedCode.title)
-        Assertions.assertEquals(arrangeSetup.updatedCodeForm.description, mockedCode.description)
+        Assertions.assertEquals(form.title, mockedCode.title)
+        Assertions.assertEquals(form.description, mockedCode.description)
     }
 }
