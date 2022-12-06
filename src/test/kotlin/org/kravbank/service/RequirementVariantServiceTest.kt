@@ -64,8 +64,8 @@ internal class RequirementVariantServiceTest {
         Assertions.assertEquals(requirementVariant.description, mockedRequirementVariant.description)
         Assertions.assertEquals(requirementVariant.useProduct, mockedRequirementVariant.useProduct)
         Assertions.assertEquals(
-            requirementVariant.useSpesification,
-            mockedRequirementVariant.useSpesification
+            requirementVariant.useSpecification,
+            mockedRequirementVariant.useSpecification
         )
         Assertions.assertEquals(requirementVariant.product, mockedRequirementVariant.product)
         Assertions.assertEquals(
@@ -92,8 +92,8 @@ internal class RequirementVariantServiceTest {
         Assertions.assertEquals(arrangeSetup.requirementVariant.description, mockedRequirementVariants[0].description)
         Assertions.assertEquals(arrangeSetup.requirementVariant.useProduct, mockedRequirementVariants[0].useProduct)
         Assertions.assertEquals(
-            arrangeSetup.requirementVariant.useSpesification,
-            mockedRequirementVariants[0].useSpesification
+            arrangeSetup.requirementVariant.useSpecification,
+            mockedRequirementVariants[0].useSpecification
         )
         Assertions.assertEquals(arrangeSetup.requirementVariant.product, mockedRequirementVariants[0].product)
         Assertions.assertEquals(
@@ -127,8 +127,8 @@ internal class RequirementVariantServiceTest {
         Assertions.assertEquals(form.description, mockedRequirementVariant.description)
         Assertions.assertEquals(form.useProduct, mockedRequirementVariant.useProduct)
         Assertions.assertEquals(
-            form.useSpesification,
-            mockedRequirementVariant.useSpesification
+            form.useSpecification,
+            mockedRequirementVariant.useSpecification
         )
         Assertions.assertEquals(
             form.useQualification,
@@ -153,7 +153,7 @@ internal class RequirementVariantServiceTest {
         Assertions.assertEquals(requirementVariant.requirement, mockedRequirementVariant.requirement)
         Assertions.assertEquals(requirementVariant.requirementText, mockedRequirementVariant.requirementText)
         Assertions.assertEquals(requirementVariant.useProduct, mockedRequirementVariant.useProduct)
-        Assertions.assertEquals(requirementVariant.useSpesification, mockedRequirementVariant.useSpesification)
+        Assertions.assertEquals(requirementVariant.useSpecification, mockedRequirementVariant.useSpecification)
         Assertions.assertEquals(requirementVariant.instruction, mockedRequirementVariant.instruction)
         Assertions.assertEquals(requirementVariant.useQualification, mockedRequirementVariant.useQualification)
         Assertions.assertEquals(requirementVariant.description, mockedRequirementVariant.description)
@@ -195,8 +195,8 @@ internal class RequirementVariantServiceTest {
             mockedRequirementVariant.useProduct
         )
         Assertions.assertEquals(
-            form.useSpesification,
-            mockedRequirementVariant.useSpesification
+            form.useSpecification,
+            mockedRequirementVariant.useSpecification
         )
         Assertions.assertEquals(
             form.useQualification,
