@@ -1,17 +1,17 @@
-package org.kravbank.domain;
+package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
 
 @Entity
 class Requirement : PanacheEntity() {
-    lateinit var title: String
+    var title: String = ""
 
-    lateinit var description: String
+    var description: String = ""
 
     @OneToMany(
         mappedBy = ("requirement"),

@@ -5,6 +5,10 @@ import org.kravbank.domain.Code
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_DELETE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_UPDATE
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.toList
@@ -19,7 +23,7 @@ class CodeRepository : PanacheRepository<Code> {
                 ref,
                 codelistId
             ).firstResult<Code>()
-        return Optional.ofNullable(code).orElseThrow { NotFoundException("Code was not found!") }
+        return Optional.ofNullable(code).orElseThrow { NotFoundException(CODE_NOTFOUND) }
     }
 
     @Throws(BackendException::class)
@@ -31,7 +35,7 @@ class CodeRepository : PanacheRepository<Code> {
     fun createCode(code: Code) {
         persistAndFlush(code)
         if (!code.isPersistent) {
-            throw BadRequestException("Bad request! Code was not created")
+            throw BadRequestException(CODE_BADREQUEST_CREATE)
         }
     }
 
@@ -40,7 +44,7 @@ class CodeRepository : PanacheRepository<Code> {
         val deleted: Boolean
         val found = findByRef(codelistId, codeRef)
         deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException("Bad request! Code was not deleted")
+        if (!deleted) throw BadRequestException(CODE_BADREQUEST_DELETE)
         return found
     }
 
@@ -50,10 +54,9 @@ class CodeRepository : PanacheRepository<Code> {
             "title = ?1, description = ?2 where id= ?3",
             code.title,
             code.description,
-            //code.deletedDate,
             id
         )
-        Optional.of(updated).orElseThrow { BadRequestException("Bad request! Code did not update") }
+        Optional.of(updated).orElseThrow { BadRequestException(CODE_BADREQUEST_UPDATE) }
     }
 
 }
