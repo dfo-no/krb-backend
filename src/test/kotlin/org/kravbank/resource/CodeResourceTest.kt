@@ -7,7 +7,7 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.code.CodeCreateRequest
 import org.kravbank.dao.code.CodeUpdateRequest
-import org.kravbank.resource.utils.KeycloakAccess
+import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
 class CodeResourceTest {

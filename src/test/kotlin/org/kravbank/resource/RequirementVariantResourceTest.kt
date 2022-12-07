@@ -7,7 +7,7 @@ import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementVariantForm
-import org.kravbank.resource.utils.KeycloakAccess
+import org.kravbank.utils.KeycloakAccess
 
 
 @QuarkusTest

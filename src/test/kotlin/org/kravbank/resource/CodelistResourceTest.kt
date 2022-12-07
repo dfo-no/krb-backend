@@ -6,7 +6,7 @@ import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodelistForm
-import org.kravbank.resource.utils.KeycloakAccess
+import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
 internal class CodelistResourceTest() {
