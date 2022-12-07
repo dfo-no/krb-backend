@@ -319,7 +319,7 @@ class TestSetup {
             requirementVariant.description = "En beskrivelse"
             requirementVariant.instruction = "Instruksjon"
             requirementVariant.useProduct = true
-            requirementVariant.useSpesification = true
+            requirementVariant.useSpecification = true
             requirementVariant.useQualification = true
             requirementVariant.requirementText = "Variant tekst"
             requirementVariant.product = products
@@ -330,7 +330,7 @@ class TestSetup {
             newRequirementVariant.description = "Ny beskrivelse"
             newRequirementVariant.instruction = "Ny Instruksjon"
             newRequirementVariant.useProduct = false
-            newRequirementVariant.useSpesification = false
+            newRequirementVariant.useSpecification = false
             newRequirementVariant.useQualification = false
             newRequirementVariant.product = products
             newRequirementVariant.requirementText = "Variant tekst"
@@ -343,7 +343,7 @@ class TestSetup {
             updatedRequirementVariantForm.instruction = "Oppdatert instruksjon for requirement"
             updatedRequirementVariantForm.description = "Oppdatert requirement variant beskrivelse"
             updatedRequirementVariantForm.useProduct = false
-            updatedRequirementVariantForm.useSpesification = false
+            updatedRequirementVariantForm.useSpecification = false
             updatedRequirementVariantForm.useQualification = false
 
             requirementVariants.add(requirementVariant)

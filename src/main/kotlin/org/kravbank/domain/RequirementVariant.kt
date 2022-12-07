@@ -18,7 +18,7 @@ class RequirementVariant : PanacheEntity() {
 
     var useProduct: Boolean = false
 
-    var useSpesification: Boolean = false
+    var useSpecification: Boolean = false
 
     var useQualification: Boolean = false
 

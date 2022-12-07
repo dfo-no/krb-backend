@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.utils.Mapper
 
-class RequirementVariantForm() : Mapper<RequirementVariantForm, RequirementVariant> {
+class RequirementVariantForm: Mapper<RequirementVariantForm, RequirementVariant> {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var ref: String = ""
@@ -17,7 +17,7 @@ class RequirementVariantForm() : Mapper<RequirementVariantForm, RequirementVaria
 
     var useProduct: Boolean = false
 
-    var useSpesification: Boolean = false
+    var useSpecification: Boolean = false
 
     var useQualification: Boolean = false
 
@@ -28,7 +28,7 @@ class RequirementVariantForm() : Mapper<RequirementVariantForm, RequirementVaria
         requirementText = domain.requirementText
         instruction = domain.instruction
         useProduct = domain.useProduct
-        useSpesification = domain.useSpesification
+        useSpecification = domain.useSpecification
         useQualification = domain.useQualification
     }
 
@@ -38,7 +38,7 @@ class RequirementVariantForm() : Mapper<RequirementVariantForm, RequirementVaria
         requirementText = entity.requirementText
         instruction = entity.instruction
         useProduct = entity.useProduct
-        useSpesification = entity.useSpesification
+        useSpecification = entity.useSpecification
         useQualification = entity.useQualification
     }
 }

@@ -65,12 +65,12 @@ class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
     @Throws(BackendException::class)
     fun updateRequirementVariant(id: Long, reqVariant: RequirementVariant) {
         val updated = update(
-            "description = ?1, requirementtext = ?2, instruction = ?3, useproduct = ?4, usespesification = ?5, usequalification = ?6 where id = ?7",
+            "description = ?1, requirementtext = ?2, instruction = ?3, useproduct = ?4, usespecification = ?5, usequalification = ?6 where id = ?7",
             reqVariant.description,
             reqVariant.requirementText,
             reqVariant.instruction,
             reqVariant.useProduct,
-            reqVariant.useSpesification,
+            reqVariant.useSpecification,
             reqVariant.useQualification,
             id
         )

@@ -32,7 +32,7 @@
                 "requirementText": "Oppgi hvor mange dager man maksimalt må påregne fra bestilling til leveranse.",
                 "instruction": "",
                 "useProduct": false,
-                "useSpesification": true,
+                "useSpecification": true,
                 "useQualification": false,
                 "products": [],
                 "questions": [
@@ -63,7 +63,7 @@
                 "requirementText": "Oppgi hvor mange dager man gjennomsnittlig må påregne fra bestilling til leveranse.",
                 "instruction": "",
                 "useProduct": false,
-                "useSpesification": true,
+                "useSpecification": true,
                 "useQualification": false,
                 "products": [],
                 "questions": [
@@ -106,7 +106,7 @@
                 "requirementText": "Kjøretøy må leveres på følgende sted for å kunne regnes som levert:",
                 "instruction": "Brukes dersom man ønsker at kjøretøy skal leveres i stedet for å hentes hos leverandør.",
                 "useProduct": false,
-                "useSpesification": true,
+                "useSpecification": true,
                 "useQualification": false,
                 "products": [],
                 "questions": [
@@ -156,7 +156,7 @@
                 "requirementText": "Oppgi avstand fra leveringssted til nærmeste godkjente verksted.\n\nBenytt Google Maps til å beregne kjørelengde, benytt korteste kjørelengde. Avrundes oppover til nærmeste 0,1 km.",
                 "instruction": "",
                 "useProduct": false,
-                "useSpesification": true,
+                "useSpecification": true,
                 "useQualification": false,
                 "products": [],
                 "questions": [
@@ -220,7 +220,7 @@
                 "requirementText": "Kommer kjøretøyet direkte fra fabrikk til forhandler?",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "aacfeb2e-811b-4f21-8229-7399e04f9125",
@@ -275,7 +275,7 @@
                 "requirementText": "Kjøretøyet har automatgir.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -305,7 +305,7 @@
                 "requirementText": "Kjøretøyet har manuelt gir.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -335,7 +335,7 @@
                 "requirementText": "Oppgi type gir i kjøretøyet.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -393,7 +393,7 @@
                 "requirementText": "Oppgi tilgjengelig tilbehør i kupéen.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -441,7 +441,7 @@
                 "requirementText": "Oppgi antall seter foran i kjøretøyet inkludert sjåførens sete.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -488,7 +488,7 @@
                 "requirementText": "Oppgi antall seter bak i kjøretøyet.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -523,7 +523,7 @@
                 "requirementText": "Kjøretøyet har ikke seter bak sjåfør.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -577,7 +577,7 @@
                 "requirementText": "Godsrommet eller planet må kunne romme en rettvinklet kasse (også kalt \"statskassa\") med lengde/bredde/høyde 140 x 90 x 105 cm.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -608,7 +608,7 @@
                 "requirementText": "Oppgi basjerommets volum.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -666,7 +666,7 @@
                 "requirementText": "Kjøretøyet er utstyrt med sentrallås.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -730,7 +730,7 @@
                 "requirementText": "Oppgi kjøretøyets primære farge på karosseriet.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -1065,7 +1065,7 @@
                 "requirementText": "Kommer kjøretøyet direkte fra fabrikk til forhandler?",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "aacfeb2e-811b-4f21-8229-7399e04f9125",
@@ -1145,7 +1145,7 @@
                 "requirementText": "Oppgi antall seter foran i kjøretøyet inkludert sjåførens sete.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
@@ -1234,7 +1234,7 @@
                 "requirementText": "Oppgi kjøretøyets primære farge på karosseriet.",
                 "instruction": "",
                 "useProduct": true,
-                "useSpesification": false,
+                "useSpecification": false,
                 "useQualification": false,
                 "products": [
                   "6d916c0f-f378-4d0f-88f8-f703d1cce58a",
