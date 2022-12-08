@@ -49,16 +49,14 @@ internal class ProjectResourceMockTest {
             .`when`(projectRepository.findByRef(projectRef))
             .thenReturn(project)
 
-        val response: Response = projectResource.getProject(projectRef)
+        val response = projectResource.getProject(projectRef)
 
         val entity: Project = ProjectForm()
-            .toEntity(response.entity as ProjectForm)
+            .toEntity(response)
 
         assertEquals(project.title, entity.title)
         assertEquals(project.description, entity.description)
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
     }
 
     @Test
@@ -70,7 +68,6 @@ internal class ProjectResourceMockTest {
         try {
 
             projectResource.getProject(projectRef)
-                .entity as NotFoundException
 
         } catch (e: Exception) {
             assertEquals(PROJECT_NOTFOUND, e.message)
@@ -83,16 +80,12 @@ internal class ProjectResourceMockTest {
             .`when`(projectRepository.listAllProjects())
             .thenReturn(projects)
 
-        val response: Response = projectResource.listProjects()
-
-        val entity: List<ProjectForm> = response.entity as List<ProjectForm>
+        val response = projectResource.listProjects()
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(projects[0].title, entity[0].title)
-        assertEquals(projects[0].description, entity[0].description)
+        assertFalse(response.isEmpty())
+        assertEquals(projects[0].title, response[0].title)
+        assertEquals(projects[0].description, response[0].description)
     }
 
     @Test
@@ -133,14 +126,12 @@ internal class ProjectResourceMockTest {
 
         val form = updatedProjectForm
 
-        val response: Response = projectResource.updateProject(projectRef, form)
+        val response = projectResource.updateProject(projectRef, form)
 
-        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertEquals(form.title, entity.title)
-        assertEquals(form.description, entity.description)
+        assertEquals(form.title, response.title)
+        assertEquals(form.description, response.description)
     }
 
     @Test
@@ -151,8 +142,7 @@ internal class ProjectResourceMockTest {
         val form = updatedProjectForm
 
         try {
-            projectResource.updateProject(projectRef, form).entity as NotFoundException
-
+            projectResource.updateProject(projectRef, form)
         } catch (e: Exception) {
             assertEquals(PROJECT_NOTFOUND, e.message)
         }
