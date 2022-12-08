@@ -21,22 +21,20 @@ class PublicationRepository : PanacheRepository<Publication> {
     fun findByRef(projectId: Long, ref: String): Publication {
         val publication =
             find(
-                "ref = ?1 and project_id_fk = ?2",
+                "ref = ?1 and project_id_fk = ?2 and deleteddate is null",
                 ref,
                 projectId
-            )
-                .firstResult<Publication>()
+            ).firstResult<Publication>()
 
-        if (publication?.deletedDate == null) {
+        if (publication != null) {
             return publication
 
         } else throw NotFoundException(PUBLICATION_NOTFOUND)
     }
 
     fun listAllPublications(id: Long): List<Publication> {
-        return find("project_id_fk", id)
+        return find("project_id_fk = ?1 and deleteddate is null", id)
             .stream<Publication>()
-            .filter { p -> p.deletedDate == null }
             .toList()
     }
 
@@ -44,19 +42,18 @@ class PublicationRepository : PanacheRepository<Publication> {
     fun createPublication(publication: Publication) {
         persistAndFlush(publication)
 
-        if (!publication.isPersistent) {
-
-            throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
-        }
+        if (!publication.isPersistent) throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
     }
 
     @Throws(BackendException::class)
     fun deletePublication(projectId: Long, publicationRef: String): Publication {
         val found = findByRef(projectId, publicationRef)
 
-        val isSoftDeleted = softDelete(found.id)
+        found.deletedDate = LocalDateTime.now()
 
-        if (!isSoftDeleted) throw BadRequestException(PUBLICATION_BADREQUEST_DELETE)
+        persistAndFlush(found)
+
+        if (!found.isPersistent) throw BadRequestException(PUBLICATION_BADREQUEST_DELETE)
 
         return found
     }
@@ -64,7 +61,7 @@ class PublicationRepository : PanacheRepository<Publication> {
     @Throws(BackendException::class)
     fun updatePublication(id: Long, publication: Publication) {
         val updated = update(
-            "comment = ?1, version =?2 where id= ?3",
+            "comment = ?1, version = ?2 where id = ?3",
             publication.comment,
             publication.version,
             id
@@ -72,16 +69,4 @@ class PublicationRepository : PanacheRepository<Publication> {
 
         Optional.of(updated).orElseThrow { BadRequestException(PUBLICATION_BADREQUEST_UPDATE) }
     }
-
-    fun softDelete(publicationId: Long): Boolean {
-        val deletedDate = LocalDateTime.now()
-
-        val softDelete = update("deleteddate = ?1 where id = ?2", deletedDate, publicationId)
-
-        if (softDelete != 1) return false
-
-        return true
-
-    }
-
 }
