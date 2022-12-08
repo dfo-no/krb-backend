@@ -6,7 +6,7 @@ import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
-import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_DELET
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_NOTFOUND
 import java.time.LocalDateTime
@@ -55,7 +55,7 @@ class PublicationRepository : PanacheRepository<Publication> {
 
         val isSoftDeleted = softDelete(found.id)
 
-        if (!isSoftDeleted) throw BadRequestException(PUBLICATION_BADREQUEST_DELET)
+        if (!isSoftDeleted) throw BadRequestException(PUBLICATION_BADREQUEST_DELETE)
 
         return found
     }

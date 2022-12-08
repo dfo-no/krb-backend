@@ -104,7 +104,7 @@ internal class PublicationServiceTest {
         val mockedPublication: Publication = publicationService.delete(projectRef, publicationRef)
 
         Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(TestSetup.newRequirement.ref, mockedPublication.ref)
+        Assertions.assertEquals(newPublication, mockedPublication)
 
     }
 
