@@ -50,6 +50,7 @@ class PublicationRepository : PanacheRepository<Publication> {
         }
     }
 
+    @Throws(BackendException::class)
     fun deletePublication(projectId: Long, publicationRef: String): Publication {
         val found = findByRef(projectId, publicationRef)
 

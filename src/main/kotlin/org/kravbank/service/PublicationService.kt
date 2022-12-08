@@ -2,7 +2,6 @@ package org.kravbank.service
 
 import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.Publication
-import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
 import java.time.LocalDateTime
@@ -20,14 +19,12 @@ class PublicationService(
         return publicationRepository.findByRef(foundProject.id, publicationRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String): List<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
 
         return publicationRepository.listAllPublications(foundProject.id)
     }
 
-    @Throws(BackendException::class)
     fun create(projectRef: String, newPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
 
@@ -42,7 +39,6 @@ class PublicationService(
         return publication
     }
 
-    @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
 
@@ -50,7 +46,6 @@ class PublicationService(
 
     }
 
-    @Throws(BackendException::class)
     fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
 
