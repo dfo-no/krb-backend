@@ -8,8 +8,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.Publication
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.resource.PublicationResource
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_DELETE
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.publication
 import org.kravbank.utils.TestSetup.Arrange.publicationForm
@@ -114,46 +116,33 @@ internal class PublicationResourceMockTest {
         assertEquals(form.version, entity.version)
     }
 
-    /*TODO("Fix delete test")
 
-                    @Test
-                    fun deletePublication_OK() {
-                        val publication_2 = Publication()
-                        publication_2.id = 155L
-                        publication_2.ref = "dsfdsgs<'fåowi39543tdsf"
-                        publication_2.version = 10
-                        publication_2.comment = "En kommentar her"
-                        publication_2.project = project
-                        publication_2.date = time
+    @Test
+    fun deletePublication_OK() {
+        Mockito
+            .`when`(publicationRepository.deletePublication(projectId, publicationRef))
+            .thenReturn(publication)
 
+        val response: Response = publicationResource.deletePublication(projectRef, publicationRef)
 
-                        //mock
-                        Mockito
-                            .`when`(publicationRepository.deletePublication(publicationId))
-                            .thenReturn(true)
+        assertNotNull(response)
+        assertEquals(Response.Status.OK.statusCode, response.status)
+        assertEquals(publication.ref, response.entity)
+    }
 
-                        val response: Response = publicationResource.deletePublication(projectRef, publicationRef)
+    @Test
+    fun deletePublication_KO() {
+        Mockito
+            .`when`(publicationRepository.deletePublication(projectId, publicationRef))
+            .thenThrow(BadRequestException(PUBLICATION_BADREQUEST_DELETE))
 
-                        //assert
-                        assertNotNull(response)
-                        assertEquals(publicationRef, response.entity.toString())
+        try {
+            publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
 
-                    }
+        } catch (e: Exception) {
+            assertEquals(PUBLICATION_BADREQUEST_DELETE, e.message)
+        }
+    }
 
-                       @Test
-                    fun deletePublication_KO() {
-
-                        Mockito
-                            .`when`(publicationRepository.deletePublication(publicationId))
-                            .thenReturn(false)
-
-                        try {
-                            publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
-                        } catch (e: Exception) {
-                            assertEquals("Bad request! Publication was not deleted", e.message)
-                        }
-                    }
-
-                 */
 
 }
