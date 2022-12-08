@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.kravbank.domain.Publication
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.utils.TestSetup
+import org.kravbank.utils.TestSetup.Arrange.newPublication
 import org.kravbank.utils.TestSetup.Arrange.publication
 import org.kravbank.utils.TestSetup.Arrange.publications
 import org.kravbank.utils.TestSetup.Arrange.updatedPublicationForm
@@ -96,29 +97,15 @@ internal class PublicationServiceTest {
 
     @Test
     fun delete() {
+        Mockito
+            .`when`(publicationRepository.deletePublication(projectId, publicationRef))
+            .thenReturn(newPublication)
 
+        val mockedPublication: Publication = publicationService.delete(projectRef, publicationRef)
 
-        //todo: Kommer tilbake til denne testen senere
-        /*
-                Mockito
-                    .`when`(publicationRepository.deletePublication(publication_projectId))
-                    .thenReturn(false)
+        Assertions.assertNotNull(mockedPublication)
+        Assertions.assertEquals(TestSetup.newRequirement.ref, mockedPublication.ref)
 
-                /*
-                Mockito
-                    .`when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
-                    .thenReturn(false)
-                 */
-
-                val mockedPublication: Publication =
-                    publicationService.delete("bbb4db69-edb2-431f-855a-4368e2bcddd1", "zzz4db69-edb2-431f-855a-4368e2bcddd1")
-
-                //Ikke-null på grunn av soft delete
-                Assertions.assertNotNull(mockedPublication)
-
-                Assertions.assertEquals(newPublication.ref, mockedPublication.ref)
-
-         */
     }
 
     @Test
