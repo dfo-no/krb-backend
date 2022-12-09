@@ -71,7 +71,7 @@ internal class RequirementVariantResourceMockTest {
         assertEquals(requirementVariant.requirementText, entity.requirementText)
         assertEquals(requirementVariant.useProduct, entity.useProduct)
         assertEquals(requirementVariant.useQualification, entity.useQualification)
-        assertEquals(requirementVariant.useSpesification, entity.useSpesification)
+        assertEquals(requirementVariant.useSpecification, entity.useSpecification)
     }
 
     @Test
@@ -112,7 +112,7 @@ internal class RequirementVariantResourceMockTest {
         assertEquals(requirementVariants[0].requirementText, entity[0].requirementText)
         assertEquals(requirementVariants[0].useProduct, entity[0].useProduct)
         assertEquals(requirementVariants[0].useQualification, entity[0].useQualification)
-        assertEquals(requirementVariants[0].useSpesification, entity[0].useSpesification)
+        assertEquals(requirementVariants[0].useSpecification, entity[0].useSpecification)
     }
 
     @Test

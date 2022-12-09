@@ -41,7 +41,7 @@ class RequirementVariantResourceTest {
         rv.requirementText = "Integrasjonstest rv reqtext"
         rv.instruction = "Integrasjonstest rv instruction"
         rv.useProduct = true
-        rv.useSpesification = true
+        rv.useSpecification = true
         rv.useQualification = true
 
         given()
@@ -73,7 +73,7 @@ class RequirementVariantResourceTest {
         rv.requirementText = "Integrasjonstest rv reqtext"
         rv.instruction = "Integrasjonstest rv instruction"
         rv.useProduct = true
-        rv.useSpesification = true
+        rv.useSpecification = true
         rv.useQualification = true
 
         given()

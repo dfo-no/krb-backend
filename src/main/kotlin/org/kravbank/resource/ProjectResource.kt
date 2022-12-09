@@ -10,8 +10,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
-
 
 @Path("/api/v1/projects")
 @RequestScoped
@@ -22,21 +20,19 @@ class ProjectResource(val projectService: ProjectService) {
 
     @GET
     @RolesAllowed("user")
-    @Path("/{projcetRef}")
-    fun getProject(@PathParam("projcetRef") projcetRef: String): Response {
-        val project = projectService.get(projcetRef)
-        val form = ProjectForm().fromEntity(project)
-        return Response.ok(form).build()
+    @Path("/{projectRef}")
+    fun getProject(@PathParam("projectRef") projectRef: String): ProjectForm {
+        val project = projectService.get(projectRef)
+        return ProjectForm().fromEntity(project)
     }
 
     @GET
     @RolesAllowed("user")
-    fun listProjects(): Response {
-        val form = projectService.list()
+    fun listProjects(): List<ProjectForm> {
+        return projectService.list()
             .stream()
             .map(ProjectForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -49,22 +45,20 @@ class ProjectResource(val projectService: ProjectService) {
     }
 
     @DELETE
-    @Path("{projcetRef}")
+    @Path("{projectRef}")
     @Transactional
     @RolesAllowed("user")
-    fun deleteProject(@PathParam("projcetRef") projcetRef: String): Response {
-        val project = projectService.delete(projcetRef)
-        val form = ProjectForm().fromEntity(project)
-        return Response.ok(form.ref).build()
+    fun deleteProject(@PathParam("projectRef") projectRef: String): Response {
+        val project = projectService.delete(projectRef)
+        return Response.ok(project.ref).build()
     }
 
     @PUT
-    @Path("{projcetRef}")
+    @Path("{projectRef}")
     @Transactional
     @RolesAllowed("user")
-    fun updateProject(@PathParam("projcetRef") projcetRef: String, updatedProject: ProjectForm): Response {
-        val project = projectService.update(projcetRef, updatedProject)
-        val form = ProjectForm().fromEntity(project)
-        return Response.ok(form).build()
+    fun updateProject(@PathParam("projectRef") projectRef: String, updatedProject: ProjectForm): ProjectForm {
+        val project = projectService.update(projectRef, updatedProject)
+        return ProjectForm().fromEntity(project)
     }
 }
