@@ -9,7 +9,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectref}/publications")
 @Produces(APPLICATION_JSON)
@@ -22,19 +21,18 @@ class PublicationResource(val publicationService: PublicationService) {
     @Path("/{publicationref}")
     fun getPublication(
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
-    ): Response {
+    ): PublicationForm {
         val publication = publicationService.get(projectRef, publicationRef)
-        val form = PublicationForm().fromEntity(publication)
-        return Response.ok(form).build()
+        return PublicationForm().fromEntity(publication)
     }
 
     @GET
-    fun listPublications(@PathParam("projectref") projectRef: String): Response {
-        val form = publicationService.list(projectRef)
+    fun listPublications(@PathParam("projectref") projectRef: String): List<PublicationForm> {
+        return publicationService
+            .list(projectRef)
             .stream()
             .map(PublicationForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -42,8 +40,7 @@ class PublicationResource(val publicationService: PublicationService) {
     fun createPublication(@PathParam("projectref") projectRef: String, newPublication: PublicationForm): Response {
         val publication = publicationService.create(projectRef, newPublication)
         //returnerer ny publication ref i respons header
-        return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref))
-            .build()
+        return Response.created(URI.create("/api/v1/projects/$projectRef/publications/" + publication.ref)).build()
     }
 
     @DELETE
@@ -65,9 +62,8 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String,
         @PathParam("publicationref") publicationRef: String,
         updatedPublication: PublicationForm
-    ): Response {
+    ): PublicationForm {
         val publication = publicationService.update(projectRef, publicationRef, updatedPublication)
-        val form = PublicationForm().fromEntity(publication)
-        return Response.ok(form).build()
+        return PublicationForm().fromEntity(publication)
     }
 }

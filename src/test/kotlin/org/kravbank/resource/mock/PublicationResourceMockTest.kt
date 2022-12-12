@@ -49,13 +49,11 @@ internal class PublicationResourceMockTest {
             .`when`(publicationRepository.findByRef(projectId, publicationRef))
             .thenReturn(publication)
 
-        val response: Response = publicationResource.getPublication(projectRef, publicationRef)
+        val response = publicationResource.getPublication(projectRef, publicationRef)
 
-        val entity: Publication = PublicationForm().toEntity(response.entity as PublicationForm)
+        val entity: Publication = PublicationForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(publication.comment, entity.comment)
         assertEquals(publication.version, entity.version)
     }
@@ -66,16 +64,12 @@ internal class PublicationResourceMockTest {
             .`when`(publicationRepository.listAllPublications(projectId))
             .thenReturn(publications)
 
-        val response: Response = publicationResource.listPublications(projectRef)
-
-        val entity: List<PublicationForm> = response.entity as List<PublicationForm>
+        val response = publicationResource.listPublications(projectRef)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(publications[0].comment, entity[0].comment)
-        assertEquals(publications[0].version, entity[0].version)
+        assertFalse(response.isEmpty())
+        assertEquals(publications[0].comment, response[0].comment)
+        assertEquals(publications[0].version, response[0].version)
     }
 
     @Test
@@ -90,7 +84,7 @@ internal class PublicationResourceMockTest {
 
         val form = publicationForm
 
-        val response: Response = publicationResource.createPublication(projectRef, form)
+        val response = publicationResource.createPublication(projectRef, form)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -104,12 +98,11 @@ internal class PublicationResourceMockTest {
 
         val form = updatedPublicationForm
 
-        val response: Response = publicationResource.updatePublication(projectRef, publicationRef, form)
+        val response = publicationResource.updatePublication(projectRef, publicationRef, form)
 
-        val entity: Publication = PublicationForm().toEntity(response.entity as PublicationForm)
+        val entity: Publication = PublicationForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(form.comment, entity.comment)
         assertEquals(form.version, entity.version)
     }
@@ -132,7 +125,7 @@ internal class PublicationResourceMockTest {
                             .`when`(publicationRepository.deletePublication(publicationId))
                             .thenReturn(true)
 
-                        val response: Response = publicationResource.deletePublication(projectRef, publicationRef)
+                        val response = publicationResource.deletePublication(projectRef, publicationRef)
 
                         //assert
                         assertNotNull(response)

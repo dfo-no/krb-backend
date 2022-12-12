@@ -112,7 +112,7 @@ internal class ProjectResourceMockTest {
             .`when`(projectRepository.findByRef(projectRef))
             .thenThrow(NotFoundException(PROJECT_NOTFOUND))
         try {
-            projectResource.deleteProject(projectRef).entity as NotFoundException
+            projectResource.deleteProject(projectRef)
         } catch (e: Exception) {
             assertEquals(PROJECT_NOTFOUND, e.message)
         }
@@ -160,7 +160,7 @@ internal class ProjectResourceMockTest {
         // Mockito.`when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java))).thenReturn(false)
 
         val response: Response = projectResource.deleteProject(projectRef)
-        val entity: Project = ProjectForm().toEntity(response.entity as ProjectForm)
+        val entity: Project = ProjectForm().toEntity(response)
 
         //assert
         assertNotNull(entity)

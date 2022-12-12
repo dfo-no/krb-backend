@@ -55,13 +55,11 @@ internal class RequirementResourceMockTest {
             .`when`(requirementRepository.findByRef(projectId, requirementRef))
             .thenReturn(requirement)
 
-        val response: Response = requirementResource.getRequirement(projectRef, requirementRef)
+        val response = requirementResource.getRequirement(projectRef, requirementRef)
 
-        val entity: Requirement = RequirementForm().toEntity(response.entity as RequirementForm)
+        val entity: Requirement = RequirementForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(requirement.title, entity.title)
         assertEquals(requirement.description, entity.description)
     }
@@ -77,7 +75,7 @@ internal class RequirementResourceMockTest {
             requirementResource.getRequirement(
                 projectRef,
                 requirementRef
-            ).entity as NotFoundException
+            )
 
         } catch (e: Exception) {
 
@@ -91,16 +89,13 @@ internal class RequirementResourceMockTest {
             .`when`(requirementRepository.listAllRequirements(projectId))
             .thenReturn(requirements)
 
-        val response: Response = requirementResource.listRequirements(projectRef)
-
-        val entity: List<RequirementForm> = response.entity as List<RequirementForm>
+        val response = requirementResource.listRequirements(projectRef)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(requirements[0].title, entity[0].title)
-        assertEquals(requirements[0].description, entity[0].description)
+
+        assertFalse(response.isEmpty())
+        assertEquals(requirements[0].title, response[0].title)
+        assertEquals(requirements[0].description, response[0].description)
     }
 
     @Test
@@ -115,7 +110,7 @@ internal class RequirementResourceMockTest {
         val form = requirementForm
         form.needRef = need_requirementRef
 
-        val response: Response = requirementResource.createRequirement(projectRef, form)
+        val response = requirementResource.createRequirement(projectRef, form)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -127,7 +122,7 @@ internal class RequirementResourceMockTest {
             .`when`(requirementRepository.deleteRequirement(projectId, requirementRef))
             .thenReturn(newRequirement)
 
-        val response: Response = requirementResource.deleteRequirement(projectRef, requirementRef)
+        val response = requirementResource.deleteRequirement(projectRef, requirementRef)
 
         assertNotNull(response)
         assertEquals(newRequirement.ref, response.entity.toString())
@@ -157,12 +152,11 @@ internal class RequirementResourceMockTest {
 
         val form = updatedRequirementForm
 
-        val response: Response = requirementResource.updateRequirement(projectRef, requirementRef, form)
+        val response = requirementResource.updateRequirement(projectRef, requirementRef, form)
 
-        val entity: Requirement = RequirementForm().toEntity(response.entity as RequirementForm)
+        val entity: Requirement = RequirementForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(form.title, entity.title)
         assertEquals(form.description, entity.description)
     }
@@ -176,7 +170,7 @@ internal class RequirementResourceMockTest {
         val form = updatedRequirementForm
 
         try {
-            requirementResource.updateRequirement(projectRef, requirementRef, form).entity as NotFoundException
+            requirementResource.updateRequirement(projectRef, requirementRef, form)
         } catch (e: Exception) {
             assertEquals(REQUIREMENT_NOTFOUND, e.message)
         }

@@ -53,13 +53,11 @@ internal class NeedResourceMockTest {
             )
         ).thenReturn(need)
 
-        val response: Response = needResource.getNeed(projectRef, needRef)
+        val response = needResource.getNeed(projectRef, needRef)
 
-        val entity: Need = NeedForm().toEntity(response.entity as NeedForm)
+        val entity: Need = NeedForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(need.title, entity.title)
         assertEquals(need.description, entity.description)
     }
@@ -68,16 +66,12 @@ internal class NeedResourceMockTest {
     fun listNeeds_OK() {
         Mockito.`when`(needRepository.listAllNeeds(projectId)).thenReturn(needs)
 
-        val response: Response = needResource.listNeeds(projectRef)
-
-        val entity: List<NeedForm> = response.entity as List<NeedForm>
+        val response = needResource.listNeeds(projectRef)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(needs[0].title, entity[0].title)
-        assertEquals(needs[0].description, entity[0].description)
+        assertFalse(response.isEmpty())
+        assertEquals(needs[0].title, response[0].title)
+        assertEquals(needs[0].description, response[0].description)
     }
 
     @Test
@@ -93,7 +87,7 @@ internal class NeedResourceMockTest {
 
         val form = NeedForm().fromEntity(need)
 
-        val response: Response = needResource.createNeed(projectRef, form)
+        val response = needResource.createNeed(projectRef, form)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -105,7 +99,7 @@ internal class NeedResourceMockTest {
             .`when`(needRepository.deleteNeed(projectId, needRef))
             .thenReturn(newNeed)
 
-        val response: Response = needResource.deleteNeed(projectRef, needRef)
+        val response = needResource.deleteNeed(projectRef, needRef)
 
         assertNotNull(response)
         assertEquals(newNeed.ref, response.entity.toString())
@@ -118,16 +112,15 @@ internal class NeedResourceMockTest {
             .`when`(needRepository.findByRef(projectId, needRef))
             .thenReturn(newNeed)
 
-        val response: Response = needResource.updateNeed(
+        val response = needResource.updateNeed(
             projectRef,
             needRef,
             updatedNeedForm
         )
 
-        val entity: Need = NeedForm().toEntity(response.entity as NeedForm)
+        val entity: Need = NeedForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(updatedNeedForm.title, entity.title)
         assertEquals(updatedNeedForm.description, entity.description)
     }

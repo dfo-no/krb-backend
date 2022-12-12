@@ -9,7 +9,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/requirements")
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,19 +21,17 @@ class RequirementResource(val requirementService: RequirementService) {
     fun getRequirement(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String
-    ): Response {
+    ): RequirementForm {
         val requirement = requirementService.get(projectRef, requirementRef)
-        val form = RequirementForm().fromEntity(requirement)
-        return Response.ok(form).build()
+        return RequirementForm().fromEntity(requirement)
     }
 
     @GET
-    fun listRequirements(@PathParam("projectRef") projectRef: String): Response {
-        val form = requirementService.list(projectRef)
+    fun listRequirements(@PathParam("projectRef") projectRef: String): List<RequirementForm> {
+        return requirementService.list(projectRef)
             .stream()
             .map(RequirementForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -66,9 +63,8 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         updatedRequirement: RequirementForm
-    ): Response {
+    ): RequirementForm {
         val requirement = requirementService.update(projectRef, requirementRef, updatedRequirement)
-        val form = RequirementForm().fromEntity(requirement)
-        return Response.ok(form).build()
+        return RequirementForm().fromEntity(requirement)
     }
 }

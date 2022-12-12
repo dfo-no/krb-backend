@@ -60,17 +60,15 @@ internal class CodeResourceMockTest {
                 )
             ).thenReturn(code)
 
-        val response: Response = codeResource.getCode(
+        val response = codeResource.getCode(
             projectRef,
             codelistRef,
             codeRef
         )
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
 
-        val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
+        val entity: Code = CodeForm().toEntity(response)
 
         assertEquals(code.title, entity.title)
         assertEquals(code.description, entity.description)
@@ -81,16 +79,14 @@ internal class CodeResourceMockTest {
         Mockito
             .`when`(codeRepository.listAllCodes(codelistId))
             .thenReturn(codes)
-        val response: Response = codeResource.listCodes(
+        val response = codeResource.listCodes(
             projectRef,
             codelistRef
         )
 
-        val entity: List<CodeForm> = response.entity as List<CodeForm>
+        val entity: List<CodeForm> = response
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertFalse(entity.isEmpty())
         assertEquals(codes[0].title, entity[0].title)
         assertEquals(codes[0].description, entity[0].description)
@@ -125,7 +121,6 @@ internal class CodeResourceMockTest {
         val response: Response = codeResource.deleteCode(projectRef, codelistRef, codeRef)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(newCode.ref, response.entity)
     }
 
@@ -152,17 +147,16 @@ internal class CodeResourceMockTest {
             )
             .thenReturn(arrangeSetup.newCode)
 
-        val response: Response = codeResource.updateCode(
+        val response = codeResource.updateCode(
             projectRef,
             codelistRef,
             codeRef,
             updatedCodeForm
         )
 
-        val entity: Code = CodeForm().toEntity(response.entity as CodeForm)
+        val entity: Code = CodeForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(updatedCodeForm.title, entity.title)
         assertEquals(updatedCodeForm.description, entity.description)
     }
@@ -179,7 +173,6 @@ internal class CodeResourceMockTest {
                 codelistRef,
                 codeRef
             )
-                .entity as NotFoundException
 
         } catch (e: Exception) {
             assertEquals(CODE_NOTFOUND, e.message)

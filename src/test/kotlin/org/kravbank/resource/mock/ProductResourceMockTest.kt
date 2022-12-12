@@ -52,13 +52,11 @@ internal class ProductResourceMockTest {
             .`when`(productRepository.findByRef(projectId, productRef))
             .thenReturn(product)
 
-        val response: Response = productResource.getProduct(projectRef, productRef)
+        val response = productResource.getProduct(projectRef, productRef)
 
-        val entity: Product = ProductForm().toEntity(response.entity as ProductForm)
+        val entity = ProductForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(product.title, entity.title)
         assertEquals(product.description, entity.description)
     }
@@ -69,16 +67,12 @@ internal class ProductResourceMockTest {
             .`when`(productRepository.listAllProducts(projectId))
             .thenReturn(products)
 
-        val response: Response = productResource.listProducts(projectRef)
-
-        val entity: List<ProductForm> = response.entity as List<ProductForm>
+        val response = productResource.listProducts(projectRef)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(product.title, entity[0].title)
-        assertEquals(product.description, entity[0].description)
+        assertFalse(response.isEmpty())
+        assertEquals(product.title, response[0].title)
+        assertEquals(product.description, response[0].description)
     }
 
     @Test
@@ -110,12 +104,11 @@ internal class ProductResourceMockTest {
 
         val form = updatedProductForm
 
-        val response: Response = productResource.updateProduct(projectRef, productRef, form)
+        val response = productResource.updateProduct(projectRef, productRef, form)
 
-        val entity: Product = ProductForm().toEntity(response.entity as ProductForm)
+        val entity: Product = ProductForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(form.title, entity.title)
         assertEquals(form.description, entity.description)
     }
@@ -133,7 +126,7 @@ internal class ProductResourceMockTest {
                 projectRef,
                 productRef,
                 form
-            ).entity as NotFoundException
+            )
 
         } catch (e: Exception) {
             assertEquals(PRODUCT_NOTFOUND, e.message)
@@ -151,7 +144,7 @@ internal class ProductResourceMockTest {
             productResource.getProduct(
                 projectRef,
                 productRef
-            ).entity as NotFoundException
+            )
 
         } catch (e: Exception) {
             assertEquals(PRODUCT_NOTFOUND, e.message)
@@ -187,7 +180,7 @@ internal class ProductResourceMockTest {
             .thenThrow(NotFoundException("Product not found"))
 
         try {
-            productResource.deleteProduct(projectRef, productRef).entity as NotFoundException
+            productResource.deleteProduct(projectRef, productRef)
         } catch (e: Exception) {
             //print(e.message)
             assertEquals("Product not found", e.message)
