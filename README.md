@@ -1,7 +1,5 @@
 # Kravbank backend README
 
-TODO: Remove this, it is only to trigger a new build in GitHub
-
 ## Prerequisites
 
 * In order to run the application locally, you need a .env file
