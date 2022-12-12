@@ -3,7 +3,6 @@ package org.kravbank.service
 import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
-import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
 import java.time.LocalDateTime
@@ -39,9 +38,9 @@ class PublicationService(
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        val deleted = publicationRepository.deletePublication(publication.id)
-        if (deleted) return publication
-        throw BadRequestException("Bad request! Did not delete publication")
+        return publicationRepository.deletePublication(publication)
+
+        // throw BadRequestException("Bad request! Did not delete publication") TODO: Put somewhere else further up in chain
     }
 
     @Throws(BackendException::class)

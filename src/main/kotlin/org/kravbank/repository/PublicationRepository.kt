@@ -1,6 +1,5 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -8,13 +7,11 @@ import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_NOTFOUND
-import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class PublicationRepository : PanacheRepository<Publication> {
+class PublicationRepository : BackendRepository<Publication>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Publication {
         val publication =
@@ -41,13 +38,6 @@ class PublicationRepository : PanacheRepository<Publication> {
         if (!publication.isPersistent) {
             throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
         }
-    }
-
-    fun deletePublication(id: Long): Boolean {
-        val deletedDate = LocalDateTime.now()
-        val updates = update("deleteddate = ?1 where id = ?2", deletedDate, id)
-        if (updates > 0) return true
-        return false
     }
 
     @Throws(BackendException::class)
