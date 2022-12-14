@@ -38,8 +38,8 @@ class PublicationService(
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        return publicationRepository.deletePublication(publication)
-
+        publicationRepository.delete(publication)
+        return  publication
         // throw BadRequestException("Bad request! Did not delete publication") TODO: Put somewhere else further up in chain
     }
 

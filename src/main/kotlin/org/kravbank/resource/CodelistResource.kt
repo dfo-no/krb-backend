@@ -8,7 +8,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/codelists")
 @Produces(APPLICATION_JSON)
@@ -56,9 +55,8 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String
     ): Response {
-        val codelist = codelistService.delete(projectRef, codelistRef)
-        val form = CodelistForm().fromEntity(codelist)
-        return Response.ok(form.ref).build()
+        codelistService.delete(projectRef, codelistRef)
+        return Response.ok(codelistRef).build()
     }
 
     @PUT
