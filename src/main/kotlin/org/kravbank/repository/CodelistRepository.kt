@@ -1,19 +1,17 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Codelist
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_CREATE
-import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class CodelistRepository : PanacheRepository<Codelist> {
+class CodelistRepository : BackendRepository<Codelist>() {
 
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Codelist {
@@ -43,12 +41,9 @@ class CodelistRepository : PanacheRepository<Codelist> {
     }
 
     @Throws(BackendException::class)
-    fun deleteCodelist(projectId: Long, codelistRef: String): Codelist {
-        val deleted: Boolean
+    fun deleteCodelist(projectId: Long, codelistRef: String): Boolean {
         val found = findByRef(projectId, codelistRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException(CODELIST_BADREQUEST_DELETE)
-        return found
+        return deleteById(found.id)
     }
 
     @Throws(BackendException::class)
