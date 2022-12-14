@@ -10,7 +10,7 @@ test:
 	@mvn -B --no-transfer-progress clean test
 
 integration_test:
-	@mvn -B --no-transfer-progress clean verify
+	@mvn -B --no-transfer-progress clean verify -Dskip.surefire.tests -DskipITs=false
 
 user_jar:
 	@mvn -B --no-transfer-progress clean install -Dquarkus.package.type=uber-jar -DskipTests
