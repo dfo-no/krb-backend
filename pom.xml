@@ -17,6 +17,7 @@
         <quarkus.platform.version>2.12.1.Final</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+        <failsafe-plugin.version>3.0.0-M7</failsafe-plugin.version>
         <defaultSkipTests>false</defaultSkipTests>
         <skip.surefire.tests>${defaultSkipTests}</skip.surefire.tests>
     </properties>
@@ -212,7 +213,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>${failsafe-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
