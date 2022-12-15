@@ -1,22 +1,17 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
-import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_NOTFOUND
-import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class PublicationRepository : PanacheRepository<Publication> {
-
+class PublicationRepository : BackendRepository<Publication>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Publication {
         val publication =
@@ -46,19 +41,6 @@ class PublicationRepository : PanacheRepository<Publication> {
     }
 
     @Throws(BackendException::class)
-    fun deletePublication(projectId: Long, publicationRef: String): Publication {
-        val found = findByRef(projectId, publicationRef)
-
-        found.deletedDate = LocalDateTime.now()
-
-        persistAndFlush(found)
-
-        if (!found.isPersistent) throw BadRequestException(PUBLICATION_BADREQUEST_DELETE)
-
-        return found
-    }
-
-    @Throws(BackendException::class)
     fun updatePublication(id: Long, publication: Publication) {
         val updated = update(
             "comment = ?1, version = ?2 where id = ?3",
@@ -66,7 +48,7 @@ class PublicationRepository : PanacheRepository<Publication> {
             publication.version,
             id
         )
-
         Optional.of(updated).orElseThrow { BadRequestException(PUBLICATION_BADREQUEST_UPDATE) }
     }
+
 }
