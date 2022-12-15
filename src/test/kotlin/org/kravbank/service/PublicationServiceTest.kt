@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.kravbank.domain.Publication
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.newPublication
 import org.kravbank.utils.TestSetup.Arrange.publication
 import org.kravbank.utils.TestSetup.Arrange.publications
 import org.kravbank.utils.TestSetup.Arrange.updatedPublicationForm
@@ -98,13 +97,13 @@ internal class PublicationServiceTest {
     @Test
     fun delete() {
         Mockito
-            .`when`(publicationRepository.deletePublication(projectId, publicationRef))
-            .thenReturn(newPublication)
+            .`when`(publicationRepository.findByRef(projectId, publicationRef))
+            .thenReturn(publication)
 
-        val mockedPublication: Publication = publicationService.delete(projectRef, publicationRef)
+        publicationService.delete(projectRef, publicationRef)
 
-        Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(newPublication, mockedPublication)
+        //verifies the repo-call from the resource
+        Mockito.verify(publicationRepository).delete(publication)
 
     }
 
