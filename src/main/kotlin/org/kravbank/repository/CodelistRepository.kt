@@ -41,12 +41,6 @@ class CodelistRepository : BackendRepository<Codelist>() {
     }
 
     @Throws(BackendException::class)
-    fun deleteCodelist(projectId: Long, codelistRef: String): Boolean {
-        val found = findByRef(projectId, codelistRef)
-        return deleteById(found.id)
-    }
-
-    @Throws(BackendException::class)
     fun updateCodelist(id: Long, codelist: Codelist) {
         val updated = update(
             "title = ?1, description = ?2 where id= ?3",

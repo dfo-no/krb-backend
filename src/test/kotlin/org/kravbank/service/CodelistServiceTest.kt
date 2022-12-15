@@ -13,7 +13,10 @@ import org.kravbank.utils.TestSetup.Arrange.codelistForm
 import org.kravbank.utils.TestSetup.Arrange.codelists
 import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import javax.inject.Inject
 
 @QuarkusTest
@@ -99,17 +102,17 @@ internal class CodelistServiceTest {
     fun delete() {
         Mockito
             .`when`(
-                codelistRepository.deleteCodelist(
-                    projectId,
-                    codelistRef
-                )
+                codelistRepository.deleteById(anyLong())
             )
             .thenReturn(true)
+
+        Mockito.`when`(codelistRepository.findByRef(anyLong(), anyString())).thenReturn(codelist)
 
         val result = codelistService.delete(projectRef, codelistRef)
 
         Assertions.assertNotNull(result)
         Assertions.assertEquals(true, result)
+        verify(codelistRepository).deleteById(1L)
     }
 
     @Test

@@ -36,7 +36,8 @@ class CodelistService(
     @Throws(BackendException::class)
     fun delete(projectRef: String, codelistRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
-        return codelistRepository.deleteCodelist(foundProject.id, codelistRef)
+        val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+        return codelistRepository.deleteById(foundCodelist.id)
     }
 
     @Throws(BackendException::class)
