@@ -16,6 +16,8 @@ import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.codelist
 import org.kravbank.utils.TestSetup.Arrange.codelists
+import org.kravbank.utils.TestSetup.Arrange.newCodelist
+import org.kravbank.utils.TestSetup.Arrange.project_codelistRef
 import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
@@ -120,44 +122,34 @@ internal class CodelistResourceMockTest {
         Mockito
             .doNothing()
             .`when`(codelistRepository).persist(ArgumentMatchers.any(Codelist::class.java))
+
         Mockito
             .`when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
-        val form = CodelistForm().fromEntity(arrangeSetup.codelist)
+        val form = CodelistForm().fromEntity(newCodelist)
 
-        val response: Response = codelistResource.createCodelist(projectRef, form)
+        val response: Response = codelistResource.createCodelist(project_codelistRef, form)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
 
     }
-    /*
-        @Test
-        fun deleteCodelist_OK() {
-            //TODO fiks nullpointer error
-            Slettet  deleteCodelist fra codelist repo ,
-            brukte i steden panaches  deleteById fra serviceklassen
-            codeliste service kaster error foundCodlist er null, noe som er merkelig siden begge metodene returnerer boolean (samme mockito given-setup)
 
-            Mockito
-                .`when`(
-                    codelistRepository.deleteById(
-                        4
-                    )
-                )
-                .thenReturn(true)
+    @Test
+    fun deleteCodelist_OK() {
+        Mockito
+            .`when`(
+                codelistRepository
+                    .findByRef(projectId, codelistRef)
+            ).thenReturn(codelist)
 
-            val response: Response =
-                codelistResource.deleteCodelist(projectRef, codelistRef)
+        val response: Response =
+            codelistResource.deleteCodelist(projectRef, codelistRef)
 
-            assertNotNull(response)
-            assertEquals(codelistRef, response.entity)
-        }
-
-
-     */
-
+        assertNotNull(response)
+        assertEquals(codelistRef, response.entity)
+    }
 
     /* // TODO
            slett pga panaches egen delete metode?
