@@ -3,8 +3,10 @@ package org.kravbank.service
 import org.kravbank.dao.PublicationForm
 import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 
@@ -32,7 +34,9 @@ class PublicationService(
         val publication = PublicationForm().toEntity(newPublication)
         publication.project = foundProject
         publication.date = LocalDateTime.now()
-        publicationRepository.createPublication(publication)
+        publicationRepository.persistAndFlush(publication)
+
+        if (!publicationRepository.isPersistent(publication)) throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
 
         return publication
     }

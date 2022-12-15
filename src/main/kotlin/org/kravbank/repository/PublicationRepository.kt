@@ -4,7 +4,6 @@ import org.kravbank.domain.Publication
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_NOTFOUND
 import java.util.*
@@ -31,13 +30,6 @@ class PublicationRepository : BackendRepository<Publication>() {
         return find("project_id_fk = ?1 and deleteddate is null", id)
             .stream<Publication>()
             .toList()
-    }
-
-    @Throws(BackendException::class)
-    fun createPublication(publication: Publication) {
-        persistAndFlush(publication)
-
-        if (!publication.isPersistent) throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
     }
 
     @Throws(BackendException::class)
