@@ -8,17 +8,15 @@ import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_NOTFOUND
-import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
 class ProjectRepository : PanacheRepository<Project> {
     @Throws(BackendException::class)
     fun findByRef(ref: String): Project {
         val project = find("ref", ref).firstResult<Project>()
-        if (project?.deletedDate == null) {
+        if (project != null) {
             return project
         } else throw NotFoundException(PROJECT_NOTFOUND)
     }
@@ -26,7 +24,6 @@ class ProjectRepository : PanacheRepository<Project> {
     fun listAllProjects(): List<Project> {
         return findAll()
             .stream<Project>()
-            .filter { p -> p.deletedDate == null }
             .toList()
     }
 
@@ -34,14 +31,6 @@ class ProjectRepository : PanacheRepository<Project> {
     fun createProject(project: Project) {
         persistAndFlush(project)
         if (!project.isPersistent) throw BadRequestException(PROJECT_BADREQUEST_CREATE)
-    }
-
-    fun deleteProject(id: Long): Boolean {
-        val deletedDate = LocalDateTime.now()
-        //soft delete
-        val updated = update("deleteddate = ?1 where id = ?2", deletedDate, id)
-        if (updated > 0) return true
-        return false
     }
 
     @Throws(BackendException::class)
