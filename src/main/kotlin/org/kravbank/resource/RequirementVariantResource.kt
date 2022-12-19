@@ -9,7 +9,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/requirements/{requirementRef}/requirementvariants")
 @Produces(MediaType.APPLICATION_JSON)
@@ -24,22 +23,20 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
-    ): Response {
+    ): RequirementVariantForm {
         val reqVariant = requirementVariantService.get(projectRef, requirementRef, requirementVariantRef)
-        val form = RequirementVariantForm().fromEntity(reqVariant)
-        return Response.ok(form).build()
+        return RequirementVariantForm().fromEntity(reqVariant)
     }
 
     @GET
     fun listRequirementVariants(
         @PathParam("projectRef") projectRef: String,
         @PathParam("requirementRef") requirementRef: String,
-    ): Response {
-        val form = requirementVariantService.list(projectRef, requirementRef)
+    ): List<RequirementVariantForm> {
+        return requirementVariantService.list(projectRef, requirementRef)
             .stream()
             .map(RequirementVariantForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -77,10 +74,9 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String,
         updatedReqVariant: RequirementVariantForm
-    ): Response {
+    ): RequirementVariantForm {
         val reqVariant =
             requirementVariantService.update(projectRef, requirementRef, requirementVariantRef, updatedReqVariant)
-        val form = RequirementVariantForm().fromEntity(reqVariant)
-        return Response.ok(form).build()
+        return RequirementVariantForm().fromEntity(reqVariant)
     }
 }

@@ -9,7 +9,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/products")
 @RequestScoped
@@ -23,19 +22,17 @@ class ProductResource(val productService: ProductService) {
     fun getProduct(
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String,
-    ): Response {
+    ): ProductForm {
         val product = productService.get(projectRef, productref)
-        val form = ProductForm().fromEntity(product)
-        return Response.ok(form).build()
+        return ProductForm().fromEntity(product)
     }
 
     @GET
-    fun listProducts(@PathParam("projectRef") projectRef: String): Response {
-        val form = productService.list(projectRef)
+    fun listProducts(@PathParam("projectRef") projectRef: String): List<ProductForm> {
+        return productService.list(projectRef)
             .stream()
             .map(ProductForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -67,10 +64,9 @@ class ProductResource(val productService: ProductService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String,
         updatedProduct: ProductForm
-    ): Response {
+    ): ProductForm {
         val product = productService.update(projectRef, productref, updatedProduct)
-        val productUpdateDTO = ProductForm().fromEntity(product)
-        return Response.ok(productUpdateDTO).build()
+        return ProductForm().fromEntity(product)
     }
 }
 

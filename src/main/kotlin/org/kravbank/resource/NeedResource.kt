@@ -9,7 +9,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/needs")
 @RequestScoped
@@ -23,19 +22,17 @@ class NeedResource(val needService: NeedService) {
     fun getNeed(
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String
-    ): Response {
+    ): NeedForm {
         val need = needService.get(projectRef, needRef)
-        val form = NeedForm().fromEntity(need)
-        return Response.ok(form).build()
+        return NeedForm().fromEntity(need)
     }
 
     @GET
-    fun listNeeds(@PathParam("projectRef") projectRef: String): Response {
-        val form = needService.list(projectRef)
+    fun listNeeds(@PathParam("projectRef") projectRef: String): List<NeedForm> {
+        return needService.list(projectRef)
             .stream()
             .map(NeedForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -43,8 +40,7 @@ class NeedResource(val needService: NeedService) {
     fun createNeed(@PathParam("projectRef") projectRef: String, newNeed: NeedForm): Response {
         val need = needService.create(projectRef, newNeed)
         //returnerer ny need ref i response header
-        return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref))
-            .build()
+        return Response.created(URI.create("/api/v1/projects/$projectRef/needs/" + need.ref)).build()
     }
 
     @DELETE
@@ -65,11 +61,9 @@ class NeedResource(val needService: NeedService) {
     @Transactional
     fun updateNeed(
         @PathParam("projectRef") projectRef: String,
-        @PathParam("needRef") needRef: String,
-        updatedNeed: NeedForm
-    ): Response {
+        @PathParam("needRef") needRef: String, updatedNeed: NeedForm
+    ): NeedForm {
         val need = needService.update(projectRef, needRef, updatedNeed)
-        val form = NeedForm().fromEntity(need)
-        return Response.ok(form).build()
+        return NeedForm().fromEntity(need)
     }
 }

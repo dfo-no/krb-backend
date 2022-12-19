@@ -8,7 +8,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/codelists")
 @Produces(APPLICATION_JSON)
@@ -21,21 +20,19 @@ class CodelistResource(val codelistService: CodelistService) {
     fun getCodelistByRef(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelisRef: String
-    ): Response {
+    ): CodelistForm {
         val codelist = codelistService.get(projectRef, codelisRef)
-        val form = CodelistForm().fromEntity(codelist)
-        return Response.ok(form).build()
+        return CodelistForm().fromEntity(codelist)
     }
 
     @GET
     fun listCodelists(
         @PathParam("projectRef") projectRef: String
-    ): Response {
-        val form = codelistService.list(projectRef)
+    ): List<CodelistForm> {
+        return codelistService.list(projectRef)
             .stream()
             .map(CodelistForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
     }
 
     @Transactional
@@ -68,9 +65,8 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         updateCodelist: CodelistForm
-    ): Response {
+    ): CodelistForm {
         val codelist = codelistService.update(projectRef, codelistRef, updateCodelist)
-        val form = CodelistForm().fromEntity(codelist)
-        return Response.ok(form).build()
+        return CodelistForm().fromEntity(codelist)
     }
 }
