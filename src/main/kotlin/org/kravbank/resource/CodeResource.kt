@@ -1,8 +1,5 @@
-package org.kravbank.resource;
+package org.kravbank.resource
 
-import org.kravbank.dao.code.CodeCreateRequest
-import org.kravbank.dao.code.CodeUpdateRequest
-import org.kravbank.dao.code.toResponse
 import io.quarkus.security.Authenticated
 import org.kravbank.dao.CodeForm
 import org.kravbank.service.CodeService
@@ -11,7 +8,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
@@ -25,32 +21,32 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
-    ): Response {
+    ): CodeForm {
         val code = codeService.get(projectRef, codelistRef, codeRef)
-        return Response.ok(code.toResponse()).build()
+        return CodeForm().fromEntity(code)
     }
 
     @GET
     fun listCodes(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-    ): Response {
-        val codes = codeService.list(projectRef, codelistRef)
-        return Response.ok(codes.map { it.toResponse() }).build()
+    ): List<CodeForm> {
+        return codeService.list(projectRef, codelistRef)
+            .stream()
+            .map(CodeForm()::fromEntity)
+            .toList()
     }
 
     @Transactional
     @POST
     fun createCode(
-        @PathParam("projectRef") projectRef: String,
-        @PathParam("codelistRef") codelistRef: String,
-        newCode: CodeCreateRequest
+        @PathParam("projectRef") projectRef: String, @PathParam("codelistRef") codelistRef: String, newCode: CodeForm
     ): Response {
         val code = codeService.create(projectRef, codelistRef, newCode)
-
         //returnerer ny code ref i response header
         return Response.created(
-            URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref)).build()
+            URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref)
+        ).build()
     }
 
     @DELETE
@@ -62,7 +58,8 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("codeRef") codeRef: String
     ): Response {
         val code = codeService.delete(projectRef, codelistRef, codeRef)
-        return Response.ok(code.toResponse().ref).build()
+        val form = CodeForm().fromEntity(code)
+        return Response.ok(form.ref).build()
     }
 
     @PUT
@@ -72,9 +69,9 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String,
-        updatedCode: CodeUpdateRequest
-    ): Response {
+        updatedCode: CodeForm
+    ): CodeForm {
         val updated = codeService.update(projectRef, codelistRef, codeRef, updatedCode)
-        return Response.ok(updated.toResponse()).build()
+        return CodeForm().fromEntity(updated)
     }
 }

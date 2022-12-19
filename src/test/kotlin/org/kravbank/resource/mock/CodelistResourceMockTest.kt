@@ -55,14 +55,11 @@ internal class CodelistResourceMockTest {
                     .findByRef(projectId, codelistRef)
             ).thenReturn(codelist)
 
-        val response: Response =
-            codelistResource.getCodelistByRef(projectRef, codelistRef)
+        val response = codelistResource.getCodelistByRef(projectRef, codelistRef)
 
-        val entity: Codelist = CodelistForm().toEntity(response.entity as CodelistForm)
+        val entity: Codelist = CodelistForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(codelist.title, entity.title)
         assertEquals(codelist.description, entity.description)
     }
@@ -76,7 +73,7 @@ internal class CodelistResourceMockTest {
             codelistResource.getCodelistByRef(
                 projectRef,
                 codelistRef
-            ).entity as NotFoundException
+            )
         } catch (e: Exception) {
             assertEquals(CODELIST_NOTFOUND, e.message)
         }
@@ -88,13 +85,11 @@ internal class CodelistResourceMockTest {
             .`when`(codelistRepository.listAllCodelists(projectId))
             .thenReturn(codelists)
 
-        val response: Response = codelistResource.listCodelists(projectRef)
+        val response = codelistResource.listCodelists(projectRef)
 
-        val entity: List<CodelistForm> = response.entity as List<CodelistForm>
+        val entity: List<CodelistForm> = response
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertFalse(entity.isEmpty())
         assertEquals(codelists[0].title, entity[0].title)
         assertEquals(codelists[0].description, entity[0].description)
@@ -164,16 +159,15 @@ internal class CodelistResourceMockTest {
             .`when`(codelistRepository.findByRef(projectId, codelistRef))
             .thenReturn(codelist)
 
-        val response: Response = codelistResource.updateCodelist(
+        val response = codelistResource.updateCodelist(
             projectRef,
             codelistRef,
             updatedCodelistForm
         )
 
-        val entity: Codelist = CodelistForm().toEntity(response.entity as CodelistForm)
+        val entity: Codelist = CodelistForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(updatedCodelistForm.title, entity.title)
     }
 
@@ -192,7 +186,7 @@ internal class CodelistResourceMockTest {
                 projectRef,
                 codelistRef,
                 updatedCodelistForm
-            ).entity as NotFoundException
+            )
         } catch (e: Exception) {
             assertEquals(CODELIST_NOTFOUND, e.message)
         }
