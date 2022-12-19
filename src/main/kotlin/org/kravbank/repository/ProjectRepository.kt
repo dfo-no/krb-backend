@@ -1,6 +1,5 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -12,7 +11,7 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class ProjectRepository : PanacheRepository<Project> {
+class ProjectRepository : BackendRepository<Project>() {
     @Throws(BackendException::class)
     fun findByRef(ref: String): Project {
         val project = find("ref", ref).firstResult<Project>()

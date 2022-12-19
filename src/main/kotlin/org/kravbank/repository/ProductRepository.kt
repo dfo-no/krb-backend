@@ -1,6 +1,5 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -11,10 +10,9 @@ import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_NOTFOUND
 import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class ProductRepository : PanacheRepository<Product> {
+class ProductRepository : BackendRepository<Product>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Product {
         val product =

@@ -15,19 +15,17 @@ class PublicationRepository : BackendRepository<Publication>() {
     fun findByRef(projectId: Long, ref: String): Publication {
         val publication =
             find(
-                "ref = ?1 and project_id_fk = ?2 and deleteddate is null",
+                "ref = ?1 and project_id_fk = ?2",
                 ref,
                 projectId
             ).firstResult<Publication>()
-
         if (publication != null) {
             return publication
-
         } else throw NotFoundException(PUBLICATION_NOTFOUND)
     }
 
     fun listAllPublications(id: Long): List<Publication> {
-        return find("project_id_fk = ?1 and deleteddate is null", id)
+        return find("project_id_fk = ?1", id)
             .stream<Publication>()
             .toList()
     }

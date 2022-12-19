@@ -1,6 +1,5 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Requirement
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -11,10 +10,9 @@ import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_NOTFOUND
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class RequirementRepository : PanacheRepository<Requirement> {
+class RequirementRepository : BackendRepository<Requirement>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Requirement {
         val requirement =
