@@ -1,8 +1,6 @@
 package org.kravbank.service
 
-import org.kravbank.dao.code.CodeCreateRequest
-import org.kravbank.dao.code.CodeUpdateRequest
-import org.kravbank.dao.code.toEntity
+import org.kravbank.dao.CodeForm
 import org.kravbank.domain.Code
 import org.kravbank.lang.BackendException
 import org.kravbank.repository.CodeRepository
@@ -31,12 +29,10 @@ class CodeService(
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, codelistRef: String, newCode: CodeCreateRequest): Code {
+    fun create(projectRef: String, codelistRef: String, newCode: CodeForm): Code {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
-        val code = newCode.toEntity()
-
-        // legger til foreldre-relasjonen
+        val code = CodeForm().toEntity(newCode)
         code.codelist = foundCodelist
         codeRepository.createCode(code)
         return code
@@ -50,11 +46,11 @@ class CodeService(
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, codelistRef: String, codeRef: String, updatedCode: CodeUpdateRequest): Code {
+    fun update(projectRef: String, codelistRef: String, codeRef: String, updatedCode: CodeForm): Code {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
-        val update = updatedCode.toEntity(codeRef)
+        val update = CodeForm().toEntity(updatedCode)
         codeRepository.updateCode(foundCode.id, update)
         return update.apply { ref = foundCode.ref }
     }

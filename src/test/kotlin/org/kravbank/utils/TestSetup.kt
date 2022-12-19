@@ -1,8 +1,6 @@
 package org.kravbank.utils
 
 import org.kravbank.dao.*
-import org.kravbank.dao.code.CodeCreateRequest
-import org.kravbank.dao.code.CodeUpdateRequest
 import org.kravbank.domain.*
 import java.time.LocalDateTime
 
@@ -29,16 +27,6 @@ class TestSetup {
         val codelist_codeId = 4L
         val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val code_codelistRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
-
-        val codeUpdateRequest = CodeUpdateRequest(
-            title = "Oppdatert kode tittel fra Code update request",
-            description = "Oppdatert kode beskrivelse fra Code update request"
-        )
-        val codeCreateRequest = CodeCreateRequest(
-            title = "Ny kode tittel fra Code create request",
-            description = "Ny kode beskrivelse fra Code create request"
-        )
-
 
         //publication
         var publication = Publication()
@@ -283,7 +271,6 @@ class TestSetup {
 
             publications.add(publication)
             publications.add(newPublication)
-
 
             //requirement
             requirement = Requirement()
