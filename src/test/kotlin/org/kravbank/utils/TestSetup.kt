@@ -28,7 +28,6 @@ class TestSetup {
         val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
         val code_codelistRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
 
-
         //publication
         var publication = Publication()
         var publications: MutableList<Publication> = mutableListOf()
@@ -155,6 +154,10 @@ class TestSetup {
             updatedCodeForm.title = "Endre tittel som need"
             updatedCodeForm.description = "Endre beskrivelse som need"
 
+
+
+
+
             codes.add(code)
             codes.add(newCode)
 
@@ -269,7 +272,6 @@ class TestSetup {
             publications.add(publication)
             publications.add(newPublication)
 
-
             //requirement
             requirement = Requirement()
             requirement.id = 1000L
@@ -306,6 +308,7 @@ class TestSetup {
             requirementVariant.useProduct = true
             requirementVariant.useSpecification = true
             requirementVariant.useQualification = true
+            requirementVariant.requirementText = "Variant tekst"
             requirementVariant.product = products
             requirementVariant.requirement = requirement
 
@@ -317,6 +320,7 @@ class TestSetup {
             newRequirementVariant.useSpecification = false
             newRequirementVariant.useQualification = false
             newRequirementVariant.product = products
+            newRequirementVariant.requirementText = "Variant tekst"
             newRequirementVariant.requirement = requirement
 
             requirementVariantForm = RequirementVariantForm().fromEntity(newRequirementVariant)

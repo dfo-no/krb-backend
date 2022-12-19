@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.kravbank.domain.Requirement
 import org.kravbank.utils.Mapper
 
-class RequirementForm() : Mapper<RequirementForm, Requirement> {
+class RequirementForm : Mapper<RequirementForm, Requirement> {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var ref: String = ""
@@ -13,7 +13,8 @@ class RequirementForm() : Mapper<RequirementForm, Requirement> {
 
     lateinit var description: String
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // denne gir feil i integrasjonstesten pga. den ikke deserialiserer
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) Denne gir feil i integrasjonstesten pga. den ikke deserialiserer
+    //@JsonProperty(access = JsonProperty.Access.READ_WRITE)
     var needRef: String = ""
 
     override fun toEntity(domain: RequirementForm): Requirement = Requirement().apply {

@@ -18,7 +18,6 @@ class Requirement : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value = "val-requirementVariant")
     var requirementvariants = mutableListOf<RequirementVariant>()
 

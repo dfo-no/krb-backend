@@ -21,9 +21,9 @@ class UnwrapResource {
     @Path(value = "/uploadPdf")
     @FormParam("file")
     @PartType(MediaType.APPLICATION_OCTET_STREAM)
-    fun generatePdf(file: InputStream): Response { // TODO: endret fra 1. RequestParam 2. import org.springframework.web.multipart.MultipartFile;
+    fun generatePdf(file: InputStream): Response {
 
-        if (!file.markSupported()) { //TODO: endret fra file.isEmpty()
+        if (!file.markSupported()) {
             return Response.ok("Error").build()
         }
         var response = ""
