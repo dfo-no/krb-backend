@@ -51,10 +51,8 @@ class ProductResource(val productService: ProductService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("productref") productref: String
     ): Response {
-        val product = productService.delete(projectRef, productref)
-        val form = ProductForm().fromEntity(product)
-        // returnerer slettet product ref i body
-        return Response.ok(form.ref).build()
+        productService.delete(projectRef, productref)
+        return Response.ok(productref).build()
     }
 
     @PUT
