@@ -10,10 +10,13 @@ import org.kravbank.repository.CodeRepository
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.code
 import org.kravbank.utils.TestSetup.Arrange.codeForm
+import org.kravbank.utils.TestSetup.Arrange.codelist
 import org.kravbank.utils.TestSetup.Arrange.codes
+import org.kravbank.utils.TestSetup.Arrange.project
 import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import javax.inject.Inject
 
 @QuarkusTest
@@ -99,18 +102,9 @@ internal class CodeServiceTest {
 
     @Test
     fun delete() {
-        Mockito
-            .`when`(codeRepository.deleteCode(codelistId, codeRef))
-            .thenReturn(code)
+        codeService.delete(project.ref, codelist.ref, code.ref)
 
-        val mockedCode: Code = codeService.delete(
-            projectRef,
-            codelistRef,
-            codeRef
-        )
-
-        Assertions.assertNotNull(mockedCode)
-        Assertions.assertEquals(code.ref, mockedCode.ref)
+        verify(codeRepository).deleteById(code.id)
     }
 
     @Test
