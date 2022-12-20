@@ -35,9 +35,6 @@ insert into Need("id", title, description, ref, project_id_fk)
 values (10, 'Need tittel fra script', 'Need beskrivelse fra script', 'need1b69-edb2-431f-855a-4368e2bcddd1', 2);
 insert into Need("id", title, description, ref, project_id_fk)
 values (11, 'Need tittel fra script #2', 'Need beskrivelse fra script #2', 'need2b69-edb2-431f-855a-4368e2bcddd1', 2);
-insert into Need("id", title, description, ref, project_id_fk)
-values (29, 'Need tittel fra script #3', 'Need beskrivelse fra script #3', 'need210291111-edb2-431f-855a-4368e2bcddd1',
-        2);
 
 -- REQUIREMENT
 insert into Requirement("id", title, description, ref, project_id_fk, need_id_fk)
@@ -48,12 +45,18 @@ values (13, 'Requirement tittel fra script #2', 'Requirement beskrivelse fra scr
         'reqd2b69-edb2-431f-855a-4368e2bcddd1', 2, 10);
 
 --REQUIREMENT VARIANT
-insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespecification, requirement_id_fk)
-values(14,'Requirement variant beskrivelse fra script','instruksjon','rvrv1b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
-insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespecification, requirement_id_fk)
-values(15,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv2b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
-insert into RequirementVariant("id",description, instruction, ref, requirementtext,useproduct, usequalification, usespecification, requirement_id_fk)
-values(16,'Requirement variant beskrivelse fra script #2 ','instruksjon','rvrv3b69-edb2-431f-855a-4368e2bcddd1', 'req text',true, true, true, 12);
+insert into RequirementVariant("id", description, instruction, ref, requirementtext, useproduct, usequalification,
+                               usespecification, requirement_id_fk)
+values (14, 'Requirement variant beskrivelse fra script', 'instruksjon', 'rvrv1b69-edb2-431f-855a-4368e2bcddd1',
+        'req text', true, true, true, 12);
+insert into RequirementVariant("id", description, instruction, ref, requirementtext, useproduct, usequalification,
+                               usespecification, requirement_id_fk)
+values (15, 'Requirement variant beskrivelse fra script #2 ', 'instruksjon', 'rvrv2b69-edb2-431f-855a-4368e2bcddd1',
+        'req text', true, true, true, 12);
+insert into RequirementVariant("id", description, instruction, ref, requirementtext, useproduct, usequalification,
+                               usespecification, requirement_id_fk)
+values (16, 'Requirement variant beskrivelse fra script #2 ', 'instruksjon', 'rvrv3b69-edb2-431f-855a-4368e2bcddd1',
+        'req text', true, true, true, 12);
 
 -- PRODUCT
 insert into product("id", title, description, ref, deleteddate, project_id_fk, requirementvariant_id_fk)

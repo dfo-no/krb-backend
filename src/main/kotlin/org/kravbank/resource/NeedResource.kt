@@ -50,10 +50,9 @@ class NeedResource(val needService: NeedService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("needRef") needRef: String
     ): Response {
-        val need = needService.delete(projectRef, needRef)
-        val form = NeedForm().fromEntity(need)
+        needService.delete(projectRef, needRef)
         // returnerer slettet need ref i body
-        return Response.ok(form.ref).build()
+        return Response.ok(needRef).build()
     }
 
     @PUT

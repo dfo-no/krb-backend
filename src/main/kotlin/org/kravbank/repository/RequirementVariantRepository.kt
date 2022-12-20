@@ -1,6 +1,5 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -12,10 +11,9 @@ import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_NOTFOUND
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_NOTFOUND_PRODUCT
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class RequirementVariantRepository : PanacheRepository<RequirementVariant> {
+class RequirementVariantRepository : BackendRepository<RequirementVariant>() {
     @Throws(BackendException::class)
     fun findByRef(requirementId: Long, ref: String): RequirementVariant {
         val reqVariant =

@@ -1,6 +1,5 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Code
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -11,10 +10,9 @@ import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class CodeRepository : PanacheRepository<Code> {
+class CodeRepository : BackendRepository<Code>() {
     @Throws(BackendException::class)
     fun findByRef(codelistId: Long, ref: String): Code {
         val code =

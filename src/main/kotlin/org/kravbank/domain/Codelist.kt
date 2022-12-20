@@ -9,6 +9,7 @@ import javax.persistence.*
 
 @Entity
 class Codelist : PanacheEntity() {
+
     lateinit var title: String
 
     lateinit var description: String

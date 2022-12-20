@@ -39,7 +39,8 @@ class Messages {
         //publication
         const val PUBLICATION_NOTFOUND = "Publication was not found!"
         const val PUBLICATION_BADREQUEST_CREATE = "Ooops! Publication was not created"
-        const val PUBLICATION_BADREQUEST_UPDATE = "Ooops! Requirement was not updated"
+        const val PUBLICATION_BADREQUEST_UPDATE = "Ooops! Publication was not updated"
+        const val PUBLICATION_BADREQUEST_DELETE = "Ooops! Publication was not deleted"
 
         //requirement
         const val REQUIREMENT_NOTFOUND = "Requirement was not found!"
