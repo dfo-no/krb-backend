@@ -3,9 +3,11 @@ package org.kravbank.service
 import org.kravbank.dao.CodeForm
 import org.kravbank.domain.Code
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -14,14 +16,13 @@ class CodeService(
     val codelistRepository: CodelistRepository,
     val projectRepository: ProjectRepository
 ) {
-    @Throws(BackendException::class)
+
     fun get(projectRef: String, codelistRef: String, codeRef: String): Code {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         return codeRepository.findByRef(foundCodelist.id, codeRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String, codelistRef: String): List<Code> {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
@@ -34,22 +35,26 @@ class CodeService(
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         val code = CodeForm().toEntity(newCode)
         code.codelist = foundCodelist
-        codeRepository.createCode(code)
+
+        codeRepository.persistAndFlush(code)
+        if (!codeRepository.isPersistent(code)) throw BadRequestException(CODE_BADREQUEST_CREATE)
+
         return code
     }
 
-    @Throws(BackendException::class)
-    fun delete(projectRef: String, codelistRef: String, codeRef: String): Code {
+    fun delete(projectRef: String, codelistRef: String, codeRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
-        return codeRepository.deleteCode(foundCodelist.id, codeRef)
+        val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
+
+        return codeRepository.deleteById(foundCode.id)
     }
 
-    @Throws(BackendException::class)
     fun update(projectRef: String, codelistRef: String, codeRef: String, updatedCode: CodeForm): Code {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
         val foundCode = codeRepository.findByRef(foundCodelist.id, codeRef)
+
         val update = CodeForm().toEntity(updatedCode)
         codeRepository.updateCode(foundCode.id, update)
         return update.apply { ref = foundCode.ref }
