@@ -57,9 +57,8 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
     ): Response {
-        val code = codeService.delete(projectRef, codelistRef, codeRef)
-        val form = CodeForm().fromEntity(code)
-        return Response.ok(form.ref).build()
+        codeService.delete(projectRef, codelistRef, codeRef)
+        return Response.ok(codeRef).build()
     }
 
     @PUT
