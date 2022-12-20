@@ -2,13 +2,11 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
 @Entity
-@Where(clause = "deletedDate is null")
 class Product : SoftDeletable() {
 
     lateinit var title: String

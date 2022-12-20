@@ -7,13 +7,14 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Code(
-    var title: String = "",
+class Code : PanacheEntity() {
 
-    var description: String = "",
+    lateinit var title: String
+
+    lateinit var description: String
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString(),
+    var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
@@ -23,5 +24,7 @@ class Code(
     @JsonIgnore
     @JoinColumn(name = "codelist_id_fk")
     var codelist: Codelist? = null
-) : PanacheEntity()
+
+}
+
 

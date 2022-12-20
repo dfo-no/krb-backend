@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementVariantForm
 import org.kravbank.utils.KeycloakAccess
 
-
 @QuarkusTest
 class RequirementVariantResourceTest {
 

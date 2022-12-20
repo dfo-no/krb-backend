@@ -1,7 +1,6 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.CascadeType
@@ -10,7 +9,6 @@ import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
-@Where(clause = "deletedDate is null")
 class Project : SoftDeletable() {
 
     lateinit var title: String

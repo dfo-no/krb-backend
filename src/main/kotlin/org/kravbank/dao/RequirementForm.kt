@@ -13,7 +13,8 @@ class RequirementForm : Mapper<RequirementForm, Requirement> {
 
     lateinit var description: String
 
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) Denne gir feil i integrasjonstesten pga. den ikke deserialiserer
+    //TODO
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     //@JsonProperty(access = JsonProperty.Access.READ_WRITE)
     var needRef: String = ""
 
