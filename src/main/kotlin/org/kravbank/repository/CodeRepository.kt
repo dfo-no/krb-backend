@@ -4,8 +4,6 @@ import org.kravbank.domain.Code
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
-import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import java.util.*
@@ -24,26 +22,8 @@ class CodeRepository : BackendRepository<Code>() {
         return Optional.ofNullable(code).orElseThrow { NotFoundException(CODE_NOTFOUND) }
     }
 
-    @Throws(BackendException::class)
     fun listAllCodes(id: Long): List<Code> {
         return find("codelist_id_fk", id).stream<Code>().toList()
-    }
-
-    @Throws(BackendException::class)
-    fun createCode(code: Code) {
-        persistAndFlush(code)
-        if (!code.isPersistent) {
-            throw BadRequestException(CODE_BADREQUEST_CREATE)
-        }
-    }
-
-    @Throws(BackendException::class)
-    fun deleteCode(codelistId: Long, codeRef: String): Code {
-        val deleted: Boolean
-        val found = findByRef(codelistId, codeRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException(CODE_BADREQUEST_DELETE)
-        return found
     }
 
     @Throws(BackendException::class)
