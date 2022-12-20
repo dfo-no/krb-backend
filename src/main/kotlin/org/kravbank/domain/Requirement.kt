@@ -9,6 +9,7 @@ import javax.persistence.*
 
 @Entity
 class Requirement : PanacheEntity() {
+
     var title: String = ""
 
     var description: String = ""

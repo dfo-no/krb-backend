@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementForm
 import org.kravbank.utils.KeycloakAccess
 
-
 @QuarkusTest
 class RequirementResourceTest {
 
@@ -43,7 +42,7 @@ class RequirementResourceTest {
         val form = RequirementForm()
         form.title = "Integrasjonstest requirement - tittel 1"
         form.description = "Integrasjonstest requirement - beskrivelse 1"
-        form.needRef = "need210291111-edb2-431f-855a-4368e2bcddd1"
+        form.needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         given()
             .auth()

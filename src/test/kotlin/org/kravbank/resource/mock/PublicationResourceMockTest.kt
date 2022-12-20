@@ -107,46 +107,36 @@ internal class PublicationResourceMockTest {
         assertEquals(form.version, entity.version)
     }
 
-    /*TODO("Fix delete test")
 
-                    @Test
-                    fun deletePublication_OK() {
-                        val publication_2 = Publication()
-                        publication_2.id = 155L
-                        publication_2.ref = "dsfdsgs<'fåowi39543tdsf"
-                        publication_2.version = 10
-                        publication_2.comment = "En kommentar her"
-                        publication_2.project = project
-                        publication_2.date = time
+    @Test
+    fun deletePublication_OK() {
+        Mockito
+            .`when`(publicationRepository.findByRef(projectId, publicationRef))
+            .thenReturn(publication)
 
+        publicationResource.deletePublication(projectRef, publicationRef)
 
-                        //mock
-                        Mockito
-                            .`when`(publicationRepository.deletePublication(publicationId))
-                            .thenReturn(true)
+        //verifies the repo-call from the resource
+        Mockito.verify(publicationRepository).delete(publication)
+    }
 
-                        val response = publicationResource.deletePublication(projectRef, publicationRef)
+    /*
 
-                        //assert
-                        assertNotNull(response)
-                        assertEquals(publicationRef, response.entity.toString())
+// Todo se på senere
+@Test
+fun deletePublication_KO() {
+Mockito
+    .`when`(publicationRepository.delete(projectId, publicationRef))
+    .thenThrow(BadRequestException(PUBLICATION_BADREQUEST_DELETE))
 
-                    }
+try {
+    publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
 
-                       @Test
-                    fun deletePublication_KO() {
+} catch (e: Exception) {
+    assertEquals(PUBLICATION_BADREQUEST_DELETE, e.message)
+}
+}
 
-                        Mockito
-                            .`when`(publicationRepository.deletePublication(publicationId))
-                            .thenReturn(false)
-
-                        try {
-                            publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
-                        } catch (e: Exception) {
-                            assertEquals("Bad request! Publication was not deleted", e.message)
-                        }
-                    }
-
-                 */
+*/
 
 }

@@ -1,7 +1,7 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import io.quarkus.hibernate.orm.panache.PanacheEntity
+import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.CascadeType
@@ -10,7 +10,8 @@ import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
-class Project : PanacheEntity() {
+@Where(clause = "deletedDate is null")
+class Project : SoftDeletable() {
 
     lateinit var title: String
 
@@ -22,7 +23,7 @@ class Project : PanacheEntity() {
     )
     var ref: String = UUID.randomUUID().toString()
 
-    var deletedDate: LocalDateTime? = null
+    override var deletedDate: LocalDateTime? = null
 
     @OneToMany(
         mappedBy = ("project"),

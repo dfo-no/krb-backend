@@ -1,87 +1,86 @@
 package org.kravbank.service
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.domain.Need
+import org.kravbank.domain.Project
 import org.kravbank.repository.NeedRepository
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.need
 import org.kravbank.utils.TestSetup.Arrange.needForm
 import org.kravbank.utils.TestSetup.Arrange.needs
 import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 
 @QuarkusTest
 internal class NeedServiceTest {
 
-    @InjectMock
-    lateinit var needRepository: NeedRepository
+    final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    final val needRepository: NeedRepository = mock(NeedRepository::class.java)
 
-    @Inject
-    lateinit var needService: NeedService
+    val needService = NeedService(needRepository, projectRepository)
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private val projectId: Long = arrangeSetup.project_needId
-
-    private val needRef: String = arrangeSetup.need_projectRef
-
-    private val projectRef: String = arrangeSetup.project_needRef
-
+    private lateinit var need: Need
+    private lateinit var project: Project
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+        need = arrangeSetup.need
+        project = arrangeSetup.project
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
 
     }
 
+
     @Test
     fun get() {
-        Mockito
-            .`when`(
-                needRepository
-                    .findByRef(projectId, needRef)
-            ).thenReturn(need)
+        `when`(
+            needRepository
+                .findByRef(project.id, need.ref)
+        ).thenReturn(need)
 
         val mockedNeed: Need =
-            needService.get(projectRef, needRef)
+            needService.get(project.ref, need.ref)
 
-        Assertions.assertEquals(need.title, mockedNeed.title)
-        Assertions.assertEquals(need.id, mockedNeed.id)
-        Assertions.assertEquals(need.project, mockedNeed.project)
-        Assertions.assertEquals(need.description, mockedNeed.description)
+        assertEquals(need.title, mockedNeed.title)
+        assertEquals(need.id, mockedNeed.id)
+        assertEquals(need.project, mockedNeed.project)
+        assertEquals(need.description, mockedNeed.description)
+
     }
 
     @Test
     fun list() {
-        Mockito
-            .`when`(needRepository.listAllNeeds(projectId))
-            .thenReturn(needs)
+        `when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
 
-        val mockedNeeds: List<Need> = needService.list(projectRef)
+        val mockedNeeds: List<Need> = needService.list(project.ref)
 
-        Assertions.assertEquals(needs[0].title, mockedNeeds[0].title)
-        Assertions.assertEquals(needs[0].description, mockedNeeds[0].description)
-        Assertions.assertEquals(needs[0].ref, mockedNeeds[0].ref)
-        Assertions.assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
-        Assertions.assertEquals(needs[0].project, mockedNeeds[0].project)
-        Assertions.assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
+        assertEquals(needs[0].title, mockedNeeds[0].title)
+        assertEquals(needs[0].description, mockedNeeds[0].description)
+        assertEquals(needs[0].ref, mockedNeeds[0].ref)
+        assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
+        assertEquals(needs[0].project, mockedNeeds[0].project)
+        assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
+
     }
 
     @Test
     fun create() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(needRepository)
             .persist(ArgumentMatchers.any(Need::class.java))
-        Mockito
-            .`when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
+
+        `when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
             .thenReturn(true)
 
         val form = needForm
@@ -89,48 +88,40 @@ internal class NeedServiceTest {
         val mockedNeed: Need =
             needService.create(arrangeSetup.need.project!!.ref, form)
 
-        Assertions.assertNotNull(mockedNeed)
-        Assertions.assertEquals(form.title, mockedNeed.title)
-        Assertions.assertEquals(form.description, mockedNeed.description)
+        assertNotNull(mockedNeed)
+        assertEquals(form.title, mockedNeed.title)
+        assertEquals(form.description, mockedNeed.description)
+
     }
+
 
     @Test
     fun delete() {
-        Mockito
-            .`when`(needRepository.deleteNeed(projectId, needRef))
-            .thenReturn(need)
+        needService.delete(project.ref, need.ref)
 
-        val mockedNeed: Need = needService.delete(
-            projectRef,
-            needRef
-        )
+        //kallet på repo fra service-layer blir verifisert
+        verify(needRepository).deleteById(need.id)
 
-        Assertions.assertNotNull(mockedNeed)
-        Assertions.assertEquals(need.ref, mockedNeed.ref)
-        Assertions.assertEquals(need.title, mockedNeed.title)
-        Assertions.assertEquals(need.description, mockedNeed.description)
-        Assertions.assertEquals(need.project, mockedNeed.project)
-        Assertions.assertEquals(need.requirements, mockedNeed.requirements)
     }
 
     @Test
     fun update() {
-        Mockito
-            .`when`(
-                needRepository
-                    .findByRef(projectId, needRef)
-            ).thenReturn(arrangeSetup.need)
+        `when`(
+            needRepository
+                .findByRef(project.id, need.ref)
+        ).thenReturn(arrangeSetup.need)
 
         val form = updatedNeedForm
 
         val mockedNeed: Need = needService.update(
-            projectRef,
-            needRef,
+            project.ref,
+            need.ref,
             form
         )
 
-        Assertions.assertNotNull(mockedNeed)
-        Assertions.assertEquals(form.title, mockedNeed.title)
-        Assertions.assertEquals(form.description, mockedNeed.description)
+        assertNotNull(mockedNeed)
+        assertEquals(form.title, mockedNeed.title)
+        assertEquals(form.description, mockedNeed.description)
+
     }
 }

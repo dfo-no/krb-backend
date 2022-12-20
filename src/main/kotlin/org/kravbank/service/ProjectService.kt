@@ -3,7 +3,6 @@ package org.kravbank.service
 import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
-import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import javax.enterprise.context.ApplicationScoped
 
@@ -28,11 +27,16 @@ class ProjectService(val projectRepository: ProjectRepository) {
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String): Project {
+    fun delete(projectRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
-        val deleted = projectRepository.deleteProject(foundProject.id)
-        if (deleted) return foundProject
+        /* //TODO denne bør oppdateres fra native query i stedenfor
+        foundProject.deletedDate = LocalDateTime.now()
+        projectRepository.updateProject(foundProject.id, foundProject)
+         */
+        return projectRepository.deleteById(foundProject.id)
+        /*if (deleted) return foundProject
         throw BadRequestException("Bad request! Did not delete project")
+         */
     }
 
     @Throws(BackendException::class)

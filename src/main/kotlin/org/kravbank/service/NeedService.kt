@@ -34,9 +34,11 @@ class NeedService(
     }
 
     @Throws(BackendException::class)
-    fun delete(projectRef: String, needRef: String): Need {
+    fun delete(projectRef: String, needRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
-        return needRepository.deleteNeed(foundProject.id, needRef)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        return needRepository.deleteById(foundNeed.id)
     }
 
     @Throws(BackendException::class)

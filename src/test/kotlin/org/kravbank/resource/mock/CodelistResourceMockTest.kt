@@ -1,61 +1,65 @@
 package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.Codelist
-import org.kravbank.lang.BadRequestException
+import org.kravbank.domain.Project
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodelistRepository
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.CodelistResource
-import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_DELETE
+import org.kravbank.service.CodelistService
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codelist
 import org.kravbank.utils.TestSetup.Arrange.codelists
-import org.kravbank.utils.TestSetup.Arrange.newCodelist_2
 import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
+
 
 @QuarkusTest
 @TestSecurity(authorizationEnabled = false)
 internal class CodelistResourceMockTest {
 
-    @InjectMock
-    lateinit var codelistRepository: CodelistRepository
 
-    @Inject
-    lateinit var codelistResource: CodelistResource
+    // The first two are mocks - this way we avoid coupling the test to the database
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val codelistRepository: CodelistRepository = mock(CodelistRepository::class.java)
 
-    private final val arrangeSetup = TestSetup.Arrange
+    // This is just an ordinary, innocent Kotlin class so we just make an instance of it.
+    // This both means our test is more realistic, and also means we get to test the service for next to no extra cost.
+    private final val codelistService = CodelistService(codelistRepository, projectRepository)
 
-    private final val projectId: Long = arrangeSetup.project_codelistId
-    private final val projectRef: String = arrangeSetup.project_codelistRef
-    private final val codelistRef: String = arrangeSetup.codelist_projectRef
+    // This is the thing we actually set out to test
+    val codelistResource = CodelistResource(codelistService)
+
+    private val arrangeSetup = TestSetup.Arrange
+
+    private lateinit var codelist: Codelist
+    private lateinit var project: Project
+
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+        codelist = arrangeSetup.codelist
+        project = arrangeSetup.project
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
+        `when`(codelistRepository.listAllCodelists(project.id)).thenReturn(codelists)
 
     }
 
     @Test
     fun getCodelist_OK() {
-        Mockito
-            .`when`(
-                codelistRepository
-                    .findByRef(projectId, codelistRef)
-            ).thenReturn(codelist)
-
-        val response = codelistResource.getCodelistByRef(projectRef, codelistRef)
+        val response = codelistResource.getCodelistByRef(project.ref, codelist.ref)
 
         val entity: Codelist = CodelistForm().toEntity(response)
 
@@ -66,13 +70,12 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun getCodelist_KO() {
-        Mockito
-            .`when`(codelistRepository.findByRef(projectId, codelistRef))
+        `when`(codelistRepository.findByRef(project.id, codelist.ref))
             .thenThrow(NotFoundException(CODELIST_NOTFOUND))
         try {
             codelistResource.getCodelistByRef(
-                projectRef,
-                codelistRef
+                project.ref,
+                codelist.ref
             )
         } catch (e: Exception) {
             assertEquals(CODELIST_NOTFOUND, e.message)
@@ -81,32 +84,31 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun listCodelists_OK() {
-        Mockito
-            .`when`(codelistRepository.listAllCodelists(projectId))
-            .thenReturn(codelists)
 
-        val response = codelistResource.listCodelists(projectRef)
+        // TODO  ikke nødvendig med typenarrowing / smart casts med Form istedenfor Response returverdi?
+
+        val response = codelistResource.listCodelists(project.ref)
 
         val entity: List<CodelistForm> = response
 
         assertNotNull(response)
         assertFalse(entity.isEmpty())
-        assertEquals(codelists[0].title, entity[0].title)
-        assertEquals(codelists[0].description, entity[0].description)
+        val firstObjectInList = entity[0]
+        assertEquals(codelists[0].title, firstObjectInList.title)
+        assertEquals(codelists[0].description, firstObjectInList.description)
     }
 
     @Test
     fun createCodelist_OK() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(codelistRepository).persist(ArgumentMatchers.any(Codelist::class.java))
-        Mockito
-            .`when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
+
+        `when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
-        val form = CodelistForm().fromEntity(arrangeSetup.codelist)
+        val form = CodelistForm().fromEntity(codelist)
 
-        val response: Response = codelistResource.createCodelist(projectRef, form)
+        val response: Response = codelistResource.createCodelist(project.ref, form)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -115,53 +117,21 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun deleteCodelist_OK() {
-        Mockito
-            .`when`(
-                codelistRepository.deleteCodelist(
-                    projectId,
-                    codelistRef
-                )
-            )
-            .thenReturn(newCodelist_2)
 
-        val response: Response =
-            codelistResource.deleteCodelist(projectRef, codelistRef)
+        val response: Response = codelistResource.deleteCodelist(project.ref, codelist.ref)
 
         assertNotNull(response)
-        assertEquals(newCodelist_2.ref, response.entity)
+        assertEquals(codelist.ref, response.entity)
+        verify(codelistRepository).deleteById(1L)
     }
 
-    @Test
-    fun deleteCodelist_KO() {
-        Mockito
-            .`when`(
-                codelistRepository.deleteCodelist(
-                    projectId,
-                    codelistRef
-                )
-            )
-            .thenThrow(BadRequestException(CODELIST_BADREQUEST_DELETE))
-        try {
-
-            codelistResource.deleteCodelist(
-                projectRef,
-                codelistRef
-            ).entity as BadRequestException
-
-        } catch (e: Exception) {
-            assertEquals(CODELIST_BADREQUEST_DELETE, e.message)
-        }
-    }
 
     @Test
     fun updateCodelist_OK() {
-        Mockito
-            .`when`(codelistRepository.findByRef(projectId, codelistRef))
-            .thenReturn(codelist)
 
         val response = codelistResource.updateCodelist(
-            projectRef,
-            codelistRef,
+            project.ref,
+            codelist.ref,
             updatedCodelistForm
         )
 
@@ -173,22 +143,23 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun updateCodelist_KO() {
-        Mockito
-            .`when`(
-                codelistRepository.findByRef(
-                    projectId,
-                    codelistRef
-                )
+        `when`(
+            codelistRepository.findByRef(
+                project.id,
+                codelist.ref
             )
-            .thenThrow(NotFoundException(CODELIST_NOTFOUND))
-        try {
+        ).thenThrow(NotFoundException(CODELIST_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
             codelistResource.updateCodelist(
-                projectRef,
-                codelistRef,
+                project.ref,
+                codelist.ref,
                 updatedCodelistForm
             )
-        } catch (e: Exception) {
-            assertEquals(CODELIST_NOTFOUND, e.message)
         }
+
+        assertEquals(CODELIST_NOTFOUND, exception.message)
+
     }
 }
+
