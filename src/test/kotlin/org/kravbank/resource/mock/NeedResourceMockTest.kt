@@ -58,13 +58,11 @@ internal class NeedResourceMockTest {
             )
         ).thenReturn(need)
 
-        val response: Response = needResource.getNeed(project.ref, need.ref)
+        val response = needResource.getNeed(project.ref, need.ref)
 
-        val entity: Need = NeedForm().toEntity(response.entity as NeedForm)
+        val entity = NeedForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(need.title, entity.title)
         assertEquals(need.description, entity.description)
     }
@@ -73,31 +71,14 @@ internal class NeedResourceMockTest {
     fun listNeeds_OK() {
         Mockito.`when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
 
-        val response: Response = needResource.listNeeds(project.ref)
+        val response = needResource.listNeeds(project.ref)
 
-        val entity = response.entity
+        assertNotNull(response)
+        assertFalse(response.isEmpty())
+        val firstObjectInList = response[0]
+        assertEquals(needs[0].title, firstObjectInList.title)
+        assertEquals(needs[0].description, firstObjectInList.description)
 
-        if (entity is List<*>) {
-
-            assertNotNull(response)
-            assertEquals(Response.Status.OK.statusCode, response.status)
-            assertNotNull(response.entity)
-            assertFalse(entity.isEmpty())
-
-            val firstObjectInList = entity[0]
-            if (firstObjectInList is NeedForm) {
-                assertEquals(needs[0].title, firstObjectInList.title)
-                assertEquals(needs[0].description, firstObjectInList.description)
-            } else {
-                if (firstObjectInList !== null) {
-                    org.junit.jupiter.api.fail("""Expected a list of NeedForm, but the list contained: ${firstObjectInList::class.java.typeName}""")
-                } else {
-                    org.junit.jupiter.api.fail("""Expected a list of NeedForm, but there was no object in the list.""")
-                }
-            }
-        } else {
-            org.junit.jupiter.api.fail("""Expected a list of NeedForm, got: ${entity::class.java.typeName}""")
-        }
     }
 
 
@@ -137,16 +118,15 @@ internal class NeedResourceMockTest {
             .`when`(needRepository.findByRef(need.id, need.ref))
             .thenReturn(newNeed)
 
-        val response: Response = needResource.updateNeed(
+        val response = needResource.updateNeed(
             project.ref,
             need.ref,
             updatedNeedForm
         )
 
-        val entity: Need = NeedForm().toEntity(response.entity as NeedForm)
+        val entity = NeedForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(updatedNeedForm.title, entity.title)
         assertEquals(updatedNeedForm.description, entity.description)
     }

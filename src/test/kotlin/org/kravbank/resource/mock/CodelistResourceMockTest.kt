@@ -5,7 +5,6 @@ import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
 import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
@@ -48,27 +47,23 @@ internal class CodelistResourceMockTest {
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
+
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
+
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
+        `when`(codelistRepository.listAllCodelists(project.id)).thenReturn(codelists)
+
     }
 
     @Test
     fun getCodelist_OK() {
-        `when`(
-            codelistRepository
-                .findByRef(project.id, codelist.ref)
-        ).thenReturn(codelist)
+        val response = codelistResource.getCodelistByRef(project.ref, codelist.ref)
 
-        val response: Response =
-            codelistResource.getCodelistByRef(project.ref, codelist.ref)
-
-        val entity: Codelist = CodelistForm().toEntity(response.entity as CodelistForm)
+        val entity: Codelist = CodelistForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(codelist.title, entity.title)
         assertEquals(codelist.description, entity.description)
     }
@@ -81,7 +76,7 @@ internal class CodelistResourceMockTest {
             codelistResource.getCodelistByRef(
                 project.ref,
                 codelist.ref
-            ).entity as NotFoundException
+            )
         } catch (e: Exception) {
             assertEquals(CODELIST_NOTFOUND, e.message)
         }
@@ -89,35 +84,18 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun listCodelists_OK() {
-        `when`(codelistRepository.listAllCodelists(project.id)).thenReturn(codelists)
 
-        val response: Response = codelistResource.listCodelists(project.ref)
+        // TODO  ikke nødvendig med typenarrowing / smart casts med Form istedenfor Response returverdi?
 
-        val entity = response.entity
+        val response = codelistResource.listCodelists(project.ref)
 
-        // Litt over-the-top her kanskje, men  det viser "type narrowing", kalt "smart casts" i Kotlin
-        //
-        if (entity is List<*>) {
+        val entity: List<CodelistForm> = response
 
-            assertNotNull(response)
-            assertEquals(Response.Status.OK.statusCode, response.status)
-            assertNotNull(response.entity)
-            assertFalse(entity.isEmpty())
-            val firstObjectInList = entity[0]
-            if (firstObjectInList is CodelistForm) {
-                assertEquals(codelists[0].title, firstObjectInList.title)
-                assertEquals(codelists[0].description, firstObjectInList.description)
-            } else {
-                if (firstObjectInList !== null) {
-                    fail("""Expected a list of CodelistForm, but the list contained: ${firstObjectInList::class.java.typeName}""")
-                } else {
-                    fail("""Expected a list of CodelistForm, but there was no object in the list.""")
-                }
-            }
-        } else {
-            fail("""Expected a list of CodelistForm, got: ${entity::class.java.typeName}""")
-        }
-
+        assertNotNull(response)
+        assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(codelists[0].title, firstObjectInList.title)
+        assertEquals(codelists[0].description, firstObjectInList.description)
     }
 
     @Test
@@ -128,7 +106,7 @@ internal class CodelistResourceMockTest {
         `when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
-        val form = CodelistForm().fromEntity(arrangeSetup.codelist)
+        val form = CodelistForm().fromEntity(codelist)
 
         val response: Response = codelistResource.createCodelist(project.ref, form)
 
@@ -149,25 +127,17 @@ internal class CodelistResourceMockTest {
 
 
     @Test
-    fun deleteCodelist_KO() {
-
-        //TODO (slette fordi vi ikke trenger teste hibernates deleteById metode?)
-
-    }
-
-    @Test
     fun updateCodelist_OK() {
 
-        val response: Response = codelistResource.updateCodelist(
+        val response = codelistResource.updateCodelist(
             project.ref,
             codelist.ref,
             updatedCodelistForm
         )
 
-        val entity: Codelist = CodelistForm().toEntity(response.entity as CodelistForm)
+        val entity: Codelist = CodelistForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(updatedCodelistForm.title, entity.title)
     }
 
@@ -178,8 +148,7 @@ internal class CodelistResourceMockTest {
                 project.id,
                 codelist.ref
             )
-        )
-            .thenThrow(NotFoundException(CODELIST_NOTFOUND))
+        ).thenThrow(NotFoundException(CODELIST_NOTFOUND))
 
         val exception = assertThrows(NotFoundException::class.java) {
             codelistResource.updateCodelist(
