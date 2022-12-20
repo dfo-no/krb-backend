@@ -91,7 +91,7 @@ class RequirementVariantResourceTest {
             .auth()
             .oauth2(token)
             .`when`()
-            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
+            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv3b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
