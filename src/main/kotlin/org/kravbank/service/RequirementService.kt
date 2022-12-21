@@ -16,13 +16,11 @@ class RequirementService(
     val projectRepository: ProjectRepository,
     val needRepository: NeedRepository
 ) {
-    @Throws(BackendException::class)
     fun get(projectRef: String, requirementRef: String): Requirement {
         val project = projectRepository.findByRef(projectRef)
         return requirementRepository.findByRef(project.id, requirementRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String): List<Requirement> {
         val foundProject = projectRepository.findByRef(projectRef)
         return requirementRepository.listAllRequirements(foundProject.id)
@@ -43,7 +41,6 @@ class RequirementService(
         return requirement
     }
 
-    @Throws(BackendException::class)
     fun delete(projectRef: String, requirementRef: String): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
@@ -56,6 +53,7 @@ class RequirementService(
     fun update(projectRef: String, requirementRef: String, updatedRequirement: RequirementForm): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+
         val update = RequirementForm().toEntity(updatedRequirement)
         requirementRepository.updateRequirement(foundRequirement.id, update)
         return update.apply { ref = foundRequirement.ref }

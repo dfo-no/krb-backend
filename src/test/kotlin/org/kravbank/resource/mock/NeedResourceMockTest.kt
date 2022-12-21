@@ -14,10 +14,9 @@ import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.NeedResource
 import org.kravbank.service.NeedService
-import org.kravbank.utils.Messages
+import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.needs
 import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
@@ -38,9 +37,10 @@ internal class NeedResourceMockTest {
 
 
     private lateinit var updateNeedForm: NeedForm
-    private lateinit var createNeedForm: NeedForm
+    private lateinit var needs: List<Need>
     private lateinit var need: Need
     private lateinit var project: Project
+    private lateinit var createForm: NeedForm
 
 
     @BeforeEach
@@ -49,13 +49,16 @@ internal class NeedResourceMockTest {
 
 
         updateNeedForm = arrangeSetup.updatedNeedForm
-        createNeedForm = arrangeSetup.needForm
+        needs = arrangeSetup.needs
         need = arrangeSetup.need
         project = arrangeSetup.project
+        createForm = NeedForm().fromEntity(need)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+        `when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
+
 
     }
 
@@ -93,7 +96,7 @@ internal class NeedResourceMockTest {
         `when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
             .thenReturn(true)
 
-        val response: Response = needResource.createNeed(project.ref, createNeedForm)
+        val response: Response = needResource.createNeed(project.ref, createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -151,11 +154,11 @@ internal class NeedResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             needResource.createNeed(
                 project.ref,
-                createNeedForm,
+                createForm,
             )
         }
 
-        assertEquals(Messages.RepoErrorMsg.CODELIST_BADREQUEST_CREATE, exception.message)
+        assertEquals(NEED_BADREQUEST_CREATE, exception.message)
     }
 
     @Test

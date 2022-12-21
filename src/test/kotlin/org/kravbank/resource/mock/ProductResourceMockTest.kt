@@ -47,11 +47,11 @@ internal class ProductResourceMockTest {
     private val arrangeSetup = TestSetup.Arrange
 
     private lateinit var updateProductForm: ProductForm
-    private lateinit var createProductForm: ProductForm
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var product: Product
     private lateinit var project: Project
+    private lateinit var createForm: ProductForm
 
 
     @BeforeEach
@@ -60,11 +60,11 @@ internal class ProductResourceMockTest {
 
 
         updateProductForm = arrangeSetup.updatedProductForm
-        createProductForm = arrangeSetup.productForm
         requirement = arrangeSetup.requirement
         requirementVariant = arrangeSetup.requirementVariant
         product = arrangeSetup.product
         project = arrangeSetup.project
+        createForm = ProductForm().fromEntity(product)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -112,7 +112,7 @@ internal class ProductResourceMockTest {
         `when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
             .thenReturn(true)
 
-        val response: Response = productResource.createProduct(project.ref, createProductForm)
+        val response: Response = productResource.createProduct(project.ref, createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -172,7 +172,7 @@ internal class ProductResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             productResource.createProduct(
                 project.ref,
-                createProductForm,
+                createForm,
             )
         }
         assertEquals(PRODUCT_BADREQUEST_CREATE, exception.message)

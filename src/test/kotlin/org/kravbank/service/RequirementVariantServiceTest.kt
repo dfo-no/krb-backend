@@ -35,12 +35,13 @@ internal class RequirementVariantServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createRequirementVariantForm: RequirementVariantForm
-    private lateinit var updateRequirementVariantForm: RequirementVariantForm
+
     private lateinit var requirementVariants: List<RequirementVariant>
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var createForm: RequirementVariantForm
+    private lateinit var updateForm: RequirementVariantForm
 
 
     @BeforeEach
@@ -48,12 +49,13 @@ internal class RequirementVariantServiceTest {
         arrangeSetup.start()
 
 
-        updateRequirementVariantForm = arrangeSetup.updatedRequirementVariantForm
-        createRequirementVariantForm = arrangeSetup.requirementVariantForm
+
         requirementVariants = arrangeSetup.requirementVariants
         requirementVariant = arrangeSetup.requirementVariant
         project = arrangeSetup.project
         requirement = arrangeSetup.requirement
+        updateForm = arrangeSetup.updatedRequirementVariantForm
+        createForm = RequirementVariantForm().fromEntity(requirementVariant)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -129,21 +131,21 @@ internal class RequirementVariantServiceTest {
         val response = requirementVariantService.create(
             project.ref,
             requirement.ref,
-            createRequirementVariantForm
+            createForm
         )
 
         val entity: RequirementVariant = response
 
         assertNotNull(entity)
-        assertEquals(createRequirementVariantForm.instruction, entity.instruction)
-        assertEquals(createRequirementVariantForm.description, entity.description)
-        assertEquals(createRequirementVariantForm.useProduct, entity.useProduct)
+        assertEquals(createForm.instruction, entity.instruction)
+        assertEquals(createForm.description, entity.description)
+        assertEquals(createForm.useProduct, entity.useProduct)
         assertEquals(
-            createRequirementVariantForm.useSpecification,
+            createForm.useSpecification,
             entity.useSpecification
         )
         assertEquals(
-            createRequirementVariantForm.useQualification,
+            createForm.useQualification,
             entity.useQualification
         )
     }
@@ -167,7 +169,7 @@ internal class RequirementVariantServiceTest {
                 project.ref,
                 requirement.ref,
                 requirementVariant.ref,
-                createRequirementVariantForm
+                updateForm
             )
 
         val entity: RequirementVariant = response
@@ -175,23 +177,23 @@ internal class RequirementVariantServiceTest {
 
         assertNotNull(entity)
         assertEquals(
-            createRequirementVariantForm.instruction,
+            updateForm.instruction,
             entity.instruction
         )
         assertEquals(
-            createRequirementVariantForm.description,
+            updateForm.description,
             entity.description
         )
         assertEquals(
-            createRequirementVariantForm.useProduct,
+            updateForm.useProduct,
             entity.useProduct
         )
         assertEquals(
-            createRequirementVariantForm.useSpecification,
+            updateForm.useSpecification,
             entity.useSpecification
         )
         assertEquals(
-            createRequirementVariantForm.useQualification,
+            updateForm.useQualification,
             entity.useQualification
         )
     }

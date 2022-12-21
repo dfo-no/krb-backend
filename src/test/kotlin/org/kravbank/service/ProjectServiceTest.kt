@@ -23,18 +23,20 @@ internal class ProjectServiceTest {
 
     private lateinit var projects: List<Project>
     private lateinit var project: Project
-    private lateinit var createProjectForm: ProjectForm
-    private lateinit var updateProjectForm: ProjectForm
+    private lateinit var createForm: ProjectForm
+    private lateinit var updateForm: ProjectForm
 
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
-        updateProjectForm = arrangeSetup.updatedProjectForm
-        createProjectForm = arrangeSetup.projectForm
+
         project = arrangeSetup.project
         projects = arrangeSetup.projects
+        updateForm = arrangeSetup.updatedProjectForm
+        createForm = ProjectForm().fromEntity(project)
+
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(projectRepository.listAllProjects()).thenReturn(projects)
@@ -89,13 +91,13 @@ internal class ProjectServiceTest {
             .thenReturn(true)
 
 
-        val response = projectService.create(createProjectForm)
+        val response = projectService.create(createForm)
 
         val entity: Project = response
 
         Assertions.assertNotNull(entity)
-        Assertions.assertEquals(createProjectForm.title, entity.title)
-        Assertions.assertEquals(createProjectForm.description, entity.description)
+        Assertions.assertEquals(createForm.title, entity.title)
+        Assertions.assertEquals(createForm.description, entity.description)
     }
 
     @Test
@@ -112,14 +114,14 @@ internal class ProjectServiceTest {
     fun update() {
         val response = projectService.update(
             project.ref,
-            updateProjectForm
+            updateForm
         )
 
         val entity: Project = response
 
         Assertions.assertNotNull(entity)
-        Assertions.assertEquals(updateProjectForm.title, entity.title)
-        Assertions.assertEquals(updateProjectForm.description, entity.description)
+        Assertions.assertEquals(updateForm.title, entity.title)
+        Assertions.assertEquals(updateForm.description, entity.description)
     }
 
 

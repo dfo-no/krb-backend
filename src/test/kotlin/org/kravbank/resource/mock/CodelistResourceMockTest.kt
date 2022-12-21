@@ -41,10 +41,10 @@ internal class CodelistResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createCodelistForm: CodelistForm
     private lateinit var updateCodelistForm: CodelistForm
     private lateinit var codelist: Codelist
     private lateinit var project: Project
+    private lateinit var createForm: CodelistForm
 
 
     @BeforeEach
@@ -52,10 +52,9 @@ internal class CodelistResourceMockTest {
         arrangeSetup.start()
 
         updateCodelistForm = arrangeSetup.updatedCodelistForm
-        createCodelistForm = arrangeSetup.codelistForm
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
-
+        createForm = CodelistForm().fromEntity(codelist)
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
@@ -95,7 +94,7 @@ internal class CodelistResourceMockTest {
         `when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
-        val response: Response = codelistResource.createCodelist(project.ref, createCodelistForm)
+        val response: Response = codelistResource.createCodelist(project.ref, createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -158,7 +157,7 @@ internal class CodelistResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             codelistResource.createCodelist(
                 project.ref,
-                createCodelistForm,
+                createForm,
             )
         }
 

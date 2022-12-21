@@ -33,8 +33,8 @@ internal class ProductServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createProductForm: ProductForm
-    private lateinit var updateProductForm: ProductForm
+    private lateinit var createForm: ProductForm
+    private lateinit var updateForm: ProductForm
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var product: Product
@@ -45,13 +45,14 @@ internal class ProductServiceTest {
     fun setUp() {
         arrangeSetup.start()
 
-        updateProductForm = arrangeSetup.updatedProductForm
-        createProductForm = arrangeSetup.productForm
+
         requirement = arrangeSetup.requirement
         requirementVariant = arrangeSetup.requirementVariant
         products = arrangeSetup.products
         product = arrangeSetup.product
         project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedProductForm
+        createForm = ProductForm().fromEntity(product)
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(productRepository.findByRef(project.id, product.ref)).thenReturn(product)
@@ -99,13 +100,13 @@ internal class ProductServiceTest {
         `when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
             .thenReturn(true)
 
-        val response = productService.create(project.ref, createProductForm)
+        val response = productService.create(project.ref, createForm)
 
         val entity: Product = response
 
         assertNotNull(entity)
-        assertEquals(createProductForm.title, entity.title)
-        assertEquals(createProductForm.description, entity.description)
+        assertEquals(createForm.title, entity.title)
+        assertEquals(createForm.description, entity.description)
     }
 
     @Test
@@ -125,13 +126,13 @@ internal class ProductServiceTest {
         val response = productService.update(
             project.ref,
             product.ref,
-            updateProductForm
+            updateForm
         )
 
         val entity: Product = response
 
         assertNotNull(entity)
-        assertEquals(updateProductForm.title, entity.title)
-        assertEquals(updateProductForm.description, entity.description)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
     }
 }

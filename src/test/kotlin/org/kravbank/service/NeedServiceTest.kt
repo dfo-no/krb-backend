@@ -1,6 +1,7 @@
 package org.kravbank.service
 
 import io.quarkus.test.junit.QuarkusTest
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -11,8 +12,6 @@ import org.kravbank.domain.Project
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.needs
-import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
@@ -26,31 +25,33 @@ internal class NeedServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createNeedForm: NeedForm
+    private lateinit var needs: List<Need>
     private lateinit var need: Need
     private lateinit var project: Project
+    private lateinit var createForm: NeedForm
+    private lateinit var updateForm: NeedForm
+
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
-        createNeedForm = arrangeSetup.needForm
         need = arrangeSetup.need
+        needs = arrangeSetup.needs
         project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedNeedForm
+        createForm = NeedForm().fromEntity(need)
+
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+        `when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
 
     }
 
 
     @Test
     fun get() {
-        `when`(
-            needRepository
-                .findByRef(project.id, need.ref)
-        ).thenReturn(need)
-
         val mockedNeed: Need =
             needService.get(project.ref, need.ref)
 
@@ -63,16 +64,19 @@ internal class NeedServiceTest {
 
     @Test
     fun list() {
-        `when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
+        val response = needService.list(project.ref)
 
-        val mockedNeeds: List<Need> = needService.list(project.ref)
+        val entity: List<Need> = response
 
-        assertEquals(needs[0].title, mockedNeeds[0].title)
-        assertEquals(needs[0].description, mockedNeeds[0].description)
-        assertEquals(needs[0].ref, mockedNeeds[0].ref)
-        assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
-        assertEquals(needs[0].project, mockedNeeds[0].project)
-        assertEquals(needs[0].requirements, mockedNeeds[0].requirements)
+        assertNotNull(response)
+        Assertions.assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(needs[0].title, firstObjectInList.title)
+        assertEquals(needs[0].description, firstObjectInList.description)
+        assertEquals(needs[0].ref, firstObjectInList.ref)
+        assertEquals(needs[0].requirements, firstObjectInList.requirements)
+        assertEquals(needs[0].project, firstObjectInList.project)
+        assertEquals(needs[0].requirements, firstObjectInList.requirements)
 
     }
 
@@ -87,11 +91,11 @@ internal class NeedServiceTest {
 
 
         val mockedNeed: Need =
-            needService.create(arrangeSetup.need.project!!.ref, createNeedForm)
+            needService.create(arrangeSetup.need.project!!.ref, createForm)
 
         assertNotNull(mockedNeed)
-        assertEquals(createNeedForm.title, mockedNeed.title)
-        assertEquals(createNeedForm.description, mockedNeed.description)
+        assertEquals(createForm.title, mockedNeed.title)
+        assertEquals(createForm.description, mockedNeed.description)
 
     }
 
@@ -107,20 +111,18 @@ internal class NeedServiceTest {
     @Test
     fun update() {
 
-        val form = updatedNeedForm
-
         val response = needService.update(
             project.ref,
             need.ref,
-            form
+            updateForm
         )
 
         val entity: Need = response
 
 
         assertNotNull(entity)
-        assertEquals(form.title, entity.title)
-        assertEquals(form.description, entity.description)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
 
     }
 }

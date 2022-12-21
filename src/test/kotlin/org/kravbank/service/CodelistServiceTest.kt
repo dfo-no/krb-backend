@@ -27,8 +27,8 @@ internal class CodelistServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createCodelistForm: CodelistForm
-    private lateinit var updateCodelistForm: CodelistForm
+    private lateinit var createForm: CodelistForm
+    private lateinit var updateForm: CodelistForm
     private lateinit var codelist: Codelist
     private lateinit var project: Project
 
@@ -37,10 +37,10 @@ internal class CodelistServiceTest {
     fun setUp() {
         arrangeSetup.start()
 
-        updateCodelistForm = arrangeSetup.updatedCodelistForm
-        createCodelistForm = arrangeSetup.codelistForm
+        updateForm = arrangeSetup.updatedCodelistForm
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
+        createForm = CodelistForm().fromEntity(codelist)
 
 
         Mockito.`when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -91,14 +91,14 @@ internal class CodelistServiceTest {
         val response =
             codelistService.create(
                 arrangeSetup.codelist.project!!.ref,
-                createCodelistForm
+                createForm
             )
 
         val entity: Codelist = response
 
         assertNotNull(entity)
-        assertEquals(createCodelistForm.title, entity.title)
-        assertEquals(createCodelistForm.description, entity.description)
+        assertEquals(createForm.title, entity.title)
+        assertEquals(createForm.description, entity.description)
     }
 
 
@@ -114,13 +114,13 @@ internal class CodelistServiceTest {
         val response = codelistService.update(
             project.ref,
             codelist.ref,
-            updateCodelistForm
+            updateForm
         )
 
         val entity: Codelist = response
 
         assertNotNull(response)
-        assertEquals(updateCodelistForm.title, entity.title)
-        assertEquals(updateCodelistForm.description, entity.description)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
     }
 }

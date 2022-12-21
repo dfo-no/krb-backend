@@ -32,22 +32,25 @@ internal class RequirementServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createRequirementForm: RequirementForm
-    private lateinit var updateRequirementForm: RequirementForm
+
     private lateinit var requirements: List<Requirement>
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var createForm: RequirementForm
+    private lateinit var updateForm: RequirementForm
 
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
-        updateRequirementForm = arrangeSetup.updatedRequirementForm
-        createRequirementForm = arrangeSetup.requirementForm
+
         requirements = arrangeSetup.requirements
         requirement = arrangeSetup.requirement
         project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedRequirementForm
+        createForm = RequirementForm().fromEntity(requirement)
+
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(requirementRepository.findByRef(project.id, requirement.ref)).thenReturn(requirement)
@@ -93,13 +96,13 @@ internal class RequirementServiceTest {
             .thenReturn(true)
 
         val response =
-            requirementService.create(project.ref, createRequirementForm)
+            requirementService.create(project.ref, createForm)
 
         val entity: Requirement = response
 
         assertNotNull(response)
-        assertEquals(createRequirementForm.title, entity.title)
-        assertEquals(createRequirementForm.description, entity.description)
+        assertEquals(createForm.title, entity.title)
+        assertEquals(createForm.description, entity.description)
 
     }
 
@@ -107,7 +110,7 @@ internal class RequirementServiceTest {
     fun delete() {
         requirementService.delete(project.ref, requirement.ref)
 
-        verify(requirementRepository).delete(requirement)
+        verify(requirementRepository).deleteById(requirement.id)
     }
 
 
@@ -116,14 +119,14 @@ internal class RequirementServiceTest {
         val response = requirementService.update(
             project.ref,
             requirement.ref,
-            updateRequirementForm
+            updateForm
         )
 
         val entity: Requirement = response
 
         assertNotNull(entity)
-        assertEquals(updateRequirementForm.title, entity.title)
-        assertEquals(updateRequirementForm.description, entity.description)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
     }
 }
 

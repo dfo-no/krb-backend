@@ -38,11 +38,11 @@ internal class PublicationResourceMockTest {
     private val arrangeSetup = TestSetup.Arrange
 
 
-    private lateinit var createPublicationForm: PublicationForm
-    private lateinit var updatePublicationForm: PublicationForm
     private lateinit var publications: List<Publication>
     private lateinit var publication: Publication
     private lateinit var project: Project
+    private lateinit var updateForm: PublicationForm
+    private lateinit var createForm: PublicationForm
 
 
     @BeforeEach
@@ -50,11 +50,11 @@ internal class PublicationResourceMockTest {
         arrangeSetup.start()
 
 
-        updatePublicationForm = arrangeSetup.updatedPublicationForm
-        createPublicationForm = arrangeSetup.publicationForm
         publications = arrangeSetup.publications
         publication = arrangeSetup.publication
         project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedPublicationForm
+        createForm = PublicationForm().fromEntity(publication)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -94,7 +94,7 @@ internal class PublicationResourceMockTest {
 
         `when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java))).thenReturn(true)
 
-        val response = publicationResource.createPublication(project.ref, createPublicationForm)
+        val response = publicationResource.createPublication(project.ref, createForm)
 
         val entity: Response = response
 
@@ -107,13 +107,13 @@ internal class PublicationResourceMockTest {
         `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
 
 
-        val response = publicationResource.updatePublication(project.ref, publication.ref, updatePublicationForm)
+        val response = publicationResource.updatePublication(project.ref, publication.ref, updateForm)
 
         val entity: Publication = PublicationForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updatePublicationForm.comment, entity.comment)
-        assertEquals(updatePublicationForm.version, entity.version)
+        assertEquals(updateForm.comment, entity.comment)
+        assertEquals(updateForm.version, entity.version)
     }
 
 
@@ -152,7 +152,7 @@ internal class PublicationResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             publicationResource.createPublication(
                 project.ref,
-                createPublicationForm,
+                createForm,
             )
         }
 
@@ -172,7 +172,7 @@ internal class PublicationResourceMockTest {
             publicationResource.updatePublication(
                 project.ref,
                 publication.ref,
-                updatePublicationForm
+                updateForm
             )
         }
 

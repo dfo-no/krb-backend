@@ -43,11 +43,11 @@ internal class RequirementResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createRequirementForm: RequirementForm
-    private lateinit var updateRequirementForm: RequirementForm
     private lateinit var requirements: List<Requirement>
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var updateForm: RequirementForm
+    private lateinit var createForm: RequirementForm
 
 
     @BeforeEach
@@ -55,11 +55,11 @@ internal class RequirementResourceMockTest {
         arrangeSetup.start()
 
 
-        updateRequirementForm = arrangeSetup.updatedRequirementForm
-        createRequirementForm = arrangeSetup.requirementForm
+        updateForm = arrangeSetup.updatedRequirementForm
         requirements = arrangeSetup.requirements
         requirement = arrangeSetup.requirement
         project = arrangeSetup.project
+        createForm = RequirementForm().fromEntity(requirement)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -103,7 +103,7 @@ internal class RequirementResourceMockTest {
         `when`(requirementRepository.isPersistent(ArgumentMatchers.any(Requirement::class.java)))
             .thenReturn(true)
 
-        val response = requirementResource.createRequirement(project.ref, createRequirementForm)
+        val response = requirementResource.createRequirement(project.ref, createForm)
 
         val entity: Response = response
 
@@ -117,19 +117,19 @@ internal class RequirementResourceMockTest {
 
         assertNotNull(response)
         assertEquals(requirement.ref, response.entity)
-        verify(requirementRepository).deleteById(1000L)
+        verify(requirementRepository).deleteById(requirement.id)
 
     }
 
     @Test
     fun updateRequirement_OK() {
-        val response = requirementResource.updateRequirement(project.ref, requirement.ref, updateRequirementForm)
+        val response = requirementResource.updateRequirement(project.ref, requirement.ref, updateForm)
 
         val entity: Requirement = RequirementForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updateRequirementForm.title, entity.title)
-        assertEquals(updateRequirementForm.description, entity.description)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
     }
 
 
@@ -160,7 +160,7 @@ internal class RequirementResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             requirementResource.createRequirement(
                 project.ref,
-                createRequirementForm,
+                createForm,
             )
         }
 
@@ -177,7 +177,7 @@ internal class RequirementResourceMockTest {
             requirementResource.updateRequirement(
                 project.ref,
                 requirement.ref,
-                updateRequirementForm
+                updateForm
             )
         }
         assertEquals(REQUIREMENT_NOTFOUND, exception.message)

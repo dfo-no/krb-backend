@@ -1,4 +1,4 @@
-package org.kravbank.service
+package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions.*
@@ -14,6 +14,7 @@ import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.RequirementVariantResource
+import org.kravbank.service.RequirementVariantService
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_NOTFOUND
 import org.kravbank.utils.TestSetup
@@ -43,12 +44,12 @@ internal class RequirementVariantResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createRequirementVariantForm: RequirementVariantForm
-    private lateinit var updateRequirementVariantForm: RequirementVariantForm
     private lateinit var requirementVariants: List<RequirementVariant>
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var updateForm: RequirementVariantForm
+    private lateinit var createForm: RequirementVariantForm
 
 
     @BeforeEach
@@ -56,12 +57,13 @@ internal class RequirementVariantResourceMockTest {
         arrangeSetup.start()
 
 
-        updateRequirementVariantForm = arrangeSetup.updatedRequirementVariantForm
-        createRequirementVariantForm = arrangeSetup.requirementVariantForm
         requirementVariants = arrangeSetup.requirementVariants
         requirementVariant = arrangeSetup.requirementVariant
         project = arrangeSetup.project
         requirement = arrangeSetup.requirement
+        updateForm = arrangeSetup.updatedRequirementVariantForm
+        createForm = RequirementVariantForm().fromEntity(requirementVariant)
+
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -90,12 +92,10 @@ internal class RequirementVariantResourceMockTest {
             requirementVariant.useSpecification,
             entity.useSpecification
         )
-        assertEquals(requirementVariant.product, entity.product)
         assertEquals(
             requirementVariant.useQualification,
             entity.useQualification
         )
-        assertEquals(requirementVariant.requirement, entity.requirement)
     }
 
     @Test
@@ -134,12 +134,12 @@ internal class RequirementVariantResourceMockTest {
             .thenReturn(true)
 
 
-        val form = RequirementVariantForm().fromEntity(requirementVariant)
+        val createForm = RequirementVariantForm().fromEntity(requirementVariant)
 
         val response = requirementVariantResource.createRequirementVariant(
             project.ref,
             requirement.ref,
-            form
+            createForm
         )
 
         assertNotNull(response)
@@ -169,7 +169,7 @@ internal class RequirementVariantResourceMockTest {
                 project.ref,
                 requirement.ref,
                 requirementVariant.ref,
-                createRequirementVariantForm
+                updateForm
             )
 
         val entity: RequirementVariant = response
@@ -177,23 +177,23 @@ internal class RequirementVariantResourceMockTest {
 
         assertNotNull(entity)
         assertEquals(
-            createRequirementVariantForm.instruction,
+            updateForm.instruction,
             entity.instruction
         )
         assertEquals(
-            createRequirementVariantForm.description,
+            updateForm.description,
             entity.description
         )
         assertEquals(
-            createRequirementVariantForm.useProduct,
+            updateForm.useProduct,
             entity.useProduct
         )
         assertEquals(
-            createRequirementVariantForm.useSpecification,
+            updateForm.useSpecification,
             entity.useSpecification
         )
         assertEquals(
-            createRequirementVariantForm.useQualification,
+            updateForm.useQualification,
             entity.useQualification
         )
     }
@@ -229,7 +229,7 @@ internal class RequirementVariantResourceMockTest {
             requirementVariantResource.createRequirementVariant(
                 project.ref,
                 requirement.ref,
-                createRequirementVariantForm,
+                createForm,
             )
         }
 
@@ -247,7 +247,7 @@ internal class RequirementVariantResourceMockTest {
                 project.ref,
                 requirement.ref,
                 requirementVariant.ref,
-                updateRequirementVariantForm
+                updateForm
             )
         }
         assertEquals(REQUIREMENTVARIANT_NOTFOUND, exception.message)

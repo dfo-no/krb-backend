@@ -19,9 +19,7 @@ import org.kravbank.service.CodeService
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codeForm
 import org.kravbank.utils.TestSetup.Arrange.codes
-import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
@@ -45,21 +43,22 @@ internal class CodeResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createCodeForm: CodeForm
-    private lateinit var updateCodeForm: CodeForm
     private lateinit var code: Code
     private lateinit var codelist: Codelist
     private lateinit var project: Project
+    private lateinit var updateCodeForm: CodeForm
+    private lateinit var createForm: CodeForm
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
-        updateCodeForm = arrangeSetup.updatedCodeForm
-        createCodeForm = arrangeSetup.codeForm
+
         code = arrangeSetup.code
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
+        updateCodeForm = arrangeSetup.updatedCodeForm
+        createForm = CodeForm().fromEntity(code)
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
@@ -109,7 +108,7 @@ internal class CodeResourceMockTest {
         val response: Response = codeResource.createCode(
             project.ref,
             codelist.ref,
-            codeForm
+            createForm
         )
 
         assertNotNull(response)
@@ -122,7 +121,7 @@ internal class CodeResourceMockTest {
 
         assertNotNull(response)
         assertEquals(code.ref, response.entity)
-        verify(codeRepository).deleteById(506)
+        verify(codeRepository).deleteById(code.id)
     }
 
     @Test
@@ -132,14 +131,14 @@ internal class CodeResourceMockTest {
             project.ref,
             codelist.ref,
             code.ref,
-            updatedCodeForm
+            updateCodeForm
         )
 
         val entity: Code = CodeForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updatedCodeForm.title, entity.title)
-        assertEquals(updatedCodeForm.description, entity.description)
+        assertEquals(updateCodeForm.title, entity.title)
+        assertEquals(updateCodeForm.description, entity.description)
     }
 
 
@@ -172,7 +171,7 @@ internal class CodeResourceMockTest {
             codeResource.createCode(
                 project.ref,
                 codelist.ref,
-                createCodeForm,
+                createForm,
             )
         }
 

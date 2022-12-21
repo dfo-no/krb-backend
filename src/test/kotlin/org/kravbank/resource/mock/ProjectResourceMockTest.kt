@@ -35,8 +35,8 @@ internal class ProjectResourceMockTest {
 
     private lateinit var projects: List<Project>
     private lateinit var project: Project
-    private lateinit var createProjectForm: ProjectForm
     private lateinit var updateProjectForm: ProjectForm
+    private lateinit var createForm: ProjectForm
 
 
     @BeforeEach
@@ -44,9 +44,11 @@ internal class ProjectResourceMockTest {
         arrangeSetup.start()
 
         updateProjectForm = arrangeSetup.updatedProjectForm
-        createProjectForm = arrangeSetup.projectForm
         project = arrangeSetup.project
         projects = arrangeSetup.projects
+        createForm = ProjectForm().fromEntity(project)
+
+
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(projectRepository.listAllProjects()).thenReturn(projects)
@@ -89,7 +91,7 @@ internal class ProjectResourceMockTest {
         `when`(projectRepository.isPersistent(ArgumentMatchers.any(Project::class.java)))
             .thenReturn(true)
 
-        val response: Response = projectResource.createProject(createProjectForm)
+        val response: Response = projectResource.createProject(createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -143,7 +145,7 @@ internal class ProjectResourceMockTest {
     fun createCodelist_KO() {
         val exception = assertThrows(BadRequestException::class.java) {
             projectResource.createProject(
-                createProjectForm,
+                createForm,
             )
         }
         assertEquals(PROJECT_BADREQUEST_CREATE, exception.message)

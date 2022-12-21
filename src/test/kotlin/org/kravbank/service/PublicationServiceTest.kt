@@ -28,8 +28,8 @@ internal class PublicationServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createPublicationForm: PublicationForm
-    private lateinit var updatePublicationForm: PublicationForm
+    private lateinit var createForm: PublicationForm
+    private lateinit var updateForm: PublicationForm
     private lateinit var publications: List<Publication>
     private lateinit var publication: Publication
     private lateinit var project: Project
@@ -40,11 +40,13 @@ internal class PublicationServiceTest {
         arrangeSetup.start()
 
 
-        updatePublicationForm = arrangeSetup.updatedPublicationForm
-        createPublicationForm = arrangeSetup.publicationForm
         publications = arrangeSetup.publications
         publication = arrangeSetup.publication
         project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedPublicationForm
+        createForm = PublicationForm().fromEntity(publication)
+
+
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -96,7 +98,7 @@ internal class PublicationServiceTest {
             .thenReturn(true)
 
         val response =
-            publicationService.create(project.ref, createPublicationForm)
+            publicationService.create(project.ref, createForm)
 
         val entity: Publication = response
 
@@ -118,13 +120,13 @@ internal class PublicationServiceTest {
         val response = publicationService.update(
             project.ref,
             publication.ref,
-            updatePublicationForm
+            updateForm
         )
 
         val entity: Publication = response
 
         assertNotNull(entity)
-        assertEquals(updatePublicationForm.comment, entity.comment)
-        assertEquals(updatePublicationForm.version, entity.version)
+        assertEquals(updateForm.comment, entity.comment)
+        assertEquals(updateForm.version, entity.version)
     }
 }

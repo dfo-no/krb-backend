@@ -33,24 +33,25 @@ internal class CodeServiceTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
-    private lateinit var createCodeForm: CodeForm
-    private lateinit var updateCodeForm: CodeForm
+
     private lateinit var codes: List<Code>
     private lateinit var code: Code
     private lateinit var codelist: Codelist
     private lateinit var project: Project
-
+    private lateinit var createForm: CodeForm
+    private lateinit var updateForm: CodeForm
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
-        updateCodeForm = arrangeSetup.updatedCodeForm
-        createCodeForm = arrangeSetup.codeForm
+
         codes = arrangeSetup.codes
         code = arrangeSetup.code
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedCodeForm
+        createForm = CodeForm().fromEntity(code)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
@@ -103,14 +104,14 @@ internal class CodeServiceTest {
             codeService.create(
                 project.ref,
                 codelist.ref,
-                createCodeForm
+                createForm
             )
 
         val entity: Code = response
 
         assertNotNull(entity)
-        assertEquals(createCodeForm.title, entity.title)
-        assertEquals(createCodeForm.description, entity.description)
+        assertEquals(createForm.title, entity.title)
+        assertEquals(createForm.description, entity.description)
 
     }
 
@@ -131,13 +132,13 @@ internal class CodeServiceTest {
             project.ref,
             codelist.ref,
             code.ref,
-            updateCodeForm
+            updateForm
         )
 
         val entity: Code = response
 
         assertNotNull(response)
-        assertEquals(updateCodeForm.title, entity.title)
-        assertEquals(updateCodeForm.description, entity.description)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
     }
 }
