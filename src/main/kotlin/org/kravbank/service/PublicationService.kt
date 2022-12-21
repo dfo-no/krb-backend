@@ -21,7 +21,6 @@ class PublicationService(
         return publicationRepository.findByRef(foundProject.id, publicationRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String): List<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
 
