@@ -4,7 +4,6 @@ import org.kravbank.domain.Need
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND_REQUIREMENT
@@ -21,6 +20,7 @@ class NeedRepository : BackendRepository<Need>() {
                 ref,
                 projectId
             ).firstResult<Need>()
+
         return Optional.ofNullable(need).orElseThrow { NotFoundException(NEED_NOTFOUND) }
     }
 
@@ -31,22 +31,17 @@ class NeedRepository : BackendRepository<Need>() {
                 "ref = ?1",
                 ref
             ).firstResult<Need>()
+
         return Optional.ofNullable(need).orElseThrow { NotFoundException(NEED_NOTFOUND_REQUIREMENT) }
     }
 
 
-    @Throws(BackendException::class)
     fun listAllNeeds(id: Long): List<Need> {
-        return find("project_id_fk", id).stream<Need>().toList()
+        return find("project_id_fk", id)
+            .stream<Need>()
+            .toList()
     }
 
-    @Throws(BackendException::class)
-    fun createNeed(need: Need) {
-        persistAndFlush(need)
-        if (!need.isPersistent) {
-            throw BadRequestException(NEED_BADREQUEST_CREATE)
-        }
-    }
 
     @Throws(BackendException::class)
     fun updateNeed(id: Long, need: Need) {

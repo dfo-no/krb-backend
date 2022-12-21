@@ -51,7 +51,6 @@ class NeedResource(val needService: NeedService) {
         @PathParam("needRef") needRef: String
     ): Response {
         needService.delete(projectRef, needRef)
-        // returnerer slettet need ref i body
         return Response.ok(needRef).build()
     }
 

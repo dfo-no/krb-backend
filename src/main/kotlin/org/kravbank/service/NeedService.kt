@@ -3,8 +3,10 @@ package org.kravbank.service
 import org.kravbank.dao.NeedForm
 import org.kravbank.domain.Need
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -12,13 +14,11 @@ class NeedService(
     val needRepository: NeedRepository,
     val projectRepository: ProjectRepository
 ) {
-    @Throws(BackendException::class)
     fun get(projectRef: String, needRef: String): Need {
         val project = projectRepository.findByRef(projectRef)
         return needRepository.findByRef(project.id, needRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String): List<Need> {
         val foundProject = projectRepository.findByRef(projectRef)
         return needRepository.listAllNeeds(foundProject.id)
@@ -29,11 +29,16 @@ class NeedService(
         val project = projectRepository.findByRef(projectRef)
         val need = NeedForm().toEntity(newNeed)
         need.project = project
-        needRepository.createNeed(need)
+
+        needRepository.persistAndFlush(need)
+
+        if (!needRepository.isPersistent(need)) {
+            throw BadRequestException(NEED_BADREQUEST_CREATE)
+        }
+
         return need
     }
 
-    @Throws(BackendException::class)
     fun delete(projectRef: String, needRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundNeed = needRepository.findByRef(foundProject.id, needRef)
@@ -45,6 +50,7 @@ class NeedService(
     fun update(projectRef: String, needRef: String, updatedNeed: NeedForm): Need {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
         val update = NeedForm().toEntity(updatedNeed)
         needRepository.updateNeed(foundNeed.id, update)
         return update.apply { ref = foundNeed.ref }
