@@ -10,15 +10,16 @@ import org.kravbank.domain.Product
 import org.kravbank.domain.Project
 import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
+import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.ProductResource
 import org.kravbank.service.ProductService
+import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.productForm
 import org.kravbank.utils.TestSetup.Arrange.products
 import org.kravbank.utils.TestSetup.Arrange.updatedProductForm
 import org.mockito.ArgumentMatchers
@@ -45,6 +46,8 @@ internal class ProductResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
+    private lateinit var updateProductForm: ProductForm
+    private lateinit var createProductForm: ProductForm
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var product: Product
@@ -55,10 +58,14 @@ internal class ProductResourceMockTest {
     fun setUp() {
         arrangeSetup.start()
 
+
+        updateProductForm = arrangeSetup.updatedProductForm
+        createProductForm = arrangeSetup.productForm
         requirement = arrangeSetup.requirement
         requirementVariant = arrangeSetup.requirementVariant
         product = arrangeSetup.product
         project = arrangeSetup.project
+
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(productRepository.findByRef(project.id, product.ref)).thenReturn(product)
@@ -81,6 +88,7 @@ internal class ProductResourceMockTest {
         assertEquals(product.description, entity.description)
     }
 
+
     @Test
     fun listProducts_OK() {
         val response = productResource.listProducts(project.ref)
@@ -94,6 +102,7 @@ internal class ProductResourceMockTest {
 
     }
 
+
     @Test
     fun createProduct_OK() {
         doNothing()
@@ -103,11 +112,7 @@ internal class ProductResourceMockTest {
         `when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
             .thenReturn(true)
 
-        val form = ProductForm().fromEntity(product)
-
-        form.requirementVariantRef = requirementVariant.ref
-
-        val response: Response = productResource.createProduct(project.ref, productForm)
+        val response: Response = productResource.createProduct(project.ref, createProductForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -117,14 +122,13 @@ internal class ProductResourceMockTest {
 
     @Test
     fun updateProduct_OK() {
-
         val response = productResource.updateProduct(project.ref, product.ref, updatedProductForm)
 
         val entity: Product = ProductForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updatedProductForm.title, entity.title)
-        assertEquals(updatedProductForm.description, entity.description)
+        assertEquals(updateProductForm.title, entity.title)
+        assertEquals(updateProductForm.description, entity.description)
 
     }
 
@@ -140,21 +144,11 @@ internal class ProductResourceMockTest {
     }
 
 
-    @Test
-    fun updateRequirement_KO() {
-        `when`(productRepository.findByRef(project.id, product.ref))
-            .thenThrow(NotFoundException(PRODUCT_NOTFOUND))
-
-        val exception = assertThrows(NotFoundException::class.java) {
-            productResource.updateProduct(
-                project.ref,
-                product.ref,
-                updatedProductForm
-            )
-        }
-        assertEquals(PRODUCT_NOTFOUND, exception.message)
-
-    }
+    /**
+     *
+     * KO's of relevant exceptions.
+     *
+     */
 
 
     @Test
@@ -171,4 +165,33 @@ internal class ProductResourceMockTest {
         assertEquals(PRODUCT_NOTFOUND, exception.message)
 
     }
+
+
+    @Test
+    fun createProduct_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            productResource.createProduct(
+                project.ref,
+                createProductForm,
+            )
+        }
+        assertEquals(PRODUCT_BADREQUEST_CREATE, exception.message)
+    }
+
+
+    @Test
+    fun updateProduct_KO() {
+        `when`(productRepository.findByRef(project.id, product.ref))
+            .thenThrow(NotFoundException(PRODUCT_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            productResource.updateProduct(
+                project.ref,
+                product.ref,
+                updatedProductForm
+            )
+        }
+        assertEquals(PRODUCT_NOTFOUND, exception.message)
+    }
+
 }
