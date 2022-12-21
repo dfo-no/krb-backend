@@ -19,8 +19,10 @@ class ProductRepository : BackendRepository<Product>() {
                 ref,
                 projectId
             ).firstResult<Product>()
+
         if (product?.deletedDate == null) {
             return product
+
         } else throw NotFoundException(PRODUCT_NOTFOUND)
     }
 

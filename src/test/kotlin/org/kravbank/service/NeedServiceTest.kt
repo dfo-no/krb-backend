@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.NeedForm
 import org.kravbank.domain.Need
 import org.kravbank.domain.Project
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.needForm
 import org.kravbank.utils.TestSetup.Arrange.needs
 import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
@@ -19,13 +19,14 @@ import org.mockito.Mockito.*
 @QuarkusTest
 internal class NeedServiceTest {
 
-    final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
-    final val needRepository: NeedRepository = mock(NeedRepository::class.java)
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val needRepository: NeedRepository = mock(NeedRepository::class.java)
 
     val needService = NeedService(needRepository, projectRepository)
 
     private val arrangeSetup = TestSetup.Arrange
 
+    private lateinit var createNeedForm: NeedForm
     private lateinit var need: Need
     private lateinit var project: Project
 
@@ -33,6 +34,7 @@ internal class NeedServiceTest {
     fun setUp() {
         arrangeSetup.start()
 
+        createNeedForm = arrangeSetup.needForm
         need = arrangeSetup.need
         project = arrangeSetup.project
 
@@ -83,14 +85,13 @@ internal class NeedServiceTest {
         `when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
             .thenReturn(true)
 
-        val form = needForm
 
         val mockedNeed: Need =
-            needService.create(arrangeSetup.need.project!!.ref, form)
+            needService.create(arrangeSetup.need.project!!.ref, createNeedForm)
 
         assertNotNull(mockedNeed)
-        assertEquals(form.title, mockedNeed.title)
-        assertEquals(form.description, mockedNeed.description)
+        assertEquals(createNeedForm.title, mockedNeed.title)
+        assertEquals(createNeedForm.description, mockedNeed.description)
 
     }
 
@@ -99,29 +100,27 @@ internal class NeedServiceTest {
     fun delete() {
         needService.delete(project.ref, need.ref)
 
-        //kallet på repo fra service-layer blir verifisert
         verify(needRepository).deleteById(need.id)
 
     }
 
     @Test
     fun update() {
-        `when`(
-            needRepository
-                .findByRef(project.id, need.ref)
-        ).thenReturn(arrangeSetup.need)
 
         val form = updatedNeedForm
 
-        val mockedNeed: Need = needService.update(
+        val response = needService.update(
             project.ref,
             need.ref,
             form
         )
 
-        assertNotNull(mockedNeed)
-        assertEquals(form.title, mockedNeed.title)
-        assertEquals(form.description, mockedNeed.description)
+        val entity: Need = response
+
+
+        assertNotNull(entity)
+        assertEquals(form.title, entity.title)
+        assertEquals(form.description, entity.description)
 
     }
 }

@@ -1,121 +1,137 @@
 package org.kravbank.service
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.ProductForm
 import org.kravbank.domain.Product
+import org.kravbank.domain.Project
+import org.kravbank.domain.Requirement
+import org.kravbank.domain.RequirementVariant
 import org.kravbank.repository.ProductRepository
+import org.kravbank.repository.ProjectRepository
+import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.product
-import org.kravbank.utils.TestSetup.Arrange.productForm
 import org.kravbank.utils.TestSetup.Arrange.products
-import org.kravbank.utils.TestSetup.Arrange.updatedProductForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 
 @QuarkusTest
 internal class ProductServiceTest {
 
-    @InjectMock
-    lateinit var productRepository: ProductRepository
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val productRepository: ProductRepository = mock(ProductRepository::class.java)
+    private final val requirementVariantRepository: RequirementVariantRepository =
+        mock(RequirementVariantRepository::class.java)
 
-    @Inject
-    lateinit var productService: ProductService
+    private final val productService = ProductService(
+        productRepository = productRepository,
+        projectRepository = projectRepository,
+        requirementVariantRepository = requirementVariantRepository
+    )
 
-    private final val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup.Arrange
 
-    private final val projectId: Long = arrangeSetup.project_productId
-
-    private final val productRef: String = arrangeSetup.product_projectRef
-
-    private final val projectRef: String = arrangeSetup.project_productRef
+    private lateinit var createProductForm: ProductForm
+    private lateinit var updateProductForm: ProductForm
+    private lateinit var requirementVariant: RequirementVariant
+    private lateinit var requirement: Requirement
+    private lateinit var product: Product
+    private lateinit var project: Project
 
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+        updateProductForm = arrangeSetup.updatedProductForm
+        createProductForm = arrangeSetup.productForm
+        requirement = arrangeSetup.requirement
+        requirementVariant = arrangeSetup.requirementVariant
+        products = arrangeSetup.products
+        product = arrangeSetup.product
+        project = arrangeSetup.project
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(productRepository.findByRef(project.id, product.ref)).thenReturn(product)
+        `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref)).thenReturn(
+            requirementVariant
+        )
+        `when`(productRepository.listAllProducts(project.id)).thenReturn(products)
 
     }
 
     @Test
     fun get() {
-        Mockito
-            .`when`(
-                productRepository.findByRef(projectId, productRef)
-            ).thenReturn(product)
+        val response = productService.get(project.ref, product.ref)
 
-        val mockedProduct: Product =
-            productService.get(projectRef, productRef)
+        val entity: Product = response
 
-        Assertions.assertEquals(product.title, mockedProduct.title)
-        Assertions.assertEquals(product.id, mockedProduct.id)
-        Assertions.assertEquals(product.project, mockedProduct.project)
-        Assertions.assertEquals(product.description, mockedProduct.description)
+        assertEquals(product.title, entity.title)
+        assertEquals(product.id, entity.id)
+        assertEquals(product.project, entity.project)
+        assertEquals(product.description, entity.description)
+
     }
 
     @Test
     fun list() {
-        Mockito.`when`(
-            productRepository.listAllProducts(projectId)
-        ).thenReturn(products)
+        val response = productService.list(project.ref)
 
-        val mockedProducts: List<Product> = productService.list(projectRef)
+        val entity: List<Product> = response
 
-        Assertions.assertEquals(products[0].title, mockedProducts[0].title)
-        Assertions.assertEquals(products[0].description, mockedProducts[0].description)
-        Assertions.assertEquals(products[0].project, mockedProducts[0].project)
+        assertNotNull(response)
+        assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(products[0].title, firstObjectInList.title)
+        assertEquals(products[0].description, firstObjectInList.description)
+        assertEquals(products[0].project, firstObjectInList.project)
+
     }
 
     @Test
     fun create() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(productRepository)
             .persist(ArgumentMatchers.any(Product::class.java))
 
-        Mockito
-            .`when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
+        `when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
             .thenReturn(true)
 
-        val form = productForm
+        val response = productService.create(project.ref, createProductForm)
 
-        val mockedProduct: Product =
-            productService.create(product.project!!.ref, form)
+        val entity: Product = response
 
-        Assertions.assertNotNull(mockedProduct)
-        Assertions.assertEquals(form.title, mockedProduct.title)
-        Assertions.assertEquals(form.description, mockedProduct.description)
+        assertNotNull(entity)
+        assertEquals(createProductForm.title, entity.title)
+        assertEquals(createProductForm.description, entity.description)
     }
 
     @Test
     fun delete() {
-        //TODO("Kommer tilbake her senere")
+        productService.delete(
+            project.ref,
+            product.ref
+        )
+
+        verify(productRepository).delete(product)
+
     }
 
     @Test
     fun update() {
-        Mockito
-            .`when`(
-                productRepository.findByRef(
-                    projectId,
-                    productRef
-                )
-            ).thenReturn(product)
 
-        val form = updatedProductForm
-
-        val mockedProduct: Product = productService.update(
-            projectRef,
-            productRef,
-            form
+        val response = productService.update(
+            project.ref,
+            product.ref,
+            updateProductForm
         )
 
-        Assertions.assertNotNull(mockedProduct)
-        Assertions.assertEquals(form.title, mockedProduct.title)
-        Assertions.assertEquals(form.description, mockedProduct.description)
+        val entity: Product = response
+
+        assertNotNull(entity)
+        assertEquals(updateProductForm.title, entity.title)
+        assertEquals(updateProductForm.description, entity.description)
     }
 }

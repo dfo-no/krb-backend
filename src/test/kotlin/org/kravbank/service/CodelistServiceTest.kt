@@ -22,6 +22,7 @@ internal class CodelistServiceTest {
     @InjectMock
     lateinit var codelistRepository: CodelistRepository
 
+
     @Inject
     lateinit var codelistService: CodelistService
 
