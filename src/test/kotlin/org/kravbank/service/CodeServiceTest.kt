@@ -79,7 +79,6 @@ internal class CodeServiceTest {
 
         val entity: List<Code> = response
 
-
         assertNotNull(response)
         assertFalse(entity.isEmpty())
         val firstObjectInList = entity[0]
@@ -100,16 +99,18 @@ internal class CodeServiceTest {
             .thenReturn(true)
 
 
-        val mockedCode: Code =
+        val response =
             codeService.create(
                 project.ref,
                 codelist.ref,
                 createCodeForm
             )
 
-        assertNotNull(mockedCode)
-        assertEquals(createCodeForm.title, mockedCode.title)
-        assertEquals(createCodeForm.description, mockedCode.description)
+        val entity: Code = response
+
+        assertNotNull(entity)
+        assertEquals(createCodeForm.title, entity.title)
+        assertEquals(createCodeForm.description, entity.description)
 
     }
 
@@ -135,7 +136,7 @@ internal class CodeServiceTest {
 
         val entity: Code = response
 
-        assertNotNull(entity)
+        assertNotNull(response)
         assertEquals(updateCodeForm.title, entity.title)
         assertEquals(updateCodeForm.description, entity.description)
     }

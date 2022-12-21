@@ -9,12 +9,14 @@ import org.kravbank.dao.CodeForm
 import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
+import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodeRepository
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.CodeResource
 import org.kravbank.service.CodeService
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.codeForm
@@ -43,6 +45,8 @@ internal class CodeResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
+    private lateinit var createCodeForm: CodeForm
+    private lateinit var updateCodeForm: CodeForm
     private lateinit var code: Code
     private lateinit var codelist: Codelist
     private lateinit var project: Project
@@ -51,6 +55,8 @@ internal class CodeResourceMockTest {
     fun setUp() {
         arrangeSetup.start()
 
+        updateCodeForm = arrangeSetup.updatedCodeForm
+        createCodeForm = arrangeSetup.codeForm
         code = arrangeSetup.code
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
@@ -136,6 +142,14 @@ internal class CodeResourceMockTest {
         assertEquals(updatedCodeForm.description, entity.description)
     }
 
+
+    /**
+     *
+     * Below are KO's of relevant exceptions.
+     *
+     */
+
+
     @Test
     fun getCode_KO() {
         `when`(codeRepository.findByRef(codelist.id, code.ref))
@@ -150,5 +164,40 @@ internal class CodeResourceMockTest {
         }
 
         assertEquals(CODE_NOTFOUND, exception.message)
+    }
+
+    @Test
+    fun createCode_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            codeResource.createCode(
+                project.ref,
+                codelist.ref,
+                createCodeForm,
+            )
+        }
+
+        assertEquals(CODE_BADREQUEST_CREATE, exception.message)
+    }
+
+
+    @Test
+    fun updateCode_KO() {
+        `when`(
+            codelistRepository.findByRef(
+                project.id,
+                codelist.ref
+            )
+        ).thenThrow(NotFoundException(CODE_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            codeResource.updateCode(
+                project.ref,
+                codelist.ref,
+                code.ref,
+                updateCodeForm
+            )
+        }
+        assertEquals(CODE_NOTFOUND, exception.message)
+
     }
 }
