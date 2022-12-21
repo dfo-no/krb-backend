@@ -1,206 +1,198 @@
 package org.kravbank.service
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.RequirementVariantForm
+import org.kravbank.domain.Project
+import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
+import org.kravbank.repository.ProjectRepository
+import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.requirementVariant
-import org.kravbank.utils.TestSetup.Arrange.requirementVariantForm
-import org.kravbank.utils.TestSetup.Arrange.requirementVariants
-import org.kravbank.utils.TestSetup.Arrange.updatedRequirementVariantForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
+
 
 @QuarkusTest
 internal class RequirementVariantServiceTest {
 
-    @InjectMock
-    lateinit var requirementVariantRepository: RequirementVariantRepository
 
-    @Inject
-    lateinit var requirementVariantService: RequirementVariantService
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
+    private final val requirementVariantRepository: RequirementVariantRepository =
+        mock(RequirementVariantRepository::class.java)
 
-    private final val arrangeSetup = TestSetup.Arrange
 
-    private final val requirementId: Long = arrangeSetup.requirement_requirementVariantId
+    val requirementVariantService = RequirementVariantService(
+        projectRepository = projectRepository,
+        requirementRepository = requirementRepository,
+        requirementVariantRepository = requirementVariantRepository
+    )
 
-    private final val requirementRef: String = arrangeSetup.requirement_requirementVariantRef
 
-    private final val requirementVariantRef: String = arrangeSetup.requirementVariant_requirementRef
+    private val arrangeSetup = TestSetup.Arrange
 
-    private final val projectRef: String = arrangeSetup.project_requirementVariantRef
+    private lateinit var createRequirementVariantForm: RequirementVariantForm
+    private lateinit var updateRequirementVariantForm: RequirementVariantForm
+    private lateinit var requirementVariants: List<RequirementVariant>
+    private lateinit var requirementVariant: RequirementVariant
+    private lateinit var requirement: Requirement
+    private lateinit var project: Project
+
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+
+        updateRequirementVariantForm = arrangeSetup.updatedRequirementVariantForm
+        createRequirementVariantForm = arrangeSetup.requirementVariantForm
+        requirementVariants = arrangeSetup.requirementVariants
+        requirementVariant = arrangeSetup.requirementVariant
+        project = arrangeSetup.project
+        requirement = arrangeSetup.requirement
+
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref))
+            .thenReturn(requirementVariant)
+        `when`(requirementRepository.findByRef(project.id, requirement.ref)).thenReturn(requirement)
+        `when`(requirementVariantRepository.listAllRequirementVariants(requirement.id)).thenReturn(requirementVariants)
 
     }
 
     @Test
     fun get() {
-        Mockito
-            .`when`(
-                requirementVariantRepository
-                    .findByRef(
-                        requirementId,
-                        requirementVariantRef
-                    )
-            ).thenReturn(requirementVariant)
-
-        val mockedRequirementVariant: RequirementVariant =
+        val response =
             requirementVariantService.get(
-                projectRef,
-                arrangeSetup.requirement_requirementVariantRef,
-                requirementVariantRef
+                project.ref,
+                requirement.ref,
+                requirementVariant.ref
             )
 
-        Assertions.assertEquals(requirementVariant.instruction, mockedRequirementVariant.instruction)
-        Assertions.assertEquals(requirementVariant.description, mockedRequirementVariant.description)
-        Assertions.assertEquals(requirementVariant.useProduct, mockedRequirementVariant.useProduct)
-        Assertions.assertEquals(
+        val entity: RequirementVariant = response
+
+        assertEquals(requirementVariant.instruction, entity.instruction)
+        assertEquals(requirementVariant.description, entity.description)
+        assertEquals(requirementVariant.useProduct, entity.useProduct)
+        assertEquals(
             requirementVariant.useSpecification,
-            mockedRequirementVariant.useSpecification
+            entity.useSpecification
         )
-        Assertions.assertEquals(requirementVariant.product, mockedRequirementVariant.product)
-        Assertions.assertEquals(
+        assertEquals(requirementVariant.product, entity.product)
+        assertEquals(
             requirementVariant.useQualification,
-            mockedRequirementVariant.useQualification
+            entity.useQualification
         )
-        Assertions.assertEquals(requirementVariant.requirement, mockedRequirementVariant.requirement)
+        assertEquals(requirementVariant.requirement, entity.requirement)
     }
 
     @Test
     fun list() {
-        Mockito.`when`(
-            requirementVariantRepository
-                .listAllRequirementVariants(requirementId)
-        ).thenReturn(requirementVariants)
-
-        val mockedRequirementVariants: List<RequirementVariant> =
+        val response =
             requirementVariantService.list(
-                projectRef,
-                arrangeSetup.requirement_requirementVariantRef
+                project.ref,
+                requirement.ref
             )
 
-        Assertions.assertEquals(arrangeSetup.requirementVariant.instruction, mockedRequirementVariants[0].instruction)
-        Assertions.assertEquals(arrangeSetup.requirementVariant.description, mockedRequirementVariants[0].description)
-        Assertions.assertEquals(arrangeSetup.requirementVariant.useProduct, mockedRequirementVariants[0].useProduct)
-        Assertions.assertEquals(
-            arrangeSetup.requirementVariant.useSpecification,
-            mockedRequirementVariants[0].useSpecification
+        val entity: List<RequirementVariant> = response
+
+        assertNotNull(response)
+        assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(requirementVariant.instruction, firstObjectInList.instruction)
+        assertEquals(requirementVariant.description, firstObjectInList.description)
+        assertEquals(requirementVariant.useProduct, firstObjectInList.useProduct)
+        assertEquals(
+            requirementVariant.useSpecification,
+            firstObjectInList.useSpecification
         )
-        Assertions.assertEquals(arrangeSetup.requirementVariant.product, mockedRequirementVariants[0].product)
-        Assertions.assertEquals(
-            arrangeSetup.requirementVariant.useQualification,
-            mockedRequirementVariants[0].useQualification
+        assertEquals(requirementVariant.product, firstObjectInList.product)
+        assertEquals(
+            requirementVariant.useQualification,
+            firstObjectInList.useQualification
         )
     }
 
     @Test
     fun create() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(requirementVariantRepository)
             .persist(ArgumentMatchers.any(RequirementVariant::class.java))
 
-        Mockito
-            .`when`(requirementVariantRepository.isPersistent(ArgumentMatchers.any(RequirementVariant::class.java)))
+        `when`(requirementVariantRepository.isPersistent(ArgumentMatchers.any(RequirementVariant::class.java)))
             .thenReturn(true)
 
-        val form = requirementVariantForm
-
-        val mockedRequirementVariant: RequirementVariant =
-            requirementVariantService.create(
-                projectRef,
-                requirementRef,
-                form
-            )
-
-        Assertions.assertNotNull(mockedRequirementVariant)
-        Assertions.assertEquals(form.instruction, mockedRequirementVariant.instruction)
-        Assertions.assertEquals(form.description, mockedRequirementVariant.description)
-        Assertions.assertEquals(form.useProduct, mockedRequirementVariant.useProduct)
-        Assertions.assertEquals(
-            form.useSpecification,
-            mockedRequirementVariant.useSpecification
+        val response = requirementVariantService.create(
+            project.ref,
+            requirement.ref,
+            createRequirementVariantForm
         )
-        Assertions.assertEquals(
-            form.useQualification,
-            mockedRequirementVariant.useQualification
+
+        val entity: RequirementVariant = response
+
+        assertNotNull(entity)
+        assertEquals(createRequirementVariantForm.instruction, entity.instruction)
+        assertEquals(createRequirementVariantForm.description, entity.description)
+        assertEquals(createRequirementVariantForm.useProduct, entity.useProduct)
+        assertEquals(
+            createRequirementVariantForm.useSpecification,
+            entity.useSpecification
+        )
+        assertEquals(
+            createRequirementVariantForm.useQualification,
+            entity.useQualification
         )
     }
 
     @Test
     fun delete() {
-        Mockito
-            .`when`(requirementVariantRepository.deleteRequirementVariant(requirementId, requirementVariantRef))
-            .thenReturn(requirementVariant)
-
-        val mockedRequirementVariant: RequirementVariant = requirementVariantService.delete(
-            projectRef,
-            requirementRef,
-            requirementVariantRef
+        requirementVariantService.delete(
+            project.ref,
+            requirement.ref,
+            requirementVariant.ref
         )
 
-        Assertions.assertNotNull(mockedRequirementVariant)
-        Assertions.assertEquals(requirementVariant.ref, mockedRequirementVariant.ref)
-        Assertions.assertEquals(requirementVariant.requirement, mockedRequirementVariant.requirement)
-        Assertions.assertEquals(requirementVariant.requirementText, mockedRequirementVariant.requirementText)
-        Assertions.assertEquals(requirementVariant.useProduct, mockedRequirementVariant.useProduct)
-        Assertions.assertEquals(requirementVariant.useSpecification, mockedRequirementVariant.useSpecification)
-        Assertions.assertEquals(requirementVariant.instruction, mockedRequirementVariant.instruction)
-        Assertions.assertEquals(requirementVariant.useQualification, mockedRequirementVariant.useQualification)
-        Assertions.assertEquals(requirementVariant.description, mockedRequirementVariant.description)
-        Assertions.assertEquals(requirementVariant.product, mockedRequirementVariant.product)
+        verify(requirementVariantRepository).deleteById(requirementVariant.id)
 
     }
 
     @Test
     fun update() {
-        val form = updatedRequirementVariantForm
-        Mockito
-            .`when`(
-                requirementVariantRepository
-                    .findByRef(
-                        requirementId,
-                        requirementVariantRef
-                    )
-            ).thenReturn(requirementVariant)
-
-        val mockedRequirementVariant: RequirementVariant =
+        val response =
             requirementVariantService.update(
-                projectRef,
-                requirementRef,
-                requirementVariantRef,
-                form
+                project.ref,
+                requirement.ref,
+                requirementVariant.ref,
+                createRequirementVariantForm
             )
 
-        Assertions.assertNotNull(mockedRequirementVariant)
-        Assertions.assertEquals(
-            form.instruction,
-            mockedRequirementVariant.instruction
+        val entity: RequirementVariant = response
+
+
+        assertNotNull(entity)
+        assertEquals(
+            createRequirementVariantForm.instruction,
+            entity.instruction
         )
-        Assertions.assertEquals(
-            form.description,
-            mockedRequirementVariant.description
+        assertEquals(
+            createRequirementVariantForm.description,
+            entity.description
         )
-        Assertions.assertEquals(
-            form.useProduct,
-            mockedRequirementVariant.useProduct
+        assertEquals(
+            createRequirementVariantForm.useProduct,
+            entity.useProduct
         )
-        Assertions.assertEquals(
-            form.useSpecification,
-            mockedRequirementVariant.useSpecification
+        assertEquals(
+            createRequirementVariantForm.useSpecification,
+            entity.useSpecification
         )
-        Assertions.assertEquals(
-            form.useQualification,
-            mockedRequirementVariant.useQualification
+        assertEquals(
+            createRequirementVariantForm.useQualification,
+            entity.useQualification
         )
     }
 }

@@ -47,6 +47,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         newReqVariant: RequirementVariantForm
     ): Response {
         val reqVariant = requirementVariantService.create(projectRef, requirementRef, newReqVariant)
+
         //returnerer ny req variant ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariant.ref))
             .build()
@@ -60,10 +61,8 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response {
-        val reqvariant = requirementVariantService.delete(projectRef, requirementRef, requirementVariantRef)
-        val form = RequirementVariantForm().fromEntity(reqvariant)
-        // returnerer slettet req variant ref i body
-        return Response.ok(form.ref).build()
+        requirementVariantService.delete(projectRef, requirementRef, requirementVariantRef)
+        return Response.ok(requirementVariantRef).build()
     }
 
     @PUT
