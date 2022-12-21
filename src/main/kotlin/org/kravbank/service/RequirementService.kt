@@ -3,9 +3,11 @@ package org.kravbank.service
 import org.kravbank.dao.RequirementForm
 import org.kravbank.domain.Requirement
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
+import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -33,14 +35,21 @@ class RequirementService(
         val requirement = RequirementForm().toEntity(newRequirement)
         requirement.project = project
         requirement.need = foundNeed
-        requirementRepository.createRequirement(requirement)
+
+        requirementRepository.persistAndFlush(requirement)
+        if (!requirementRepository.isPersistent(requirement)) {
+            throw BadRequestException(REQUIREMENT_BADREQUEST_CREATE)
+        }
         return requirement
     }
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, requirementRef: String): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
-        return requirementRepository.deleteRequirement(foundProject.id, requirementRef)
+        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+
+        requirementRepository.deleteById(foundRequirement.id)
+        return foundRequirement
     }
 
     @Throws(BackendException::class)
