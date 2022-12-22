@@ -44,6 +44,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
         val foundProject = projectRepository.findByRef(projectRef)
         val update = ProjectForm().toEntity(updatedProject)
         projectRepository.updateProject(foundProject.id, update)
-        return update.apply { ref = update.ref }
+
+        return update.apply { ref = foundProject.ref }
     }
 }
