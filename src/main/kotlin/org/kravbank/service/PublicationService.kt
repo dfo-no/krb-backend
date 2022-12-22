@@ -56,10 +56,13 @@ class PublicationService(
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
 
-        val update = PublicationForm().toEntity(updatedPublication)
-        publicationRepository.updatePublication(foundPublication.id, update)
+        val updated = PublicationForm().toEntity(updatedPublication)
+        publicationRepository.updatePublication(foundPublication.id, updated.comment)
 
-        return update.apply { ref = foundPublication.ref }
+        updated.ref = foundPublication.ref
+        updated.version = foundPublication.version
+
+        return updated
     }
 
     private fun getNextVersion(publications: List<Publication>): Long {
@@ -67,8 +70,7 @@ class PublicationService(
             return 1
         }
 
-        return publications.map { p -> p.version }
-            .maxOrNull()!!.plus(1)
+        return publications.maxOf { p -> p.version }.plus(1)
     }
 
 }
