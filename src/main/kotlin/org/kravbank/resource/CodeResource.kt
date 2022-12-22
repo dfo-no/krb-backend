@@ -1,4 +1,4 @@
-package org.kravbank.resource;
+package org.kravbank.resource
 
 import io.quarkus.security.Authenticated
 import org.kravbank.dao.CodeForm
@@ -8,7 +8,6 @@ import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
-import kotlin.streams.toList
 
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
@@ -22,23 +21,20 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String
-    ): Response {
+    ): CodeForm {
         val code = codeService.get(projectRef, codelistRef, codeRef)
-        val form = CodeForm().fromEntity(code)
-        return Response.ok(form).build()
+        return CodeForm().fromEntity(code)
     }
 
     @GET
     fun listCodes(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelistRef: String,
-    ): Response {
-        val form = codeService.list(projectRef, codelistRef)
+    ): List<CodeForm> {
+        return codeService.list(projectRef, codelistRef)
             .stream()
             .map(CodeForm()::fromEntity)
             .toList()
-        return Response.ok(form).build()
-
     }
 
     @Transactional
@@ -50,8 +46,7 @@ class CodeResource(val codeService: CodeService) {
         //returnerer ny code ref i response header
         return Response.created(
             URI.create("/api/v1/projects/$projectRef/codelists/$codelistRef/codes/" + code.ref)
-        )
-            .build()
+        ).build()
     }
 
     @DELETE
@@ -75,9 +70,8 @@ class CodeResource(val codeService: CodeService) {
         @PathParam("codelistRef") codelistRef: String,
         @PathParam("codeRef") codeRef: String,
         updatedCode: CodeForm
-    ): Response {
+    ): CodeForm {
         val updated = codeService.update(projectRef, codelistRef, codeRef, updatedCode)
-        val form = CodeForm().fromEntity(updated)
-        return Response.ok(form).build()
+        return CodeForm().fromEntity(updated)
     }
 }

@@ -9,9 +9,10 @@ import javax.persistence.*
 
 @Entity
 class Codelist : PanacheEntity() {
-    var title: String = ""
 
-    var description: String = ""
+    lateinit var title: String
+
+    lateinit var description: String
 
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
@@ -21,10 +22,8 @@ class Codelist : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnorepo
     @JsonBackReference(value = "value-codes")
     var codes: MutableList<Code>? = null
-
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],

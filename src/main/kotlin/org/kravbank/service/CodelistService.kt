@@ -3,8 +3,10 @@ package org.kravbank.service
 import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.Codelist
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -29,8 +31,12 @@ class CodelistService(
         val project = projectRepository.findByRef(projectRef)
         val codelist = CodelistForm().toEntity(newCodelist)
         codelist.project = project
-        codelistRepository.createCodelist(codelist)
+        codelistRepository.persistAndFlush(codelist)
+
+        if (!codelistRepository.isPersistent(codelist)) throw BadRequestException(CODELIST_BADREQUEST_CREATE)
+
         return codelist
+
     }
 
     @Throws(BackendException::class)

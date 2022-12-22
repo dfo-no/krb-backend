@@ -9,6 +9,7 @@ import javax.persistence.*
 
 @Entity
 class Requirement : PanacheEntity() {
+
     var title: String = ""
 
     var description: String = ""
@@ -18,7 +19,6 @@ class Requirement : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    //@JsonIgnore
     @JsonBackReference(value = "val-requirementVariant")
     var requirementvariants = mutableListOf<RequirementVariant>()
 

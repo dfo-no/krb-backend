@@ -1,23 +1,26 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementForm
-
+import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
-@QuarkusIntegrationTest
 class RequirementResourceTest {
+
+    val token = KeycloakAccess.getAccessToken("alice")
+
 
     @Test
     fun getRequirement() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
+            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
@@ -25,8 +28,10 @@ class RequirementResourceTest {
     @Test
     fun listRequirements() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/")
+            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/")
             .then()
             .statusCode(200)
     }
@@ -34,27 +39,18 @@ class RequirementResourceTest {
     @Test
     fun createRequirement() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects"
-
         val form = RequirementForm()
         form.title = "Integrasjonstest requirement - tittel 1"
         form.description = "Integrasjonstest requirement - beskrivelse 1"
-        form.needRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
-
-       //val requirement = RequirementFormDAO().toEntity(form)
-
-    /*    val form = NeedForm()
-        form.title = "POST Integrasjonstest need - tittel 1"
-        form.description = "POST Integrasjonstest need - beskrivelse 1"
-     */
-
+        form.needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
             .body(form)
             .header("Content-type", "application/json")
-            .post("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements")
+            .post("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements")
             .then()
             .statusCode(201)
     }
@@ -62,20 +58,18 @@ class RequirementResourceTest {
     @Test
     fun updateRequirement() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects";
-
         val form = RequirementForm()
         form.title = "Integrasjonstest requirement - tittel 1"
         form.description = "Integrasjonstest requirement - beskrivelse 1"
 
-        //val requirement = RequirementFormDAO().toEntity(form)
 
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
             .body(form)
             .header("Content-type", "application/json")
-            .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1")
+            .put("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
@@ -83,8 +77,10 @@ class RequirementResourceTest {
     @Test
     fun deleteRequirement() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
+            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }

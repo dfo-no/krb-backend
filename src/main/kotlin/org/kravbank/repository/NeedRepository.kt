@@ -1,21 +1,18 @@
 package org.kravbank.repository
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Need
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_CREATE
-import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND_REQUIREMENT
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import kotlin.streams.toList
 
 @ApplicationScoped
-class NeedRepository : PanacheRepository<Need> {
+class NeedRepository : BackendRepository<Need>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Need {
         val need =
@@ -49,15 +46,6 @@ class NeedRepository : PanacheRepository<Need> {
         if (!need.isPersistent) {
             throw BadRequestException(NEED_BADREQUEST_CREATE)
         }
-    }
-
-    @Throws(BackendException::class)
-    fun deleteNeed(projectId: Long, needRef: String): Need {
-        val deleted: Boolean
-        val found = findByRef(projectId, needRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException(NEED_BADREQUEST_DELETE)
-        return found
     }
 
     @Throws(BackendException::class)

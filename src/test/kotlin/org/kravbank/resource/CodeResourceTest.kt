@@ -1,23 +1,25 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodeForm
-
+import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
-@QuarkusIntegrationTest
 class CodeResourceTest {
+
+    val token = KeycloakAccess.getAccessToken("alice")
 
     @Test
     fun getCode() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1")
+            .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
@@ -25,8 +27,10 @@ class CodeResourceTest {
     @Test
     fun listCode() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .get("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/")
+            .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/")
             .then()
             .statusCode(200)
     }
@@ -34,19 +38,20 @@ class CodeResourceTest {
     @Test
     fun createCode() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects"
 
         val code = CodeForm()
+
         code.title = "CODE Integrasjonstest tittel"
         code.description = "CODE Integrasjonstest code desc"
         val codeMapper = CodeForm().toEntity(code)
 
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
             .body(codeMapper)
             .header("Content-type", "application/json")
-            .post("/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes")
+            .post("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes")
             .then()
             .statusCode(201)
     }
@@ -54,8 +59,10 @@ class CodeResourceTest {
     @Test
     fun deleteCode() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .delete("http://localhost:8080/api/v1/projects/prosjekt6-edb2-431f-855a-4368e2bcddd1/codelists/newlist33333db69-edb2-431f-855a-4368e2bcddd1/codes/script6b69-edb2-431f-855a-4368e2bcddd1")
+            .delete("/api/v1/projects/prosjekt6-edb2-431f-855a-4368e2bcddd1/codelists/newlist33333db69-edb2-431f-855a-4368e2bcddd1/codes/script6b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
@@ -63,19 +70,18 @@ class CodeResourceTest {
     @Test
     fun updateCode() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "/api/v1/projects"
-        RestAssured.basePath = "/api/v1/projects";
-
         val code = CodeForm()
         code.title = "CODE Integrasjonstest tittel"
         code.description = "CODE Integrasjonstest code desc"
         val codeMapper = CodeForm().toEntity(code)
 
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
             .body(codeMapper)
             .header("Content-type", "application/json")
-            .put("http://localhost:8080/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1")
+            .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1/codes/script1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }

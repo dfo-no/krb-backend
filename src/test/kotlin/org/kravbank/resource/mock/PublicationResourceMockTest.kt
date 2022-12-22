@@ -49,13 +49,11 @@ internal class PublicationResourceMockTest {
             .`when`(publicationRepository.findByRef(projectId, publicationRef))
             .thenReturn(publication)
 
-        val response: Response = publicationResource.getPublication(projectRef, publicationRef)
+        val response = publicationResource.getPublication(projectRef, publicationRef)
 
-        val entity: Publication = PublicationForm().toEntity(response.entity as PublicationForm)
+        val entity: Publication = PublicationForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(publication.comment, entity.comment)
         assertEquals(publication.version, entity.version)
     }
@@ -66,16 +64,12 @@ internal class PublicationResourceMockTest {
             .`when`(publicationRepository.listAllPublications(projectId))
             .thenReturn(publications)
 
-        val response: Response = publicationResource.listPublications(projectRef)
-
-        val entity: List<PublicationForm> = response.entity as List<PublicationForm>
+        val response = publicationResource.listPublications(projectRef)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(publications[0].comment, entity[0].comment)
-        assertEquals(publications[0].version, entity[0].version)
+        assertFalse(response.isEmpty())
+        assertEquals(publications[0].comment, response[0].comment)
+        assertEquals(publications[0].version, response[0].version)
     }
 
     @Test
@@ -90,7 +84,7 @@ internal class PublicationResourceMockTest {
 
         val form = publicationForm
 
-        val response: Response = publicationResource.createPublication(projectRef, form)
+        val response = publicationResource.createPublication(projectRef, form)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -104,56 +98,45 @@ internal class PublicationResourceMockTest {
 
         val form = updatedPublicationForm
 
-        val response: Response = publicationResource.updatePublication(projectRef, publicationRef, form)
+        val response = publicationResource.updatePublication(projectRef, publicationRef, form)
 
-        val entity: Publication = PublicationForm().toEntity(response.entity as PublicationForm)
+        val entity: Publication = PublicationForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(form.comment, entity.comment)
         assertEquals(form.version, entity.version)
     }
 
-    /*TODO("Fix delete test")
 
-                    @Test
-                    fun deletePublication_OK() {
-                        val publication_2 = Publication()
-                        publication_2.id = 155L
-                        publication_2.ref = "dsfdsgs<'fåowi39543tdsf"
-                        publication_2.version = 10
-                        publication_2.comment = "En kommentar her"
-                        publication_2.project = project
-                        publication_2.date = time
+    @Test
+    fun deletePublication_OK() {
+        Mockito
+            .`when`(publicationRepository.findByRef(projectId, publicationRef))
+            .thenReturn(publication)
 
+        publicationResource.deletePublication(projectRef, publicationRef)
 
-                        //mock
-                        Mockito
-                            .`when`(publicationRepository.deletePublication(publicationId))
-                            .thenReturn(true)
+        //verifies the repo-call from the resource
+        Mockito.verify(publicationRepository).delete(publication)
+    }
 
-                        val response: Response = publicationResource.deletePublication(projectRef, publicationRef)
+    /*
 
-                        //assert
-                        assertNotNull(response)
-                        assertEquals(publicationRef, response.entity.toString())
+// Todo se på senere
+@Test
+fun deletePublication_KO() {
+Mockito
+    .`when`(publicationRepository.delete(projectId, publicationRef))
+    .thenThrow(BadRequestException(PUBLICATION_BADREQUEST_DELETE))
 
-                    }
+try {
+    publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
 
-                       @Test
-                    fun deletePublication_KO() {
+} catch (e: Exception) {
+    assertEquals(PUBLICATION_BADREQUEST_DELETE, e.message)
+}
+}
 
-                        Mockito
-                            .`when`(publicationRepository.deletePublication(publicationId))
-                            .thenReturn(false)
-
-                        try {
-                            publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
-                        } catch (e: Exception) {
-                            assertEquals("Bad request! Publication was not deleted", e.message)
-                        }
-                    }
-
-                 */
+*/
 
 }

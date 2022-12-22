@@ -2,14 +2,16 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
 @Entity
+@Where(clause = "deletedDate is null")
 class Publication : SoftDeletable() {
 
-    var comment: String = ""
+    lateinit var comment: String
 
     var date: LocalDateTime = LocalDateTime.now()
 

@@ -2,20 +2,20 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import io.quarkus.hibernate.orm.panache.PanacheEntity
-
+import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
 @Entity
-class Product : PanacheEntity() {
+@Where(clause = "deletedDate is null")
+class Product : SoftDeletable() {
 
-    var title: String = ""
+    lateinit var title: String
 
-    var description: String = ""
+    lateinit var description: String
 
-    var deletedDate: LocalDateTime? = null
+    override var deletedDate: LocalDateTime? = null
 
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()

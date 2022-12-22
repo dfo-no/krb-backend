@@ -1,41 +1,47 @@
 package org.kravbank.resource
 
-import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementVariantForm
-
+import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
-@QuarkusIntegrationTest
 class RequirementVariantResourceTest {
 
+    val token = KeycloakAccess.getAccessToken("alice")
+
     @Test
+    @Order(1)
     fun getRequirementVariant() {
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
-            .get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
+            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
 
     @Test
+    @Order(2)
     fun listRequirementVariants() {
         given()
-            .`when`().get("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
+            .auth()
+            .oauth2(token)
+            .`when`()
+            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
             .then()
             .statusCode(200)
     }
 
     @Test
+    @Order(3)
     fun createRequirementVariant() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects"
-
         val rv = RequirementVariantForm()
         rv.description = "Integrasjonstest rv desc"
         rv.requirementText = "Integrasjonstest rv reqtext"
@@ -45,29 +51,20 @@ class RequirementVariantResourceTest {
         rv.useQualification = true
 
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
             .body(rv)
             .header("Content-type", "application/json")
-            .post("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
+            .post("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants")
             .then()
             .statusCode(201)
     }
 
     @Test
-    fun deleteRequirementVariant() {
-        given()
-            .`when`()
-            .delete("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv1b69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
-    }
-
-    @Test
+    @Order(4)
     fun updateRequirementVariant() {
         RestAssured.defaultParser = Parser.JSON
-        RestAssured.baseURI = "http://localhost:8080"
-        RestAssured.basePath = "/api/v1/projects"
-
         val rv = RequirementVariantForm()
         rv.description = "Integrasjonstest rv desc"
         rv.requirementText = "Integrasjonstest rv reqtext"
@@ -77,11 +74,26 @@ class RequirementVariantResourceTest {
         rv.useQualification = true
 
         given()
+            .auth()
+            .oauth2(token)
             .`when`()
             .body(rv)
             .header("Content-type", "application/json")
-            .put("http://localhost:8080/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
+            .put("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
+
+    @Test
+    @Order(5)
+    fun deleteRequirementVariant() {
+        given()
+            .auth()
+            .oauth2(token)
+            .`when`()
+            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1/requirementvariants/rvrv3b69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(200)
+    }
+
 }

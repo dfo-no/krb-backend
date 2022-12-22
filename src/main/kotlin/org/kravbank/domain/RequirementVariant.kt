@@ -10,11 +10,11 @@ import javax.persistence.*
 @Entity
 class RequirementVariant : PanacheEntity() {
 
-    var description: String = ""
+    lateinit var description: String
 
-    var requirementText: String = ""
+    lateinit var requirementText: String
 
-    var instruction: String = ""
+    lateinit var instruction: String
 
     var useProduct: Boolean = false
 

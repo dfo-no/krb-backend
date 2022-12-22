@@ -54,18 +54,16 @@ internal class RequirementVariantResourceMockTest {
             .`when`(requirementVariantRepository.findByRef(requirementId, reqVariantRef))
             .thenReturn(requirementVariant)
 
-        val response: Response = requirementVariantResource.getRequirementVariant(
+        val response = requirementVariantResource.getRequirementVariant(
             projectRef,
             requirementRef,
             reqVariantRef
         )
 
         val entity: RequirementVariant = RequirementVariantForm()
-            .toEntity(response.entity as RequirementVariantForm)
+            .toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
         assertEquals(requirementVariant.instruction, entity.instruction)
         assertEquals(requirementVariant.description, entity.description)
         assertEquals(requirementVariant.requirementText, entity.requirementText)
@@ -86,7 +84,7 @@ internal class RequirementVariantResourceMockTest {
                 projectRef,
                 requirementRef,
                 reqVariantRef
-            ).entity as NotFoundException
+            )
 
         } catch (e: Exception) {
             assertEquals(REQUIREMENTVARIANT_NOTFOUND, e.message)
@@ -99,20 +97,17 @@ internal class RequirementVariantResourceMockTest {
             .`when`(requirementVariantRepository.listAllRequirementVariants(requirementId))
             .thenReturn(requirementVariants)
 
-        val response: Response = requirementVariantResource.listRequirementVariants(projectRef, requirementRef)
+        val response = requirementVariantResource.listRequirementVariants(projectRef, requirementRef)
 
-        val entity: List<RequirementVariantForm> = response.entity as List<RequirementVariantForm>
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
-        assertNotNull(response.entity)
-        assertFalse(entity.isEmpty())
-        assertEquals(requirementVariants[0].instruction, entity[0].instruction)
-        assertEquals(requirementVariants[0].description, entity[0].description)
-        assertEquals(requirementVariants[0].requirementText, entity[0].requirementText)
-        assertEquals(requirementVariants[0].useProduct, entity[0].useProduct)
-        assertEquals(requirementVariants[0].useQualification, entity[0].useQualification)
-        assertEquals(requirementVariants[0].useSpecification, entity[0].useSpecification)
+        assertFalse(response.isEmpty())
+        assertEquals(requirementVariants[0].instruction, response[0].instruction)
+        assertEquals(requirementVariants[0].description, response[0].description)
+        assertEquals(requirementVariants[0].requirementText, response[0].requirementText)
+        assertEquals(requirementVariants[0].useProduct, response[0].useProduct)
+        assertEquals(requirementVariants[0].useQualification, response[0].useQualification)
+        assertEquals(requirementVariants[0].useSpecification, response[0].useSpecification)
     }
 
     @Test
@@ -165,17 +160,16 @@ internal class RequirementVariantResourceMockTest {
 
         val form = updatedRequirementVariantForm
 
-        val response: Response = requirementVariantResource.updateRequirementVariant(
+        val response = requirementVariantResource.updateRequirementVariant(
             projectRef,
             requirementRef,
             reqVariantRef,
             form
         )
 
-        val entity: RequirementVariant = RequirementVariantForm().toEntity(response.entity as RequirementVariantForm)
+        val entity: RequirementVariant = RequirementVariantForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(Response.Status.OK.statusCode, response.status)
         assertEquals(form.instruction, entity.instruction)
         assertEquals(form.description, entity.description)
     }
