@@ -21,7 +21,6 @@ class PublicationService(
         return publicationRepository.findByRef(foundProject.id, publicationRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String): List<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
 
@@ -34,6 +33,8 @@ class PublicationService(
         val publication = PublicationForm().toEntity(newPublication)
         publication.project = foundProject
         publication.date = LocalDateTime.now()
+        publication.version = getNextVersion(foundProject.publications)
+
         publicationRepository.persistAndFlush(publication)
 
         if (!publicationRepository.isPersistent(publication)) throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
@@ -41,23 +42,33 @@ class PublicationService(
         return publication
     }
 
-    @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(foundProject.id, publicationRef)
+
         publicationRepository.delete(publication)
 
         return publication
-        // throw BadRequestException("Bad request! Did not delete publication") TODO: Put somewhere else further up in chain
     }
 
     @Throws(BackendException::class)
     fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
+
         val update = PublicationForm().toEntity(updatedPublication)
         publicationRepository.updatePublication(foundPublication.id, update)
 
         return update.apply { ref = foundPublication.ref }
     }
+
+    private fun getNextVersion(publications: List<Publication>): Long {
+        if (publications.isEmpty()) {
+            return 1
+        }
+
+        return publications.map { p -> p.version }
+            .maxOrNull()!!.plus(1)
+    }
+
 }
