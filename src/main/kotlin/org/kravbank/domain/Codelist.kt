@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.io.Serializable
 import java.util.*
 import javax.persistence.*
 
 @Entity
-class Codelist : PanacheEntity() {
+class Codelist : PanacheEntity(), Serializable {
 
     lateinit var title: String
 
@@ -33,4 +34,10 @@ class Codelist : PanacheEntity() {
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
+
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref " +
+                "Codes: $codes \n" +
+                "Project: $project \n"
+    }
 }

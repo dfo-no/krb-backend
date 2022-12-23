@@ -2,6 +2,7 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.Where
+import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.CascadeType
@@ -11,7 +12,7 @@ import javax.persistence.OneToMany
 
 @Entity
 @Where(clause = "deletedDate is null")
-class Project : SoftDeletable() {
+class Project : SoftDeletable(), Serializable {
 
     lateinit var title: String
 
@@ -64,4 +65,14 @@ class Project : SoftDeletable() {
     )
     @JsonBackReference(value = "val-codelist")
     var codelist = mutableListOf<Codelist>()
+
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref, Deleted date: $deletedDate \n" +
+                "Codelist: $codelist \n" +
+                "Needs: $needs \n" +
+                "Requirements: $requirements \n" +
+                "Publications $publications \n" +
+                "Products $products"
+    }
 }
+  

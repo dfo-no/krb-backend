@@ -3,11 +3,12 @@ package org.kravbank.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import java.io.Serializable
 import java.util.*
 import javax.persistence.*
 
 @Entity
-class Code : PanacheEntity() {
+class Code : PanacheEntity(), Serializable {
 
     lateinit var title: String
 
@@ -25,6 +26,10 @@ class Code : PanacheEntity() {
     @JoinColumn(name = "codelist_id_fk")
     var codelist: Codelist? = null
 
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref " +
+                "Codelist: $codelist"
+    }
 }
 
 
