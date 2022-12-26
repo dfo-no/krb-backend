@@ -1,20 +1,27 @@
 package org.kravbank.service
 
+import org.hibernate.engine.jdbc.BlobProxy
 import org.kravbank.domain.Project
 import org.kravbank.domain.PublicationExport
+import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.PublicationExportRepository
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
 import java.util.*
+import javax.enterprise.context.ApplicationScoped
 
-
+@ApplicationScoped
 class PublicationExportService(
-    var project: Project,
-    val publicationExportRepository: PublicationExportRepository
+    private val publicationExportRepository: PublicationExportRepository
 ) {
 
-    fun saveBlob(): ByteArray { //TODO skal være void
+
+    //TODO split save blob and create entity
+
+    fun saveBlob(
+        project: Project
+    ): String {
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         val byteArrayOutputStreamToByteArray = byteArrayOutputStream.toByteArray()
@@ -27,7 +34,7 @@ class PublicationExportService(
 
             objectOutputStream.flush()
 
-            print(byteArrayOutputStreamToByteArray)
+            //    print(byteArrayOutputStreamToByteArray)
 
             //     print("\n iterate through byte array \n")
             //    for (b in byteArrayOutputStreamToByteArray) {
@@ -45,15 +52,24 @@ class PublicationExportService(
         val publicationExport = PublicationExport()
 
         publicationExport.ref = UUID.randomUUID().toString()
-        publicationExport.content = byteArrayOutputStreamToByteArray
+        publicationExport.blobFormat = BlobProxy.generateProxy(byteArrayOutputStreamToByteArray)
 
-        return publicationExport.content
+        publicationExportRepository.persistAndFlush(publicationExport)
 
-        //publicationExportRepository.persistAndFlush(publicationExport)
+        return publicationExport.ref
+
 
     }
 
-    fun getBlob(byteArray: ByteArray) {
+    fun get(ref: String): PublicationExport {
+
+
+        val export = publicationExportRepository.findByRef(ref)
+
+        print(export)
+
+
+        return export
 
         /*   val byteArrayInputStream: ByteArrayInputStream = ByteArrayInputStream(byteArray)
 
@@ -79,25 +95,44 @@ class PublicationExportService(
 
       */
     }
+
+    fun list(): MutableList<PublicationExport> {
+
+
+        val publicationExport = publicationExportRepository.findAll().stream<PublicationExport>()
+
+
+        return Optional.ofNullable(publicationExport.toList()).orElseThrow { NotFoundException("Nothing here...") }
+    }
 }
 
 
 fun main() {
 
+    /*
 
-    //   val fileOutputStream = FileOutputStream("newFile.txt")
-    //val objectOutputStream = ObjectOutputStream(fileOutputStream)
+     //   val fileOutputStream = FileOutputStream("newFile.txt")
+     //val objectOutputStream = ObjectOutputStream(fileOutputStream)
+
+     val project = Project()
+     val need = Need()
+
+     val publicationExportRepository = PublicationExportRepository()
+     val pes = PublicationExportService(
+         project = project,
+         publicationExportRepository = publicationExportRepository,
+         need = need
+     )
+
+     //save
+     val lagreByteArray = pes.saveBlob()
 
 
-    val project = Project()
-    val publicationExportRepository = PublicationExportRepository()
-    val pes = PublicationExportService(project = project, publicationExportRepository = publicationExportRepository)
+     //get
+     //val hentByteArray = pes.getBlob(lagreByteArray)
+     // print(hentByteArray)
 
-    val lagreByteArray = pes.saveBlob()
 
-    //val hentByteArray = pes.getBlob(lagreByteArray)
-
-    // print(hentByteArray)
-
+     */
 
 }

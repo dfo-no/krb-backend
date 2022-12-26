@@ -154,10 +154,6 @@ class TestSetup {
             updatedCodeForm.title = "Endre tittel som need"
             updatedCodeForm.description = "Endre beskrivelse som need"
 
-
-
-
-
             codes.add(code)
             codes.add(newCode)
 
