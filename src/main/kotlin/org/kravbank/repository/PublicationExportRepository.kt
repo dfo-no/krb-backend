@@ -9,15 +9,21 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class PublicationExportRepository : BackendRepository<PublicationExport>() {
     @Throws(BackendException::class)
-    fun findByRef(ref: String): PublicationExport {
+    fun findByRef(publicationId: Long, publicationExportRef: String): PublicationExport {
         val entity =
             find(
-                "ref = ?1",
-                ref
+                "publication_id_fk = ?1 and ref = ?2",
+                publicationId,
+                publicationExportRef
             ).firstResult<PublicationExport>()
 
-        return Optional.ofNullable(entity).orElseThrow { NotFoundException("$ref not found") }
+        return Optional.ofNullable(entity).orElseThrow { NotFoundException("$publicationExportRef not found") }
     }
 
 
+    fun list(id: Long): List<PublicationExport> {
+        return find("publication_id_fk = ?1", id)
+            .stream<PublicationExport>()
+            .toList()
+    }
 }

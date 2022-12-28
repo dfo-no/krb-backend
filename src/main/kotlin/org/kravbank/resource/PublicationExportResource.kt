@@ -10,56 +10,52 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-@Path("/api/v1/projects/{projectref}/publicationexport") //TODO add publication
+@Path("/api/v1/projects/{projectRef}/publications/{publicationRef}/publicationexport")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
 //@Authenticated
 class PublicationExportResource(
     val publicationExportService: PublicationExportService,
-    val projectRepository: ProjectRepository
+    val projectRepository: ProjectRepository,
 ) {
 
     @Transactional
     @POST
     fun create(
-        @PathParam("projectref") projectRef: String,
-        //newPublicationExport: PublicationExport
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("publicationRef") publicationRef: String,
     ): Response {
 
-        print("hello")
-        val useProject = projectRepository.findByRef(projectRef) // TODO  impl
+        val newRef = publicationExportService.save(projectRef, publicationRef)
 
-        val newRef = publicationExportService.saveBlob(useProject)
-
-        return Response.created(URI.create("/api/v1/projects/$projectRef/publicationexport/" + newRef)).build()
+        return Response.created(
+            URI.create("/api/v1/projects/$projectRef/publications/$publicationRef/publicationexport/$newRef")
+        ).build()
     }
 
     @Transactional
     @GET
     @Path("/{publicationExportRef}")
     fun get(
-        @PathParam("projectref") projectRef: String,
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("publicationRef") publicationRef: String,
         @PathParam("publicationExportRef") publicationExportRef: String
-    ): String {
+    ): PublicationExport {
 
-        val useProject = projectRepository.findByRef(projectRef) //TODO impl
-
-        val publicationExport = publicationExportService.get(publicationExportRef)
-
-        return publicationExport.toString()
+        return publicationExportService.get(projectRef, publicationRef, publicationExportRef)
 
     }
 
     @Transactional
     @GET
     fun list(
-        @PathParam("projectref") projectRef: String,
-    ): MutableList<PublicationExport> {
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("publicationRef") publicationRef: String,
 
-        val useProject = projectRepository.list(projectRef) //TODO impl
+        ): List<PublicationExport> {
 
-        return publicationExportService.list()
+        return publicationExportService.list(projectRef, publicationRef)
     }
 
 }
