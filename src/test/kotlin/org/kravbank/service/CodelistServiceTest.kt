@@ -13,7 +13,10 @@ import org.kravbank.utils.TestSetup.Arrange.codelistForm
 import org.kravbank.utils.TestSetup.Arrange.codelists
 import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import javax.inject.Inject
 
 @QuarkusTest
@@ -95,30 +98,22 @@ internal class CodelistServiceTest {
         Assertions.assertEquals(form.description, mockedCodelist.description)
     }
 
-    /*
-    //TODO fiks nullpointer error
-          Slettet  deleteCodelist fra codelist repo ,
-           brukte i steden panaches  deleteById fra serviceklassen
-           codeliste service kaster error foundCodlist er null, noe som er merkelig siden begge metodene returnerer boolean (samme mockito given-setup)
-
     @Test
     fun delete() {
-
         Mockito
             .`when`(
-                codelistRepository.deleteById(
-                    codelist_projectId
-                )
+                codelistRepository.deleteById(anyLong())
             )
             .thenReturn(true)
+
+        Mockito.`when`(codelistRepository.findByRef(anyLong(), anyString())).thenReturn(codelist)
 
         val result = codelistService.delete(projectRef, codelistRef)
 
         Assertions.assertNotNull(result)
         Assertions.assertEquals(true, result)
+        verify(codelistRepository).deleteById(1L)
     }
-
-     */
 
     @Test
     fun update() {

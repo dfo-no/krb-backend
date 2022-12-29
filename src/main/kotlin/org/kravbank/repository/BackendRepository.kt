@@ -11,9 +11,7 @@ open class BackendRepository<T : PanacheEntity> : PanacheRepository<T> {
             val deletedDate = LocalDateTime.now()
             entity.deletedDate = deletedDate
             persistAndFlush(entity)
-        }
-
-        else -> {
+        } else -> {
             super.delete(entity)
         }
     }
