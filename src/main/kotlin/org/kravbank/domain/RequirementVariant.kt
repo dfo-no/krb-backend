@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import lombok.NoArgsConstructor
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*
 
 @Entity
+@NoArgsConstructor
 class RequirementVariant : PanacheEntity(), Serializable {
 
     lateinit var description: String

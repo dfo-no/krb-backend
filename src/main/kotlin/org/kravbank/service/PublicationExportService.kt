@@ -21,6 +21,22 @@ class PublicationExportService(
     val publicationRepository: PublicationRepository
 ) {
 
+    
+    fun getDecodedBlob(
+        projectRef: String,
+        publicationRef: String,
+        publicationExportRef: String
+    ): ArrayList<*> {
+
+        val project = projectRepository.findByRef(projectRef)
+
+        val publicationId = publicationRepository.findByRef(project.id, publicationRef).id
+
+        val publicationExport = publicationExportRepository.findByRef(publicationId, publicationExportRef)
+
+        return decodeBlob(publicationExport)
+
+    }
 
     fun get(
         projectRef: String,
@@ -33,9 +49,6 @@ class PublicationExportService(
         val publicationId = publicationRepository.findByRef(project.id, publicationRef).id
 
         return publicationExportRepository.findByRef(publicationId, publicationExportRef)
-
-        // return decodeBlob(publicationExport)
-
 
     }
 
@@ -73,24 +86,18 @@ class PublicationExportService(
         return newPublicationExport.ref
     }
 
-    fun decodeBlob(publicationExport: PublicationExport): ArrayList<Any> {
-
-        println("start decode blob")
+    fun decodeBlob(publicationExport: PublicationExport): ArrayList<*> {
 
         val blob = publicationExport.blobFormat
+
         val bytes = generateBytes(blob)
-        val fromBytesToList = convertFromBytes(bytes)
 
-
-        println("Inside decode blob $fromBytesToList")
-
-        return fromBytesToList
+        return convertFromBytes(bytes)
     }
 
 
     fun encodeBlob(byteArrayOutputStream: ByteArrayOutputStream): Blob {
 
-        println("\n inside encode blob : $byteArrayOutputStream \n")
         return BlobProxy.generateProxy(byteArrayOutputStream.toByteArray())
     }
 
@@ -99,8 +106,6 @@ class PublicationExportService(
         val bytes = blob.getBytes(1, blob.length().toInt())
 
         blob.free()
-
-        println("inside generateBytes")
 
         return bytes
     }
@@ -112,45 +117,62 @@ class PublicationExportService(
     ): ByteArrayOutputStream {
 
         val byteArrayOutputStream = ByteArrayOutputStream()
+
+        val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+
+        val list = generateListOfOutputObjects(project, publication)
+
+        //converting
+        /**
+         *
+         * TODO
+         * include specifications & answer
+         *
+         */
+        objectOutputStream.use {
+            objectOutputStream.writeObject(list)
+            objectOutputStream.flush()
+            objectOutputStream.close()
+        }
+
+        return byteArrayOutputStream
+
+    }
+
+
+    //TODO delete
+    @Throws(IOException::class)
+    fun convertToBytesMethod2(
+        project: Project,
+        publication: Publication
+    ): ByteArrayOutputStream {
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+
         val objectOutputStream: ObjectOutputStream
 
         try {
-
             objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
 
-            val list = generateListOfOutputObjects(project, publication)
+            objectOutputStream.writeObject(generateListOfOutputObjects(project, publication))
 
-            objectOutputStream.writeObject(list)
+            objectOutputStream.writeObject(project)
+
             objectOutputStream.flush()
-
-            println("inside convert to bytes")
             return byteArrayOutputStream
-
-
-            // TODO create this
-            //create putput stream of specifications
-            // create outputstream of answer
-
-
-            // TODO Delete this
-            // print("\n iterate through byte array \n")
-            //    for (b in byteArrayOutputStream.toByteArray()) {
-            //       print(b)
-            // }
-
-
         } finally {
             try {
                 byteArrayOutputStream.close()
             } catch (e: IOException) {
-                println("INSIDE CATCH 1 $e.message")
+                throw IOException("Feil med outputstream. Feilmelding: $e")
             }
         }
     }
 
 
     /**
-     *  TODO SEALED CLASS?
+     *  TODO
+     *  List of SEALED CLASS?
      */
     fun generateListOfOutputObjects(
         project: Project,
@@ -166,48 +188,24 @@ class PublicationExportService(
     }
 
 
+    /**
+     *
+     * TODO fix
+     * Getting following exception:
+     * InvalidClassException: org.kravbank.domain.Project; no valid constructor
+     *
+     */
+
     @Throws(IOException::class, ClassNotFoundException::class)
-    private fun convertFromBytes(byteArray: ByteArray): ArrayList<Any> {
+    private fun convertFromBytes(byteArray: ByteArray): ArrayList<*> {
+
         val bis = ByteArrayInputStream(byteArray)
         val objectInputStream = ObjectInputStream(bis)
 
-        println("inside convert from bytes")
-        return objectInputStream.use { objectInputStream.readObject() } as ArrayList<Any>
+        //converting
+        val objs = objectInputStream.use {
+            objectInputStream.readObject() as ArrayList<*>
+        }
+        return objs
     }
-
-}
-
-
-fun main() {
-
-    //val fileOutputStream = FileOutputStream("newFile.txt")
-    //val objectOutputStream = ObjectOutputStream(fileOutputStream)
-    /*
-        val publication = Publication()
-        publication.comment = "kommentrar hade"
-        val project = Project()
-        project.title = "Tittel hei"
-
-
-        val pes = PublicationExportService(
-            projectRepository = ProjectRepository(),
-            publicationExportRepository = PublicationExportRepository(),
-            publicationRepository = PublicationRepository()
-        )
-
-        //save
-
-        val saveString = pes.save(project.ref, publication.ref)
-
-
-        print(saveString)
-
-
-     */
-    //get
-
-
-    // print(hentByteArray)
-
-
 }

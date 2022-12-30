@@ -2,6 +2,7 @@ package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import lombok.NoArgsConstructor
 import org.hibernate.annotations.Where
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -10,6 +11,7 @@ import javax.persistence.*
 
 @Entity
 @Where(clause = "deletedDate is null")
+@NoArgsConstructor
 class Product : SoftDeletable(), Serializable {
 
     lateinit var title: String

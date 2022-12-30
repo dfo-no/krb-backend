@@ -20,6 +20,24 @@ class PublicationExportResource(
     val projectRepository: ProjectRepository,
 ) {
 
+
+    /**
+     * TODO
+     * test
+     */
+    @GET
+    @Transactional
+    @Path("/blob/{publicationExportRef}")
+    fun getBlob(
+        @PathParam("projectRef") projectRef: String,
+        @PathParam("publicationRef") publicationRef: String,
+        @PathParam("publicationExportRef") publicationExportRef: String
+    ): ArrayList<*> {
+
+        return publicationExportService.getDecodedBlob(projectRef, publicationRef, publicationExportRef)
+    }
+
+
     @Transactional
     @POST
     fun create(
@@ -46,6 +64,7 @@ class PublicationExportResource(
         return publicationExportService.get(projectRef, publicationRef, publicationExportRef)
 
     }
+
 
     @Transactional
     @GET

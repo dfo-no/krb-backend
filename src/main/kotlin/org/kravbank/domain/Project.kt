@@ -1,6 +1,7 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import lombok.NoArgsConstructor
 import org.hibernate.annotations.Where
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -12,11 +13,12 @@ import javax.persistence.OneToMany
 
 @Entity
 @Where(clause = "deletedDate is null")
+@NoArgsConstructor
 class Project : SoftDeletable(), Serializable {
 
-    lateinit var title: String
+    var title: String = ""
 
-    lateinit var description: String
+    var description: String = " "
 
     @Column(
         unique = true,
@@ -74,5 +76,6 @@ class Project : SoftDeletable(), Serializable {
                 "Publications $publications \n" +
                 "Products $products"
     }
+
 }
   

@@ -3,6 +3,7 @@ package org.kravbank.domain
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import lombok.NoArgsConstructor
 import org.hibernate.annotations.Where
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -11,6 +12,7 @@ import javax.persistence.*
 
 @Entity
 @Where(clause = "deletedDate is null")
+@NoArgsConstructor
 class Publication : SoftDeletable(), Serializable {
 
     lateinit var comment: String
@@ -26,8 +28,9 @@ class Publication : SoftDeletable(), Serializable {
 
     //TODO UUID OR ID ref
     @OneToOne(
+        // mappedBy = ("publication"),
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        fetch = FetchType.LAZY
+        //fetch = FetchType.LAZY
     )
     @JoinColumn(name = "publicationExport_id_fk")
     @JsonBackReference(value = "publication_export_backReference")

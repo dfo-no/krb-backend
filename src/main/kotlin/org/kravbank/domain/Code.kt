@@ -3,11 +3,13 @@ package org.kravbank.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import lombok.NoArgsConstructor
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*
 
 @Entity
+@NoArgsConstructor
 class Code : PanacheEntity(), Serializable {
 
     lateinit var title: String
