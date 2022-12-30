@@ -19,6 +19,7 @@ class PublicationRepository : BackendRepository<Publication>() {
                 ref,
                 projectId
             ).firstResult<Publication>()
+
         if (publication != null) {
             return publication
         } else throw NotFoundException(PUBLICATION_NOTFOUND)

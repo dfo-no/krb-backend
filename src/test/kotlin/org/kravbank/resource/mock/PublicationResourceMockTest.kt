@@ -1,55 +1,72 @@
 package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.PublicationForm
+import org.kravbank.domain.Project
 import org.kravbank.domain.Publication
+import org.kravbank.lang.BadRequestException
+import org.kravbank.lang.NotFoundException
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.resource.PublicationResource
+import org.kravbank.service.PublicationService
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.PUBLICATION_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.publication
-import org.kravbank.utils.TestSetup.Arrange.publicationForm
-import org.kravbank.utils.TestSetup.Arrange.publications
-import org.kravbank.utils.TestSetup.Arrange.updatedPublicationForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
+
 
 @QuarkusTest
 @TestSecurity(authorizationEnabled = false)
 internal class PublicationResourceMockTest {
 
-    @InjectMock
-    lateinit var publicationRepository: PublicationRepository
 
-    @Inject
-    lateinit var publicationResource: PublicationResource
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val publicationRepository: PublicationRepository = mock(PublicationRepository::class.java)
 
-    private final val arrangeSetup = TestSetup.Arrange
+    private final val publicationService = PublicationService(publicationRepository, projectRepository)
 
-    private val projectId: Long = arrangeSetup.project_publicationId
-    private val projectRef: String = arrangeSetup.project_publicationRef
-    private val publicationRef: String = arrangeSetup.publication_projectRef
+    val publicationResource = PublicationResource(publicationService)
+
+
+    private val arrangeSetup = TestSetup.Arrange
+
+
+    private lateinit var publications: List<Publication>
+    private lateinit var publication: Publication
+    private lateinit var project: Project
+    private lateinit var updateForm: PublicationForm
+    private lateinit var createForm: PublicationForm
+
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+
+        publications = arrangeSetup.publications
+        publication = arrangeSetup.publication
+        project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedPublicationForm
+        createForm = PublicationForm().fromEntity(publication)
+
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
+        `when`(publicationRepository.listAllPublications(project.id)).thenReturn(publications)
 
     }
 
+
     @Test
     fun getPublication_OK() {
-        Mockito
-            .`when`(publicationRepository.findByRef(projectId, publicationRef))
-            .thenReturn(publication)
-
-        val response = publicationResource.getPublication(projectRef, publicationRef)
+        val response = publicationResource.getPublication(project.ref, publication.ref)
 
         val entity: Publication = PublicationForm().toEntity(response)
 
@@ -60,83 +77,106 @@ internal class PublicationResourceMockTest {
 
     @Test
     fun listPublications_OK() {
-        Mockito
-            .`when`(publicationRepository.listAllPublications(projectId))
-            .thenReturn(publications)
+        val response = publicationResource.listPublications(project.ref)
 
-        val response = publicationResource.listPublications(projectRef)
+        val entity: List<PublicationForm> = response
 
         assertNotNull(response)
-        assertFalse(response.isEmpty())
-        assertEquals(publications[0].comment, response[0].comment)
-        assertEquals(publications[0].version, response[0].version)
+        assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(publications[0].comment, firstObjectInList.comment)
+        assertEquals(publications[0].version, firstObjectInList.version)
     }
 
     @Test
     fun createPublication_OK() {
-        Mockito
-            .doNothing()
-            .`when`(publicationRepository).persist(ArgumentMatchers.any(Publication::class.java))
+        doNothing().`when`(publicationRepository).persist(ArgumentMatchers.any(Publication::class.java))
 
-        Mockito
-            .`when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
-            .thenReturn(true)
+        `when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java))).thenReturn(true)
 
-        val form = publicationForm
+        val response = publicationResource.createPublication(project.ref, createForm)
 
-        val response = publicationResource.createPublication(projectRef, form)
+        val entity: Response = response
 
         assertNotNull(response)
-        assertEquals(Response.Status.CREATED.statusCode, response.status)
+        assertEquals(Response.Status.CREATED.statusCode, entity.status)
     }
 
     @Test
     fun updatePublication_OK() {
-        Mockito
-            .`when`(publicationRepository.findByRef(projectId, publicationRef))
-            .thenReturn(publication)
+        `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
 
-        val form = updatedPublicationForm
 
-        val response = publicationResource.updatePublication(projectRef, publicationRef, form)
+        val response = publicationResource.updatePublication(project.ref, publication.ref, updateForm)
 
         val entity: Publication = PublicationForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(form.comment, entity.comment)
-        assertEquals(form.version, entity.version)
+        assertEquals(updateForm.comment, entity.comment)
+        assertEquals(updateForm.version, entity.version)
     }
 
 
     @Test
     fun deletePublication_OK() {
-        Mockito
-            .`when`(publicationRepository.findByRef(projectId, publicationRef))
-            .thenReturn(publication)
+        publicationResource.deletePublication(project.ref, publication.ref)
 
-        publicationResource.deletePublication(projectRef, publicationRef)
-
-        //verifies the repo-call from the resource
-        Mockito.verify(publicationRepository).delete(publication)
+        verify(publicationRepository).delete(publication)
     }
 
-    /*
 
-// Todo se på senere
-@Test
-fun deletePublication_KO() {
-Mockito
-    .`when`(publicationRepository.delete(projectId, publicationRef))
-    .thenThrow(BadRequestException(PUBLICATION_BADREQUEST_DELETE))
+    /**
+     *
+     * KO's of relevant exceptions.
+     *
+     */
 
-try {
-    publicationResource.deletePublication(projectRef, publicationRef).entity as BadRequestException
 
-} catch (e: Exception) {
-    assertEquals(PUBLICATION_BADREQUEST_DELETE, e.message)
-}
-}
+    @Test
+    fun getPublication_KO() {
+        `when`(publicationRepository.findByRef(project.id, publication.ref))
+            .thenThrow(NotFoundException(PUBLICATION_NOTFOUND))
 
-*/
+        val exception = assertThrows(NotFoundException::class.java) {
+            publicationResource.getPublication(
+                project.ref,
+                publication.ref
+            )
+        }
+
+        assertEquals(PUBLICATION_NOTFOUND, exception.message)
+    }
+
+    @Test
+    fun createPublication_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            publicationResource.createPublication(
+                project.ref,
+                createForm,
+            )
+        }
+
+        assertEquals(PUBLICATION_BADREQUEST_CREATE, exception.message)
+    }
+
+    @Test
+    fun updatePublication_KO() {
+        `when`(
+            publicationRepository.findByRef(
+                project.id,
+                publication.ref
+            )
+        ).thenThrow(NotFoundException(PUBLICATION_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            publicationResource.updatePublication(
+                project.ref,
+                publication.ref,
+                updateForm
+            )
+        }
+
+        assertEquals(PUBLICATION_NOTFOUND, exception.message)
+    }
 
 }

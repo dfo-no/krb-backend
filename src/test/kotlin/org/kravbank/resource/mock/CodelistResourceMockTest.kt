@@ -8,22 +8,23 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
+import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.CodelistResource
 import org.kravbank.service.CodelistService
+import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import org.kravbank.utils.TestSetup
 import org.kravbank.utils.TestSetup.Arrange.codelists
-import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
 
 @QuarkusTest
-@TestSecurity(authorizationEnabled = false)
+@TestSecurity(authorizationEnabled = false) //disables Keycloak
 internal class CodelistResourceMockTest {
 
 
@@ -40,16 +41,20 @@ internal class CodelistResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
+    private lateinit var updateCodelistForm: CodelistForm
     private lateinit var codelist: Codelist
     private lateinit var project: Project
+    private lateinit var createForm: CodelistForm
 
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
+        updateCodelistForm = arrangeSetup.updatedCodelistForm
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
+        createForm = CodelistForm().fromEntity(codelist)
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
@@ -69,24 +74,7 @@ internal class CodelistResourceMockTest {
     }
 
     @Test
-    fun getCodelist_KO() {
-        `when`(codelistRepository.findByRef(project.id, codelist.ref))
-            .thenThrow(NotFoundException(CODELIST_NOTFOUND))
-        try {
-            codelistResource.getCodelistByRef(
-                project.ref,
-                codelist.ref
-            )
-        } catch (e: Exception) {
-            assertEquals(CODELIST_NOTFOUND, e.message)
-        }
-    }
-
-    @Test
     fun listCodelists_OK() {
-
-        // TODO  ikke nødvendig med typenarrowing / smart casts med Form istedenfor Response returverdi?
-
         val response = codelistResource.listCodelists(project.ref)
 
         val entity: List<CodelistForm> = response
@@ -106,9 +94,7 @@ internal class CodelistResourceMockTest {
         `when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
-        val form = CodelistForm().fromEntity(codelist)
-
-        val response: Response = codelistResource.createCodelist(project.ref, form)
+        val response: Response = codelistResource.createCodelist(project.ref, createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -128,18 +114,56 @@ internal class CodelistResourceMockTest {
 
     @Test
     fun updateCodelist_OK() {
-
         val response = codelistResource.updateCodelist(
             project.ref,
             codelist.ref,
-            updatedCodelistForm
+            updateCodelistForm
         )
 
         val entity: Codelist = CodelistForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updatedCodelistForm.title, entity.title)
+        assertEquals(updateCodelistForm.title, entity.title)
+        assertEquals(updateCodelistForm.description, entity.description)
+
     }
+
+
+    /**
+     *
+     * KO's of relevant exceptions.
+     *
+     */
+
+
+    @Test
+    fun getCodelist_KO() {
+        `when`(codelistRepository.findByRef(project.id, codelist.ref))
+            .thenThrow(NotFoundException(CODELIST_NOTFOUND))
+
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            codelistResource.getCodelistByRef(
+                project.ref,
+                codelist.ref
+            )
+        }
+        assertEquals(CODELIST_NOTFOUND, exception.message)
+    }
+
+
+    @Test
+    fun createCodelist_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            codelistResource.createCodelist(
+                project.ref,
+                createForm,
+            )
+        }
+
+        assertEquals(CODELIST_BADREQUEST_CREATE, exception.message)
+    }
+
 
     @Test
     fun updateCodelist_KO() {
@@ -154,10 +178,9 @@ internal class CodelistResourceMockTest {
             codelistResource.updateCodelist(
                 project.ref,
                 codelist.ref,
-                updatedCodelistForm
+                updateCodelistForm
             )
         }
-
         assertEquals(CODELIST_NOTFOUND, exception.message)
 
     }

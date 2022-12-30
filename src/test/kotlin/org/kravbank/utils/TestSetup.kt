@@ -8,6 +8,7 @@ class TestSetup {
 
     companion object Arrange {
 
+
         //project
         var project = Project()
         var newProject = Project()
@@ -23,10 +24,7 @@ class TestSetup {
         lateinit var newCode: Code
         lateinit var codeForm: CodeForm
         lateinit var updatedCodeForm: CodeForm
-        val project_codeRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val codelist_codeId = 4L
-        val codelist_codeRef = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
-        val code_codelistRef = "script1b69-edb2-431f-855a-4368e2bcddd1"
+
 
         //publication
         var publication = Publication()
@@ -34,9 +32,6 @@ class TestSetup {
         lateinit var newPublication: Publication
         lateinit var publicationForm: PublicationForm
         lateinit var updatedPublicationForm: PublicationForm
-        val publication_projectRef: String = "zzz4db69-edb2-431f-855a-4368e2bcddd1"
-        val project_publicationId: Long = 3L
-        val project_publicationRef: String = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
 
 
         //product
@@ -45,21 +40,15 @@ class TestSetup {
         lateinit var newProduct: Product
         lateinit var productForm: ProductForm
         lateinit var updatedProductForm: ProductForm
-        val project_productRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val project_productId = 3L
-        val product_projectRef = "edb4db69-edb2-431f-855a-4368e2bcddd1"
         val reqVariant_productRef = "rvrv1b69-edb2-431f-855a-4368e2bcddd1"
 
 
         //requirement
         var requirement = Requirement()
-        var requirements: MutableList<Requirement> = mutableListOf()
+        var requirements = mutableListOf<Requirement>()
         lateinit var newRequirement: Requirement
         lateinit var requirementForm: RequirementForm
         lateinit var updatedRequirementForm: RequirementForm
-        val project_requirementRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val project_requirementId = 2L
-        val requirement_projectRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
         val need_requirementRef = "need2b69-edb2-431f-855a-4368e2bcddd1"
 
 
@@ -69,9 +58,6 @@ class TestSetup {
         lateinit var newRequirementVariant: RequirementVariant
         lateinit var requirementVariantForm: RequirementVariantForm
         lateinit var updatedRequirementVariantForm: RequirementVariantForm
-        val project_requirementVariantRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val requirement_requirementVariantId = 12L
-        val requirement_requirementVariantRef = "req1b69-edb2-431f-855a-4368e2bcddd1"
         val requirementVariant_requirementRef = "rvrv3b69-edb2-431f-855a-4368e2bcddd1"
 
 
@@ -81,9 +67,6 @@ class TestSetup {
         lateinit var needForm: NeedForm
         lateinit var newNeed: Need
         lateinit var updatedNeedForm: NeedForm
-        val project_needRef = "aaa4db69-edb2-431f-855a-4368e2bcddd1"
-        val project_needId = 2L
-        val need_projectRef: String = "need1b69-edb2-431f-855a-4368e2bcddd1"
 
 
         //codelist
@@ -93,11 +76,8 @@ class TestSetup {
         lateinit var newCodelist_2: Codelist
         lateinit var codelistForm: CodelistForm
         lateinit var updatedCodelistForm: CodelistForm
-        val project_codelistRef = "bbb4db69-edb2-431f-855a-4368e2bcddd1"
-        val project_codelistId = 3L
-        val codelist_projectRef: String = "qqq4db69-edb2-431f-855a-4368e2bcddd1"
-
         private val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
+
 
         fun start() {
 
@@ -111,6 +91,7 @@ class TestSetup {
             project.publications = publications
             project.needs = needs
             project.products = products
+
 
             newProject = Project()
             newProject.title = "andre prosjekt"
@@ -153,10 +134,6 @@ class TestSetup {
             updatedCodeForm = CodeForm()
             updatedCodeForm.title = "Endre tittel som need"
             updatedCodeForm.description = "Endre beskrivelse som need"
-
-
-
-
 
             codes.add(code)
             codes.add(newCode)
@@ -271,6 +248,7 @@ class TestSetup {
 
             publications.add(publication)
             publications.add(newPublication)
+
 
             //requirement
             requirement = Requirement()

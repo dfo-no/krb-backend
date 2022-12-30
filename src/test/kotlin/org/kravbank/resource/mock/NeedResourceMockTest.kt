@@ -8,24 +8,26 @@ import org.junit.jupiter.api.Test
 import org.kravbank.dao.NeedForm
 import org.kravbank.domain.Need
 import org.kravbank.domain.Project
+import org.kravbank.lang.BadRequestException
+import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.NeedRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.NeedResource
 import org.kravbank.service.NeedService
+import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_CREATE
+import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.needs
-import org.kravbank.utils.TestSetup.Arrange.newNeed
 import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
+import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
 @QuarkusTest
 @TestSecurity(authorizationEnabled = false)
 internal class NeedResourceMockTest {
 
-    private final val projectRepository: ProjectRepository = Mockito.mock(ProjectRepository::class.java)
-    private final val needRepository: NeedRepository = Mockito.mock(NeedRepository::class.java)
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val needRepository: NeedRepository = mock(NeedRepository::class.java)
 
     private final val needService = NeedService(needRepository, projectRepository)
 
@@ -33,31 +35,36 @@ internal class NeedResourceMockTest {
 
     private val arrangeSetup = TestSetup.Arrange
 
+
+    private lateinit var updateNeedForm: NeedForm
+    private lateinit var needs: List<Need>
     private lateinit var need: Need
     private lateinit var project: Project
+    private lateinit var createForm: NeedForm
+
 
     @BeforeEach
     fun setUp() {
         arrangeSetup.start()
 
+
+        updateNeedForm = arrangeSetup.updatedNeedForm
+        needs = arrangeSetup.needs
         need = arrangeSetup.need
         project = arrangeSetup.project
+        createForm = NeedForm().fromEntity(need)
 
-        Mockito.`when`(projectRepository.findByRef(project.ref)).thenReturn(project)
-        Mockito.`when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+        `when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
+
 
     }
 
 
     @Test
     fun getNeed_OK() {
-        Mockito.`when`(
-            needRepository.findByRef(
-                need.id,
-                need.ref
-            )
-        ).thenReturn(need)
-
         val response = needResource.getNeed(project.ref, need.ref)
 
         val entity = NeedForm().toEntity(response)
@@ -69,8 +76,6 @@ internal class NeedResourceMockTest {
 
     @Test
     fun listNeeds_OK() {
-        Mockito.`when`(needRepository.listAllNeeds(project.id)).thenReturn(needs)
-
         val response = needResource.listNeeds(project.ref)
 
         assertNotNull(response)
@@ -84,18 +89,14 @@ internal class NeedResourceMockTest {
 
     @Test
     fun createNeed_OK() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(needRepository)
             .persist(ArgumentMatchers.any(Need::class.java))
 
-        Mockito
-            .`when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
+        `when`(needRepository.isPersistent(ArgumentMatchers.any(Need::class.java)))
             .thenReturn(true)
 
-        val form = NeedForm().fromEntity(need)
-
-        val response: Response = needResource.createNeed(project.ref, form)
+        val response: Response = needResource.createNeed(project.ref, createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
@@ -103,25 +104,20 @@ internal class NeedResourceMockTest {
 
     @Test
     fun deleteNeed_OK() {
-
         val response: Response = needResource.deleteNeed(project.ref, need.ref)
 
         assertNotNull(response)
         assertEquals(need.ref, response.entity)
-        Mockito.verify(needRepository).deleteById(need.id)
+        verify(needRepository).deleteById(need.id)
 
     }
 
     @Test
     fun updateNeed_OK() {
-        Mockito
-            .`when`(needRepository.findByRef(need.id, need.ref))
-            .thenReturn(newNeed)
-
         val response = needResource.updateNeed(
             project.ref,
             need.ref,
-            updatedNeedForm
+            updateNeedForm
         )
 
         val entity = NeedForm().toEntity(response)
@@ -129,5 +125,59 @@ internal class NeedResourceMockTest {
         assertNotNull(response)
         assertEquals(updatedNeedForm.title, entity.title)
         assertEquals(updatedNeedForm.description, entity.description)
+    }
+
+
+    /**
+     *
+     * KO's of relevant exceptions.
+     *
+     */
+
+    @Test
+    fun getNeed_KO() {
+        `when`(needRepository.findByRef(project.id, need.ref))
+            .thenThrow(NotFoundException(NEED_NOTFOUND))
+
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            needResource.getNeed(
+                project.ref,
+                need.ref
+            )
+        }
+        assertEquals(NEED_NOTFOUND, exception.message)
+    }
+
+    @Test
+    fun createNeed_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            needResource.createNeed(
+                project.ref,
+                createForm,
+            )
+        }
+
+        assertEquals(NEED_BADREQUEST_CREATE, exception.message)
+    }
+
+    @Test
+    fun updateNeed_KO() {
+        `when`(
+            needRepository.findByRef(
+                project.id,
+                need.ref
+            )
+        ).thenThrow(NotFoundException(NEED_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            needResource.updateNeed(
+                project.ref,
+                need.ref,
+                updateNeedForm
+            )
+        }
+
+        assertEquals(NEED_NOTFOUND, exception.message)
     }
 }

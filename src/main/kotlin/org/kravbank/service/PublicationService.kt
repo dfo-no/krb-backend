@@ -21,7 +21,6 @@ class PublicationService(
         return publicationRepository.findByRef(foundProject.id, publicationRef)
     }
 
-    @Throws(BackendException::class)
     fun list(projectRef: String): List<Publication> {
         val foundProject = projectRepository.findByRef(projectRef)
 
@@ -31,24 +30,24 @@ class PublicationService(
     @Throws(BackendException::class)
     fun create(projectRef: String, newPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
+
         val publication = PublicationForm().toEntity(newPublication)
         publication.project = foundProject
         publication.date = LocalDateTime.now()
-        publicationRepository.persistAndFlush(publication)
 
+        publicationRepository.persistAndFlush(publication)
         if (!publicationRepository.isPersistent(publication)) throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
 
         return publication
     }
 
-    @Throws(BackendException::class)
     fun delete(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(foundProject.id, publicationRef)
+
         publicationRepository.delete(publication)
 
         return publication
-        // throw BadRequestException("Bad request! Did not delete publication") TODO: Put somewhere else further up in chain
     }
 
     @Throws(BackendException::class)

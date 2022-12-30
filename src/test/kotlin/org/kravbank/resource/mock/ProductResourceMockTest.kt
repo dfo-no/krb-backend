@@ -1,58 +1,85 @@
 package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.ProductForm
 import org.kravbank.domain.Product
+import org.kravbank.domain.Project
+import org.kravbank.domain.Requirement
+import org.kravbank.domain.RequirementVariant
+import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProductRepository
+import org.kravbank.repository.ProjectRepository
+import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.ProductResource
+import org.kravbank.service.ProductService
+import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.product
-import org.kravbank.utils.TestSetup.Arrange.productForm
 import org.kravbank.utils.TestSetup.Arrange.products
-import org.kravbank.utils.TestSetup.Arrange.reqVariant_productRef
 import org.kravbank.utils.TestSetup.Arrange.updatedProductForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
 @QuarkusTest
 @TestSecurity(authorizationEnabled = false)
 internal class ProductResourceMockTest {
 
-    @InjectMock
-    lateinit var productRepository: ProductRepository
 
-    @Inject
-    lateinit var productResource: ProductResource
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val productRepository: ProductRepository = mock(ProductRepository::class.java)
+    private final val requirementVariantRepository: RequirementVariantRepository =
+        mock(RequirementVariantRepository::class.java)
 
-    private final val arrangeSetup = TestSetup.Arrange
+    private final val productService = ProductService(
+        productRepository = productRepository,
+        projectRepository = projectRepository,
+        requirementVariantRepository = requirementVariantRepository
+    )
 
-    private val projectId: Long = arrangeSetup.project_productId
-    private val projectRef: String = arrangeSetup.project_productRef
-    private val productRef: String = arrangeSetup.product_projectRef
+    val productResource = ProductResource(productService)
+
+    private val arrangeSetup = TestSetup.Arrange
+
+    private lateinit var updateProductForm: ProductForm
+    private lateinit var requirementVariant: RequirementVariant
+    private lateinit var requirement: Requirement
+    private lateinit var product: Product
+    private lateinit var project: Project
+    private lateinit var createForm: ProductForm
+
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+
+        updateProductForm = arrangeSetup.updatedProductForm
+        requirement = arrangeSetup.requirement
+        requirementVariant = arrangeSetup.requirementVariant
+        product = arrangeSetup.product
+        project = arrangeSetup.project
+        createForm = ProductForm().fromEntity(product)
+
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(productRepository.findByRef(project.id, product.ref)).thenReturn(product)
+        `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref)).thenReturn(
+            requirementVariant
+        )
+        `when`(productRepository.listAllProducts(project.id)).thenReturn(products)
 
     }
 
+
     @Test
     fun getProduct_OK() {
-        Mockito
-            .`when`(productRepository.findByRef(projectId, productRef))
-            .thenReturn(product)
-
-        val response = productResource.getProduct(projectRef, productRef)
+        val response = productResource.getProduct(project.ref, product.ref)
 
         val entity = ProductForm().toEntity(response)
 
@@ -61,131 +88,110 @@ internal class ProductResourceMockTest {
         assertEquals(product.description, entity.description)
     }
 
+
     @Test
     fun listProducts_OK() {
-        Mockito
-            .`when`(productRepository.listAllProducts(projectId))
-            .thenReturn(products)
-
-        val response = productResource.listProducts(projectRef)
+        val response = productResource.listProducts(project.ref)
 
         assertNotNull(response)
         assertFalse(response.isEmpty())
-        assertEquals(product.title, response[0].title)
-        assertEquals(product.description, response[0].description)
+        val firstObjectInList = response[0]
+
+        assertEquals(product.title, firstObjectInList.title)
+        assertEquals(product.description, firstObjectInList.description)
+
     }
 
+
     @Test
-    fun createRequirement_OK() {
-        Mockito
-            .doNothing()
+    fun createProduct_OK() {
+        doNothing()
             .`when`(productRepository)
             .persist(ArgumentMatchers.any(Product::class.java))
 
-        Mockito
-            .`when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
+        `when`(productRepository.isPersistent(ArgumentMatchers.any(Product::class.java)))
             .thenReturn(true)
 
-        val form = productForm
-        form.requirementVariantRef = reqVariant_productRef
-
-        val response: Response = productResource.createProduct(projectRef, productForm)
+        val response: Response = productResource.createProduct(project.ref, createForm)
 
         assertNotNull(response)
         assertEquals(Response.Status.CREATED.statusCode, response.status)
+
     }
 
 
     @Test
     fun updateProduct_OK() {
-        Mockito
-            .`when`(productRepository.findByRef(projectId, productRef))
-            .thenReturn(product)
-
-        val form = updatedProductForm
-
-        val response = productResource.updateProduct(projectRef, productRef, form)
+        val response = productResource.updateProduct(project.ref, product.ref, updatedProductForm)
 
         val entity: Product = ProductForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(form.title, entity.title)
-        assertEquals(form.description, entity.description)
+        assertEquals(updateProductForm.title, entity.title)
+        assertEquals(updateProductForm.description, entity.description)
+
     }
+
 
     @Test
-    fun updateRequirement_KO() {
-        Mockito
-            .`when`(productRepository.findByRef(projectId, productRef))
-            .thenThrow(NotFoundException(PRODUCT_NOTFOUND))
+    fun deleteProduct_OK() {
+        val response: Response = productResource.deleteProduct(project.ref, product.ref)
 
-        val form = updatedProductForm
+        assertNotNull(response)
+        assertEquals(product.ref, response.entity)
+        verify(productRepository).delete(product)
 
-        try {
-            productResource.updateProduct(
-                projectRef,
-                productRef,
-                form
-            )
-
-        } catch (e: Exception) {
-            assertEquals(PRODUCT_NOTFOUND, e.message)
-        }
     }
+
+
+    /**
+     *
+     * KO's of relevant exceptions.
+     *
+     */
+
 
     @Test
     fun getProduct_KO() {
-        Mockito
-            .`when`(productRepository.findByRef(projectId, productRef))
+        `when`(productRepository.findByRef(project.id, product.ref))
             .thenThrow(NotFoundException(PRODUCT_NOTFOUND))
 
-        try {
-
+        val exception = assertThrows(NotFoundException::class.java) {
             productResource.getProduct(
-                projectRef,
-                productRef
+                project.ref,
+                product.ref,
             )
-
-        } catch (e: Exception) {
-            assertEquals(PRODUCT_NOTFOUND, e.message)
         }
+        assertEquals(PRODUCT_NOTFOUND, exception.message)
+
     }
 
 
-    /*
-        todo:
-          Denne testen er nyttig, men kommer tilbake til den når jeg får løst enten med
-          1. mock og assert med bool retur fra repo.
-          eller
-          2. endre fra bool til entity retur fra repo
-
-        @Test
-        fun deleteProduct_OK() {
-            Mockito
-                .`when`(productRepository.deleteProduct(productId))
-                .thenReturn(true)
-
-            val response: Response = productResource.deleteProduct(projectRef, productRef)
-
-            assertNotNull(response)
-            // assertEquals()
-            assertEquals("98870ds9fgsdfklmklklds", response.entity.toString())
-
-        }
     @Test
-    fun deleteRequirement_KO() {
-        //mock
-        Mockito
-            .`when`(productRepository.findByRef(productId, productRef))
-            .thenThrow(NotFoundException("Product not found"))
-
-        try {
-            productResource.deleteProduct(projectRef, productRef)
-        } catch (e: Exception) {
-            //print(e.message)
-            assertEquals("Product not found", e.message)
+    fun createProduct_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            productResource.createProduct(
+                project.ref,
+                createForm,
+            )
         }
+        assertEquals(PRODUCT_BADREQUEST_CREATE, exception.message)
     }
-     */
+
+
+    @Test
+    fun updateProduct_KO() {
+        `when`(productRepository.findByRef(project.id, product.ref))
+            .thenThrow(NotFoundException(PRODUCT_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            productResource.updateProduct(
+                project.ref,
+                product.ref,
+                updatedProductForm
+            )
+        }
+        assertEquals(PRODUCT_NOTFOUND, exception.message)
+    }
 
 }
