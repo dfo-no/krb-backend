@@ -135,11 +135,18 @@ internal class ProductResourceMockTest {
 
     @Test
     fun deleteProduct_OK() {
+
+        //To check that delete timestamp is asserted, we need to call real method
+        `when`(productRepository.delete(product)).thenCallRealMethod()
+
         val response: Response = productResource.deleteProduct(project.ref, product.ref)
 
         assertNotNull(response)
         assertEquals(product.ref, response.entity)
         verify(productRepository).delete(product)
+
+        //soft deleted method adds deleted timestamp
+        assertNotNull(product.deletedDate)
 
     }
 
