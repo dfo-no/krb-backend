@@ -1,7 +1,5 @@
 package org.kravbank.resource.mock
 
-import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,22 +22,20 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
-@QuarkusTest
-@TestSecurity(authorizationEnabled = false)
 internal class CodeResourceMockTest {
 
 
-    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
-    private final val codelistRepository: CodelistRepository = mock(CodelistRepository::class.java)
-    private final val codeRepository: CodeRepository = mock(CodeRepository::class.java)
+    private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private val codelistRepository: CodelistRepository = mock(CodelistRepository::class.java)
+    private val codeRepository: CodeRepository = mock(CodeRepository::class.java)
 
-    private final val codeService = CodeService(
+    private val codeService = CodeService(
         codeRepository = codeRepository,
         codelistRepository = codelistRepository,
         projectRepository = projectRepository
     )
 
-    val codeResource = CodeResource(codeService)
+    private val codeResource = CodeResource(codeService)
 
     private val arrangeSetup = TestSetup.Arrange
 
@@ -51,25 +47,33 @@ internal class CodeResourceMockTest {
 
     @BeforeEach
     fun setUp() {
+
         arrangeSetup.start()
 
-
         code = arrangeSetup.code
+        codes = arrangeSetup.codes
         codelist = arrangeSetup.codelist
         project = arrangeSetup.project
         updateCodeForm = arrangeSetup.updatedCodeForm
         createForm = CodeForm().fromEntity(code)
 
-        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
-        `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
-        `when`(codeRepository.findByRef(codelist.id, code.ref)).thenReturn(code)
-        `when`(codeRepository.listAllCodes(codelist.id)).thenReturn(codes)
-
+        `when`(projectRepository.findByRef(anyString())).thenReturn(project)
+        `when`(codelistRepository.findByRef(anyLong(), anyString())).thenReturn(codelist)
+        `when`(codeRepository.findByRef((anyLong()), anyString())).thenReturn(code)
+        `when`(codeRepository.listAllCodes(anyLong())).thenReturn(codes)
     }
 
 
     @Test
     fun getCode_OK() {
+
+        `when`(
+            codeRepository.findByRef(
+                codelist.id,
+                code.ref
+            )
+        ).thenReturn(code)
+
         val response = codeResource.getCode(project.ref, codelist.ref, code.ref)
 
         val entity: Code = CodeForm().toEntity(response)
@@ -81,6 +85,9 @@ internal class CodeResourceMockTest {
 
     @Test
     fun listCodes_OK() {
+
+        `when`(codeRepository.listAllCodes(codelist.id)).thenReturn(codes)
+
         val response = codeResource.listCodes(
             project.ref,
             codelist.ref
@@ -93,11 +100,11 @@ internal class CodeResourceMockTest {
         val firstObjectInList = entity[0]
         assertEquals(codes[0].title, firstObjectInList.title)
         assertEquals(codes[0].description, firstObjectInList.description)
-
     }
 
     @Test
     fun createCode_OK() {
+
         doNothing()
             .`when`(codeRepository)
             .persist(ArgumentMatchers.any(Code::class.java))
@@ -117,6 +124,10 @@ internal class CodeResourceMockTest {
 
     @Test
     fun deleteCode_OK() {
+
+        `when`(codeRepository.deleteById(anyLong()))
+            .thenReturn(true)
+
         val response: Response = codeResource.deleteCode(project.ref, codelist.ref, code.ref)
 
         assertNotNull(response)
@@ -126,6 +137,13 @@ internal class CodeResourceMockTest {
 
     @Test
     fun updateCode_OK() {
+
+        `when`(
+            codeRepository.findByRef(
+                codelist.id,
+                code.ref
+            )
+        ).thenReturn(code)
 
         val response = codeResource.updateCode(
             project.ref,
@@ -151,6 +169,7 @@ internal class CodeResourceMockTest {
 
     @Test
     fun getCode_KO() {
+
         `when`(codeRepository.findByRef(codelist.id, code.ref))
             .thenThrow(NotFoundException(CODE_NOTFOUND))
 
@@ -167,6 +186,7 @@ internal class CodeResourceMockTest {
 
     @Test
     fun createCode_KO() {
+
         val exception = assertThrows(BadRequestException::class.java) {
             codeResource.createCode(
                 project.ref,
@@ -181,6 +201,7 @@ internal class CodeResourceMockTest {
 
     @Test
     fun updateCode_KO() {
+
         `when`(
             codelistRepository.findByRef(
                 project.id,
@@ -197,6 +218,5 @@ internal class CodeResourceMockTest {
             )
         }
         assertEquals(CODE_NOTFOUND, exception.message)
-
     }
 }
