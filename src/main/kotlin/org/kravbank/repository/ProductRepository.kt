@@ -4,10 +4,8 @@ import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_NOTFOUND
-import java.time.LocalDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
@@ -21,32 +19,17 @@ class ProductRepository : BackendRepository<Product>() {
                 ref,
                 projectId
             ).firstResult<Product>()
+
         if (product?.deletedDate == null) {
             return product
+
         } else throw NotFoundException(PRODUCT_NOTFOUND)
     }
 
     fun listAllProducts(id: Long): List<Product> {
         return find("project_id_fk", id)
             .stream<Product>()
-            .filter { p -> p.deletedDate == null }
             .toList()
-    }
-
-    @Throws(BackendException::class)
-    fun createProduct(product: Product) {
-        persistAndFlush(product)
-        if (!product.isPersistent) {
-            throw BadRequestException(PRODUCT_BADREQUEST_CREATE)
-        }
-    }
-
-    @Throws(BackendException::class)
-    fun deleteProduct(id: Long): Boolean {
-        val deletedDate = LocalDateTime.now()
-        val updated = update("deleteddate = ?1 where id = ?2", deletedDate, id)
-        if (updated > 0) return true
-        return false
     }
 
     @Throws(BackendException::class)

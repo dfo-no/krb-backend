@@ -3,14 +3,15 @@ package org.kravbank.service
 import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.Project
 import org.kravbank.lang.BackendException
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
+import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
 
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
-    @Throws(BackendException::class)
     fun get(projectRef: String): Project {
         return projectRepository.findByRef(projectRef)
     }
@@ -22,29 +23,28 @@ class ProjectService(val projectRepository: ProjectRepository) {
     @Throws(BackendException::class)
     fun create(newProject: ProjectForm): Project {
         val project = ProjectForm().toEntity(newProject)
-        projectRepository.createProject(project)
+
+        projectRepository.persistAndFlush(project)
+        if (!projectRepository.isPersistent(project)) throw BadRequestException(PROJECT_BADREQUEST_CREATE)
+
         return project
     }
 
-    @Throws(BackendException::class)
-    fun delete(projectRef: String): Boolean {
+    fun delete(projectRef: String): Project {
         val foundProject = projectRepository.findByRef(projectRef)
-        /* //TODO denne bør oppdateres fra native query i stedenfor
-        foundProject.deletedDate = LocalDateTime.now()
-        projectRepository.updateProject(foundProject.id, foundProject)
-         */
-        return projectRepository.deleteById(foundProject.id)
-        /*if (deleted) return foundProject
-        throw BadRequestException("Bad request! Did not delete project")
-         */
+
+        projectRepository.delete(foundProject)
+
+        return foundProject
     }
 
-    @Throws(BackendException::class)
     fun update(projectRef: String, updatedProject: ProjectForm): Project {
         val foundProject = projectRepository.findByRef(projectRef)
+
         val update = ProjectForm().toEntity(updatedProject)
+
         projectRepository.updateProject(foundProject.id, update)
 
-        return update.apply { ref = foundProject.ref }
+        return update.apply { ref = update.ref }
     }
 }

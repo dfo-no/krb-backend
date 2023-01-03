@@ -1,74 +1,79 @@
 package org.kravbank.service
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.CodelistForm
 import org.kravbank.domain.Codelist
+import org.kravbank.domain.Project
 import org.kravbank.repository.CodelistRepository
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codelist
-import org.kravbank.utils.TestSetup.Arrange.codelistForm
 import org.kravbank.utils.TestSetup.Arrange.codelists
-import org.kravbank.utils.TestSetup.Arrange.updatedCodelistForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.verify
 
 @QuarkusTest
 internal class CodelistServiceTest {
 
-    @InjectMock
-    lateinit var codelistRepository: CodelistRepository
+    private final val projectRepository: ProjectRepository = Mockito.mock(ProjectRepository::class.java)
+    private final val codelistRepository: CodelistRepository = Mockito.mock(CodelistRepository::class.java)
 
-    @Inject
-    lateinit var codelistService: CodelistService
+    private final val codelistService = CodelistService(codelistRepository, projectRepository)
 
-    private final val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup.Arrange
 
-    private final val projectId: Long = arrangeSetup.project_codelistId
-
-    private final val codelistRef: String = arrangeSetup.codelist_projectRef
-
-    private final val projectRef: String = arrangeSetup.project_codelistRef
+    private lateinit var createForm: CodelistForm
+    private lateinit var updateForm: CodelistForm
+    private lateinit var codelist: Codelist
+    private lateinit var project: Project
 
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+        updateForm = arrangeSetup.updatedCodelistForm
+        codelist = arrangeSetup.codelist
+        project = arrangeSetup.project
+        createForm = CodelistForm().fromEntity(codelist)
+
+
+        Mockito.`when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        Mockito.`when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
+        Mockito.`when`(codelistRepository.listAllCodelists(project.id)).thenReturn(codelists)
 
     }
 
+
     @Test
     fun get() {
-        Mockito
-            .`when`(
-                codelistRepository
-                    .findByRef(projectId, codelistRef)
-            ).thenReturn(codelist)
+        val response = codelistService.get(project.ref, codelist.ref)
 
-        val mockedCodelist: Codelist =
-            codelistService.get(projectRef, codelistRef)
+        val entity: Codelist = response
 
-        Assertions.assertEquals(codelist.title, mockedCodelist.title)
-        Assertions.assertEquals(codelist.id, mockedCodelist.id)
-        Assertions.assertEquals(codelist.project, mockedCodelist.project)
-        Assertions.assertEquals(codelist.description, mockedCodelist.description)
+        assertEquals(codelist.title, entity.title)
+        assertEquals(codelist.id, entity.id)
+        assertEquals(codelist.project, entity.project)
+        assertEquals(codelist.description, entity.description)
     }
 
     @Test
     fun list() {
-        Mockito
-            .`when`(codelistRepository.listAllCodelists(projectId))
-            .thenReturn(codelists)
+        val response = codelistService.list(project.ref)
 
-        val mockedCodelists: List<Codelist> = codelistService.list(projectRef)
+        val entity: List<Codelist> = response
 
-        Assertions.assertEquals(codelists[0].title, mockedCodelists[0].title)
-        Assertions.assertEquals(codelists[0].description, mockedCodelists[0].description)
-        Assertions.assertEquals(codelists[0].project, mockedCodelists[0].project)
+        assertNotNull(response)
+        Assertions.assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(codelists[0].title, firstObjectInList.title)
+        assertEquals(codelists[0].description, firstObjectInList.description)
+        assertEquals(codelists[0].project, firstObjectInList.project)
     }
 
     @Test
@@ -82,60 +87,40 @@ internal class CodelistServiceTest {
             .`when`(codelistRepository.isPersistent(ArgumentMatchers.any(Codelist::class.java)))
             .thenReturn(true)
 
-        val form = codelistForm
 
-        val mockedCodelist: Codelist =
+        val response =
             codelistService.create(
                 arrangeSetup.codelist.project!!.ref,
-                form
+                createForm
             )
 
-        Assertions.assertNotNull(mockedCodelist)
-        Assertions.assertEquals(form.title, mockedCodelist.title)
-        Assertions.assertEquals(form.description, mockedCodelist.description)
+        val entity: Codelist = response
+
+        assertNotNull(entity)
+        assertEquals(createForm.title, entity.title)
+        assertEquals(createForm.description, entity.description)
     }
 
-    /*
-    //TODO fiks nullpointer error
-          Slettet  deleteCodelist fra codelist repo ,
-           brukte i steden panaches  deleteById fra serviceklassen
-           codeliste service kaster error foundCodlist er null, noe som er merkelig siden begge metodene returnerer boolean (samme mockito given-setup)
 
     @Test
     fun delete() {
+        codelistService.delete(project.ref, codelist.ref)
 
-        Mockito
-            .`when`(
-                codelistRepository.deleteById(
-                    codelist_projectId
-                )
-            )
-            .thenReturn(true)
-
-        val result = codelistService.delete(projectRef, codelistRef)
-
-        Assertions.assertNotNull(result)
-        Assertions.assertEquals(true, result)
+        verify(codelistRepository).deleteById(codelist.id)
     }
-
-     */
 
     @Test
     fun update() {
-        Mockito
-            .`when`(codelistRepository.findByRef(projectId, codelistRef))
-            .thenReturn(arrangeSetup.codelist)
-
-        val form = updatedCodelistForm
-
-        val mockedCodelist: Codelist = codelistService.update(
-            projectRef,
-            codelistRef,
-            form
+        val response = codelistService.update(
+            project.ref,
+            codelist.ref,
+            updateForm
         )
 
-        Assertions.assertNotNull(mockedCodelist)
-        Assertions.assertEquals(form.title, mockedCodelist.title)
-        Assertions.assertEquals(form.description, mockedCodelist.description)
+        val entity: Codelist = response
+
+        assertNotNull(response)
+        assertEquals(updateForm.title, entity.title)
+        assertEquals(updateForm.description, entity.description)
     }
 }

@@ -1,141 +1,132 @@
 package org.kravbank.service
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.kravbank.dao.PublicationForm
+import org.kravbank.domain.Project
 import org.kravbank.domain.Publication
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.publication
-import org.kravbank.utils.TestSetup.Arrange.publications
-import org.kravbank.utils.TestSetup.Arrange.updatedPublicationForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 
 @QuarkusTest
 internal class PublicationServiceTest {
 
-    @InjectMock
-    lateinit var publicationRepository: PublicationRepository
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val publicationRepository: PublicationRepository = mock(PublicationRepository::class.java)
 
-    @Inject
-    lateinit var publicationService: PublicationService
 
-    private final val arrangeSetup = TestSetup.Arrange
+    val publicationService = PublicationService(
+        publicationRepository = publicationRepository,
+        projectRepository = projectRepository
+    )
 
-    private final val projectId: Long = arrangeSetup.project_publicationId
 
-    private final val projectRef: String = arrangeSetup.project_publicationRef
+    private val arrangeSetup = TestSetup.Arrange
 
-    private final val publicationRef: String = arrangeSetup.publication_projectRef
+    private lateinit var createForm: PublicationForm
+    private lateinit var updateForm: PublicationForm
+    private lateinit var publications: List<Publication>
+    private lateinit var publication: Publication
+    private lateinit var project: Project
 
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+
+        publications = arrangeSetup.publications
+        publication = arrangeSetup.publication
+        project = arrangeSetup.project
+        updateForm = arrangeSetup.updatedPublicationForm
+        createForm = PublicationForm().fromEntity(publication)
+
+
+
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
+        `when`(publicationRepository.listAllPublications(project.id)).thenReturn(publications)
 
     }
 
+
     @Test
     fun get() {
-        Mockito
-            .`when`(
-                publicationRepository.findByRef(
-                    projectId,
-                    publicationRef
-                )
+        val response =
+            publicationService.get(
+                project.ref,
+                publication.ref
             )
-            .thenReturn(publication)
 
-        val mockedPublication: Publication =
-            publicationService.get(arrangeSetup.project_publicationRef, arrangeSetup.publication_projectRef)
+        val entity: Publication = response
 
-        Assertions.assertEquals(publication.comment, mockedPublication.comment)
-        Assertions.assertEquals(publication.id, mockedPublication.id)
-        Assertions.assertEquals(publication.project, mockedPublication.project)
-        Assertions.assertEquals(publication.date, mockedPublication.date)
+        assertEquals(publication.comment, entity.comment)
+        assertEquals(publication.id, entity.id)
+        assertEquals(publication.project, entity.project)
+        assertEquals(publication.date, entity.date)
     }
 
     @Test
     fun list() {
-        Mockito.`when`(
-            publicationRepository
-                .listAllPublications(projectId)
-        ).thenReturn(publications)
 
-        val mockedPublications: List<Publication> = publicationService.list(arrangeSetup.project_publicationRef)
+        val response = publicationService.list(project.ref)
 
-        Assertions.assertEquals(publications[0].comment, mockedPublications[0].comment)
-        Assertions.assertEquals(publications[0].id, mockedPublications[0].id)
-        Assertions.assertEquals(publications[0].project, mockedPublications[0].project)
-        Assertions.assertEquals(publications[0].date, mockedPublications[0].date)
+        val entity: List<Publication> = response
+
+        assertNotNull(response)
+        assertFalse(entity.isEmpty())
+        val firstObjectInList = entity[0]
+        assertEquals(publications[0].comment, firstObjectInList.comment)
+        assertEquals(publications[0].id, firstObjectInList.id)
+        assertEquals(publications[0].project, firstObjectInList.project)
+        assertEquals(publications[0].date, firstObjectInList.date)
     }
 
     @Test
     fun create() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(publicationRepository)
             .persist(ArgumentMatchers.any(Publication::class.java))
 
-        Mockito
-            .`when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
+        `when`(publicationRepository.isPersistent(ArgumentMatchers.any(Publication::class.java)))
             .thenReturn(true)
 
-        val mockedPublication: Publication =
-            publicationService.create(arrangeSetup.publication.project!!.ref, arrangeSetup.publicationForm)
+        val response =
+            publicationService.create(project.ref, createForm)
 
-        Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(arrangeSetup.newPublication.comment, mockedPublication.comment)
+        val entity: Publication = response
 
-        //TODO finn bedre måte å teste versjon på ?
-        //Assertions.assertEquals(arrangeSetup.newPublication.version, mockedPublication.version)
+        assertNotNull(entity)
+        assertEquals(publication.comment, entity.comment)
+        assertEquals(publication.version, entity.version)
     }
 
     @Test
     fun delete() {
-        Mockito
-            .`when`(publicationRepository.findByRef(projectId, publicationRef))
-            .thenReturn(publication)
+        publicationService.delete(project.ref, publication.ref)
 
-        publicationService.delete(projectRef, publicationRef)
-
-        //verifies the repo-call from the resource
-        Mockito.verify(publicationRepository).delete(publication)
+        verify(publicationRepository).delete(publication)
 
     }
 
     @Test
     fun update() {
-        Mockito
-            .`when`(
-                publicationRepository.findByRef(
-                    projectId,
-                    publicationRef
-                )
-            ).thenReturn(publication)
-
-        val form = updatedPublicationForm
-
-
-        val mockedPublication: Publication = publicationService.update(
-            projectRef,
-            publicationRef,
-            form
+        val response = publicationService.update(
+            project.ref,
+            publication.ref,
+            updateForm
         )
 
+        val entity: Publication = response
 
-        Assertions.assertNotNull(mockedPublication)
-        Assertions.assertEquals(form.comment, mockedPublication.comment)
-
-        //TODO finn bedre måte å teste versjon på ?
-        // Assertions.assertEquals(form.version, mockedPublication.version)
-
-
+        assertNotNull(entity)
+        assertEquals(updateForm.comment, entity.comment)
+        assertEquals(updateForm.version, entity.version)
     }
-
 }

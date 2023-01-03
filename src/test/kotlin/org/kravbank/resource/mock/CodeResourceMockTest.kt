@@ -1,111 +1,114 @@
 package org.kravbank.resource.mock
 
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodeForm
 import org.kravbank.domain.Code
+import org.kravbank.domain.Codelist
+import org.kravbank.domain.Project
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.CodeRepository
+import org.kravbank.repository.CodelistRepository
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.resource.CodeResource
-import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_DELETE
+import org.kravbank.service.CodeService
+import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.code
-import org.kravbank.utils.TestSetup.Arrange.codeForm
 import org.kravbank.utils.TestSetup.Arrange.codes
-import org.kravbank.utils.TestSetup.Arrange.newCode
-import org.kravbank.utils.TestSetup.Arrange.updatedCodeForm
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import javax.inject.Inject
+import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
 @QuarkusTest
 @TestSecurity(authorizationEnabled = false)
 internal class CodeResourceMockTest {
 
-    @InjectMock
-    lateinit var codeRepository: CodeRepository
 
-    @Inject
-    lateinit var codeResource: CodeResource
+    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private final val codelistRepository: CodelistRepository = mock(CodelistRepository::class.java)
+    private final val codeRepository: CodeRepository = mock(CodeRepository::class.java)
 
-    final val arrangeSetup = TestSetup.Arrange
+    private final val codeService = CodeService(
+        codeRepository = codeRepository,
+        codelistRepository = codelistRepository,
+        projectRepository = projectRepository
+    )
 
-    private final val codelistId: Long = arrangeSetup.codelist_codeId
-    private final val codelistRef: String = arrangeSetup.codelist_codeRef
-    private final val codeRef: String = arrangeSetup.code_codelistRef
-    private final val projectRef: String = arrangeSetup.project_codeRef
+    val codeResource = CodeResource(codeService)
+
+    private val arrangeSetup = TestSetup.Arrange
+
+    private lateinit var code: Code
+    private lateinit var codelist: Codelist
+    private lateinit var project: Project
+    private lateinit var updateCodeForm: CodeForm
+    private lateinit var createForm: CodeForm
 
     @BeforeEach
     fun setUp() {
-
         arrangeSetup.start()
+
+
+        code = arrangeSetup.code
+        codelist = arrangeSetup.codelist
+        project = arrangeSetup.project
+        updateCodeForm = arrangeSetup.updatedCodeForm
+        createForm = CodeForm().fromEntity(code)
+
+        `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
+        `when`(codelistRepository.findByRef(project.id, codelist.ref)).thenReturn(codelist)
+        `when`(codeRepository.findByRef(codelist.id, code.ref)).thenReturn(code)
+        `when`(codeRepository.listAllCodes(codelist.id)).thenReturn(codes)
 
     }
 
 
     @Test
     fun getCode_OK() {
-        Mockito
-            .`when`(
-                codeRepository.findByRef(
-                    codelistId,
-                    codeRef
-                )
-            ).thenReturn(code)
-
-        val response = codeResource.getCode(
-            projectRef,
-            codelistRef,
-            codeRef
-        )
-
-        assertNotNull(response)
+        val response = codeResource.getCode(project.ref, codelist.ref, code.ref)
 
         val entity: Code = CodeForm().toEntity(response)
 
+        assertNotNull(response)
         assertEquals(code.title, entity.title)
         assertEquals(code.description, entity.description)
     }
 
     @Test
     fun listCodes_OK() {
-        Mockito
-            .`when`(codeRepository.listAllCodes(codelistId))
-            .thenReturn(codes)
         val response = codeResource.listCodes(
-            projectRef,
-            codelistRef
+            project.ref,
+            codelist.ref
         )
 
         val entity: List<CodeForm> = response
 
         assertNotNull(response)
         assertFalse(entity.isEmpty())
-        assertEquals(codes[0].title, entity[0].title)
-        assertEquals(codes[0].description, entity[0].description)
+        val firstObjectInList = entity[0]
+        assertEquals(codes[0].title, firstObjectInList.title)
+        assertEquals(codes[0].description, firstObjectInList.description)
+
     }
 
     @Test
     fun createCode_OK() {
-        Mockito
-            .doNothing()
+        doNothing()
             .`when`(codeRepository)
             .persist(ArgumentMatchers.any(Code::class.java))
-        Mockito
-            .`when`(codeRepository.isPersistent(ArgumentMatchers.any(Code::class.java)))
+
+        `when`(codeRepository.isPersistent(ArgumentMatchers.any(Code::class.java)))
             .thenReturn(true)
 
         val response: Response = codeResource.createCode(
-            projectRef,
-            codelistRef,
-            codeForm
+            project.ref,
+            codelist.ref,
+            createForm
         )
 
         assertNotNull(response)
@@ -114,68 +117,86 @@ internal class CodeResourceMockTest {
 
     @Test
     fun deleteCode_OK() {
-        Mockito
-            .`when`(codeRepository.deleteCode(codelistId, codeRef))
-            .thenReturn(newCode)
-
-        val response: Response = codeResource.deleteCode(projectRef, codelistRef, codeRef)
+        val response: Response = codeResource.deleteCode(project.ref, codelist.ref, code.ref)
 
         assertNotNull(response)
-        assertEquals(newCode.ref, response.entity)
-    }
-
-    @Test
-    fun deleteCode_KO() {
-        Mockito
-            .`when`(codeRepository.deleteCode(codelistId, codeRef))
-            .thenThrow(BadRequestException(CODE_BADREQUEST_DELETE))
-        try {
-            codeResource.deleteCode(projectRef, codelistRef, codeRef).entity as BadRequestException
-        } catch (e: Exception) {
-            assertEquals(CODE_BADREQUEST_DELETE, e.message)
-        }
+        assertEquals(code.ref, response.entity)
+        verify(codeRepository).deleteById(code.id)
     }
 
     @Test
     fun updateCode_OK() {
-        Mockito
-            .`when`(
-                codeRepository.findByRef(
-                    codelistId,
-                    codeRef
-                )
-            )
-            .thenReturn(arrangeSetup.newCode)
 
         val response = codeResource.updateCode(
-            projectRef,
-            codelistRef,
-            codeRef,
-            updatedCodeForm
+            project.ref,
+            codelist.ref,
+            code.ref,
+            updateCodeForm
         )
 
         val entity: Code = CodeForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updatedCodeForm.title, entity.title)
-        assertEquals(updatedCodeForm.description, entity.description)
+        assertEquals(updateCodeForm.title, entity.title)
+        assertEquals(updateCodeForm.description, entity.description)
     }
+
+
+    /**
+     *
+     * Below are KO's of relevant exceptions.
+     *
+     */
+
 
     @Test
     fun getCode_KO() {
-        Mockito
-            .`when`(codeRepository.findByRef(codelistId, codeRef))
+        `when`(codeRepository.findByRef(codelist.id, code.ref))
             .thenThrow(NotFoundException(CODE_NOTFOUND))
-        try {
 
+        val exception = assertThrows(NotFoundException::class.java) {
             codeResource.getCode(
-                projectRef,
-                codelistRef,
-                codeRef
+                project.ref,
+                codelist.ref,
+                code.ref,
             )
-
-        } catch (e: Exception) {
-            assertEquals(CODE_NOTFOUND, e.message)
         }
+
+        assertEquals(CODE_NOTFOUND, exception.message)
+    }
+
+    @Test
+    fun createCode_KO() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            codeResource.createCode(
+                project.ref,
+                codelist.ref,
+                createForm,
+            )
+        }
+
+        assertEquals(CODE_BADREQUEST_CREATE, exception.message)
+    }
+
+
+    @Test
+    fun updateCode_KO() {
+        `when`(
+            codelistRepository.findByRef(
+                project.id,
+                codelist.ref
+            )
+        ).thenThrow(NotFoundException(CODE_NOTFOUND))
+
+        val exception = assertThrows(NotFoundException::class.java) {
+            codeResource.updateCode(
+                project.ref,
+                codelist.ref,
+                code.ref,
+                updateCodeForm
+            )
+        }
+        assertEquals(CODE_NOTFOUND, exception.message)
+
     }
 }

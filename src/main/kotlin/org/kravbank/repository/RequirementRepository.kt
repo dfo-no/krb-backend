@@ -4,8 +4,6 @@ import org.kravbank.domain.Requirement
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_CREATE
-import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_DELETE
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_BADREQUEST_UPDATE
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENT_NOTFOUND
 import java.util.*
@@ -21,31 +19,14 @@ class RequirementRepository : BackendRepository<Requirement>() {
                 ref,
                 projectId
             ).firstResult<Requirement>()
+
         return Optional.ofNullable(requirement).orElseThrow { NotFoundException(REQUIREMENT_NOTFOUND) }
     }
 
-    @Throws(BackendException::class)
     fun listAllRequirements(id: Long): List<Requirement> {
         return find("project_id_fk", id)
             .stream<Requirement>()
             .toList()
-    }
-
-    @Throws(BackendException::class)
-    fun createRequirement(requirement: Requirement) {
-        persistAndFlush(requirement)
-        if (!requirement.isPersistent) {
-            throw BadRequestException(REQUIREMENT_BADREQUEST_CREATE)
-        }
-    }
-
-    @Throws(BackendException::class)
-    fun deleteRequirement(projectId: Long, requirementRef: String): Requirement {
-        val deleted: Boolean
-        val found = findByRef(projectId, requirementRef)
-        deleted = deleteById(found.id)
-        if (!deleted) throw BadRequestException(REQUIREMENT_BADREQUEST_DELETE)
-        return found
     }
 
     @Throws(BackendException::class)

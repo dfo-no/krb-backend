@@ -31,8 +31,8 @@ class CodelistService(
         val project = projectRepository.findByRef(projectRef)
         val codelist = CodelistForm().toEntity(newCodelist)
         codelist.project = project
-        codelistRepository.persistAndFlush(codelist)
 
+        codelistRepository.persistAndFlush(codelist)
         if (!codelistRepository.isPersistent(codelist)) throw BadRequestException(CODELIST_BADREQUEST_CREATE)
 
         return codelist
@@ -43,6 +43,7 @@ class CodelistService(
     fun delete(projectRef: String, codelistRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+
         return codelistRepository.deleteById(foundCodelist.id)
     }
 
@@ -50,6 +51,7 @@ class CodelistService(
     fun update(projectRef: String, codelistRef: String, updatedCodelist: CodelistForm): Codelist {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+
         val update = CodelistForm().toEntity(updatedCodelist)
         codelistRepository.updateCodelist(foundCodelist.id, update)
         return update.apply { ref = foundCodelist.ref }
