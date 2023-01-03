@@ -44,15 +44,12 @@ internal class PublicationServiceTest {
         publication = arrangeSetup.publication
         project = arrangeSetup.project
         updateForm = arrangeSetup.updatedPublicationForm
-        createForm = PublicationForm().fromEntity(publication)
-
-
+        createForm = arrangeSetup.publicationForm
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
         `when`(publicationRepository.listAllPublications(project.id)).thenReturn(publications)
-
     }
 
 
@@ -66,10 +63,13 @@ internal class PublicationServiceTest {
 
         val entity: Publication = response
 
+        assertEquals(publication.ref, entity.ref)
         assertEquals(publication.comment, entity.comment)
         assertEquals(publication.id, entity.id)
         assertEquals(publication.project, entity.project)
         assertEquals(publication.date, entity.date)
+        assertEquals(publication.version, entity.version)
+
     }
 
     @Test
@@ -82,10 +82,13 @@ internal class PublicationServiceTest {
         assertNotNull(response)
         assertFalse(entity.isEmpty())
         val firstObjectInList = entity[0]
+        assertEquals(publications[0].ref, firstObjectInList.ref)
         assertEquals(publications[0].comment, firstObjectInList.comment)
         assertEquals(publications[0].id, firstObjectInList.id)
         assertEquals(publications[0].project, firstObjectInList.project)
         assertEquals(publications[0].date, firstObjectInList.date)
+        assertEquals(publications[0].version, firstObjectInList.version)
+
     }
 
     @Test
@@ -102,9 +105,12 @@ internal class PublicationServiceTest {
 
         val entity: Publication = response
 
+        val lastUsedVersion = publications.maxByOrNull { publication -> publication.version }!!.version
+
         assertNotNull(entity)
-        assertEquals(publication.comment, entity.comment)
-        assertEquals(publication.version, entity.version)
+        assertEquals(createForm.comment, entity.comment)
+        assertEquals(lastUsedVersion + 1, entity.version) //next version in list of publications
+
     }
 
     @Test
@@ -127,6 +133,5 @@ internal class PublicationServiceTest {
 
         assertNotNull(entity)
         assertEquals(updateForm.comment, entity.comment)
-        assertEquals(updateForm.version, entity.version)
     }
 }

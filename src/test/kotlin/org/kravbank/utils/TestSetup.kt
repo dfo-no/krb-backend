@@ -234,17 +234,19 @@ class TestSetup {
             publication.comment = "En til kommentar"
             publication.version = 10
 
+            publicationForm = PublicationForm().fromEntity(publication)
+            publication.version = 10
+
             newPublication = Publication()
             newPublication.id = 201
             newPublication.ref = "asdsa-fdsf-34-fsd-dsgf-35463fd"
             newPublication.project = newProject
             newPublication.comment = "En ny kommentar"
-
-            publicationForm = PublicationForm().fromEntity(newPublication)
+            newPublication.version = 11
 
             updatedPublicationForm = PublicationForm()
             updatedPublicationForm.comment = "Oppdatert tittel"
-            updatedPublicationForm.version = 11
+            updatedPublicationForm.version = 10
 
             publications.add(publication)
             publications.add(newPublication)

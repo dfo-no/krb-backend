@@ -54,8 +54,7 @@ internal class PublicationResourceMockTest {
         publication = arrangeSetup.publication
         project = arrangeSetup.project
         updateForm = arrangeSetup.updatedPublicationForm
-        createForm = PublicationForm().fromEntity(publication)
-
+        createForm = arrangeSetup.publicationForm
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
@@ -68,24 +67,25 @@ internal class PublicationResourceMockTest {
     fun getPublication_OK() {
         val response = publicationResource.getPublication(project.ref, publication.ref)
 
-        val entity: Publication = PublicationForm().toEntity(response)
-
         assertNotNull(response)
-        assertEquals(publication.comment, entity.comment)
-        assertEquals(publication.version, entity.version)
+        assertEquals(publication.comment, response.comment)
+        assertEquals(publication.version, response.version)
+        assertEquals(publication.date, response.date)
+        assertEquals(publication.ref, response.ref)
+
     }
 
     @Test
     fun listPublications_OK() {
         val response = publicationResource.listPublications(project.ref)
 
-        val entity: List<PublicationForm> = response
-
         assertNotNull(response)
-        assertFalse(entity.isEmpty())
-        val firstObjectInList = entity[0]
+        assertFalse(response.isEmpty())
+        val firstObjectInList = response[0]
         assertEquals(publications[0].comment, firstObjectInList.comment)
         assertEquals(publications[0].version, firstObjectInList.version)
+        assertEquals(publications[0].date, firstObjectInList.date)
+        assertEquals(publications[0].ref, firstObjectInList.ref)
     }
 
     @Test
@@ -104,16 +104,10 @@ internal class PublicationResourceMockTest {
 
     @Test
     fun updatePublication_OK() {
-        `when`(publicationRepository.findByRef(project.id, publication.ref)).thenReturn(publication)
-
-
         val response = publicationResource.updatePublication(project.ref, publication.ref, updateForm)
 
-        val entity: Publication = PublicationForm().toEntity(response)
-
         assertNotNull(response)
-        assertEquals(updateForm.comment, entity.comment)
-        assertEquals(updateForm.version, entity.version)
+        assertEquals(updateForm.comment, response.comment)
     }
 
 

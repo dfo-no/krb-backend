@@ -19,7 +19,6 @@ class PublicationForm() : Mapper<PublicationForm, Publication> {
 
     override fun toEntity(domain: PublicationForm): Publication = Publication().apply {
         comment = domain.comment
-        version = domain.version
     }
 
     override fun fromEntity(entity: Publication): PublicationForm = PublicationForm().apply {
