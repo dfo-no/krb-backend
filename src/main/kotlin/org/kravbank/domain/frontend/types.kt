@@ -1,8 +1,8 @@
 import com.fasterxml.jackson.annotation.JsonProperty
 
-typealias Root = List<Root2>;
+typealias Banks = List<Bank>
 
-data class Root2(
+data class Bank(
     val id: String,
     val title: String,
     val description: String,
