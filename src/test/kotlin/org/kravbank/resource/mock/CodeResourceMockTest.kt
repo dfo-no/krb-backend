@@ -66,14 +66,16 @@ internal class CodeResourceMockTest {
 
     @Test
     fun getCode_OK() {
+        /*
+                `when`(
+                    codeRepository.findByRef(
+                        codelist.id,
+                        code.ref
+                    )
+                ).thenReturn(code)
 
-        `when`(
-            codeRepository.findByRef(
-                codelist.id,
-                code.ref
-            )
-        ).thenReturn(code)
 
+         */
         val response = codeResource.getCode(project.ref, codelist.ref, code.ref)
 
         val entity: Code = CodeForm().toEntity(response)
