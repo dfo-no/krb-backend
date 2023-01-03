@@ -4,7 +4,6 @@ import org.hibernate.engine.jdbc.BlobProxy
 import org.kravbank.domain.Project
 import org.kravbank.domain.Publication
 import org.kravbank.domain.PublicationExport
-import org.kravbank.lang.BackendException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationExportRepository
 import org.kravbank.repository.PublicationRepository
@@ -21,7 +20,7 @@ class PublicationExportService(
     val publicationRepository: PublicationRepository
 ) {
 
-    
+
     fun getDecodedBlob(
         projectRef: String,
         publicationRef: String,
@@ -53,7 +52,6 @@ class PublicationExportService(
     }
 
 
-    @Throws(BackendException::class)
     fun list(
         projectRef: String,
         publicationRef: String
@@ -110,6 +108,7 @@ class PublicationExportService(
         return bytes
     }
 
+
     @Throws(IOException::class)
     fun convertToBytes(
         project: Project,
@@ -136,37 +135,6 @@ class PublicationExportService(
         }
 
         return byteArrayOutputStream
-
-    }
-
-
-    //TODO delete
-    @Throws(IOException::class)
-    fun convertToBytesMethod2(
-        project: Project,
-        publication: Publication
-    ): ByteArrayOutputStream {
-
-        val byteArrayOutputStream = ByteArrayOutputStream()
-
-        val objectOutputStream: ObjectOutputStream
-
-        try {
-            objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
-
-            objectOutputStream.writeObject(generateListOfOutputObjects(project, publication))
-
-            objectOutputStream.writeObject(project)
-
-            objectOutputStream.flush()
-            return byteArrayOutputStream
-        } finally {
-            try {
-                byteArrayOutputStream.close()
-            } catch (e: IOException) {
-                throw IOException("Feil med outputstream. Feilmelding: $e")
-            }
-        }
     }
 
 
@@ -209,3 +177,62 @@ class PublicationExportService(
         return objs
     }
 }
+
+
+/*
+
+
+    fun writeValueAsBytesMapper(
+        project: Project,
+        publication: Publication
+    ): ByteArray {
+
+        val list = generateListOfOutputObjects(project, publication)
+
+        val objectMapper = ObjectMapper()
+
+        objectMapper.registerModule(JavaTimeModule())
+
+        return objectMapper.writeValueAsBytes(list)
+
+    }
+
+    fun readValueFromBytes(
+        byteArray: ByteArray
+    ) {
+        val inObjectMapper = ObjectMapper()
+
+        val ret = inObjectMapper.readValue(byteArray.toString(), ByteArray::class.java)
+
+        for (r in ret) println("read value from bytes $r")
+
+    }
+    //TODO delete
+    @Throws(IOException::class)
+    fun convertToBytesMethod2(
+        project: Project,
+        publication: Publication
+    ): ByteArrayOutputStream {
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+
+        val objectOutputStream: ObjectOutputStream
+
+        try {
+            objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+
+            objectOutputStream.writeObject(generateListOfOutputObjects(project, publication))
+
+            objectOutputStream.writeObject(project)
+
+            objectOutputStream.flush()
+            return byteArrayOutputStream
+        } finally {
+            try {
+                byteArrayOutputStream.close()
+            } catch (e: IOException) {
+                throw IOException("Feil med outputstream. Feilmelding: $e")
+            }
+        }
+    }
+ */
