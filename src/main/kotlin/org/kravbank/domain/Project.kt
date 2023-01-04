@@ -17,10 +17,7 @@ class Project : SoftDeletable() {
 
     lateinit var description: String
 
-    @Column(
-        unique = true,
-        name = "ref"
-    )
+    @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
 
     override var deletedDate: LocalDateTime? = null

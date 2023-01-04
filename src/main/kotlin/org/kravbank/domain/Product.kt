@@ -28,7 +28,6 @@ class Product : SoftDeletable() {
     )
     @JsonManagedReference(value = "product")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     @ManyToOne(
@@ -37,6 +36,5 @@ class Product : SoftDeletable() {
     )
     @JsonManagedReference(value = "val-reqvariant-product")
     @JsonIgnore
-    @JoinColumn(name = "requirementvariant_id_fk")
     var requirementvariant: RequirementVariant? = null
 }

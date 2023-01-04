@@ -25,7 +25,6 @@ class Need : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-need-project")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     @OneToMany(
