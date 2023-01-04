@@ -64,4 +64,15 @@ class Project : SoftDeletable() {
     )
     @JsonBackReference(value = "val-codelist")
     var codelist = mutableListOf<Codelist>()
+
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref, Deleted date: $deletedDate \n" +
+                "Codelist: $codelist \n" +
+                "Needs: $needs \n" +
+                "Requirements: $requirements \n" +
+                "Publications $publications \n" +
+                "Products $products"
+    }
+
 }
+  

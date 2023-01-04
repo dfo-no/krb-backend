@@ -33,4 +33,10 @@ class Codelist : PanacheEntity() {
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
+
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref " +
+                "Codes: $codes \n" +
+                "Project: $project \n"
+    }
 }

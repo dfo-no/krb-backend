@@ -25,6 +25,10 @@ class Code : PanacheEntity() {
     @JoinColumn(name = "codelist_id_fk")
     var codelist: Codelist? = null
 
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref " +
+                "Codelist: $codelist"
+    }
 }
 
 
