@@ -1,3 +1,5 @@
+package org.kravbank.domain.frontend
+
 import com.fasterxml.jackson.annotation.JsonProperty
 
 typealias Banks = List<Bank>

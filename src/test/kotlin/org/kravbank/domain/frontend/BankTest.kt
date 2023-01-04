@@ -1,6 +1,5 @@
 package org.kravbank.domain.frontend
 
-import Banks
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.assertEquals
