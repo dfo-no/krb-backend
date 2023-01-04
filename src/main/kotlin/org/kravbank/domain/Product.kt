@@ -11,8 +11,10 @@ import javax.persistence.*
 @Where(clause = "deletedDate is null")
 class Product : SoftDeletable() {
 
+    @Column(columnDefinition="TEXT")
     lateinit var title: String
 
+    @Column(columnDefinition="TEXT")
     lateinit var description: String
 
     override var deletedDate: LocalDateTime? = null
