@@ -42,7 +42,7 @@ class PublicationExportResource(
         val newRef = publicationExportService.create(projectRef, publicationRef).ref
 
         return Response.created(
-            URI.create("/api/v1/projects/$projectRef/publications/$publicationRef/publicationexport/$newRef")
+            URI.create("/api/v1/projects/$projectRef/publications/$publicationRef/publicationexports/$newRef")
         ).build()
     }
 
