@@ -11,6 +11,7 @@ import javax.persistence.*
 @Where(clause = "deletedDate is null")
 class Publication : SoftDeletable() {
 
+    @Column(columnDefinition="TEXT")
     lateinit var comment: String
 
     var date: LocalDateTime = LocalDateTime.now()
@@ -28,7 +29,6 @@ class Publication : SoftDeletable() {
     )
     @JsonManagedReference(value = "val-publication")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
 }

@@ -10,8 +10,10 @@ import javax.persistence.*
 @Entity
 class Need : PanacheEntity() {
 
+    @Column(columnDefinition="TEXT")
     lateinit var title: String
 
+    @Column(columnDefinition="TEXT")
     lateinit var description: String
 
     @Column(unique = true)
@@ -23,7 +25,6 @@ class Need : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-need-project")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     @OneToMany(

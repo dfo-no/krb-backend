@@ -15,7 +15,7 @@ class ProductRepository : BackendRepository<Product>() {
     fun findByRef(projectId: Long, ref: String): Product {
         val product =
             find(
-                "ref = ?1 and project_id_fk = ?2",
+                "ref = ?1 and project.id = ?2",
                 ref,
                 projectId
             ).firstResult<Product>()
@@ -27,7 +27,7 @@ class ProductRepository : BackendRepository<Product>() {
     }
 
     fun listAllProducts(id: Long): List<Product> {
-        return find("project_id_fk", id)
+        return find("project.id", id)
             .stream<Product>()
             .toList()
     }

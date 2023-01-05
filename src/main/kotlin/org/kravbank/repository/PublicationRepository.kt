@@ -15,7 +15,7 @@ class PublicationRepository : BackendRepository<Publication>() {
     fun findByRef(projectId: Long, ref: String): Publication {
         val publication =
             find(
-                "ref = ?1 and project_id_fk = ?2",
+                "ref = ?1 and project.id = ?2",
                 ref,
                 projectId
             ).firstResult<Publication>()
@@ -26,7 +26,7 @@ class PublicationRepository : BackendRepository<Publication>() {
     }
 
     fun listAllPublications(id: Long): List<Publication> {
-        return find("project_id_fk = ?1", id)
+        return find("project.id = ?1", id)
             .stream<Publication>()
             .toList()
     }

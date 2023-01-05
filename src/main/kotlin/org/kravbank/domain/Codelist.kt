@@ -10,8 +10,10 @@ import javax.persistence.*
 @Entity
 class Codelist : PanacheEntity() {
 
+    @Column(columnDefinition="TEXT")
     lateinit var title: String
 
+    @Column(columnDefinition="TEXT")
     lateinit var description: String
 
     @Column(unique = true)
@@ -31,6 +33,5 @@ class Codelist : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-codelist")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 }

@@ -30,7 +30,6 @@ class RequirementVariant : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-requirementVariant")
     @JsonIgnore
-    @JoinColumn(name = "requirement_id_fk")
     var requirement: Requirement? = null
 
     @OneToMany(

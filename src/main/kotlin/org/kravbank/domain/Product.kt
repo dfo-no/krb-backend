@@ -11,8 +11,10 @@ import javax.persistence.*
 @Where(clause = "deletedDate is null")
 class Product : SoftDeletable() {
 
+    @Column(columnDefinition="TEXT")
     lateinit var title: String
 
+    @Column(columnDefinition="TEXT")
     lateinit var description: String
 
     override var deletedDate: LocalDateTime? = null
@@ -26,7 +28,6 @@ class Product : SoftDeletable() {
     )
     @JsonManagedReference(value = "product")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     @ManyToOne(
@@ -35,6 +36,5 @@ class Product : SoftDeletable() {
     )
     @JsonManagedReference(value = "val-reqvariant-product")
     @JsonIgnore
-    @JoinColumn(name = "requirementvariant_id_fk")
     var requirementvariant: RequirementVariant? = null
 }

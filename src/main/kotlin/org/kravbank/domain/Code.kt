@@ -22,7 +22,6 @@ class Code : PanacheEntity() {
     )
     @JsonManagedReference(value = "value-codes")
     @JsonIgnore
-    @JoinColumn(name = "codelist_id_fk")
     var codelist: Codelist? = null
 
 }
