@@ -6,6 +6,7 @@ import org.hibernate.engine.jdbc.BlobProxy
 import org.kravbank.dao.PublicationExportForm
 import org.kravbank.domain.Project
 import org.kravbank.domain.PublicationExport
+import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationExportRepository
 import org.kravbank.repository.PublicationRepository
@@ -54,74 +55,78 @@ class PublicationExportService(
     }
 
 
-    fun save(
+    fun create(
         projectRef: String,
         publicationRef: String
-    ): String {
+    ): PublicationExport {
 
         val project = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(project.id, publicationRef)
 
-        val convertProjectToBytes = writeValueAsBytes(project)
 
         val newPublicationExport = PublicationExport()
         newPublicationExport.ref = UUID.randomUUID().toString()
 
-        newPublicationExport.blobFormat = encodeBlob(convertProjectToBytes)
+        newPublicationExport.blobFormat = encodeBlob(writeValueAsBytes(project))
         newPublicationExport.publication = publication
 
         publicationExportRepository.persistAndFlush(newPublicationExport)
 
-        return newPublicationExport.ref
+        if (!publicationExportRepository.isPersistent(newPublicationExport)) throw BadRequestException("${newPublicationExport.ref} not persisted")
+
+        return newPublicationExport
     }
 
-    //ENCODE
+    companion object {
 
-    fun writeValueAsBytes(
-        project: Project,
-    ): ByteArray {
+        //ENCODE
 
-        val objectMapper = ObjectMapper()
+        fun writeValueAsBytes(
+            project: Project,
+        ): ByteArray {
 
-        objectMapper.registerModule(JavaTimeModule())
+            val objectMapper = ObjectMapper()
 
-        return objectMapper.writeValueAsBytes(project)
-    }
+            objectMapper.registerModule(JavaTimeModule())
 
-    fun encodeBlob(byteArray: ByteArray): Blob = BlobProxy.generateProxy(byteArray)
+            return objectMapper.writeValueAsBytes(project)
+        }
 
-
-    //DECODE
-
-
-    // TODO ("Handle specifications & answer when needed")
-    fun readValueFromBytes(
-        byteArray: ByteArray
-    ): Project {
-        val inObjectMapper = ObjectMapper()
-
-        val project = inObjectMapper.readValue(byteArray, Project::class.java)
-
-        if (project is Project) {
-            return project
-        } else throw IOException("An error with Input/Output/ObjectMapper")
-    }
+        fun encodeBlob(byteArray: ByteArray): Blob = BlobProxy.generateProxy(byteArray)
 
 
-    fun decodeBlob(blob: Blob): Project {
-
-        val bytes = generateBytes(blob)
-
-        return readValueFromBytes(bytes)
-    }
+        //DECODE
 
 
-    fun generateBytes(blob: Blob): ByteArray {
+        // TODO ("Handle specifications & answer when needed")
+        private fun readValueFromBytes(
+            byteArray: ByteArray
+        ): Project {
+            val inObjectMapper = ObjectMapper()
 
-        val bytes = blob.getBytes(1, blob.length().toInt())
+            val project = inObjectMapper.readValue(byteArray, Project::class.java)
 
-        blob.free()
+            if (project is Project) {
+                return project
+            } else throw IOException("An error with Input/Output/ObjectMapper")
+        }
 
-        return bytes
+
+        fun decodeBlob(blob: Blob): Project {
+
+            val bytes = generateBytes(blob)
+
+            return readValueFromBytes(bytes)
+        }
+
+
+        private fun generateBytes(blob: Blob): ByteArray {
+
+            val bytes = blob.getBytes(1, blob.length().toInt())
+
+            blob.free()
+
+            return bytes
+        }
     }
 }

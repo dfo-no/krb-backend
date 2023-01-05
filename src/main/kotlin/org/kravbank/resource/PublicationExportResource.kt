@@ -39,7 +39,7 @@ class PublicationExportResource(
         @PathParam("publicationRef") publicationRef: String,
     ): Response {
 
-        val newRef = publicationExportService.save(projectRef, publicationRef)
+        val newRef = publicationExportService.create(projectRef, publicationRef).ref
 
         return Response.created(
             URI.create("/api/v1/projects/$projectRef/publications/$publicationRef/publicationexport/$newRef")
