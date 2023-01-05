@@ -1,7 +1,9 @@
 package org.kravbank.utils
 
+import org.keycloak.util.JsonSerialization.writeValueAsBytes
 import org.kravbank.dao.*
 import org.kravbank.domain.*
+import org.kravbank.service.PublicationExportService.Companion.encodeBlob
 import java.time.LocalDateTime
 
 class TestSetup {
@@ -78,6 +80,9 @@ class TestSetup {
         lateinit var updatedCodelistForm: CodelistForm
         private val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
 
+
+        //publication Export
+        var publicationExport = PublicationExport()
 
         fun start() {
 
@@ -316,6 +321,14 @@ class TestSetup {
             requirementVariants.add(requirementVariant)
             requirementVariants.add(newRequirementVariant)
 
+
+            //publication export
+
+            
+            publicationExport.id = 89
+            publicationExport.ref = "dasfsdfgsd-sdgdsf"
+            publicationExport.blobFormat = encodeBlob(writeValueAsBytes(project))
+            publicationExport.publication = publication
         }
     }
 }
