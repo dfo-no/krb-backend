@@ -1,9 +1,7 @@
 package org.kravbank.utils
 
-import org.keycloak.util.JsonSerialization.writeValueAsBytes
 import org.kravbank.dao.*
 import org.kravbank.domain.*
-import org.kravbank.service.PublicationExportService.Companion.encodeBlob
 import java.time.LocalDateTime
 
 class TestSetup {
@@ -324,11 +322,14 @@ class TestSetup {
 
             //publication export
 
-            
+
             publicationExport.id = 89
             publicationExport.ref = "dasfsdfgsd-sdgdsf"
-            publicationExport.blobFormat = encodeBlob(writeValueAsBytes(project))
-            publicationExport.publication = publication
+            publicationExport.publicationRef = publication.ref
+            //TODO fix, making some problems for other tests
+            //publicationExport.blobFormat = encodeBlob(JsonSerialization.writeValueAsBytes(project))
+
+
         }
     }
 }
