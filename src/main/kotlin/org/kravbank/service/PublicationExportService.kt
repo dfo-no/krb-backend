@@ -1,7 +1,7 @@
 package org.kravbank.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.hibernate.engine.jdbc.BlobProxy
 import org.kravbank.dao.PublicationExportForm
 import org.kravbank.domain.Project
@@ -10,7 +10,6 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationExportRepository
 import org.kravbank.repository.PublicationRepository
-import java.io.IOException
 import java.sql.Blob
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
@@ -32,9 +31,9 @@ class PublicationExportService(
 
         val project = projectRepository.findByRef(projectRef)
 
-        val publicationId = publicationRepository.findByRef(project.id, publicationRef).id
+        val publication = publicationRepository.findByRef(project.id, publicationRef)
 
-        val publicationExport = publicationExportRepository.findByRef(publicationId, publicationExportRef)
+        val publicationExport = publicationExportRepository.findByRef(publication.ref, publicationExportRef)
 
         val decodedProject = decodeBlob(publicationExport.blobFormat)
         val form = PublicationExportForm().fromEntity(publicationExport)
@@ -63,29 +62,34 @@ class PublicationExportService(
         val project = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(project.id, publicationRef)
 
-
         val newPublicationExport = PublicationExport()
         newPublicationExport.ref = UUID.randomUUID().toString()
-
         newPublicationExport.blobFormat = encodeBlob(writeValueAsBytes(project))
-        newPublicationExport.publication = publication
+        newPublicationExport.publicationRef = publicationRef
 
         publicationExportRepository.persistAndFlush(newPublicationExport)
 
         if (!publicationExportRepository.isPersistent(newPublicationExport)) throw BadRequestException("${newPublicationExport.ref} not persisted")
+
+        PublicationService.updateAndPersistPublicationExport(
+            publication.id,
+            publicationRepository,
+            publication.ref
+        )
 
         return newPublicationExport
     }
 
     companion object {
 
+        private val objectMapper = jacksonObjectMapper()
+
+
         //ENCODE
 
         fun writeValueAsBytes(
             project: Project,
         ): ByteArray {
-
-            val objectMapper = ObjectMapper()
 
             objectMapper.registerModule(JavaTimeModule())
 
@@ -102,13 +106,13 @@ class PublicationExportService(
         private fun readValueFromBytes(
             byteArray: ByteArray
         ): Project {
-            val inObjectMapper = ObjectMapper()
 
-            val project = inObjectMapper.readValue(byteArray, Project::class.java)
 
-            if (project is Project) {
-                return project
-            } else throw IOException("An error with Input/Output/ObjectMapper")
+            //val project = objectMapper.readValue<Project>(byteArray)
+
+            return objectMapper.readValue(byteArray, Project::class.java)
+
+
         }
 
 

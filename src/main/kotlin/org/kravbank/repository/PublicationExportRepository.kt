@@ -9,11 +9,11 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class PublicationExportRepository : BackendRepository<PublicationExport>() {
     @Throws(BackendException::class)
-    fun findByRef(publicationId: Long, publicationExportRef: String): PublicationExport {
+    fun findByRef(publicationRef: String, publicationExportRef: String): PublicationExport {
         val entity =
             find(
-                "publication_id_fk = ?1 and ref = ?2",
-                publicationId,
+                "publicationRef = ?1 and ref = ?2",
+                publicationRef,
                 publicationExportRef
             ).firstResult<PublicationExport>()
 
@@ -22,7 +22,7 @@ class PublicationExportRepository : BackendRepository<PublicationExport>() {
 
 
     fun list(id: Long): List<PublicationExport> {
-        return find("publication_id_fk = ?1", id)
+        return find("publicationRef = ?1", id)
             .stream<PublicationExport>()
             .toList()
     }

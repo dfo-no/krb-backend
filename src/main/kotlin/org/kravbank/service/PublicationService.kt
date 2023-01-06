@@ -72,4 +72,22 @@ class PublicationService(
 
         return publications.maxOf { p -> p.version }.plus(1)
     }
+
+    companion object AddToPublication {
+        fun updateAndPersistPublicationExport(
+            id: Long,
+            publicationRepository: PublicationRepository,
+            ref: String
+        ) {
+
+            val foundPublication = publicationRepository.findById(id)
+
+            foundPublication.publicationExportRef = ref
+
+            foundPublication.persistAndFlush()
+
+            if (!publicationRepository.isPersistent(foundPublication)) throw BadRequestException("Something went wrong updating $foundPublication")
+
+        }
+    }
 }
