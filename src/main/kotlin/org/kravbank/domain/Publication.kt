@@ -1,6 +1,5 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.Where
@@ -23,15 +22,7 @@ class Publication : SoftDeletable() {
 
     override var deletedDate: LocalDateTime? = null
 
-    //TODO UUID OR ID ref
-    @OneToOne(
-        // mappedBy = ("publication"),
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
-        fetch = FetchType.LAZY
-    )
-    @JoinColumn(name = "publicationExport_id_fk")
-    @JsonBackReference(value = "publication_export_backReference")
-    var publicationExport: PublicationExport? = null
+    lateinit var publicationExportRef: String
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
