@@ -22,7 +22,7 @@ class Publication : SoftDeletable() {
 
     override var deletedDate: LocalDateTime? = null
 
-    lateinit var publicationExportRef: String
+    var publicationExportRef: String? = null
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
