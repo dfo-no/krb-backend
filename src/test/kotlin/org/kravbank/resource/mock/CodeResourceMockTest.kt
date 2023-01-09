@@ -22,7 +22,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
-internal class CodeResourceMockTest {
+class CodeResourceMockTest {
 
 
     private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
@@ -66,16 +66,7 @@ internal class CodeResourceMockTest {
 
     @Test
     fun getCode_OK() {
-        /*
-                `when`(
-                    codeRepository.findByRef(
-                        codelist.id,
-                        code.ref
-                    )
-                ).thenReturn(code)
 
-
-         */
         val response = codeResource.getCode(project.ref, codelist.ref, code.ref)
 
         val entity: Code = CodeForm().toEntity(response)
@@ -87,8 +78,6 @@ internal class CodeResourceMockTest {
 
     @Test
     fun listCodes_OK() {
-
-        `when`(codeRepository.listAllCodes(codelist.id)).thenReturn(codes)
 
         val response = codeResource.listCodes(
             project.ref,
@@ -139,13 +128,6 @@ internal class CodeResourceMockTest {
 
     @Test
     fun updateCode_OK() {
-
-        `when`(
-            codeRepository.findByRef(
-                codelist.id,
-                code.ref
-            )
-        ).thenReturn(code)
 
         val response = codeResource.updateCode(
             project.ref,

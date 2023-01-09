@@ -1,7 +1,5 @@
 package org.kravbank.resource.mock
 
-import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,23 +24,22 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
-@QuarkusTest
-@TestSecurity(authorizationEnabled = false)
-internal class ProductResourceMockTest {
+
+class ProductResourceMockTest {
 
 
-    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
-    private final val productRepository: ProductRepository = mock(ProductRepository::class.java)
-    private final val requirementVariantRepository: RequirementVariantRepository =
+    private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private val productRepository: ProductRepository = mock(ProductRepository::class.java)
+    private val requirementVariantRepository: RequirementVariantRepository =
         mock(RequirementVariantRepository::class.java)
 
-    private final val productService = ProductService(
+    private val productService = ProductService(
         productRepository = productRepository,
         projectRepository = projectRepository,
         requirementVariantRepository = requirementVariantRepository
     )
 
-    val productResource = ProductResource(productService)
+    private val productResource = ProductResource(productService)
 
     private val arrangeSetup = TestSetup.Arrange
 

@@ -1,7 +1,5 @@
 package org.kravbank.resource.mock
 
-import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.security.TestSecurity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,17 +18,15 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
-@QuarkusTest
-@TestSecurity(authorizationEnabled = false)
-internal class ProjectResourceMockTest {
+class ProjectResourceMockTest {
 
-    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
 
-    private final val projectService = ProjectService(projectRepository)
+    private val projectService = ProjectService(projectRepository)
 
     private val arrangeSetup = TestSetup.Arrange
 
-    val projectResource = ProjectResource(projectService)
+    private val projectResource = ProjectResource(projectService)
 
 
     private lateinit var projects: List<Project>
