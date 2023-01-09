@@ -1,23 +1,24 @@
 package org.kravbank.domain
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
-import java.sql.Blob
+import java.util.*
+import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.Lob
 
 @Entity
 class PublicationExport : PanacheEntity() {
 
-    lateinit var ref: String
+    var ref: String = UUID.randomUUID().toString()
 
-    @Lob
-    lateinit var blobFormat: Blob
+    //hibernate 6 ref
+    @Column(columnDefinition = "TEXT")
+    lateinit var content: String
 
     lateinit var publicationRef: String
 
 
     override fun toString(): String {
-        return "Ref : $ref, BlobFormat : $blobFormat"
+        return "Ref : $ref, BlobFormat : $content"
     }
 
 }

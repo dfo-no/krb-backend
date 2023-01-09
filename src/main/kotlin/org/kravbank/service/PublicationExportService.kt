@@ -2,7 +2,6 @@ package org.kravbank.service
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.hibernate.engine.jdbc.BlobProxy
 import org.kravbank.dao.PublicationExportForm
 import org.kravbank.domain.Project
 import org.kravbank.domain.PublicationExport
@@ -10,8 +9,6 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.PublicationExportRepository
 import org.kravbank.repository.PublicationRepository
-import java.sql.Blob
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 
@@ -35,12 +32,13 @@ class PublicationExportService(
 
         val publicationExport = publicationExportRepository.findByRef(publication.ref, publicationExportRef)
 
-        val decodedProject = decodeBlob(publicationExport.blobFormat)
-        val form = PublicationExportForm().fromEntity(publicationExport)
-        form.content.add(decodedProject)
+        val deserializedProject = deserializedProject(publicationExport.content)
+
+        val form = PublicationExportForm().fromEntity(publicationExport).apply {
+            this.deserializedProject = deserializedProject
+        }
 
         return form
-
     }
 
     fun list(
@@ -62,10 +60,12 @@ class PublicationExportService(
         val project = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(project.id, publicationRef)
 
-        val newPublicationExport = PublicationExport()
-        newPublicationExport.ref = UUID.randomUUID().toString()
-        newPublicationExport.blobFormat = encodeBlob(writeValueAsBytes(project))
-        newPublicationExport.publicationRef = publicationRef
+        val serializedProject = serializedProject(project)
+
+        val newPublicationExport = PublicationExport().apply {
+            this.content = serializedProject
+            this.publicationRef = publicationRef
+        }
 
         publicationExportRepository.persistAndFlush(newPublicationExport)
 
@@ -84,53 +84,15 @@ class PublicationExportService(
 
         private val objectMapper = jacksonObjectMapper()
 
-
-        //ENCODE
-
-        fun writeValueAsBytes(
-            project: Project,
-        ): ByteArray {
-
+        fun serializedProject(project: Project): String {
             objectMapper.registerModule(JavaTimeModule())
 
-            return objectMapper.writeValueAsBytes(project)
+            return objectMapper.writeValueAsString(project)
         }
 
-        fun encodeBlob(byteArray: ByteArray): Blob = BlobProxy.generateProxy(byteArray)
+        fun deserializedProject(str: String): Project {
 
-
-        //DECODE
-
-
-        // TODO ("Handle specifications & answer when needed")
-        private fun readValueFromBytes(
-            byteArray: ByteArray
-        ): Project {
-
-
-            //val project = objectMapper.readValue<Project>(byteArray)
-
-            return objectMapper.readValue(byteArray, Project::class.java)
-
-
-        }
-
-
-        fun decodeBlob(blob: Blob): Project {
-
-            val bytes = generateBytes(blob)
-
-            return readValueFromBytes(bytes)
-        }
-
-
-        private fun generateBytes(blob: Blob): ByteArray {
-
-            val bytes = blob.getBytes(1, blob.length().toInt())
-
-            blob.free()
-
-            return bytes
+            return objectMapper.readValue(str, Project::class.java)
         }
     }
 }
