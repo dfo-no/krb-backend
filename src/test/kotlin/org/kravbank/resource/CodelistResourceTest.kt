@@ -9,9 +9,9 @@ import org.kravbank.dao.CodelistForm
 import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
-internal class CodelistResourceTest() {
+class CodelistResourceTest {
 
-    val token = KeycloakAccess.getAccessToken("bob")
+    private val token = KeycloakAccess.getAccessToken("bob")
 
     @Test
     fun getCodelist() {

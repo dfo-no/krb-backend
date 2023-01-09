@@ -11,7 +11,7 @@ import org.kravbank.utils.KeycloakAccess
 @QuarkusTest
 class CodeResourceTest {
 
-    val token = KeycloakAccess.getAccessToken("alice")
+    private val token = KeycloakAccess.getAccessToken("alice")
 
     @Test
     fun getCode() {
