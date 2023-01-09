@@ -54,7 +54,9 @@ data class Variant(
     val requirementText: String,
     val instruction: String,
     val useProduct: Boolean,
-    val useSpesification: Boolean,
+    // Input data has misspelled field name
+    @JsonProperty("useSpesification")
+    val useSpecification: Boolean,
     val useQualification: Boolean,
     val products: List<String>,
     val questions: List<Question>,
@@ -88,10 +90,15 @@ data class Config(
     val periodHours: Long?,
     val timeScores: List<TimeScore>?,
     val pointsUnconfirmed: Long?,
-    val pointsNonPrefered: Long?,
-    val preferedAlternative: Boolean?,
-    val discountNonPrefered: Long?,
-    val discountPrefered: Long?,
+    // Input data has misspelled field name
+    @JsonProperty("pointsNonPrefered")
+    val pointsNonPreferred: Long?,
+    @JsonProperty("preferedAlternative")
+    val preferredAlternative: Boolean?,
+    @JsonProperty("discountNonPrefered")
+    val discountNonPreferred: Long?,
+    @JsonProperty("discountPrefered")
+    val discountPreferred: Long?,
     val defaultDiscount: Long?,
     val mandatoryCodes: List<Any?>?,
     val optionalCodes: List<Any?>?,
