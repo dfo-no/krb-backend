@@ -1,8 +1,6 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
@@ -21,7 +19,6 @@ class Requirement : PanacheEntity() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-requirementVariant")
     var requirementvariants = mutableListOf<RequirementVariant>()
 
     @Column(unique = true)
@@ -31,7 +28,6 @@ class Requirement : PanacheEntity() {
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         fetch = FetchType.EAGER,
     )
-    @JsonManagedReference(value = "val-requirement")
     @JsonIgnore
     var project: Project? = null
 
@@ -39,7 +35,6 @@ class Requirement : PanacheEntity() {
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference(value = "val-need-requirement")
     @JsonIgnore
     var need: Need? = null
 }

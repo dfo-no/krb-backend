@@ -1,7 +1,6 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
@@ -26,7 +25,6 @@ class Product : SoftDeletable() {
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference(value = "product")
     @JsonIgnore
     var project: Project? = null
 
@@ -34,7 +32,5 @@ class Product : SoftDeletable() {
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         fetch = FetchType.LAZY
     )
-    @JsonManagedReference(value = "val-reqvariant-product")
-    @JsonIgnore
     var requirementvariant: RequirementVariant? = null
 }

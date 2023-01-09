@@ -1,6 +1,6 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
@@ -27,7 +27,6 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "product")
     var products = mutableListOf<Product>()
 
     @OneToMany(
@@ -35,7 +34,6 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-publication")
     var publications = mutableListOf<Publication>()
 
     @OneToMany(
@@ -43,7 +41,7 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-requirement")
+    @JsonIgnore
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany(
@@ -51,7 +49,7 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-need-project")
+
     var needs = mutableListOf<Need>()
 
     @OneToMany(
@@ -59,6 +57,5 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-codelist")
     var codelist = mutableListOf<Codelist>()
 }
