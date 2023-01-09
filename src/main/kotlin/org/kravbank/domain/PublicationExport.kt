@@ -10,15 +10,14 @@ class PublicationExport : PanacheEntity() {
 
     var ref: String = UUID.randomUUID().toString()
 
-    //hibernate 6 ref
-    @Column(columnDefinition = "TEXT")
-    lateinit var content: String
-
     lateinit var publicationRef: String
 
+    //hibernate 6 ref
+    @Column(columnDefinition = "TEXT")
+    var serializedProject: String = ""
 
     override fun toString(): String {
-        return "Ref : $ref, BlobFormat : $content"
+        return "Ref : $ref, SerializedProject : $serializedProject"
     }
 
 }

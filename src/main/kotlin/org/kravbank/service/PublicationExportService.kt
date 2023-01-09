@@ -14,7 +14,7 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class PublicationExportService(
-    private val publicationExportRepository: PublicationExportRepository,
+    val publicationExportRepository: PublicationExportRepository,
     val projectRepository: ProjectRepository,
     val publicationRepository: PublicationRepository
 ) {
@@ -32,7 +32,7 @@ class PublicationExportService(
 
         val publicationExport = publicationExportRepository.findByRef(publication.ref, publicationExportRef)
 
-        val deserializedProject = deserializedProject(publicationExport.content)
+        val deserializedProject = deserializedProject(publicationExport.serializedProject)
 
         val form = PublicationExportForm().fromEntity(publicationExport).apply {
             this.deserializedProject = deserializedProject
@@ -63,7 +63,7 @@ class PublicationExportService(
         val serializedProject = serializedProject(project)
 
         val newPublicationExport = PublicationExport().apply {
-            this.content = serializedProject
+            this.serializedProject = serializedProject
             this.publicationRef = publicationRef
         }
 
@@ -80,7 +80,8 @@ class PublicationExportService(
         return newPublicationExport
     }
 
-    companion object {
+
+    companion object Serialization {
 
         private val objectMapper = jacksonObjectMapper()
 
@@ -90,9 +91,9 @@ class PublicationExportService(
             return objectMapper.writeValueAsString(project)
         }
 
-        fun deserializedProject(str: String): Project {
+        fun deserializedProject(str: String): Project = objectMapper.readValue(str, Project::class.java)
 
-            return objectMapper.readValue(str, Project::class.java)
-        }
     }
+
+
 }
