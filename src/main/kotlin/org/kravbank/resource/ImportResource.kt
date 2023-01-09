@@ -20,7 +20,7 @@ class ImportResource {
     private val mapper = jacksonObjectMapper()
 
     @Inject
-    private lateinit var projectRepository: ProjectRepository
+    lateinit var projectRepository: ProjectRepository
 
     @POST
     @Path(value = "/bulk")
@@ -32,12 +32,13 @@ class ImportResource {
 
         banks.forEach { bank ->
 
-            val project = Project()
+            val newProject = Project()
 
             val products = bank.products.map { product ->
                 Product().apply {
                     title = product.title
                     description = product.description
+                    project = newProject
                 }
             }
 
@@ -51,20 +52,22 @@ class ImportResource {
 
             val needs = bank.needs.map { need ->
 
-                val requirements = need.requirements.map { requirement ->
+                val foundRequirements = need.requirements.map { requirement ->
                     Requirement().apply {
                         title = requirement.title
                         description = requirement.description
-                        this.project = project
+                        project = newProject
 
 
                     }
                 }
 
+                println(foundRequirements)
                 Need().apply {
                     title = need.title
                     description = need.description
-                    this.requirements = requirements.toMutableList()
+                    project = newProject
+                    requirements = foundRequirements.toMutableList()
                 }
             }
 
@@ -74,10 +77,11 @@ class ImportResource {
                 Codelist().apply {
                     title = codelist.title
                     description = codelist.description
+                    project = newProject
                 }
             }
 
-            project.apply {
+            newProject.apply {
 
                 title = bank.title
                 description = bank.description
@@ -89,7 +93,7 @@ class ImportResource {
                 this.codelist = codelist.toMutableList()
             }
 
-            projectRepository.persist(project)
+            projectRepository.persist(newProject)
 
         }
 

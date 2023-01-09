@@ -1,6 +1,6 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
@@ -26,7 +26,7 @@ class Publication : SoftDeletable() {
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         fetch = FetchType.LAZY,
     )
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var project: Project? = null
 
 }

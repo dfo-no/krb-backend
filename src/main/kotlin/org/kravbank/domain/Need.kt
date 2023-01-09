@@ -1,6 +1,6 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
@@ -21,7 +21,7 @@ class Need : PanacheEntity() {
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
         fetch = FetchType.LAZY,
     )
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var project: Project? = null
 
     @OneToMany(
