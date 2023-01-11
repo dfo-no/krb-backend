@@ -1,5 +1,6 @@
 package org.kravbank.repository
 
+import io.quarkus.hibernate.orm.panache.PanacheRepository
 import org.kravbank.domain.Product
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -10,20 +11,17 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class ProductRepository : BackendRepository<Product>() {
+class ProductRepository : PanacheRepository<Product> { //BackendRepository<Product>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Product {
-        val product =
-            find(
-                "ref = ?1 and project_id_fk = ?2",
-                ref,
-                projectId
-            ).firstResult<Product>()
+        val entity = find(
+            "ref = ?1 and project_id_fk = ?2",
+            ref,
+            projectId
+        ).firstResult<Product>()
 
-        if (product?.deletedDate == null) {
-            return product
+        return Optional.ofNullable(entity).orElseThrow { NotFoundException(PRODUCT_NOTFOUND) }
 
-        } else throw NotFoundException(PRODUCT_NOTFOUND)
     }
 
     fun listAllProducts(id: Long): List<Product> {
