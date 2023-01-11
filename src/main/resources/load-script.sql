@@ -1,3 +1,9 @@
+-----
+-----
+----- INSERT ENTITIES
+-----
+-----
+
 --PROJECT
 insert into Project("id", title, description, deleteddate, ref)
 values (1, 'Prosjekt1', 'Beskrivelse1', null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
@@ -85,4 +91,35 @@ values (28, 'code tittel fra script6', 'code beskrivelse fra script', 'script6b6
 select setval('hibernate_sequence', 100, true);
 
 
+-----
+-----
+----- STORED PROCEDURE
+-----
+-----
+
+
+CREATE FUNCTION delete_record_insert()
+    RETURNS trigger
+AS
+'
+    BEGIN
+        EXECUTE ''INSERT INTO deleteRecord (data, objectid, tablename) VALUES ($1, $2, $3)''
+            USING to_jsonb(OLD.*), OLD.id, TG_TABLE_NAME;
+        RETURN OLD;
+    End;
+' LANGUAGE plpgsql;
+
+
+
+CREATE TRIGGER delete_record_insert
+    AFTER DELETE
+    ON Product
+    FOR EACH ROW
+EXECUTE FUNCTION delete_record_insert();
+
+CREATE TRIGGER delete_record_insert
+    AFTER DELETE
+    ON Requirement
+    FOR EACH ROW
+EXECUTE FUNCTION delete_record_insert();
 
