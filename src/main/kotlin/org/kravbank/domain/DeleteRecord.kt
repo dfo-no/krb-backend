@@ -19,14 +19,13 @@ data class DeleteRecord(
     val tableName: String?,
 
     val objectId: Long?,
-    
+
     ) : PanacheEntityBase() {
 
     constructor() : this(null, LocalDateTime.now(), null, null, null) {}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
     override fun equals(other: Any?): Boolean {
