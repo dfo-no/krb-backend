@@ -2,27 +2,33 @@ package org.kravbank.domain
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import org.hibernate.Hibernate
+import java.sql.Timestamp
 import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.*
 
 @Entity
 data class DeleteRecord(
 
     @Column(columnDefinition = "jsonb")
-    val data: String?,
+    val data: String? = null,
 
-    val deletedAt: LocalDateTime?,
 
-    val updatedAt: LocalDateTime?,
+    //TODO
+    // Fikse: denne blir ikke satt i PSQL via triggeren
+    // alternativt kan man opprette tabellen i psql direkte - med default verdi current_timestamp
+    //@Temporal(TemporalType.TIMESTAMP)
+    //@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    val deletedAt: Date? = Timestamp.valueOf(LocalDateTime.now()),
+
+    val updatedAt: LocalDateTime? = null,
 
     @Column(columnDefinition = "varchar(200)")
-    val tableName: String?,
+    val tableName: String? = null,
 
-    val objectId: Long?,
+    val objectId: Long? = null
 
-    ) : PanacheEntityBase() {
-
-    constructor() : this(null, LocalDateTime.now(), null, null, null) {}
+) : PanacheEntityBase() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +49,6 @@ data class DeleteRecord(
         return this::class.simpleName + "(id = $id )"
     }
 }
+
 
 
