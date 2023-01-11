@@ -65,12 +65,12 @@ values (16, 'Requirement variant beskrivelse fra script #2 ', 'instruksjon', 'rv
         'req text', true, true, true, 12);
 
 -- PRODUCT
-insert into product("id", title, description, ref, deleteddate, project_id_fk, requirementvariant_id_fk)
-values (5, 'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', null, 3, 14);
-insert into Product("id", title, description, ref, deleteddate, project_id_fk, requirementvariant_id_fk)
-values (6, 'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', null, 3, 14);
-insert into Product("id", title, description, ref, deleteddate, project_id_fk, requirementvariant_id_fk)
-values (7, 'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', null, 1, 14);
+insert into product("id", title, description, ref, project_id_fk, requirementvariant_id_fk)
+values (5, 'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', 3, 14);
+insert into Product("id", title, description, ref, project_id_fk, requirementvariant_id_fk)
+values (6, 'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', 3, 14);
+insert into Product("id", title, description, ref, project_id_fk, requirementvariant_id_fk)
+values (7, 'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', 1, 14);
 
 -- CODE
 insert into Code("id", title, description, ref, codelist_id_fk)
@@ -98,7 +98,7 @@ select setval('hibernate_sequence', 100, true);
 
 -----
 -----
------ STORED PROCEDURE
+----- STORED PROCEDURES
 -----
 -----
 
@@ -108,14 +108,13 @@ CREATE FUNCTION delete_record_insert()
 AS
 '
     BEGIN
-        EXECUTE ''INSERT INTO deleteRecord (data, objectid, tablename) VALUES ($1, $2, $3)''
-            USING to_jsonb(OLD.*), OLD.id, TG_TABLE_NAME;
+        EXECUTE ''INSERT INTO deleteRecord (data, objectId, tableName, deletedAt) VALUES ($1, $2, $3, $4)''
+            USING to_jsonb(OLD.*), OLD.id, TG_TABLE_NAME, current_timestamp;
         RETURN OLD;
     End;
 ' LANGUAGE plpgsql;
 
-
-
+-- Soft deletables
 CREATE TRIGGER delete_record_insert
     AFTER DELETE
     ON Product
@@ -124,7 +123,12 @@ EXECUTE FUNCTION delete_record_insert();
 
 CREATE TRIGGER delete_record_insert
     AFTER DELETE
-    ON Requirement
+    ON Publication
     FOR EACH ROW
 EXECUTE FUNCTION delete_record_insert();
 
+CREATE TRIGGER delete_record_insert
+    AFTER DELETE
+    ON Project
+    FOR EACH ROW
+EXECUTE FUNCTION delete_record_insert();
