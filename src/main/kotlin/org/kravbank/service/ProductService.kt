@@ -10,12 +10,14 @@ import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
+
 @ApplicationScoped
 class ProductService(
     val productRepository: ProductRepository,
     val projectRepository: ProjectRepository,
     val requirementVariantRepository: RequirementVariantRepository,
 ) {
+
 
     fun get(projectRef: String, productRef: String): Product {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -47,7 +49,7 @@ class ProductService(
         val foundProject = projectRepository.findByRef(projectRef)
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
 
-        productRepository.delete(foundProduct)
+        productRepository.deleteById(foundProduct.id)
 
         return foundProduct
     }
