@@ -4,15 +4,28 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import org.kravbank.dao.ProductForm
+import org.kravbank.domain.DeleteRecord
+import org.kravbank.lang.NotFoundException
 import org.kravbank.utils.KeycloakAccess
+import javax.inject.Inject
+import javax.persistence.EntityManager
+import javax.persistence.Query
 
 
 @QuarkusTest
 class ProductResourceTest {
 
     private val token = KeycloakAccess.getAccessToken("alice")
+
+    //@Inject
+    //lateinit var deleteRecordRepository: DeleteRecordRepository
+
+    @Inject
+    lateinit var em: EntityManager
 
 
     @Test
@@ -39,6 +52,8 @@ class ProductResourceTest {
 
     @Test
     fun createProduct() {
+
+
         RestAssured.defaultParser = Parser.JSON
 
         val form = ProductForm()
@@ -55,18 +70,84 @@ class ProductResourceTest {
             .post("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
             .then()
             .statusCode(201)
+
     }
 
     @Test
     fun deleteProdudct() {
-        given()
+
+        //REPOSITORY CLASS
+        // val deleteRecordList = deleteRecordRepository.findAll().list<DeleteRecord>()
+        // val firstInList = deleteRecordList[0]
+        // println("from repo $firstInList")
+        // for (c in deleteRecordList) println(c.toString())
+
+        //get all products
+        var response =
+            given()
+                .auth()
+                .oauth2(token)
+                .`when`()
+                .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
+
+        var productStatusCode = response.statusCode()
+        var productListLength = response.body.jsonPath().getInt("data.size()")
+
+        assertEquals(200, productStatusCode)
+        assertEquals(2, productListLength)
+
+        // get all delete records
+        val sql = "SELECT *  FROM DeleteRecord"
+        var query: Query = em.createNativeQuery(sql, DeleteRecord::class.java)
+        var listOfDeletedRecords = query.resultList.toMutableList()
+
+        var deletedRecordListSize: Int
+
+        if (listOfDeletedRecords.isNotEmpty()) {
+            deletedRecordListSize = listOfDeletedRecords.size
+            assertEquals(2, deletedRecordListSize)
+
+        } else {
+            fail { throw NotFoundException("Emtpy delete record list") }
+        }
+
+        // Delete action...
+        val delete = given()
             .auth()
             .oauth2(token)
             .`when`()
             .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
+
+        assertEquals(200, delete.statusCode)
+
+        //check delete record +1
+        query = em.createNativeQuery(sql, DeleteRecord::class.java)
+        listOfDeletedRecords = query.resultList.toMutableList()
+
+        deletedRecordListSize = listOfDeletedRecords.size
+
+        if (listOfDeletedRecords.isNotEmpty()) {
+            assertEquals(3, deletedRecordListSize)
+        } else {
+            fail { throw NotFoundException("Emtpy product list") }
+        }
+
+        //check product list -1
+        response =
+            given()
+                .auth()
+                .oauth2(token)
+                .`when`()
+                .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
+
+        productStatusCode = response.statusCode()
+        productListLength = response.body.jsonPath().getInt("data.size()")
+
+        assertEquals(200, productStatusCode)
+        assertEquals(1, productListLength)
+
     }
+
 
     @Test
     fun updateProduct() {
