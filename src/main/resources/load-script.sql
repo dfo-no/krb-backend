@@ -86,6 +86,27 @@ values (23, 'code tittel fra script5', 'code beskrivelse fra script', 'script5b6
 insert into Code("id", title, description, ref, codelist_id_fk)
 values (28, 'code tittel fra script6', 'code beskrivelse fra script', 'script6b69-edb2-431f-855a-4368e2bcddd1', 27);
 
+-- DELETE RECORD
+insert into DeleteRecord (id, data, deletedAt, updatedAt, tableName, objectId)
+values (109, '{
+  "id": 999,
+  "ref": "ref-til-product-999",
+  "title": "product-9999 tittel",
+  "description": "propduct-9999-beskrivelse",
+  "project_id_fk": 3,
+  "requirementvariant_id_fk": 14
+}', '2021-09-29 21:17:30.23195', null, 'product', 999);
+
+insert into DeleteRecord (id, data, deletedAt, updatedAt, tableName, objectId)
+values (110, '{
+  "id": 998,
+  "ref": "ref-til-product-998",
+  "title": "product-998 tittel",
+  "description": "propduct-9999-beskrivelse",
+  "project_id_fk": 3,
+  "requirementvariant_id_fk": 14
+}', '2021-09-29 21:17:30.23195', null, 'product', 998);
+
 
 --CONFIG
 select setval('hibernate_sequence', 100, true);
