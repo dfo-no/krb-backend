@@ -1,20 +1,19 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.*
 
 @Entity
-//@Where(clause = "deletedDate is null")
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Product : PanacheEntity() {
 
     lateinit var title: String
 
     lateinit var description: String
-
-    //override var deletedDate: LocalDateTime? = null
 
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()

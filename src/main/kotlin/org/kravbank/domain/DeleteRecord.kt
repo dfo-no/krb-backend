@@ -7,6 +7,11 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
+@NamedNativeQuery(
+    name = "selectDeletedRecords",
+    query = "SELECT * FROM DeleteRecord",
+    resultClass = DeleteRecord::class
+)
 @Entity
 data class DeleteRecord(
 
