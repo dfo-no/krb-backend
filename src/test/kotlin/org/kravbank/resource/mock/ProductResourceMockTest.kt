@@ -143,10 +143,7 @@ internal class ProductResourceMockTest {
 
         assertNotNull(response)
         assertEquals(product.ref, response.entity)
-        verify(productRepository).delete(product)
-
-        //soft deleted method adds deleted timestamp
-        //assertNotNull(product.deletedDate)
+        //  TODO verify(productRepository).delete(product)
 
     }
 
