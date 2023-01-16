@@ -112,39 +112,36 @@ class ProductResourceTest {
                 .`when`()
                 .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
 
-        val formatProductList = listProductsResponse.body.jsonPath().getList("", Product::class.java)
-        val oldProductListLength = formatProductList.size
         assertEquals(200, listProductsResponse.statusCode())
 
-        val deleteThisProduct = formatProductList[0]
+        val productList = listProductsResponse.body.jsonPath().getList("", Product::class.java)
+        val oldProductListLength = productList.size
+
+        val productToDelete = productList[0]
 
 
-        // list existing delete records
-        val namedSelectQuery = "selectDeletedRecords"
+        // list existing soft-deleted records
         val deleteRecordQuery: TypedQuery<DeleteRecord> =
-            em.createNamedQuery(namedSelectQuery, DeleteRecord::class.java)
-        val listDeletedRecordsBeforeTest =
-            deleteRecordQuery.resultList // as MutableList<DeleteRecord> //the named query in DeleteRecord is returning resultClass DeleteRecord
-        val oldDeletedRecordsListLength = listDeletedRecordsBeforeTest.size
+            em.createNamedQuery("selectDeletedRecords", DeleteRecord::class.java)
+
+        val numberOfDeletedRecordsBeforeTest = deleteRecordQuery.resultList.size
 
         // Delete action...
         val delete = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/${deleteThisProduct.ref}")
+            .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/${productToDelete.ref}")
 
         assertEquals(200, delete.statusCode)
 
-        //check delete record +1
-        // deleteRecordQuery = em.createNamedQuery(namedSelectQuery, DeleteRecord::class.java)
-        val listDeletedRecordsAfterTest =
-            deleteRecordQuery.resultList// as MutableList<DeleteRecord> //the named query in DeleteRecord is returning resultClass DeleteRecord
+        // Verify we have one more soft-deleted record
+        val listDeletedRecordsAfterTest = deleteRecordQuery.resultList
 
-        assertEquals(oldDeletedRecordsListLength + 1, listDeletedRecordsAfterTest.size)
+        assertEquals(numberOfDeletedRecordsBeforeTest + 1, listDeletedRecordsAfterTest.size)
 
 
-        //check product list -1
+        // Verify the deleted product is gone
         listProductsResponse =
             given()
                 .auth()
@@ -153,17 +150,20 @@ class ProductResourceTest {
                 .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
 
         assertEquals(200, listProductsResponse.statusCode())
+
+
         val newProductListLength = listProductsResponse.body.jsonPath().getInt("data.size()")
+
         assertEquals(oldProductListLength - 1, newProductListLength)
 
 
-        // verify deleted product
+        // Verify the deleted product can be deserialized to a representation of the orginal product
         val mapper = jacksonObjectMapper()
-        val deserializeThisProduct = listDeletedRecordsAfterTest[listDeletedRecordsAfterTest.size - 1]
+        val deserializeThisProduct = listDeletedRecordsAfterTest.last()
         val productEntity = mapper.readValue(deserializeThisProduct.data, Product::class.java)
 
-        assertEquals(deleteThisProduct.ref, productEntity.ref)
-        assertEquals(deleteThisProduct.title, productEntity.title)
-        assertEquals(deleteThisProduct.description, productEntity.description)
+        assertEquals(productToDelete.ref, productEntity.ref)
+        assertEquals(productToDelete.title, productEntity.title)
+        assertEquals(productToDelete.description, productEntity.description)
     }
 }
