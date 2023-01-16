@@ -116,8 +116,7 @@ internal class ProductServiceTest {
             product.ref
         )
 
-        //TODO  verify(productRepository).delete(product)
-
+        verify(productRepository).deleteById(product.id)
     }
 
     @Test
