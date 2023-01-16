@@ -123,14 +123,15 @@ select setval('hibernate_sequence', 100, true);
 -----
 -----
 
+drop function if exists delete_record_insert cascade;
 
 CREATE FUNCTION delete_record_insert()
     RETURNS trigger
 AS
 '
     BEGIN
-        EXECUTE ''INSERT INTO deleteRecord (data, objectId, tableName, deletedAt) VALUES ($1, $2, $3, $4)''
-            USING to_jsonb(OLD.*), OLD.id, TG_TABLE_NAME, current_timestamp;
+        EXECUTE ''INSERT INTO deleteRecord (data, deletedAt, objectId, tableName) VALUES ($1, $2, $3, $4)''
+            USING to_jsonb(OLD.*), current_timestamp, OLD.id, TG_TABLE_NAME;
         RETURN OLD;
     End;
 ' LANGUAGE plpgsql;
