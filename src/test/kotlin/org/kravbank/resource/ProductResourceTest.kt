@@ -16,7 +16,7 @@ import org.kravbank.domain.Product
 import org.kravbank.utils.KeycloakAccess
 import javax.inject.Inject
 import javax.persistence.EntityManager
-import javax.persistence.Query
+import javax.persistence.TypedQuery
 
 
 @TestMethodOrder(
@@ -113,18 +113,19 @@ class ProductResourceTest {
                 .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
 
         val formatProductList = listProductsResponse.body.jsonPath().getList("", Product::class.java)
-        val deleteThisProduct = formatProductList[0]
         val oldProductListLength = formatProductList.size
-
         assertEquals(200, listProductsResponse.statusCode())
 
+        val deleteThisProduct = formatProductList[0]
 
-        // list delete records
+
+        // list existing delete records
         val namedSelectQuery = "selectDeletedRecords"
-        var query: Query = em.createNamedQuery(namedSelectQuery)
-        var listDeletedRecords =
-            query.resultList as MutableList<DeleteRecord> //the named query in DeleteRecord is returning resultClass DeleteRecord
-        val oldDeletedRecordsListLength = listDeletedRecords.size
+        val deleteRecordQuery: TypedQuery<DeleteRecord> =
+            em.createNamedQuery(namedSelectQuery, DeleteRecord::class.java)
+        val listDeletedRecordsBeforeTest =
+            deleteRecordQuery.resultList // as MutableList<DeleteRecord> //the named query in DeleteRecord is returning resultClass DeleteRecord
+        val oldDeletedRecordsListLength = listDeletedRecordsBeforeTest.size
 
         // Delete action...
         val delete = given()
@@ -136,11 +137,11 @@ class ProductResourceTest {
         assertEquals(200, delete.statusCode)
 
         //check delete record +1
-        query = em.createNamedQuery(namedSelectQuery)
-        listDeletedRecords =
-            query.resultList as MutableList<DeleteRecord> //the named query in DeleteRecord is returning resultClass DeleteRecord
+        // deleteRecordQuery = em.createNamedQuery(namedSelectQuery, DeleteRecord::class.java)
+        val listDeletedRecordsAfterTest =
+            deleteRecordQuery.resultList// as MutableList<DeleteRecord> //the named query in DeleteRecord is returning resultClass DeleteRecord
 
-        assertEquals(oldDeletedRecordsListLength + 1, listDeletedRecords.size)
+        assertEquals(oldDeletedRecordsListLength + 1, listDeletedRecordsAfterTest.size)
 
 
         //check product list -1
@@ -158,7 +159,7 @@ class ProductResourceTest {
 
         // verify deleted product
         val mapper = jacksonObjectMapper()
-        val deserializeThisProduct = listDeletedRecords[listDeletedRecords.size - 1]
+        val deserializeThisProduct = listDeletedRecordsAfterTest[listDeletedRecordsAfterTest.size - 1]
         val productEntity = mapper.readValue(deserializeThisProduct.data, Product::class.java)
 
         assertEquals(deleteThisProduct.ref, productEntity.ref)
