@@ -19,7 +19,7 @@ class Product : PanacheEntity() {
     var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "product")
@@ -28,11 +28,15 @@ class Product : PanacheEntity() {
     var project: Project? = null
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY
     )
     @JsonManagedReference(value = "val-reqvariant-product")
     @JsonIgnore
     @JoinColumn(name = "requirementvariant_id_fk")
     var requirementvariant: RequirementVariant? = null
+
+    override fun toString(): String {
+        return "Product(title='$title', description='$description', ref='$ref', project=$project, requirementvariant=$requirementvariant)"
+    }
 }

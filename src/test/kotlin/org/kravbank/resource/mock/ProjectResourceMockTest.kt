@@ -113,17 +113,12 @@ internal class ProjectResourceMockTest {
     @Test
     fun deleteProject_OK() {
 
-        //To check that delete timestamp is asserted, we need to call real method
-        `when`(projectRepository.delete(project)).thenCallRealMethod()
-
         val response: Response = projectResource.deleteProject(project.ref)
 
         assertNotNull(response)
         assertEquals(project.ref, response.entity)
-        verify(projectRepository).delete(project)
+        verify(projectRepository).deleteById(project.id)
 
-        //soft deleted method adds deleted timestamp
-        assertNotNull(project.deletedDate)
     }
 
 

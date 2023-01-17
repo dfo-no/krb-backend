@@ -114,17 +114,11 @@ internal class PublicationResourceMockTest {
     @Test
     fun deletePublication_OK() {
 
-        //To check that delete timestamp is asserted, we need to call real method
-        `when`(publicationRepository.delete(publication)).thenCallRealMethod()
-
         val response: Response = publicationResource.deletePublication(project.ref, publication.ref)
 
         assertNotNull(response)
         assertEquals(publication.ref, response.entity)
-        verify(publicationRepository).delete(publication)
-
-        //soft deleted method adds deleted timestamp
-        assertNotNull(publication.deletedDate)
+        verify(publicationRepository).deleteById(publication.id)
 
     }
 

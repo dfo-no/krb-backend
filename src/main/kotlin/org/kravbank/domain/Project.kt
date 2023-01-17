@@ -1,8 +1,8 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import org.hibernate.annotations.Where
-import java.time.LocalDateTime
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -10,8 +10,8 @@ import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
-@Where(clause = "deletedDate is null")
-class Project : SoftDeletable() {
+@JsonIgnoreProperties(ignoreUnknown = true)
+class Project : PanacheEntity() {
 
     lateinit var title: String
 
@@ -22,8 +22,6 @@ class Project : SoftDeletable() {
         name = "ref"
     )
     var ref: String = UUID.randomUUID().toString()
-
-    override var deletedDate: LocalDateTime? = null
 
     @OneToMany(
         mappedBy = ("project"),
@@ -64,4 +62,8 @@ class Project : SoftDeletable() {
     )
     @JsonBackReference(value = "val-codelist")
     var codelist = mutableListOf<Codelist>()
+
+    override fun toString(): String {
+        return "Project(title='$title', description='$description', ref='$ref', products=$products, publications=$publications, requirements=$requirements, needs=$needs, codelist=$codelist)"
+    }
 }
