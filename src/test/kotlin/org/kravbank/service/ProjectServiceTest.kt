@@ -104,7 +104,7 @@ class ProjectServiceTest {
             project.ref,
         )
 
-        verify(projectRepository).delete(project)
+        verify(projectRepository).deleteById(project.id)
 
     }
 

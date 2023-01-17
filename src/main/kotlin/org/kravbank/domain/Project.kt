@@ -1,7 +1,8 @@
 package org.kravbank.domain
 
-import org.hibernate.annotations.Where
-import java.time.LocalDateTime
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -9,19 +10,18 @@ import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
-@Where(clause = "deletedDate is null")
-class Project : SoftDeletable() {
-
-    @Column(
-        unique = true,
-    )
-    var ref: String = UUID.randomUUID().toString()
+@JsonIgnoreProperties(ignoreUnknown = true)
+class Project : PanacheEntity() {
 
     lateinit var title: String
 
     lateinit var description: String
 
-    override var deletedDate: LocalDateTime? = null
+    @Column(
+        unique = true,
+        name = "ref"
+    )
+    var ref: String = UUID.randomUUID().toString()
 
     @OneToMany(
         mappedBy = ("project"),
@@ -60,13 +60,6 @@ class Project : SoftDeletable() {
     var codelist = mutableListOf<Codelist>()
 
     override fun toString(): String {
-        return "Title: $title,  Description: $description, Ref: $ref, Deleted date: $deletedDate \n" +
-                "Codelist: $codelist \n" +
-                "Needs: $needs \n" +
-                "Requirements: $requirements \n" +
-                "Publications $publications \n" +
-                "Products $products"
+        return "Project(title='$title', description='$description', ref='$ref', products=$products, publications=$publications, requirements=$requirements, needs=$needs, codelist=$codelist)"
     }
-
 }
-  

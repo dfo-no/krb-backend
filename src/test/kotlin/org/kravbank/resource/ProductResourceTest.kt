@@ -81,27 +81,6 @@ class ProductResourceTest {
 
     @Test
     @Order(4)
-    fun `update existing product`() {
-        RestAssured.defaultParser = Parser.JSON
-        val form = ProductForm()
-        form.title = "PUT Integrasjonstest - Tittel 1"
-        form.description = "PUT Integrasjonstest - Beskrivelse 1"
-        val product = ProductForm().toEntity(form)
-
-        given()
-            .auth()
-            .oauth2(token)
-            .`when`()
-            .body(product)
-            .header("Content-type", "application/json")
-            .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
-    }
-
-
-    @Test
-    @Order(5)
     fun `delete product and verify delete record`() {
 
         //list products
@@ -117,8 +96,7 @@ class ProductResourceTest {
         val productList = listProductsResponse.body.jsonPath().getList("", Product::class.java)
         val oldProductListLength = productList.size
 
-        val productToDelete = productList[0]
-
+        val productToDelete = productList.last()
 
         // list existing soft-deleted records
         val deleteRecordQuery: TypedQuery<DeleteRecord> =
@@ -165,5 +143,27 @@ class ProductResourceTest {
         assertEquals(productToDelete.ref, productEntity.ref)
         assertEquals(productToDelete.title, productEntity.title)
         assertEquals(productToDelete.description, productEntity.description)
+    }
+
+
+    @Test
+    @Order(5)
+    fun `update existing product`() {
+        RestAssured.defaultParser = Parser.JSON
+
+        val form = ProductForm().apply {
+            title = "Endrer tittel til denne"
+            description = "Endrer beskrivelse til denne"
+        }
+
+        given()
+            .auth()
+            .oauth2(token)
+            .`when`()
+            .body(ProductForm().toEntity(form))
+            .header("Content-type", "application/json")
+            .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
+            .then()
+            .statusCode(200)
     }
 }

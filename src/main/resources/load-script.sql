@@ -5,18 +5,18 @@
 -----
 
 --PROJECT
-insert into Project("id", title, description, deleteddate, ref)
-values (1, 'Prosjekt1', 'Beskrivelse1', null, 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id", title, description, deleteddate, ref)
-values (2, 'Prosjekt2', 'Beskrivelse2', null, 'aaa4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id", title, description, deleteddate, ref)
-values (3, 'Prosjekt3', 'Beskrivelse3', null, 'bbb4db69-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id", title, description, deleteddate, ref)
-values (22, 'ScriptProsjekt4', 'Beskrivelse3', '2021-09-29 21:17:30.23195', 'prosjekt4-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id", title, description, deleteddate, ref)
-values (24, 'ScriptProsjekt5', 'Beskrivelse3', null, 'prosjekt5-edb2-431f-855a-4368e2bcddd1');
-insert into Project("id", title, description, deleteddate, ref)
-values (26, 'ScriptProsjekt6', 'Beskrivelse3', null, 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id", title, description, ref)
+values (1, 'Prosjekt1', 'Beskrivelse1', 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id", title, description, ref)
+values (2, 'Prosjekt2', 'Beskrivelse2', 'aaa4db69-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id", title, description, ref)
+values (3, 'Prosjekt3', 'Beskrivelse3', 'bbb4db69-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id", title, description, ref)
+values (22, 'ScriptProsjekt4', 'Beskrivelse3', 'prosjekt4-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id", title, description, ref)
+values (24, 'ScriptProsjekt5', 'Beskrivelse3', 'prosjekt5-edb2-431f-855a-4368e2bcddd1');
+insert into Project("id", title, description, ref)
+values (26, 'ScriptProsjekt6', 'Beskrivelse3', 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
 
 --CODELIST
 insert into Codelist("id", title, description, ref, project_id_fk)
@@ -31,10 +31,10 @@ insert into Codelist("id", title, description, ref, project_id_fk)
 values (27, 'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist33333db69-edb2-431f-855a-4368e2bcddd1', 26);
 
 -- PUBLICATION
-insert into Publication("id", comment, version, date, ref, deleteddate, project_id_fk)
-values (8, 'comment1', 2, '2020-09-29 21:17:30.23195', 'zzz4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
-insert into Publication("id", comment, version, date, ref, deleteddate, project_id_fk)
-values (9, 'comment2', 4, '1999-09-10 21:17:30.23195', 'xxx4db69-edb2-431f-855a-4368e2bcddd1', null, 3);
+insert into Publication("id", comment, version, date, ref, project_id_fk)
+values (8, 'comment1', 2, '2020-09-29 21:17:30.23195', 'zzz4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Publication("id", comment, version, date, ref, project_id_fk)
+values (9, 'comment2', 4, '1999-09-10 21:17:30.23195', 'xxx4db69-edb2-431f-855a-4368e2bcddd1', 3);
 
 -- NEED
 insert into Need("id", title, description, ref, project_id_fk)

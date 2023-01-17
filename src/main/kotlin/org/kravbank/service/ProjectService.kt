@@ -33,7 +33,7 @@ class ProjectService(val projectRepository: ProjectRepository) {
     fun delete(projectRef: String): Project {
         val foundProject = projectRepository.findByRef(projectRef)
 
-        projectRepository.delete(foundProject)
+        projectRepository.deleteById(foundProject.id)
 
         return foundProject
     }

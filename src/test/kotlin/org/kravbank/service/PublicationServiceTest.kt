@@ -115,7 +115,7 @@ class PublicationServiceTest {
     fun delete() {
         publicationService.delete(project.ref, publication.ref)
 
-        verify(publicationRepository).delete(publication)
+        verify(publicationRepository).deleteById(publication.id)
 
     }
 

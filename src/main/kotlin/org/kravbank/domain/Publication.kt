@@ -1,15 +1,16 @@
 package org.kravbank.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import org.hibernate.annotations.Where
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
 @Entity
-@Where(clause = "deletedDate is null")
-class Publication : SoftDeletable() {
+@JsonIgnoreProperties(ignoreUnknown = true)
+class Publication : PanacheEntity() {
 
     @Column(unique = true)
     var ref: String = UUID.randomUUID().toString()
@@ -19,8 +20,6 @@ class Publication : SoftDeletable() {
     var date: LocalDateTime = LocalDateTime.now()
 
     var version: Long = 0
-
-    override var deletedDate: LocalDateTime? = null
 
     var publicationExportRef: String? = null
 
@@ -32,4 +31,8 @@ class Publication : SoftDeletable() {
     @JsonIgnore
     @JoinColumn(name = "project_id_fk")
     var project: Project? = null
+
+    override fun toString(): String {
+        return "Publication(comment='$comment', date=$date, version=$version, ref='$ref', project=$project)"
+    }
 }

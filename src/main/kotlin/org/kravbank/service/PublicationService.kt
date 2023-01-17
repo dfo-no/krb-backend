@@ -48,7 +48,7 @@ class PublicationService(
         val foundProject = projectRepository.findByRef(projectRef)
         val publication = publicationRepository.findByRef(foundProject.id, publicationRef)
 
-        publicationRepository.delete(publication)
+        publicationRepository.deleteById(publication.id)
 
         return publication
     }
