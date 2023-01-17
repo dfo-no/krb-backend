@@ -15,6 +15,8 @@ class PublicationService(
     val publicationRepository: PublicationRepository,
     val projectRepository: ProjectRepository
 ) {
+
+
     fun get(projectRef: String, publicationRef: String): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
 
@@ -34,6 +36,7 @@ class PublicationService(
         val publication = PublicationForm().toEntity(newPublication)
         publication.project = foundProject
         publication.date = LocalDateTime.now()
+        publication.version = getNextVersion(foundProject.publications)
 
         publicationRepository.persistAndFlush(publication)
         if (!publicationRepository.isPersistent(publication)) throw BadRequestException(PUBLICATION_BADREQUEST_CREATE)
@@ -54,9 +57,19 @@ class PublicationService(
     fun update(projectRef: String, publicationRef: String, updatedPublication: PublicationForm): Publication {
         val foundProject = projectRepository.findByRef(projectRef)
         val foundPublication = publicationRepository.findByRef(foundProject.id, publicationRef)
-        val update = PublicationForm().toEntity(updatedPublication)
-        publicationRepository.updatePublication(foundPublication.id, update)
 
-        return update.apply { ref = foundPublication.ref }
+        val updated = PublicationForm().toEntity(updatedPublication)
+        publicationRepository.updatePublication(foundPublication.id, updated.comment)
+
+        updated.ref = foundPublication.ref
+        updated.version = foundPublication.version
+
+        return updated
+    }
+
+    private fun getNextVersion(publications: List<Publication>): Long {
+        if (publications.isEmpty()) return 1
+
+        return publications.maxOf { p -> p.version }.plus(1)
     }
 }

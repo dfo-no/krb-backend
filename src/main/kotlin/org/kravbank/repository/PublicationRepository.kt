@@ -32,11 +32,10 @@ class PublicationRepository : BackendRepository<Publication>() {
     }
 
     @Throws(BackendException::class)
-    fun updatePublication(id: Long, publication: Publication) {
+    fun updatePublication(id: Long, comment: String) {
         val updated = update(
-            "comment = ?1, version = ?2 where id = ?3",
-            publication.comment,
-            publication.version,
+            "comment = ?1 where id = ?2",
+            comment,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException(PUBLICATION_BADREQUEST_UPDATE) }
