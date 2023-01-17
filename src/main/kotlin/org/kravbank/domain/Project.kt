@@ -1,6 +1,5 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import java.util.*
@@ -13,15 +12,14 @@ import javax.persistence.OneToMany
 @Where(clause = "deletedDate is null")
 class Project : SoftDeletable() {
 
+    @Column(
+        unique = true,
+    )
+    var ref: String = UUID.randomUUID().toString()
+
     lateinit var title: String
 
     lateinit var description: String
-
-    @Column(
-        unique = true,
-        name = "ref"
-    )
-    var ref: String = UUID.randomUUID().toString()
 
     override var deletedDate: LocalDateTime? = null
 
@@ -30,7 +28,6 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "product")
     var products = mutableListOf<Product>()
 
     @OneToMany(
@@ -38,7 +35,6 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-publication")
     var publications = mutableListOf<Publication>()
 
     @OneToMany(
@@ -46,7 +42,7 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-requirement")
+
     var requirements = mutableListOf<Requirement>()
 
     @OneToMany(
@@ -54,7 +50,6 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-need-project")
     var needs = mutableListOf<Need>()
 
     @OneToMany(
@@ -62,6 +57,16 @@ class Project : SoftDeletable() {
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JsonBackReference(value = "val-codelist")
     var codelist = mutableListOf<Codelist>()
+
+    override fun toString(): String {
+        return "Title: $title,  Description: $description, Ref: $ref, Deleted date: $deletedDate \n" +
+                "Codelist: $codelist \n" +
+                "Needs: $needs \n" +
+                "Requirements: $requirements \n" +
+                "Publications $publications \n" +
+                "Products $products"
+    }
+
 }
+  

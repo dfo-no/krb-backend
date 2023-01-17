@@ -79,6 +79,9 @@ class TestSetup {
         private val dateTime: LocalDateTime = LocalDateTime.of(2021, 2, 21, 10, 10, 10)
 
 
+        //publication Export
+        var publicationExport = PublicationExport()
+
         fun start() {
 
             //project
@@ -315,6 +318,17 @@ class TestSetup {
 
             requirementVariants.add(requirementVariant)
             requirementVariants.add(newRequirementVariant)
+
+
+            //publication export
+
+
+            publicationExport.id = 89
+            publicationExport.ref = "dasfsdfgsd-sdgdsf"
+            publicationExport.publicationRef = publication.ref
+            //TODO fix, making some problems for other tests
+            //publicationExport.blobFormat = encodeBlob(JsonSerialization.writeValueAsBytes(project))
+
 
         }
     }

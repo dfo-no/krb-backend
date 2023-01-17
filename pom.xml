@@ -9,12 +9,12 @@
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <kotlin.version>1.7.10</kotlin.version>
+        <kotlin.version>1.7.21</kotlin.version>
         <lombok.version>1.18.24</lombok.version>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.platform.version>2.12.1.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.15.1.Final</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
         <failsafe-plugin.version>3.0.0-M7</failsafe-plugin.version>
@@ -153,6 +153,24 @@
             <artifactId>quarkus-test-keycloak-server</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--  <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-databind</artifactId>
+              <version>2.14.0</version>
+          </dependency>
+          -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

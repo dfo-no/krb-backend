@@ -81,6 +81,11 @@ insert into Code("id", title, description, ref, codelist_id_fk)
 values (28, 'code tittel fra script6', 'code beskrivelse fra script', 'script6b69-edb2-431f-855a-4368e2bcddd1', 27);
 
 
+-- PUBLICATION EXPORT
+insert into PublicationExport("id", ref, publicationRef, serializedProject)
+values (30, 'export-2314456-32454236', 'zzz4db69-edb2-431f-855a-4368e2bcddd1',
+        '{"id":3,"ref":"bbb4db69-edb2-431f-855a-4368e2bcddd1","title":"Prosjekt3","description":"Beskrivelse3","deletedDate":null,"products":[{"id":5,"title":"ProduktTittel1","description":"ProduktBeskrivelse1","deletedDate":null,"ref":"edb4db69-edb2-431f-855a-4368e2bcddd1"},{"id":6,"title":"ProduktTittel2","description":"ProduktBeskrivelse2","deletedDate":null,"ref":"kuk4db69-edb2-431f-855a-4368e2bcddd1"}],"publications":[{"id":8,"ref":"zzz4db69-edb2-431f-855a-4368e2bcddd1","comment":"comment1","date":[2020,9,29,21,17,30,231950000],"version":2,"deletedDate":null,"publicationExportRef":null},{"id":9,"ref":"xxx4db69-edb2-431f-855a-4368e2bcddd1","comment":"comment2","date":[1999,9,10,21,17,30,231950000],"version":4,"deletedDate":null,"publicationExportRef":null}],"requirements":[],"needs":[],"codelist":[{"id":4,"title":"CodelistTittel1","description":"CodelistBeskrivelse1","ref":"qqq4db69-edb2-431f-855a-4368e2bcddd1"},{"id":5,"title":"CodelistTittel2","description":"CodelistBeskrivelse2","ref":"asd4db69-edb2-431f-855a-4368e2bcddd1"}]}');
+
 --CONFIG
 select setval('hibernate_sequence', 100, true);
 
