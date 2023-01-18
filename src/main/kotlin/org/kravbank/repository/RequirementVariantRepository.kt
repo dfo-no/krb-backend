@@ -16,7 +16,7 @@ class RequirementVariantRepository : BackendRepository<RequirementVariant>() {
     fun findByRef(requirementId: Long, ref: String): RequirementVariant {
         val reqVariant =
             find(
-                "ref = ?1 and requirement_id_fk = ?2",
+                "ref = ?1 and requirement_id = ?2",
                 ref,
                 requirementId
             ).firstResult<RequirementVariant>()
@@ -37,7 +37,7 @@ class RequirementVariantRepository : BackendRepository<RequirementVariant>() {
 
 
     fun listAllRequirementVariants(id: Long): List<RequirementVariant> {
-        return find("requirement_id_fk", id)
+        return find("requirement_id", id)
             .stream<RequirementVariant>()
             .toList()
     }

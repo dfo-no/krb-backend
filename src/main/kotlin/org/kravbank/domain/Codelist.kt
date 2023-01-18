@@ -31,7 +31,6 @@ class Codelist : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-codelist")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     override fun toString(): String {

@@ -15,7 +15,7 @@ class RequirementRepository : BackendRepository<Requirement>() {
     fun findByRef(projectId: Long, ref: String): Requirement {
         val requirement =
             find(
-                "ref = ?1 and project_id_fk = ?2",
+                "ref = ?1 and project_id = ?2",
                 ref,
                 projectId
             ).firstResult<Requirement>()
@@ -24,7 +24,7 @@ class RequirementRepository : BackendRepository<Requirement>() {
     }
 
     fun listAllRequirements(id: Long): List<Requirement> {
-        return find("project_id_fk", id)
+        return find("project_id", id)
             .stream<Requirement>()
             .toList()
     }
