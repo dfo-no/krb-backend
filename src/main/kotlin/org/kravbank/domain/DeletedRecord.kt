@@ -8,11 +8,11 @@ import javax.persistence.*
 
 @NamedNativeQuery(
     name = "selectDeletedRecords",
-    query = "SELECT * FROM DeleteRecord",
-    resultClass = DeleteRecord::class
+    query = "SELECT * FROM DeletedRecord",
+    resultClass = DeletedRecord::class
 )
 @Entity
-data class DeleteRecord(
+data class DeletedRecord(
 
     @Column(columnDefinition = "jsonb")
     var data: String? = null,

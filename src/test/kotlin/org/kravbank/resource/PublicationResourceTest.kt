@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.kravbank.dao.PublicationForm
-import org.kravbank.domain.DeleteRecord
+import org.kravbank.domain.DeletedRecord
 import org.kravbank.domain.Publication
 import org.kravbank.utils.KeycloakAccess
 import javax.inject.Inject
@@ -100,10 +100,10 @@ class PublicationResourceTest {
 
 
         // list existing soft-deleted records
-        val deleteRecordQuery: TypedQuery<DeleteRecord> =
-            em.createNamedQuery("selectDeletedRecords", DeleteRecord::class.java)
+        val deletedRecordQuery: TypedQuery<DeletedRecord> =
+            em.createNamedQuery("selectDeletedRecords", DeletedRecord::class.java)
 
-        val numberOfDeletedRecordsBeforeTest = deleteRecordQuery.resultList.size
+        val numberOfDeletedRecordsBeforeTest = deletedRecordQuery.resultList.size
 
 
         // Delete action...
@@ -116,7 +116,7 @@ class PublicationResourceTest {
         assertEquals(200, delete.statusCode)
 
         // Verify we have one more soft-deleted record
-        val listDeletedRecordsAfterTest = deleteRecordQuery.resultList
+        val listDeletedRecordsAfterTest = deletedRecordQuery.resultList
 
         assertEquals(numberOfDeletedRecordsBeforeTest + 1, listDeletedRecordsAfterTest.size)
 

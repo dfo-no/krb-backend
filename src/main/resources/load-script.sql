@@ -87,8 +87,8 @@ insert into Code("id", title, description, ref, codelist_id_fk)
 values (28, 'code tittel fra script6', 'code beskrivelse fra script', 'script6b69-edb2-431f-855a-4368e2bcddd1', 27);
 
 -- DELETE RECORD
-insert into DeleteRecord (id, data, deletedAt, updatedAt, tableName, objectId)
-values (109, '{
+insert into DeletedRecord (id, data, deletedAt, updatedAt, tableName, objectId)
+values (67, '{
   "id": 999,
   "ref": "ref-til-product-999",
   "title": "product-9999 tittel",
@@ -97,8 +97,8 @@ values (109, '{
   "requirementvariant_id_fk": 14
 }', '2021-09-29 21:17:30.23195', null, 'product', 999);
 
-insert into DeleteRecord (id, data, deletedAt, updatedAt, tableName, objectId)
-values (110, '{
+insert into DeletedRecord (id, data, deletedAt, updatedAt, tableName, objectId)
+values (68, '{
   "id": 998,
   "ref": "ref-til-product-998",
   "title": "product-998 tittel",
@@ -111,7 +111,7 @@ values (110, '{
 -- PUBLICATION EXPORT
 insert into PublicationExport("id", ref, publicationRef, serializedProject)
 values (30, 'export-2314456-32454236', 'zzz4db69-edb2-431f-855a-4368e2bcddd1',
-        '{"id":3,"ref":"bbb4db69-edb2-431f-855a-4368e2bcddd1","title":"Prosjekt3","description":"Beskrivelse3","deletedDate":null,"products":[{"id":5,"title":"ProduktTittel1","description":"ProduktBeskrivelse1","deletedDate":null,"ref":"edb4db69-edb2-431f-855a-4368e2bcddd1"},{"id":6,"title":"ProduktTittel2","description":"ProduktBeskrivelse2","deletedDate":null,"ref":"kuk4db69-edb2-431f-855a-4368e2bcddd1"}],"publications":[{"id":8,"ref":"zzz4db69-edb2-431f-855a-4368e2bcddd1","comment":"comment1","date":[2020,9,29,21,17,30,231950000],"version":2,"deletedDate":null,"publicationExportRef":null},{"id":9,"ref":"xxx4db69-edb2-431f-855a-4368e2bcddd1","comment":"comment2","date":[1999,9,10,21,17,30,231950000],"version":4,"deletedDate":null,"publicationExportRef":null}],"requirements":[],"needs":[],"codelist":[{"id":4,"title":"CodelistTittel1","description":"CodelistBeskrivelse1","ref":"qqq4db69-edb2-431f-855a-4368e2bcddd1"},{"id":5,"title":"CodelistTittel2","description":"CodelistBeskrivelse2","ref":"asd4db69-edb2-431f-855a-4368e2bcddd1"}]}');
+        '{"id":3,"ref":"bbb4db69-edb2-431f-855a-4368e2bcddd1","title":"Prosjekt3","description":"Beskrivelse3","products":[{"id":5,"title":"ProduktTittel1","description":"ProduktBeskrivelse1","ref":"edb4db69-edb2-431f-855a-4368e2bcddd1"},{"id":6,"title":"ProduktTittel2","description":"ProduktBeskrivelse2","ref":"kuk4db69-edb2-431f-855a-4368e2bcddd1"}],"publications":[{"id":8,"ref":"zzz4db69-edb2-431f-855a-4368e2bcddd1","comment":"comment1","date":[2020,9,29,21,17,30,231950000],"version":2,"publicationExportRef":null},{"id":9,"ref":"xxx4db69-edb2-431f-855a-4368e2bcddd1","comment":"comment2","date":[1999,9,10,21,17,30,231950000],"version":4,"publicationExportRef":null}],"requirements":[],"needs":[],"codelist":[{"id":4,"title":"CodelistTittel1","description":"CodelistBeskrivelse1","ref":"qqq4db69-edb2-431f-855a-4368e2bcddd1"},{"id":5,"title":"CodelistTittel2","description":"CodelistBeskrivelse2","ref":"asd4db69-edb2-431f-855a-4368e2bcddd1"}]}');
 
 --CONFIG
 select setval('hibernate_sequence', 100, true);
@@ -123,34 +123,34 @@ select setval('hibernate_sequence', 100, true);
 -----
 -----
 
-drop function if exists delete_record_insert cascade;
+drop function if exists deleted_record_insert cascade;
 
-CREATE FUNCTION delete_record_insert()
+CREATE FUNCTION deleted_record_insert()
     RETURNS trigger
 AS
 '
     BEGIN
-        EXECUTE ''INSERT INTO deleteRecord (data, deletedAt, objectId, tableName) VALUES ($1, $2, $3, $4)''
+        EXECUTE ''INSERT INTO DeletedRecord (data, deletedAt, objectId, tableName) VALUES ($1, $2, $3, $4)''
             USING to_jsonb(OLD.*), current_timestamp, OLD.id, TG_TABLE_NAME;
         RETURN OLD;
     End;
 ' LANGUAGE plpgsql;
 
 -- Soft deletables
-CREATE TRIGGER delete_record_insert
+CREATE TRIGGER deleted_record_insert
     AFTER DELETE
     ON Product
     FOR EACH ROW
-EXECUTE FUNCTION delete_record_insert();
+EXECUTE FUNCTION deleted_record_insert();
 
-CREATE TRIGGER delete_record_insert
+CREATE TRIGGER deleted_record_insert
     AFTER DELETE
     ON Publication
     FOR EACH ROW
-EXECUTE FUNCTION delete_record_insert();
+EXECUTE FUNCTION deleted_record_insert();
 
-CREATE TRIGGER delete_record_insert
+CREATE TRIGGER deleted_record_insert
     AFTER DELETE
     ON Project
     FOR EACH ROW
-EXECUTE FUNCTION delete_record_insert();
+EXECUTE FUNCTION deleted_record_insert();
