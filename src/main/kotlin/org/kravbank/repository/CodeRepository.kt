@@ -15,7 +15,7 @@ class CodeRepository : BackendRepository<Code>() {
     fun findByRef(codelistId: Long, ref: String): Code {
         val code =
             find(
-                "ref = ?1 and codelist_id_fk = ?2",
+                "ref = ?1 and codelist_id = ?2",
                 ref,
                 codelistId
             ).firstResult<Code>()
@@ -23,7 +23,7 @@ class CodeRepository : BackendRepository<Code>() {
     }
 
     fun listAllCodes(id: Long): List<Code> {
-        return find("codelist_id_fk", id).stream<Code>().toList()
+        return find("codelist_id", id).stream<Code>().toList()
     }
 
     @Throws(BackendException::class)
