@@ -30,7 +30,6 @@ class Requirement : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-requirement")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     @ManyToOne(
@@ -39,6 +38,5 @@ class Requirement : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-need-requirement")
     @JsonIgnore
-    @JoinColumn(name = "need_id_fk")
     var need: Need? = null
 }

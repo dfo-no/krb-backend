@@ -73,6 +73,7 @@ class CodelistServiceTest {
         assertEquals(codelists[0].title, firstObjectInList.title)
         assertEquals(codelists[0].description, firstObjectInList.description)
         assertEquals(codelists[0].project, firstObjectInList.project)
+        assertEquals(codelists[0].codes, firstObjectInList.codes)
     }
 
     @Test

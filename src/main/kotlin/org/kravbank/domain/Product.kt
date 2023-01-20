@@ -24,7 +24,6 @@ class Product : PanacheEntity() {
     )
     @JsonManagedReference(value = "product")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     @ManyToOne(
@@ -33,7 +32,6 @@ class Product : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-reqvariant-product")
     @JsonIgnore
-    @JoinColumn(name = "requirementvariant_id_fk")
     var requirementvariant: RequirementVariant? = null
 
     override fun toString(): String {

@@ -29,7 +29,6 @@ class Publication : PanacheEntity() {
     )
     @JsonManagedReference(value = "val-publication")
     @JsonIgnore
-    @JoinColumn(name = "project_id_fk")
     var project: Project? = null
 
     override fun toString(): String {

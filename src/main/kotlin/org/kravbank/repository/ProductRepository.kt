@@ -13,18 +13,19 @@ import javax.enterprise.context.ApplicationScoped
 class ProductRepository : BackendRepository<Product>() {
     @Throws(BackendException::class)
     fun findByRef(projectId: Long, ref: String): Product {
-        val entity = find(
-            "ref = ?1 and project_id_fk = ?2",
-            ref,
-            projectId
-        ).firstResult<Product>()
+        val product =
+            find(
+                "ref = ?1 and project_id = ?2",
+                ref,
+                projectId
+            ).firstResult<Product>()
 
         return Optional.ofNullable(entity).orElseThrow { NotFoundException(PRODUCT_NOTFOUND) }
 
     }
 
     fun listAllProducts(id: Long): List<Product> {
-        return find("project_id_fk", id)
+        return find("project_id", id)
             .stream<Product>()
             .toList()
     }

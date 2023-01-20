@@ -16,7 +16,7 @@ class CodelistRepository : BackendRepository<Codelist>() {
     fun findByRef(projectId: Long, ref: String): Codelist {
         val codelist =
             find(
-                "ref = ?1 and project_id_fk = ?2",
+                "ref = ?1 and project.id = ?2",
                 ref,
                 projectId
             ).firstResult<Codelist>()
@@ -27,7 +27,7 @@ class CodelistRepository : BackendRepository<Codelist>() {
 
     @Throws(BackendException::class)
     fun listAllCodelists(id: Long): List<Codelist> {
-        return find("project_id_fk", id).list()
+        return find("project.id", id).list()
     }
 
     @Throws(BackendException::class)
