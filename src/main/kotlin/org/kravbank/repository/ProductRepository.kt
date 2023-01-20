@@ -20,10 +20,8 @@ class ProductRepository : BackendRepository<Product>() {
                 projectId
             ).firstResult<Product>()
 
-        if (product?.deletedDate == null) {
-            return product
+        return Optional.ofNullable(product).orElseThrow { NotFoundException(PRODUCT_NOTFOUND) }
 
-        } else throw NotFoundException(PRODUCT_NOTFOUND)
     }
 
     fun listAllProducts(id: Long): List<Product> {

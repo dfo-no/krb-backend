@@ -114,8 +114,7 @@ class ProductServiceTest {
             product.ref
         )
 
-        verify(productRepository).delete(product)
-
+        verify(productRepository).deleteById(product.id)
     }
 
     @Test
