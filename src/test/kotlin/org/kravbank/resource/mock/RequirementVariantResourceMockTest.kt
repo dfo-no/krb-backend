@@ -1,6 +1,5 @@
 package org.kravbank.resource.mock
 
-import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,23 +22,22 @@ import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
 
 
-@QuarkusTest
-internal class RequirementVariantResourceMockTest {
+class RequirementVariantResourceMockTest {
 
 
-    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
-    private final val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
-    private final val requirementVariantRepository: RequirementVariantRepository =
+    private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
+    private val requirementVariantRepository: RequirementVariantRepository =
         mock(RequirementVariantRepository::class.java)
 
 
-    private final val requirementVariantService = RequirementVariantService(
+    private val requirementVariantService = RequirementVariantService(
         projectRepository = projectRepository,
         requirementRepository = requirementRepository,
         requirementVariantRepository = requirementVariantRepository
     )
 
-    val requirementVariantResource = RequirementVariantResource(requirementVariantService)
+    private val requirementVariantResource = RequirementVariantResource(requirementVariantService)
 
 
     private val arrangeSetup = TestSetup.Arrange

@@ -1,6 +1,5 @@
 package org.kravbank.service
 
-import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,17 +15,16 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
 
-@QuarkusTest
-internal class RequirementVariantServiceTest {
+class RequirementVariantServiceTest {
 
 
-    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
-    private final val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
-    private final val requirementVariantRepository: RequirementVariantRepository =
+    private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
+    private val requirementVariantRepository: RequirementVariantRepository =
         mock(RequirementVariantRepository::class.java)
 
 
-    val requirementVariantService = RequirementVariantService(
+    private val requirementVariantService = RequirementVariantService(
         projectRepository = projectRepository,
         requirementRepository = requirementRepository,
         requirementVariantRepository = requirementVariantRepository
