@@ -20,7 +20,7 @@ class ProductRepository : BackendRepository<Product>() {
                 projectId
             ).firstResult<Product>()
 
-        return Optional.ofNullable(entity).orElseThrow { NotFoundException(PRODUCT_NOTFOUND) }
+        return Optional.ofNullable(product).orElseThrow { NotFoundException(PRODUCT_NOTFOUND) }
 
     }
 
