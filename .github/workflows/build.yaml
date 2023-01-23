@@ -7,6 +7,7 @@ on:
       - develop
       - krb-*
       - KRB-*
+      - prod
   release:
     types: [ published ]
 
@@ -188,31 +189,31 @@ jobs:
 
   # Deploy
 
-  deploy_development:
-    name: Deploy (development)
-    runs-on: ubuntu-latest
-
-    needs: uber-jar
-    if: "github.ref == 'refs/heads/main'"
-
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: uber-jar
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: krb-backend-api
-          slot-name: "Production"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6101935B50D04C189440CA355B835067 }}
-          package: "*.jar"
+  #  deploy_development:
+  #    name: Deploy (development)
+  #    runs-on: ubuntu-latest
+  #
+  #    needs: uber-jar
+  #    if: "github.ref == 'refs/heads/main'"
+  #
+  #    environment:
+  #      name: "Production"
+  #      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  #
+  #    steps:
+  #      - name: Download artifact from build job
+  #        uses: actions/download-artifact@v3
+  #        with:
+  #          name: uber-jar
+  #
+  #      - name: Deploy to Azure Web App
+  #        id: deploy-to-webapp
+  #        uses: azure/webapps-deploy@v2
+  #        with:
+  #          app-name: krb-backend-api
+  #          slot-name: "Production"
+  #          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6101935B50D04C189440CA355B835067 }}
+  #          package: "*.jar"
 
   deploy_production:
     name: Deploy (production)
