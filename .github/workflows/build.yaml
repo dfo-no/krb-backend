@@ -233,5 +233,6 @@ jobs:
         with:
           app-name: krb-backend-api-prod
           slot-name: "Production"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6101935B50D04C189440CA355B835067 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHERPROFILE_PROD }}
           package: "*.jar"
+
