@@ -1,3 +1,0 @@
-CREATE user krbadmin SUPERUSER;
-
-

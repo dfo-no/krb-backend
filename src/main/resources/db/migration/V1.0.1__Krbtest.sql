@@ -1,3 +1,0 @@
-CREATE database krbtest;
-
-

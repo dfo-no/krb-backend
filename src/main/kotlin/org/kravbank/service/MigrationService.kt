@@ -1,25 +1,20 @@
-import io.quarkus.flyway.FlywayDataSource
-import org.flywaydb.core.Flyway
+import io.quarkus.liquibase.LiquibaseFactory
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.inject.Named
 
+
+@ApplicationScoped
 class MigrationService {
-
+    // You can Inject the object if you want to use it manually
     @Inject
-    lateinit var flyway: Flyway
-
-    @Inject
-    @FlywayDataSource("inventory")
-    lateinit var flywayForInventory: Flyway
-
-    @Inject
-    @Named("flyway_users")
-    lateinit var flywayForUsers: Flyway
+    lateinit var liquibaseFactory: LiquibaseFactory
 
     fun checkMigration() {
-        flyway.clean()
-        flyway.migrate()
-        println(flyway.info().current().version.toString())
+        // Get the list of liquibase change set statuses
+        liquibaseFactory.createLiquibase().use { liquibase ->
+            val status = liquibase.getChangeSetStatuses(
+                liquibaseFactory.createContexts(), liquibaseFactory.createLabels()
+            )
+        }
     }
 }
-
