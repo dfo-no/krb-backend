@@ -18,11 +18,14 @@ import javax.ws.rs.core.Response
 @Authenticated
 class ProjectResource(val projectService: ProjectService) {
 
+
     @GET
     @RolesAllowed("user")
     @Path("/{projectRef}")
     fun getProject(@PathParam("projectRef") projectRef: String): ProjectForm {
         val project = projectService.get(projectRef)
+
+
         return ProjectForm().fromEntity(project)
     }
 

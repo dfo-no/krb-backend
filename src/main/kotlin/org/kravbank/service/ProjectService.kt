@@ -12,7 +12,10 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class ProjectService(val projectRepository: ProjectRepository) {
 
+
     fun get(projectRef: String): Project {
+
+
         return projectRepository.findByRef(projectRef)
     }
 
