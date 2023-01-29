@@ -8,7 +8,7 @@ on:
       - krb-*
       - KRB-*
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   # Build
@@ -89,7 +89,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build native distribution
-        run: make native
+        run: make native --allow-incomplete-classpath
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
