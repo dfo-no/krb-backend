@@ -65,6 +65,7 @@ class ImportResource {
                     title = need.title
                     description = need.description
                     this.requirements = requirements.toMutableList()
+                    this.project = project
                 }
             }
 
