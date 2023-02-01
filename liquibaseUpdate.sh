@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# This script deploys any changes in the database that have not been deployed yet
-# It compares id, author, filename . If not exists: it applies the changeset
+# This script deploys any changes in the database that have not been deployed yet.
+# The liquibase update command compares id, author, filename and unique checksum
+# Prerequisite: https://www.liquibase.com/download
 
 # shellcheck disable=SC2046
 export $(grep -v '^#' .env | xargs)
