@@ -167,6 +167,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS "requirementvariant_pkey" ON "requirementvaria
 
 -- changeset maestro:31
 drop function if exists deleted_record_insert cascade;
+
 CREATE FUNCTION deleted_record_insert()
     RETURNS trigger
 AS
@@ -178,19 +179,22 @@ AS
     End;
 ' LANGUAGE plpgsql;
 
--- changeset maestro:32
+-- changeset maestro:32 splitStatements:false stripComments:false
+DROP TRIGGER IF EXISTS deleted_record_insert ON Product;
 CREATE TRIGGER deleted_record_insert
     AFTER DELETE
     ON Product
     FOR EACH ROW
 EXECUTE FUNCTION deleted_record_insert();
 
+DROP TRIGGER IF EXISTS deleted_record_insert ON Publication;
 CREATE TRIGGER deleted_record_insert
     AFTER DELETE
     ON Publication
     FOR EACH ROW
 EXECUTE FUNCTION deleted_record_insert();
 
+DROP TRIGGER IF EXISTS deleted_record_insert ON Project;
 CREATE TRIGGER deleted_record_insert
     AFTER DELETE
     ON Project
