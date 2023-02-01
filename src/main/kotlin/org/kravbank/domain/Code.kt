@@ -9,8 +9,10 @@ import javax.persistence.*
 @Entity
 class Code : PanacheEntity() {
 
+    @Column(columnDefinition="TEXT")
     lateinit var title: String
 
+    @Column(columnDefinition="TEXT")
     lateinit var description: String
 
     @Column(unique = true)

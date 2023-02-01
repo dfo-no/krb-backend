@@ -35,9 +35,13 @@ class ImportResource {
             val project = Project()
 
             val products = bank.products.map { product ->
-                Product().apply {
+                val newProduct = Product()
+
+                newProduct.apply {
                     title = product.title
                     description = product.description
+                    this.project = project
+                    // this.requirementvariant TODO
                 }
             }
 
@@ -50,18 +54,19 @@ class ImportResource {
 
 
             val needs = bank.needs.map { need ->
+                val newNeed = Need()
 
                 val requirements = need.requirements.map { requirement ->
                     Requirement().apply {
                         title = requirement.title
                         description = requirement.description
                         this.project = project
-
+                        this.need = newNeed
 
                     }
                 }
 
-                Need().apply {
+                newNeed.apply {
                     title = need.title
                     description = need.description
                     this.requirements = requirements.toMutableList()
@@ -71,10 +76,26 @@ class ImportResource {
 
 //            val requirements = needs.map { need -> need.requirements }
 
+
+
             val codelist = bank.codelist.map { codelist ->
-                Codelist().apply {
+
+                val newCodelist = Codelist()
+
+                val codes = codelist.codes.map { code ->
+
+                    Code().apply {
+                        this.codelist = newCodelist
+                        this.title = code.title
+                        this.description = code.description
+                    }
+                }
+
+                newCodelist.apply {
                     title = codelist.title
                     description = codelist.description
+                    this.project = project
+                    this.codes = codes.toMutableList()
                 }
             }
 
