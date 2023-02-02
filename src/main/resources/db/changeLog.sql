@@ -123,10 +123,6 @@ CREATE TABLE IF NOT EXISTS "deletedrecord"
 );
 
 -- changeset maestro:18
-insert into Project("id", title, description, ref)
-values (1, 'Prosjekt1', 'Beskrivelse1', 'ccc4db69-edb2-431f-855a-4368e2bcddd1');
-
--- changeset maestro:19
 CREATE TABLE IF NOT EXISTS "publicationexport"
 (
     "id"                BIGINT NOT NULL,
@@ -135,37 +131,37 @@ CREATE TABLE IF NOT EXISTS "publicationexport"
     "serializedproject" TEXT
 );
 
--- changeset maestro:20
+-- changeset maestro:19
 CREATE UNIQUE INDEX IF NOT EXISTS "code_pkey" ON "code" ("id");
 
--- changeset maestro:21
+-- changeset maestro:20
 CREATE UNIQUE INDEX IF NOT EXISTS "codelist_pkey" ON "codelist" ("id");
 
--- changeset maestro:22
+-- changeset maestro:21
 CREATE UNIQUE INDEX IF NOT EXISTS "deletedrecord_pkey" ON "deletedrecord" ("id");
 
--- changeset maestro:24
+-- changeset maestro:22
 CREATE UNIQUE INDEX IF NOT EXISTS "need_pkey" ON "need" ("id");
 
--- changeset maestro:25
+-- changeset maestro:23
 CREATE UNIQUE INDEX IF NOT EXISTS "product_pkey" ON "product" ("id");
 
--- changeset maestro:26
+-- changeset maestro:24
 CREATE UNIQUE INDEX IF NOT EXISTS "project_pkey" ON "project" ("id");
 
--- changeset maestro:27
+-- changeset maestro:25
 CREATE UNIQUE INDEX IF NOT EXISTS "publication_pkey" ON "publication" ("id");
 
--- changeset maestro:28
+-- changeset maestro:26
 CREATE UNIQUE INDEX IF NOT EXISTS "publicationexport_pkey" ON "publicationexport" ("id");
 
--- changeset maestro:29
+-- changeset maestro:27
 CREATE UNIQUE INDEX IF NOT EXISTS "requirement_pkey" ON "requirement" ("id");
 
--- changeset maestro:30
+-- changeset maestro:28
 CREATE UNIQUE INDEX IF NOT EXISTS "requirementvariant_pkey" ON "requirementvariant" ("id");
 
--- changeset maestro:31
+-- changeset maestro:29
 drop function if exists deleted_record_insert cascade;
 
 CREATE FUNCTION deleted_record_insert()
@@ -179,7 +175,7 @@ AS
     End;
 ' LANGUAGE plpgsql;
 
--- changeset maestro:32 splitStatements:false stripComments:false
+-- changeset maestro:30
 DROP TRIGGER IF EXISTS deleted_record_insert ON Product;
 CREATE TRIGGER deleted_record_insert
     AFTER DELETE

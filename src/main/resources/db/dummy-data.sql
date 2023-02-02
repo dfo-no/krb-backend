@@ -96,7 +96,8 @@ values (67, '{
   "description": "propduct-9999-beskrivelse",
   "project_id_fk": 3,
   "requirementvariant_id_fk": 14
-}', '2021-09-29 21:17:30.23195', null, 'product', 999);
+}', '2021-09-29 21:17:30.23195', null, 'product', 999)
+ON CONFLICT DO NOTHING;
 
 insert into DeletedRecord (id, data, deletedAt, updatedAt, tableName, objectId)
 values (68, '{
@@ -106,7 +107,8 @@ values (68, '{
   "description": "propduct-9999-beskrivelse",
   "project_id_fk": 3,
   "requirementvariant_id_fk": 14
-}', '2021-09-29 21:17:30.23195', null, 'product', 998);
+}', '2021-09-29 21:17:30.23195', null, 'product', 998)
+ON CONFLICT DO NOTHING;
 
 
 -- PUBLICATION EXPORT
