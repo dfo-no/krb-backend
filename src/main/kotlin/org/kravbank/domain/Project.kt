@@ -10,53 +10,54 @@ import javax.persistence.OneToMany
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Project : PanacheEntity() {
-
-    lateinit var title: String
-
-    lateinit var description: String
+data class Project(
 
     @Column(
         unique = true,
         name = "ref"
     )
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
+
+    var title: String = "",
+
+    var description: String = "",
 
     @OneToMany(
         mappedBy = ("project"),
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    var products = mutableListOf<Product>()
+    var products: MutableList<Product>? = null,
 
     @OneToMany(
         mappedBy = ("project"),
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    var publications = mutableListOf<Publication>()
+    var publications: MutableList<Publication>? = null,
 
     @OneToMany(
         mappedBy = ("project"),
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-
-    var requirements = mutableListOf<Requirement>()
-
-    @OneToMany(
-        mappedBy = ("project"),
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-    )
-    var needs = mutableListOf<Need>()
+    var requirements: MutableList<Requirement>? = null,
 
     @OneToMany(
         mappedBy = ("project"),
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    var codelist = mutableListOf<Codelist>()
+    var needs: MutableList<Need>? = null,
+
+    @OneToMany(
+        mappedBy = ("project"),
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
+    )
+    var codelist: MutableList<Codelist>? = null
+
+) : PanacheEntity() {
 
     override fun toString(): String {
         return "Project(title='$title', description='$description', ref='$ref', products=$products, publications=$publications, requirements=$requirements, needs=$needs, codelist=$codelist)"
