@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response
 @Authenticated
 class ProjectResource(val projectService: ProjectService) {
 
+
     @GET
     @RolesAllowed("user")
     @Path("/{projectRef}")
