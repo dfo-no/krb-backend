@@ -10,18 +10,18 @@ import javax.persistence.*
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Publication : PanacheEntity() {
+data class Publication(
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
 
-    lateinit var comment: String
+    var comment: String = "",
 
-    var date: LocalDateTime = LocalDateTime.now()
+    var date: LocalDateTime = LocalDateTime.now(),
 
-    var version: Long = 0
+    var version: Long = 0,
 
-    var publicationExportRef: String? = null
+    var publicationExportRef: String? = null,
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
@@ -30,6 +30,8 @@ class Publication : PanacheEntity() {
     @JsonManagedReference(value = "val-publication")
     @JsonIgnore
     var project: Project? = null
+
+) : PanacheEntity() {
 
     override fun toString(): String {
         return "Publication(comment='$comment', date=$date, version=$version, ref='$ref', project=$project)"

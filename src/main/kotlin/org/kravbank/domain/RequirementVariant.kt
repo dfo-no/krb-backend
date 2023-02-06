@@ -8,29 +8,29 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class RequirementVariant : PanacheEntity() {
-
-    lateinit var description: String
-
-    lateinit var requirementText: String
-
-    lateinit var instruction: String
-
-    var useProduct: Boolean = false
-
-    var useSpecification: Boolean = false
-
-    var useQualification: Boolean = false
+class RequirementVariant(
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
+
+    var description: String = "",
+
+    var requirementText: String = "",
+
+    var instruction: String = "",
+
+    var useProduct: Boolean = false,
+
+    var useSpecification: Boolean = false,
+
+    var useQualification: Boolean = false,
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], fetch = FetchType.LAZY
     )
     @JsonManagedReference(value = "val-requirementVariant")
     @JsonIgnore
-    var requirement: Requirement? = null
+    var requirement: Requirement? = null,
 
     @OneToMany(
         mappedBy = ("requirementvariant"),
@@ -38,5 +38,12 @@ class RequirementVariant : PanacheEntity() {
         orphanRemoval = true
     )
     @JsonBackReference(value = "val-reqvariant-product")
-    var product: MutableList<Product>? = null
+    var product: MutableList<Product>? = null,
+
+    ) : PanacheEntity() {
+
+    override fun toString(): String {
+        return "RequirementVariant(ref='$ref', description='$description', requirementText='$requirementText', instruction='$instruction', useProduct=$useProduct, useSpecification=$useSpecification, useQualification=$useQualification, requirement=$requirement, product=$product)"
+    }
 }
+

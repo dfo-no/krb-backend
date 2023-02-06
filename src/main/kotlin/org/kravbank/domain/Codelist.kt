@@ -8,14 +8,14 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Codelist : PanacheEntity() {
+data class Codelist(
 
-    lateinit var title: String
+    var title: String = "",
 
-    lateinit var description: String
+    var description: String = "",
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
 
     @OneToMany(
         mappedBy = ("codelist"),
@@ -23,7 +23,7 @@ class Codelist : PanacheEntity() {
         orphanRemoval = true,
     )
     @JsonBackReference(value = "value-codes")
-    var codes: MutableList<Code>? = null
+    var codes: MutableList<Code>? = null,
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
@@ -32,10 +32,4 @@ class Codelist : PanacheEntity() {
     @JsonManagedReference(value = "val-codelist")
     @JsonIgnore
     var project: Project? = null
-
-    override fun toString(): String {
-        return "Title: $title,  Description: $description, Ref: $ref " +
-                "Codes: $codes \n" +
-                "Project: $project \n"
-    }
-}
+) : PanacheEntity()

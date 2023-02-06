@@ -8,31 +8,35 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Need : PanacheEntity() {
-
-    lateinit var title: String
-
-    lateinit var description: String
+data class Need(
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
+
+    var title: String = "",
+
+    var description: String = "",
 
     @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], //CascadeType.Detach
+        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY,
     )
     @JsonManagedReference(value = "val-need-project")
     @JsonIgnore
-    var project: Project? = null
+    var project: Project? = null,
 
     @OneToMany(
         mappedBy = ("need"),
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH],//, CascadeType.REMOVE],
-        orphanRemoval = true,
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH],
+        orphanRemoval = true
     )
-
-    //@JsonIgnore
     @JsonBackReference(value = "val-need-requirement")
-    var requirements = mutableListOf<Requirement>()
+    var requirements: MutableList<Requirement>? = null
+
+) : PanacheEntity() {
+    override fun toString(): String {
+        return "Need(ref='$ref', title='$title', description='$description', project=$project, requirements=$requirements)"
+    }
+
 
 }
