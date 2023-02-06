@@ -24,8 +24,6 @@ class ProjectResource(val projectService: ProjectService) {
     @Path("/{projectRef}")
     fun getProject(@PathParam("projectRef") projectRef: String): ProjectForm {
         val project = projectService.get(projectRef)
-
-
         return ProjectForm().fromEntity(project)
     }
 
