@@ -1,4 +1,4 @@
-package org.kravbank.resource
+package org.kravbank.resource.real
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
@@ -14,7 +14,7 @@ class CodelistResourceTest {
     private val token = KeycloakAccess.getAccessToken("bob")
 
     @Test
-    fun getCodelist() {
+    fun `get one codelist`() {
         given()
             .auth()
             .oauth2(token)
@@ -25,7 +25,7 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun listCodelists() {
+    fun `list all codelist`() {
         given()
             .auth()
             .oauth2(token)
@@ -36,12 +36,14 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun createCodelist() {
+    fun `create codelist`() {
         RestAssured.defaultParser = Parser.JSON
 
-        val codelist = CodelistForm()
-        codelist.title = "CODELIST Integrasjonstest - Tittel 1"
-        codelist.description = "CODELIST Integrasjonstest - Beskrivelse 1"
+        val codelist = CodelistForm().apply {
+            title = "CODELIST Integrasjonstest - Tittel 1"
+            description = "CODELIST Integrasjonstest - Beskrivelse 1"
+        }
+
         val codelistMapper = CodelistForm().toEntity(codelist)
 
         given()
@@ -56,7 +58,7 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun deleteCodelist() {
+    fun `delete codelist`() {
         given()
             .auth()
             .oauth2(token)
@@ -68,12 +70,14 @@ class CodelistResourceTest {
 
 
     @Test
-    fun updateCodelist() {
+    fun `update codelist`() {
         RestAssured.defaultParser = Parser.JSON
 
-        val codelist = CodelistForm()
-        codelist.title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
-        codelist.description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
+        val codelist = CodelistForm().apply {
+            title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
+            description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
+        }
+
         val codelistMapper = CodelistForm().toEntity(codelist)
 
         given()

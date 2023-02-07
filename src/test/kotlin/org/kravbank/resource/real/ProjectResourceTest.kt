@@ -1,4 +1,4 @@
-package org.kravbank.resource
+package org.kravbank.resource.real
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.quarkus.test.junit.QuarkusTest
@@ -10,9 +10,9 @@ import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
-import org.kravbank.dao.ProductForm
+import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.DeletedRecord
-import org.kravbank.domain.Product
+import org.kravbank.domain.Project
 import org.kravbank.utils.KeycloakAccess
 import javax.inject.Inject
 import javax.persistence.EntityManager
@@ -23,7 +23,7 @@ import javax.persistence.TypedQuery
     MethodOrderer.OrderAnnotation::class
 )
 @QuarkusTest
-class ProductResourceTest {
+class ProjectResourceTest {
 
     private val token = KeycloakAccess.getAccessToken("alice")
 
@@ -33,70 +33,71 @@ class ProductResourceTest {
 
     @Test
     @Order(1)
-    fun `get one product`() {
+    fun `get one project`() {
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/kuk4db69-edb2-431f-855a-4368e2bcddd1")
+            .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
+
 
     @Test
     @Order(2)
-    fun `list all products`() {
+    fun `list all projects`() {
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
+            .get("/api/v1/projects")
             .then()
             .statusCode(200)
     }
 
-
     @Test
-    @Order(3)
-    fun `create a new product`() {
-
+    fun createProject() {
         RestAssured.defaultParser = Parser.JSON
+        val form = ProjectForm()
+        form.title = "POST integrasjonstest - Tittel 1"
+        form.description = "POST integrasjonstest - Beskrivelse 1"
 
-        val form = ProductForm()
-        form.title = "PRODUCT Integrasjonstest - Tittel 1"
-        form.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
-        form.requirementVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+        val project = ProjectForm().toEntity(form)
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(form)
+            .body(project)
             .header("Content-type", "application/json")
-            .post("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products")
+            .post("/api/v1/projects")
             .then()
             .statusCode(201)
     }
 
 
     @Test
+    // @TestTransaction
     @Order(4)
-    fun `delete product and verify delete record`() {
+    fun `delete project and verify delete record`() {
 
-        //list products
-        var listProductsResponse =
+        //list project
+        var listProjectResponse =
             given()
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
+                .get("/api/v1/projects/")
 
-        assertEquals(200, listProductsResponse.statusCode())
 
-        val productList = listProductsResponse.body.jsonPath().getList("", Product::class.java)
-        val oldProductListLength = productList.size
+        assertEquals(200, listProjectResponse.statusCode())
 
-        val productToDelete = productList.last()
+        val projectList = listProjectResponse.body.jsonPath().getList("", Project::class.java)
+        val oldProjectListLength = projectList.size
+
+        val projectToDelete = projectList.last()
+
 
         // list existing soft-deleted records
         val deletedRecordQuery: TypedQuery<DeletedRecord> =
@@ -109,40 +110,41 @@ class ProductResourceTest {
             .auth()
             .oauth2(token)
             .`when`()
-            .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/${productToDelete.ref}")
+            .delete("/api/v1/projects/${projectToDelete.ref}")
 
         assertEquals(200, delete.statusCode)
 
         // Verify we have one more soft-deleted record
         val listDeletedRecordsAfterTest = deletedRecordQuery.resultList
 
+
         assertEquals(numberOfDeletedRecordsBeforeTest + 1, listDeletedRecordsAfterTest.size)
 
 
         // Verify the deleted product is gone
-        listProductsResponse =
+        listProjectResponse =
             given()
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
+                .get("/api/v1/projects/")
 
-        assertEquals(200, listProductsResponse.statusCode())
-
-
-        val newProductListLength = listProductsResponse.body.jsonPath().getInt("data.size()")
-
-        assertEquals(oldProductListLength - 1, newProductListLength)
+        assertEquals(200, listProjectResponse.statusCode())
 
 
-        // Verify the deleted product can be deserialized to a representation of the orginal product
+        val newProjectListLength = listProjectResponse.body.jsonPath().getInt("data.size()")
+
+        assertEquals(oldProjectListLength - 1, newProjectListLength)
+
+
+        // Verify the deleted project can be deserialized to a representation of the orginal project
         val mapper = jacksonObjectMapper()
-        val deserializeThisProduct = listDeletedRecordsAfterTest.last()
-        val productEntity = mapper.readValue(deserializeThisProduct.data, Product::class.java)
+        val deserializeThisProject = listDeletedRecordsAfterTest.last()
+        val productEntity = mapper.readValue(deserializeThisProject.data, Project::class.java)
 
-        assertEquals(productToDelete.ref, productEntity.ref)
-        assertEquals(productToDelete.title, productEntity.title)
-        assertEquals(productToDelete.description, productEntity.description)
+        assertEquals(projectToDelete.ref, productEntity.ref)
+        assertEquals(projectToDelete.title, productEntity.title)
+        assertEquals(projectToDelete.description, productEntity.description)
     }
 
 
@@ -150,19 +152,18 @@ class ProductResourceTest {
     @Order(5)
     fun `update existing product`() {
         RestAssured.defaultParser = Parser.JSON
-
-        val form = ProductForm().apply {
-            title = "Endrer tittel til denne"
-            description = "Endrer beskrivelse til denne"
-        }
+        val form = ProjectForm()
+        form.title = "Oppdatert integrasjonstest - Tittel 1"
+        form.description = "Oppdatert integrasjonstest - Beskrivelse 1"
+        val project = ProjectForm().toEntity(form)
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(ProductForm().toEntity(form))
+            .body(project)
             .header("Content-type", "application/json")
-            .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/edb4db69-edb2-431f-855a-4368e2bcddd1")
+            .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
