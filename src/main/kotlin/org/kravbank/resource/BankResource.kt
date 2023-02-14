@@ -19,14 +19,12 @@ class BankResource {
 
     @GET
     fun get(
-        @DefaultValue("500") @QueryParam("pageSize") pageSize: Int,
+        @DefaultValue("500") @QueryParam("pagesize") pageSize: Int,
         @DefaultValue("0") @QueryParam("page") page: Int,
-        @DefaultValue("title") @QueryParam("fieldName") fieldName: String,
+        @DefaultValue("title") @QueryParam("fieldname") fieldName: String,
         @DefaultValue("ASC") @QueryParam("order") order: String
-    ): List<Bank> {
+    ): List<Bank> =
+        bankService.get(pageSize, page, fieldName, order)
 
-        return bankService.get(pageSize, page, fieldName, order)
-
-    }
 }
 

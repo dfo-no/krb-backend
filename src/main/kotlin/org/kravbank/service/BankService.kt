@@ -4,7 +4,6 @@ import io.quarkus.panache.common.Sort
 import org.kravbank.domain.Project
 import org.kravbank.frontend.Bank
 import org.kravbank.repository.ProjectRepository
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -31,9 +30,9 @@ class BankService {
         val banks = ArrayList<Bank>()
 
         val response: MutableList<Project> =
-            if (order.lowercase(Locale.getDefault()) == "desc")
+            if (order.lowercase() == "desc")
                 projectRepository.findAll(Sort.descending(fieldName))
-                    .page<Project>(page, page)
+                    .page<Project>(page, pageSize)
                     .list()
             else {
                 projectRepository.findAll(Sort.ascending(fieldName))
