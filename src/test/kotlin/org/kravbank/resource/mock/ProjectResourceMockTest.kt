@@ -112,7 +112,7 @@ class ProjectResourceMockTest {
         val response: Response = projectResource.deleteProject(project.ref)
 
         assertNotNull(response)
-        assertEquals(project.ref, response.entity)
+        assertEquals(204, response.status)
         verify(projectRepository).deleteById(project.id)
 
     }
