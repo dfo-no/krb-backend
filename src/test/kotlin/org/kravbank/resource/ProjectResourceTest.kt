@@ -112,7 +112,7 @@ class ProjectResourceTest {
             .`when`()
             .delete("/api/v1/projects/${projectToDelete.ref}")
 
-        assertEquals(200, delete.statusCode)
+        assertEquals(204, delete.statusCode)
 
         // Verify we have one more soft-deleted record
         val listDeletedRecordsAfterTest = deletedRecordQuery.resultList
