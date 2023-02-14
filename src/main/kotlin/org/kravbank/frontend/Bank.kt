@@ -8,24 +8,24 @@ import org.kravbank.domain.Publication
 
 
 data class Bank(
-    var id: String,
+    val id: String,
     val title: String,
-    var description: String,
-    var needs: MutableList<Need>,
-    var codelist: MutableList<Codelist>,
-    val products: MutableList<Product>,
-    val publications: MutableList<Publication>,
-    val tags: List<Tag>?,
-    val version: Long?,
-    val publishedDate: String?,
-    val type: String?,
-    val inheritedBanks: List<Any?>?,
-    val sourceOriginal: Any?,
-    val sourceRel: Any?,
-    var projectId: String?,
-    var deletedDate: Any?
-)
+    val description: String,
+    val needs: List<Need>,
+    val codelist: List<Codelist>,
+    val products: List<Product>,
+    val publications: List<Publication>,
+    val version: Long? = null,
+    val publishedDate: String? = null,
+    val type: String,
+    val inheritedBanks: List<Any?>? = null, //TODO
+    val sourceOriginal: Any? = null, //TODO
+    val sourceRel: Any? = null, //TODO
+    // val projectId: String?,
+    // val deletedDate: Any?,
+    val tags: List<Tag>? = null, //TODO
 
+)
 
 data class Need(
     val id: String,
@@ -178,54 +178,7 @@ data class Product(
     val sourceRel: Any?,
     val deletedDate: String?,
     val unit: String?,
-    val requirements: List<Requirement2>?,
-)
-
-data class Requirement2(
-    val id: String,
-    val title: String,
-    val description: String,
-    val needId: String,
-    val tags: List<Any?>,
-    val variants: List<Variant2>,
-    val type: String,
-    val sourceOriginal: String,
-    val sourceRel: Any?,
-)
-
-data class Variant2(
-    val id: String,
-    val requirementText: String,
-    val instruction: String,
-    val useProduct: Boolean,
-    val useSpesification: Boolean,
-    val useQualification: Boolean,
-    val products: List<String>,
-    val questions: List<Question2>,
-    val type: String,
-    val description: String,
-)
-
-data class Question2(
-    val id: String,
-    val type: String,
-    val config: Config2,
-    val answer: Answer2,
-    val sourceRel: Any?,
-    val sourceOriginal: Any?,
-)
-
-data class Config2(
-    val max: Long?,
-    val defaultPoint: Long,
-    val pointsNonPrefered: Long?,
-    val preferedAlternative: Boolean?,
-)
-
-data class Answer2(
-    val point: Long,
-    val text: String?,
-    val value: Boolean?,
+    val requirements: List<Requirement>?,
 )
 
 data class Publication(

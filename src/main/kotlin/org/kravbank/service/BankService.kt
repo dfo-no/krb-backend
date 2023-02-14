@@ -1,5 +1,7 @@
 package org.kravbank.service
 
+import io.quarkus.panache.common.Sort
+import org.kravbank.domain.Project
 import org.kravbank.frontend.Bank
 import org.kravbank.repository.ProjectRepository
 import java.util.*
@@ -12,7 +14,12 @@ class BankService {
     @Inject
     private lateinit var projectRepository: ProjectRepository
 
-    fun get(): ArrayList<Bank> {
+    fun get(
+        pageSize: Int,
+        page: Int,
+        fieldName: String,
+        order: String
+    ): MutableList<Bank> {
 
         /**
          * Generate banks
@@ -23,25 +30,30 @@ class BankService {
 
         val banks = ArrayList<Bank>()
 
-        projectRepository.listAll().forEach {
+        val response: MutableList<Project> =
+            if (order.lowercase(Locale.getDefault()) == "desc")
+                projectRepository.findAll(Sort.descending(fieldName))
+                    .page<Project>(page, page)
+                    .list()
+            else {
+                projectRepository.findAll(Sort.ascending(fieldName))
+                    .page<Project>(page, pageSize)
+                    .list()
+            }
+
+        response.forEach {
             banks.add(
                 Bank(
-                    id = UUID.randomUUID().toString(),
+                    id = it.ref, // set by project ref
                     title = it.title,
                     description = it.description,
                     needs = it.needs,
                     codelist = it.codelist,
                     products = it.products,
                     publications = it.publications,
-                    projectId = it.ref,
-                    tags = null,
-                    version = null, // TODO : reuse?
-                    type = null,
-                    sourceOriginal = null,
-                    inheritedBanks = null,
-                    sourceRel = null,
-                    publishedDate = null,
-                    deletedDate = null, //TODO : soft delete?
+                    type = "bank",
+                    version = it.publications.lastOrNull()?.version,
+                    publishedDate = it.publications.lastOrNull()?.date.toString()
                 )
             )
         }
