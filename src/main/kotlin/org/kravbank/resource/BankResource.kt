@@ -1,5 +1,6 @@
 package org.kravbank.resource
 
+import io.quarkus.security.Authenticated
 import org.kravbank.frontend.Bank
 import org.kravbank.service.BankService
 import javax.enterprise.context.RequestScoped
@@ -11,7 +12,7 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
-//@Authenticated
+@Authenticated
 class BankResource {
 
     @Inject
