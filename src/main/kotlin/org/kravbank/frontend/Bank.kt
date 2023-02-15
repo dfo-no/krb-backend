@@ -6,6 +6,7 @@ import org.kravbank.domain.Need
 import org.kravbank.domain.Product
 import org.kravbank.domain.Publication
 
+//comment
 
 data class Bank(
     val id: String,
