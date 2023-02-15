@@ -1,6 +1,5 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
