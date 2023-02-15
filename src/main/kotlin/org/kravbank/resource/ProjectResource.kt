@@ -51,7 +51,7 @@ class ProjectResource(val projectService: ProjectService) {
     @RolesAllowed("user")
     fun deleteProject(@PathParam("projectRef") projectRef: String): Response {
         projectService.delete(projectRef)
-        return Response.ok(projectRef).build()
+        return Response.noContent().build()
     }
 
     @PUT

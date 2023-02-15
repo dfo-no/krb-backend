@@ -27,5 +27,6 @@ class RequirementForm : Mapper<RequirementForm, Requirement> {
         ref = entity.ref
         title = entity.title
         description = entity.description
+        needRef = entity.need?.ref ?: ""
     }
 }
