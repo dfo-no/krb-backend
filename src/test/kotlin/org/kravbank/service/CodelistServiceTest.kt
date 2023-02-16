@@ -53,13 +53,15 @@ class CodelistServiceTest {
     fun get() {
         val response = codelistService.get(project.ref, codelist.ref)
 
+        response.codes.forEach { println("${it.id}: ${it.title}") }
+
         assertEquals(codelist.title, response.title)
         assertEquals(codelist.id, response.id)
         assertEquals(codelist.project, response.project)
         assertEquals(codelist.description, response.description)
         assertEquals(2, response.codes.size)
-        assertEquals("Første codelist", response.codes[0].title)
-        assertEquals("Ny kodelist tittel", response.codes[0].title)
+        assertEquals("Tittel kode", response.codes[0].title)
+        assertEquals("Ny kodelist tittel", response.codes[1].title)
     }
 
     @Test
