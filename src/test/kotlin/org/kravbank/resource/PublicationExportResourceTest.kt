@@ -5,6 +5,7 @@ import io.restassured.RestAssured
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.kravbank.domain.PublicationExport
 import org.kravbank.utils.KeycloakAccess
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
@@ -60,5 +61,10 @@ class PublicationExportResourceTest {
             .get("api/v1/projects/$projectRef/publications/$publicationRef/publicationexports/$globalCreatedRefToUse")
             .then()
             .statusCode(200)
+            .extract().`as`(PublicationExport::class.java)
+            .let {
+                assertEquals(globalCreatedRefToUse, it.ref)
+                assertEquals(publicationRef, it.publicationRef)
+            }
     }
 }
