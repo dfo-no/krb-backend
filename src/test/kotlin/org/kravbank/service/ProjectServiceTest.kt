@@ -17,7 +17,7 @@ class ProjectServiceTest {
 
     private val projectService = ProjectService(projectRepository)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var projects: List<Project>
     private lateinit var project: Project

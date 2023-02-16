@@ -31,7 +31,7 @@ class RequirementVariantServiceTest {
     )
 
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
 
     private lateinit var requirementVariants: List<RequirementVariant>

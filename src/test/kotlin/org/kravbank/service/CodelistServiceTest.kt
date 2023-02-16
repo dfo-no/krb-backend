@@ -11,7 +11,6 @@ import org.kravbank.domain.Project
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codelists
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
@@ -24,11 +23,12 @@ class CodelistServiceTest {
 
     private val codelistService = CodelistService(codelistRepository, projectRepository)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var createForm: CodelistForm
     private lateinit var updateForm: CodelistForm
     private lateinit var codelist: Codelist
+    private lateinit var codelists: List<Codelist>
     private lateinit var project: Project
 
 
@@ -38,6 +38,7 @@ class CodelistServiceTest {
 
         updateForm = arrangeSetup.updatedCodelistForm
         codelist = arrangeSetup.codelist
+        codelists = arrangeSetup.codelists
         project = arrangeSetup.project
         createForm = CodelistForm().fromEntity(codelist)
 
@@ -52,9 +53,7 @@ class CodelistServiceTest {
     @Test
     fun get() {
         val response = codelistService.get(project.ref, codelist.ref)
-
-        response.codes.forEach { println("${it.id}: ${it.title}") }
-
+        
         assertEquals(codelist.title, response.title)
         assertEquals(codelist.id, response.id)
         assertEquals(codelist.project, response.project)

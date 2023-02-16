@@ -13,7 +13,6 @@ import org.kravbank.service.ProjectService
 import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PROJECT_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.updatedProjectForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
@@ -24,14 +23,14 @@ class ProjectResourceMockTest {
 
     private val projectService = ProjectService(projectRepository)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private val projectResource = ProjectResource(projectService)
 
 
     private lateinit var projects: List<Project>
     private lateinit var project: Project
-    private lateinit var updateProjectForm: ProjectForm
+    private lateinit var updatedProjectForm: ProjectForm
     private lateinit var createForm: ProjectForm
 
 
@@ -39,7 +38,7 @@ class ProjectResourceMockTest {
     fun setUp() {
         arrangeSetup.start()
 
-        updateProjectForm = arrangeSetup.updatedProjectForm
+        updatedProjectForm = arrangeSetup.updatedProjectForm
         project = arrangeSetup.project
         projects = arrangeSetup.projects
         createForm = ProjectForm().fromEntity(project)
@@ -101,8 +100,8 @@ class ProjectResourceMockTest {
         val entity: Project = ProjectForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updateProjectForm.title, entity.title)
-        assertEquals(updateProjectForm.description, entity.description)
+        assertEquals(updatedProjectForm.title, entity.title)
+        assertEquals(updatedProjectForm.description, entity.description)
     }
 
 

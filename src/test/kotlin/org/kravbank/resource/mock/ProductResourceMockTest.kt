@@ -18,8 +18,6 @@ import org.kravbank.service.ProductService
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.products
-import org.kravbank.utils.TestSetup.Arrange.updatedProductForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
@@ -41,12 +39,13 @@ class ProductResourceMockTest {
 
     private val productResource = ProductResource(productService)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
-    private lateinit var updateProductForm: ProductForm
+    private lateinit var updatedProductForm: ProductForm
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var product: Product
+    private lateinit var products: MutableList<Product>
     private lateinit var project: Project
     private lateinit var createForm: ProductForm
 
@@ -56,10 +55,11 @@ class ProductResourceMockTest {
         arrangeSetup.start()
 
 
-        updateProductForm = arrangeSetup.updatedProductForm
+        updatedProductForm = arrangeSetup.updatedProductForm
         requirement = arrangeSetup.requirement
         requirementVariant = arrangeSetup.requirementVariant
         product = arrangeSetup.product
+        products = arrangeSetup.products
         project = arrangeSetup.project
         createForm = ProductForm().fromEntity(product)
 
@@ -124,8 +124,8 @@ class ProductResourceMockTest {
         val entity: Product = ProductForm().toEntity(response)
 
         assertNotNull(response)
-        assertEquals(updateProductForm.title, entity.title)
-        assertEquals(updateProductForm.description, entity.description)
+        assertEquals(updatedProductForm.title, entity.title)
+        assertEquals(updatedProductForm.description, entity.description)
 
     }
 

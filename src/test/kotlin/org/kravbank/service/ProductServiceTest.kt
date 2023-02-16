@@ -12,7 +12,6 @@ import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.products
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
@@ -29,13 +28,14 @@ class ProductServiceTest {
         requirementVariantRepository = requirementVariantRepository
     )
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var createForm: ProductForm
     private lateinit var updateForm: ProductForm
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var product: Product
+    private lateinit var products: MutableList<Product>
     private lateinit var project: Project
 
 

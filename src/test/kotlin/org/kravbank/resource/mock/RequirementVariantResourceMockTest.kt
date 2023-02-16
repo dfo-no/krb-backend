@@ -40,7 +40,7 @@ class RequirementVariantResourceMockTest {
     private val requirementVariantResource = RequirementVariantResource(requirementVariantService)
 
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var requirementVariants: List<RequirementVariant>
     private lateinit var requirementVariant: RequirementVariant

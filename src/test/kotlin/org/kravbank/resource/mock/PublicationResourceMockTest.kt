@@ -31,7 +31,7 @@ class PublicationResourceMockTest {
     private val publicationResource = PublicationResource(publicationService)
 
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
 
     private lateinit var publications: List<Publication>

@@ -22,7 +22,7 @@ class NeedServiceTest {
 
     private val needService = NeedService(needRepository, projectRepository)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var needs: List<Need>
     private lateinit var need: Need
