@@ -11,7 +11,6 @@ import org.kravbank.domain.Project
 import org.kravbank.repository.CodelistRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codelists
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
@@ -24,11 +23,12 @@ class CodelistServiceTest {
 
     private val codelistService = CodelistService(codelistRepository, projectRepository)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var createForm: CodelistForm
     private lateinit var updateForm: CodelistForm
     private lateinit var codelist: Codelist
+    private lateinit var codelists: List<Codelist>
     private lateinit var project: Project
 
 
@@ -38,6 +38,7 @@ class CodelistServiceTest {
 
         updateForm = arrangeSetup.updatedCodelistForm
         codelist = arrangeSetup.codelist
+        codelists = arrangeSetup.codelists
         project = arrangeSetup.project
         createForm = CodelistForm().fromEntity(codelist)
 
@@ -52,24 +53,23 @@ class CodelistServiceTest {
     @Test
     fun get() {
         val response = codelistService.get(project.ref, codelist.ref)
-
-        val entity: Codelist = response
-
-        assertEquals(codelist.title, entity.title)
-        assertEquals(codelist.id, entity.id)
-        assertEquals(codelist.project, entity.project)
-        assertEquals(codelist.description, entity.description)
+        
+        assertEquals(codelist.title, response.title)
+        assertEquals(codelist.id, response.id)
+        assertEquals(codelist.project, response.project)
+        assertEquals(codelist.description, response.description)
+        assertEquals(2, response.codes.size)
+        assertEquals("Tittel kode", response.codes[0].title)
+        assertEquals("Ny kodelist tittel", response.codes[1].title)
     }
 
     @Test
     fun list() {
         val response = codelistService.list(project.ref)
 
-        val entity: List<Codelist> = response
-
         assertNotNull(response)
-        Assertions.assertFalse(entity.isEmpty())
-        val firstObjectInList = entity[0]
+        Assertions.assertFalse(response.isEmpty())
+        val firstObjectInList = response[0]
         assertEquals(codelists[0].title, firstObjectInList.title)
         assertEquals(codelists[0].description, firstObjectInList.description)
         assertEquals(codelists[0].project, firstObjectInList.project)
@@ -94,11 +94,9 @@ class CodelistServiceTest {
                 createForm
             )
 
-        val entity: Codelist = response
-
-        assertNotNull(entity)
-        assertEquals(createForm.title, entity.title)
-        assertEquals(createForm.description, entity.description)
+        assertNotNull(response)
+        assertEquals(createForm.title, response.title)
+        assertEquals(createForm.description, response.description)
     }
 
 
@@ -117,10 +115,8 @@ class CodelistServiceTest {
             updateForm
         )
 
-        val entity: Codelist = response
-
         assertNotNull(response)
-        assertEquals(updateForm.title, entity.title)
-        assertEquals(updateForm.description, entity.description)
+        assertEquals(updateForm.title, response.title)
+        assertEquals(updateForm.description, response.description)
     }
 }

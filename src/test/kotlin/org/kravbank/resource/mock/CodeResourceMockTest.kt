@@ -17,7 +17,6 @@ import org.kravbank.service.CodeService
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODE_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codes
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
@@ -37,9 +36,10 @@ class CodeResourceMockTest {
 
     private val codeResource = CodeResource(codeService)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var code: Code
+    private lateinit var codes: MutableList<Code>
     private lateinit var codelist: Codelist
     private lateinit var project: Project
     private lateinit var updateCodeForm: CodeForm

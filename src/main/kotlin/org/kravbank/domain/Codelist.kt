@@ -23,7 +23,7 @@ class Codelist : PanacheEntity() {
         orphanRemoval = true,
     )
     @JsonBackReference(value = "value-codes")
-    var codes: MutableList<Code>? = null
+    var codes: MutableList<Code> = mutableListOf()
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],

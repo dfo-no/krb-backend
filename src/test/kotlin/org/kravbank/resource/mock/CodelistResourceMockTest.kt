@@ -15,7 +15,6 @@ import org.kravbank.service.CodelistService
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.CODELIST_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.codelists
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
@@ -25,20 +24,21 @@ class CodelistResourceMockTest {
 
 
     // The first two are mocks - this way we avoid coupling the test to the database
-    private final val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
-    private final val codelistRepository: CodelistRepository = mock(CodelistRepository::class.java)
+    private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
+    private val codelistRepository: CodelistRepository = mock(CodelistRepository::class.java)
 
     // This is just an ordinary, innocent Kotlin class so we just make an instance of it.
     // This both means our test is more realistic, and also means we get to test the service for next to no extra cost.
-    private final val codelistService = CodelistService(codelistRepository, projectRepository)
+    private val codelistService = CodelistService(codelistRepository, projectRepository)
 
     // This is the thing we actually set out to test
-    val codelistResource = CodelistResource(codelistService)
+    private val codelistResource = CodelistResource(codelistService)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var updateCodelistForm: CodelistForm
     private lateinit var codelist: Codelist
+    private lateinit var codelists: MutableList<Codelist>
     private lateinit var project: Project
     private lateinit var createForm: CodelistForm
 
@@ -49,6 +49,7 @@ class CodelistResourceMockTest {
 
         updateCodelistForm = arrangeSetup.updatedCodelistForm
         codelist = arrangeSetup.codelist
+        codelists = arrangeSetup.codelists
         project = arrangeSetup.project
         createForm = CodelistForm().fromEntity(codelist)
 

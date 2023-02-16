@@ -30,7 +30,7 @@ class CodeServiceTest {
     )
 
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
 
     private lateinit var codes: List<Code>

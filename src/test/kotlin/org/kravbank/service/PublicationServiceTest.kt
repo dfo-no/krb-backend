@@ -24,7 +24,7 @@ class PublicationServiceTest {
     )
 
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
     private lateinit var createForm: PublicationForm
     private lateinit var updateForm: PublicationForm

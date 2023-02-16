@@ -15,7 +15,6 @@ import org.kravbank.service.NeedService
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_BADREQUEST_CREATE
 import org.kravbank.utils.Messages.RepoErrorMsg.NEED_NOTFOUND
 import org.kravbank.utils.TestSetup
-import org.kravbank.utils.TestSetup.Arrange.updatedNeedForm
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import javax.ws.rs.core.Response
@@ -29,10 +28,10 @@ class NeedResourceMockTest {
 
     private val needResource = NeedResource(needService)
 
-    private val arrangeSetup = TestSetup.Arrange
+    private val arrangeSetup = TestSetup()
 
 
-    private lateinit var updateNeedForm: NeedForm
+    private lateinit var updatedNeedForm: NeedForm
     private lateinit var needs: List<Need>
     private lateinit var need: Need
     private lateinit var project: Project
@@ -44,7 +43,7 @@ class NeedResourceMockTest {
         arrangeSetup.start()
 
 
-        updateNeedForm = arrangeSetup.updatedNeedForm
+        updatedNeedForm = arrangeSetup.updatedNeedForm
         needs = arrangeSetup.needs
         need = arrangeSetup.need
         project = arrangeSetup.project
@@ -113,7 +112,7 @@ class NeedResourceMockTest {
         val response = needResource.updateNeed(
             project.ref,
             need.ref,
-            updateNeedForm
+            updatedNeedForm
         )
 
         val entity = NeedForm().toEntity(response)
@@ -170,7 +169,7 @@ class NeedResourceMockTest {
             needResource.updateNeed(
                 project.ref,
                 need.ref,
-                updateNeedForm
+                updatedNeedForm
             )
         }
 

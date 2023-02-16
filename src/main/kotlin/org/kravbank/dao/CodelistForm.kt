@@ -13,6 +13,9 @@ class CodelistForm() : Mapper<CodelistForm, Codelist> {
 
     lateinit var description: String
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    lateinit var codes: List<CodeForm>
+
     override fun toEntity(domain: CodelistForm): Codelist = Codelist().apply {
         title = domain.title
         description = domain.description
@@ -22,5 +25,6 @@ class CodelistForm() : Mapper<CodelistForm, Codelist> {
         ref = entity.ref
         title = entity.title
         description = entity.description
+        codes = entity.codes.map ( CodeForm()::fromEntity ).toList()
     }
 }
