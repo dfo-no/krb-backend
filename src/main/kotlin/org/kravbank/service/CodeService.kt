@@ -1,15 +1,7 @@
 package org.kravbank.service
 
-import org.kravbank.dao.CodeForm
-import org.kravbank.domain.Code
-import org.kravbank.lang.BackendException
-import org.kravbank.lang.BadRequestException
-import org.kravbank.repository.CodeRepository
-import org.kravbank.repository.CodelistRepository
-import org.kravbank.repository.ProjectRepository
-import org.kravbank.utils.Messages.RepoErrorMsg.CODE_BADREQUEST_CREATE
-import javax.enterprise.context.ApplicationScoped
 
+/*
 @ApplicationScoped
 class CodeService(
     val codeRepository: CodeRepository,
@@ -60,3 +52,5 @@ class CodeService(
         return update.apply { ref = foundCode.ref }
     }
 }
+
+ */

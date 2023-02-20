@@ -22,7 +22,6 @@ class CodelistRepository : BackendRepository<Codelist>() {
             ).firstResult<Codelist>()
 
         return Optional.ofNullable(codelist).orElseThrow { NotFoundException(CODELIST_NOTFOUND) }
-
     }
 
     @Throws(BackendException::class)

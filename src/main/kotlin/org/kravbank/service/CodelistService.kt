@@ -1,6 +1,8 @@
 package org.kravbank.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.kravbank.dao.CodelistForm
+import org.kravbank.domain.Code2
 import org.kravbank.domain.Codelist
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -14,23 +16,55 @@ class CodelistService(
     val codelistRepository: CodelistRepository,
     val projectRepository: ProjectRepository
 ) {
+
+    private val objectMapper = jacksonObjectMapper()
+
     @Throws(BackendException::class)
-    fun get(projectRef: String, codelistRef: String): Codelist {
-        val project = projectRepository.findByRef(projectRef)
-        return codelistRepository.findByRef(project.id, codelistRef)
+    fun get(projectRef: String, codelistRef: String): CodelistForm {
+
+        val foundProject = projectRepository.findByRef(projectRef)
+
+        val codelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+
+        val deserializedCodes = objectMapper.readValue<List<Code2>>(
+            codelist.serializedCodes,
+            objectMapper.typeFactory.constructCollectionType(List::class.java, Code2::class.java)
+        )
+
+        val codelistForm = CodelistForm().fromEntity(codelist).apply {
+            codes = deserializedCodes
+        }
+
+        return codelistForm
     }
 
     @Throws(BackendException::class)
-    fun list(projectRef: String): List<Codelist> {
+    fun list(projectRef: String): List<CodelistForm> {
+
         val foundProject = projectRepository.findByRef(projectRef)
+
         return codelistRepository.listAllCodelists(foundProject.id)
+            .stream()
+            .map(CodelistForm()::fromEntity)
+            .toList()
+            .onEach {
+                it.codes = objectMapper.readValue<List<Code2>>(
+                    it.serializedCodes,
+                    objectMapper.typeFactory.constructCollectionType(List::class.java, Code2::class.java)
+                )
+            }
     }
+
 
     @Throws(BackendException::class)
     fun create(projectRef: String, newCodelist: CodelistForm): Codelist {
-        val project = projectRepository.findByRef(projectRef)
-        val codelist = CodelistForm().toEntity(newCodelist)
-        codelist.project = project
+
+        val foundProject = projectRepository.findByRef(projectRef)
+
+        val codelist = CodelistForm().toEntity(newCodelist).apply {
+            project = foundProject
+            serializedCodes = objectMapper.writeValueAsString(newCodelist.codes)
+        }
 
         codelistRepository.persistAndFlush(codelist)
         if (!codelistRepository.isPersistent(codelist)) throw BadRequestException(CODELIST_BADREQUEST_CREATE)

@@ -1,30 +1,42 @@
 package org.kravbank.dao
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.kravbank.domain.Code2
 import org.kravbank.domain.Codelist
 import org.kravbank.utils.Mapper
 
-class CodelistForm() : Mapper<CodelistForm, Codelist> {
+class CodelistForm(
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    lateinit var ref: String
+    var ref: String = "",
 
-    lateinit var title: String
+    var title: String = "",
 
-    lateinit var description: String
+    var description: String = "",
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    lateinit var codes: List<CodeForm>
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    var serializedCodes: String = "",
 
-    override fun toEntity(domain: CodelistForm): Codelist = Codelist().apply {
-        title = domain.title
-        description = domain.description
-    }
+    //@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    var codes: List<Code2>? = null
 
-    override fun fromEntity(entity: Codelist): CodelistForm = CodelistForm().apply {
-        ref = entity.ref
-        title = entity.title
-        description = entity.description
-        codes = entity.codes.map ( CodeForm()::fromEntity ).toList()
+) : Mapper<CodelistForm, Codelist> {
+
+    override fun toEntity(domain: CodelistForm): Codelist = Codelist()
+        .apply {
+            title = domain.title
+            description = domain.description
+        }
+
+
+    override fun fromEntity(entity: Codelist): CodelistForm = CodelistForm()
+        .apply {
+            ref = entity.ref
+            title = entity.title
+            description = entity.description
+        }
+
+    override fun toString(): String {
+        return "CodelistForm(title='$title', description='$description', codes='$codes', listCodes=$serializedCodes)"
     }
 }

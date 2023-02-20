@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS "codelist"
     "description" VARCHAR(255),
     "ref"         VARCHAR(255),
     "title"       VARCHAR(255),
+    "codes"       TEXT,
     "project_id"  BIGINT
 );
 

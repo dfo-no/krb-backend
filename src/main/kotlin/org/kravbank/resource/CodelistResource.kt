@@ -1,6 +1,5 @@
 package org.kravbank.resource
 
-import io.quarkus.security.Authenticated
 import org.kravbank.dao.CodelistForm
 import org.kravbank.service.CodelistService
 import java.net.URI
@@ -12,7 +11,7 @@ import javax.ws.rs.core.Response
 @Path("/api/v1/projects/{projectRef}/codelists")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
-@Authenticated
+//@Authenticated
 class CodelistResource(val codelistService: CodelistService) {
 
     @GET
@@ -20,19 +19,14 @@ class CodelistResource(val codelistService: CodelistService) {
     fun getCodelistByRef(
         @PathParam("projectRef") projectRef: String,
         @PathParam("codelistRef") codelisRef: String
-    ): CodelistForm {
-        val codelist = codelistService.get(projectRef, codelisRef)
-        return CodelistForm().fromEntity(codelist)
-    }
+    ): CodelistForm = codelistService.get(projectRef, codelisRef)
+
 
     @GET
     fun listCodelists(
         @PathParam("projectRef") projectRef: String
     ): List<CodelistForm> {
         return codelistService.list(projectRef)
-            .stream()
-            .map(CodelistForm()::fromEntity)
-            .toList()
     }
 
     @Transactional

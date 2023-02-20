@@ -1,14 +1,6 @@
 package org.kravbank.resource
 
-import io.quarkus.security.Authenticated
-import org.kravbank.dao.CodeForm
-import org.kravbank.service.CodeService
-import java.net.URI
-import javax.transaction.Transactional
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
-
+/*
 @Path("/api/v1/projects/{projectRef}/codelists/{codelistRef}/codes")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
@@ -74,3 +66,5 @@ class CodeResource(val codeService: CodeService) {
         return CodeForm().fromEntity(updated)
     }
 }
+
+ */
