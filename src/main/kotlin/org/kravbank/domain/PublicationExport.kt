@@ -6,18 +6,18 @@ import javax.persistence.Column
 import javax.persistence.Entity
 
 @Entity
-class PublicationExport : PanacheEntity() {
+data class PublicationExport(
 
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
 
-    lateinit var publicationRef: String
+    var publicationRef: String = "",
 
-    //hibernate 6 ref
     @Column(columnDefinition = "TEXT")
-    var serializedProject: String = ""
+    var serializedProject: String = "",
+
+    ) : PanacheEntity() {
 
     override fun toString(): String {
         return "Ref : $ref, SerializedProject : $serializedProject"
     }
-
 }

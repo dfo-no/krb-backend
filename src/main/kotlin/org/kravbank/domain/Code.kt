@@ -7,14 +7,14 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Code : PanacheEntity() {
-
-    lateinit var title: String
-
-    lateinit var description: String
+data class Code(
 
     @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var ref: String = UUID.randomUUID().toString(),
+
+    var title: String = "",
+
+    var description: String = "",
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
@@ -24,10 +24,11 @@ class Code : PanacheEntity() {
     @JsonIgnore
     var codelist: Codelist? = null
 
-    override fun toString(): String {
-        return "Title: $title,  Description: $description, Ref: $ref " +
-                "Codelist: $codelist"
-    }
-}
+) : PanacheEntity() {
 
+    override fun toString(): String {
+        return "Code(ref='$ref', title='$title', description='$description', codelist=$codelist)"
+    }
+
+}
 

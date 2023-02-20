@@ -51,8 +51,8 @@ class BankService {
                     products = it.products,
                     publications = it.publications,
                     type = "bank",
-                    version = it.publications.lastOrNull()?.version,
-                    publishedDate = it.publications.lastOrNull()?.date.toString()
+                    version = it.publications?.lastOrNull()?.version,
+                    publishedDate = it.publications?.lastOrNull()?.date.toString()
                 )
             )
         }
