@@ -59,14 +59,11 @@ class CodelistResourceTest {
             requirements = mockedRequirements
             needs = mockedNeeds
             codelist = mockedCodelists
-        }.run {
-            projectRepository.persistAndFlush(this)
-            projectRef = ref
-            projectId = id
+        }.also {
+            projectRepository.persistAndFlush(it)
+            projectRef = it.ref
+            projectId = it.id
         }
-
-        println(projectId)
-
     }
 
 
@@ -188,7 +185,7 @@ class CodelistResourceTest {
         val deletedRefConfirm = response.body.asPrettyString()
         assertEquals(newCodelistRef, deletedRefConfirm)
     }
-    
+
     @AfterAll
     @Transactional
     fun `delete dependency project`() {
