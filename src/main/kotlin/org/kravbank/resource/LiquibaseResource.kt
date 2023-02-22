@@ -4,16 +4,17 @@ import io.quarkus.liquibase.LiquibaseFactory
 import liquibase.changelog.ChangeSetStatus
 import liquibase.changelog.RanChangeSet
 import java.util.stream.Collectors
+import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
 
-@Path("/liquibase")
+@Path("/api/v1/liquibase")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
-//@RolesAllowed("admin")
+@RolesAllowed("admin")
 class LiquibaseResource {
 
     @Inject

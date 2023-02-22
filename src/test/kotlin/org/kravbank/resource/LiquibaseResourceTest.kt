@@ -11,6 +11,13 @@ class LiquibaseResourceTest {
 
     private val token = KeycloakAccess.getAccessToken("alice")
 
+    /**
+     *
+     * This test retrieves a list of RanChangeSet objects representing the current state of the Liquibase changelog.
+     * It is a way to ensure that the LiquibaseResource endpoint is returning data in the expected format and working properly
+     *
+     */
+
     @Test
     fun `assert liquibase changelogs is ok`() {
 
@@ -18,14 +25,15 @@ class LiquibaseResourceTest {
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/liquibase")
+            .get("/api/v1/liquibase")
             .then()
             .statusCode(200)
-            .extract().`as`(List::class.java)
-            .let {
-                it as List<RanChangeSet>
-                println(it)
+            .extract().body().jsonPath().getList<RanChangeSet>("")
+            .also {
                 assert(it.isNotEmpty())
+                assert(it.size > 5)
+                //  TODO  val changeLogToCheck = it[6].toString().substringAfter("changeLog=").substringBefore(",") assertEquals("db/changeLog.sql", changeLogToCheck)
+
             }
     }
 }
