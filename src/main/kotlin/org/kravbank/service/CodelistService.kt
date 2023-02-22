@@ -38,6 +38,8 @@ class CodelistService(
         return codelistForm
     }
 
+
+    //TODO list alle
     @Throws(BackendException::class)
     fun list(projectRef: String): List<CodelistForm> {
 
@@ -84,10 +86,15 @@ class CodelistService(
     @Throws(BackendException::class)
     fun update(projectRef: String, codelistRef: String, updatedCodelist: CodelistForm): Codelist {
         val foundProject = projectRepository.findByRef(projectRef)
+
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
 
-        val update = CodelistForm().toEntity(updatedCodelist)
-        codelistRepository.updateCodelist(foundCodelist.id, update)
-        return update.apply { ref = foundCodelist.ref }
+        //TODO send codelistform
+
+        return CodelistForm().toEntity(updatedCodelist).apply {
+            serializedCodes = objectMapper.writeValueAsString(updatedCodelist.codes)
+        }.also {
+            codelistRepository.updateCodelist(foundCodelist.id, it)
+        }
     }
 }

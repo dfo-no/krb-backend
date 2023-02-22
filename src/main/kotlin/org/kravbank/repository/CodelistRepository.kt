@@ -32,9 +32,10 @@ class CodelistRepository : BackendRepository<Codelist>() {
     @Throws(BackendException::class)
     fun updateCodelist(id: Long, codelist: Codelist) {
         val updated = update(
-            "title = ?1, description = ?2 where id= ?3",
+            "title = ?1, description = ?2, serializedcodes = ?3 where id= ?4",
             codelist.title,
             codelist.description,
+            codelist.serializedCodes,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException(CODELIST_BADREQUEST_UPDATE) }

@@ -46,12 +46,12 @@ CREATE TABLE IF NOT EXISTS "requirement"
 -- changeset maestro:5
 CREATE TABLE IF NOT EXISTS "codelist"
 (
-    "id"          BIGINT NOT NULL,
-    "description" VARCHAR(255),
-    "ref"         VARCHAR(255),
-    "title"       VARCHAR(255),
-    "codes"       TEXT,
-    "project_id"  BIGINT
+    "id"              BIGINT NOT NULL,
+    "description"     VARCHAR(255),
+    "ref"             VARCHAR(255),
+    "title"           VARCHAR(255),
+    "serializedCodes" TEXT,
+    "project_id"      BIGINT
 );
 
 -- changeset maestro:6
