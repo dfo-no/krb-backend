@@ -46,12 +46,11 @@ CREATE TABLE IF NOT EXISTS "requirement"
 -- changeset maestro:5
 CREATE TABLE IF NOT EXISTS "codelist"
 (
-    "id"              BIGINT NOT NULL,
-    "description"     VARCHAR(255),
-    "ref"             VARCHAR(255),
-    "title"           VARCHAR(255),
-    "serializedCodes" TEXT,
-    "project_id"      BIGINT
+    "id"          BIGINT NOT NULL,
+    "description" VARCHAR(255),
+    "ref"         VARCHAR(255),
+    "title"       VARCHAR(255),
+    "project_id"  BIGINT
 );
 
 -- changeset maestro:6
@@ -197,3 +196,10 @@ CREATE TRIGGER deleted_record_insert
     ON Project
     FOR EACH ROW
 EXECUTE FUNCTION deleted_record_insert();
+
+-- changeset maestro:31
+DROP TABLE IF EXISTS Code cascade;
+
+ALTER TABLE Codelist
+    ADD COLUMN IF NOT EXISTS serialized_codes TEXT;
+
