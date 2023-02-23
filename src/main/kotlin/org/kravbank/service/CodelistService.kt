@@ -24,36 +24,31 @@ class CodelistService(
 
         val foundProject = projectRepository.findByRef(projectRef)
 
-        val codelist = codelistRepository.findByRef(foundProject.id, codelistRef)
+        val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
 
-        val deserializedCodes = objectMapper.readValue<List<Code2>>(
-            codelist.serializedCodes,
-            objectMapper.typeFactory.constructCollectionType(List::class.java, Code2::class.java)
-        )
-
-        val codelistForm = CodelistForm().fromEntity(codelist).apply {
-            codes = deserializedCodes
+        return CodelistForm().fromEntity(foundCodelist).apply {
+            codes = deserializeCodes(foundCodelist.serializedCodes)
         }
-
-        return codelistForm
     }
 
 
-    //TODO list alle
     @Throws(BackendException::class)
     fun list(projectRef: String): List<CodelistForm> {
 
         val foundProject = projectRepository.findByRef(projectRef)
 
-        return codelistRepository.listAllCodelists(foundProject.id)
+        val foundCodelists = codelistRepository.listAllCodelists(foundProject.id)
+
+        return foundCodelists
             .stream()
             .map(CodelistForm()::fromEntity)
             .toList()
-            .onEach {
-                it.codes = objectMapper.readValue<List<Code2>>(
-                    it.serializedCodes,
-                    objectMapper.typeFactory.constructCollectionType(List::class.java, Code2::class.java)
-                )
+            .onEach { form ->
+                foundCodelists.map { entity ->
+                    if (entity.ref == form.ref) {
+                        form.codes = deserializeCodes(entity.serializedCodes)
+                    }
+                }
             }
     }
 
@@ -63,17 +58,15 @@ class CodelistService(
 
         val foundProject = projectRepository.findByRef(projectRef)
 
-        val codelist = CodelistForm().toEntity(newCodelist).apply {
+        return CodelistForm().toEntity(newCodelist).apply {
             project = foundProject
             serializedCodes = objectMapper.writeValueAsString(newCodelist.codes)
+        }.also {
+            codelistRepository.persistAndFlush(it)
+            if (!codelistRepository.isPersistent(it)) throw BadRequestException(CODELIST_BADREQUEST_CREATE)
         }
-
-        codelistRepository.persistAndFlush(codelist)
-        if (!codelistRepository.isPersistent(codelist)) throw BadRequestException(CODELIST_BADREQUEST_CREATE)
-
-        return codelist
-
     }
+
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, codelistRef: String): Boolean {
@@ -83,6 +76,7 @@ class CodelistService(
         return codelistRepository.deleteById(foundCodelist.id)
     }
 
+
     @Throws(BackendException::class)
     fun update(projectRef: String, codelistRef: String, updatedCodelist: CodelistForm): Codelist {
         val foundProject = projectRepository.findByRef(projectRef)
@@ -90,11 +84,22 @@ class CodelistService(
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
 
         //TODO send codelistform
-
         return CodelistForm().toEntity(updatedCodelist).apply {
             serializedCodes = objectMapper.writeValueAsString(updatedCodelist.codes)
         }.also {
             codelistRepository.updateCodelist(foundCodelist.id, it)
         }
+    }
+
+
+    fun deserializeCodes(serialized: String): List<Code2>? {
+        return objectMapper.readValue<List<Code2>>(
+            serialized,
+            objectMapper.typeFactory
+                .constructCollectionType(
+                    List::class.java,
+                    Code2::class.java
+                )
+        )
     }
 }
