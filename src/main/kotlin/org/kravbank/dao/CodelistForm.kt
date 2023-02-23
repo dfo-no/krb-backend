@@ -1,7 +1,7 @@
 package org.kravbank.dao
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.kravbank.domain.Code2
+import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.utils.Mapper
 
@@ -17,8 +17,7 @@ class CodelistForm(
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var serializedCodes: String = "",
 
-    //@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    var codes: List<Code2>? = null
+    var codes: List<Code>? = null
 
 ) : Mapper<CodelistForm, Codelist> {
 
@@ -35,8 +34,4 @@ class CodelistForm(
             title = entity.title
             description = entity.description
         }
-
-    override fun toString(): String {
-        return "CodelistForm(title='$title', description='$description', codes='$codes', listCodes=$serializedCodes)"
-    }
 }
