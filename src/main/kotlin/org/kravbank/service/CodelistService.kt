@@ -2,7 +2,7 @@ package org.kravbank.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.kravbank.dao.CodelistForm
-import org.kravbank.domain.Code2
+import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
@@ -27,7 +27,7 @@ class CodelistService(
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
 
         return CodelistForm().fromEntity(foundCodelist).apply {
-            codes = deserializeCodes(foundCodelist.serializedCodes)
+            codes = deserializeCodes(foundCodelist.serialized_codes)
         }
     }
 
@@ -46,7 +46,7 @@ class CodelistService(
             .onEach { form ->
                 foundCodelists.map { entity ->
                     if (entity.ref == form.ref) {
-                        form.codes = deserializeCodes(entity.serializedCodes)
+                        form.codes = deserializeCodes(entity.serialized_codes)
                     }
                 }
             }
@@ -60,7 +60,7 @@ class CodelistService(
 
         return CodelistForm().toEntity(newCodelist).apply {
             project = foundProject
-            serializedCodes = objectMapper.writeValueAsString(newCodelist.codes)
+            serialized_codes = objectMapper.writeValueAsString(newCodelist.codes)
         }.also {
             codelistRepository.persistAndFlush(it)
             if (!codelistRepository.isPersistent(it)) throw BadRequestException(CODELIST_BADREQUEST_CREATE)
@@ -70,7 +70,9 @@ class CodelistService(
 
     @Throws(BackendException::class)
     fun delete(projectRef: String, codelistRef: String): Boolean {
+
         val foundProject = projectRepository.findByRef(projectRef)
+
         val foundCodelist = codelistRepository.findByRef(foundProject.id, codelistRef)
 
         return codelistRepository.deleteById(foundCodelist.id)
@@ -85,21 +87,20 @@ class CodelistService(
 
         //TODO send codelistform
         return CodelistForm().toEntity(updatedCodelist).apply {
-            serializedCodes = objectMapper.writeValueAsString(updatedCodelist.codes)
+            serialized_codes = objectMapper.writeValueAsString(updatedCodelist.codes)
         }.also {
             codelistRepository.updateCodelist(foundCodelist.id, it)
         }
     }
 
 
-    fun deserializeCodes(serialized: String): List<Code2>? {
-        return objectMapper.readValue<List<Code2>>(
+    fun deserializeCodes(serialized: String): List<Code>? =
+        objectMapper.readValue<List<Code>>(
             serialized,
             objectMapper.typeFactory
                 .constructCollectionType(
                     List::class.java,
-                    Code2::class.java
+                    Code::class.java
                 )
         )
-    }
 }
