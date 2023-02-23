@@ -1,34 +1,13 @@
 package org.kravbank.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonManagedReference
-import io.quarkus.hibernate.orm.panache.PanacheEntity
 import java.util.*
-import javax.persistence.*
 
-@Entity
-class Code : PanacheEntity() {
+data class Code(
 
-    lateinit var title: String
+    var ref: String = UUID.randomUUID().toString(),
 
-    lateinit var description: String
+    var title: String = "",
 
-    @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
+    var description: String = "",
 
-    @ManyToOne(
-        cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
-        fetch = FetchType.LAZY
     )
-    @JsonManagedReference(value = "value-codes")
-    @JsonIgnore
-    var codelist: Codelist? = null
-
-    override fun toString(): String {
-        return "Title: $title,  Description: $description, Ref: $ref " +
-                "Codelist: $codelist"
-    }
-}
-
-
-
