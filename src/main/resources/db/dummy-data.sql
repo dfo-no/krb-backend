@@ -19,14 +19,19 @@ insert into Project("id", title, description, ref)
 values (26, 'ScriptProsjekt6', 'Beskrivelse3', 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
 
 --CODELIST
-insert into Codelist("id", title, description, ref, project_id)
-values (4, 'CodelistTittel1', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
-insert into Codelist("id", title, description, ref, project_id)
-values (5, 'CodelistTittel2', 'CodelistBeskrivelse2', 'asd4db69-edb2-431f-855a-4368e2bcddd1', 3);
-insert into Codelist("id", title, description, ref, project_id)
-values (21, 'CodelistTittel3', 'CodelistBeskrivelse2', 'newlist14db69-edb2-431f-855a-4368e2bcddd1', 22);
-insert into Codelist("id", title, description, ref, project_id)
-values (25, 'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1', 24);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (4, 'CodelistTittel1', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (5, 'CodelistTittel2', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'asd4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (21, 'CodelistTittel3', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'newlist14db69-edb2-431f-855a-4368e2bcddd1',
+        22);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (25, 'CodelistTittel4', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1', 24);
 insert into Codelist("id", title, serialized_codes, description, ref, project_id)
 values (46, 'CodelistTittel4',
         '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
