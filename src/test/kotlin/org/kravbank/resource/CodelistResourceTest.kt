@@ -14,7 +14,7 @@ class CodelistResourceTest {
     private val token = KeycloakAccess.getAccessToken("bob")
 
     @Test
-    fun getCodelist() {
+    fun `get codelist then return 200`() {
         given()
             .auth()
             .oauth2(token)
@@ -25,7 +25,7 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun listCodelists() {
+    fun `list codelist then return 200`() {
         given()
             .auth()
             .oauth2(token)
@@ -36,19 +36,22 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun createCodelist() {
+    fun `create codelist then return 201`() {
+
         RestAssured.defaultParser = Parser.JSON
 
-        val codelist = CodelistForm()
-        codelist.title = "CODELIST Integrasjonstest - Tittel 1"
-        codelist.description = "CODELIST Integrasjonstest - Beskrivelse 1"
-        val codelistMapper = CodelistForm().toEntity(codelist)
+        val codelist = CodelistForm().apply {
+            title = "CODELIST Integrasjonstest - Tittel 1"
+            description = "CODELIST Integrasjonstest - Beskrivelse 1"
+        }.run {
+            CodelistForm().toEntity(this)
+        }
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(codelistMapper)
+            .body(codelist)
             .header("Content-type", "application/json")
             .post("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists")
             .then()
@@ -56,7 +59,7 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun deleteCodelist() {
+    fun `delete codelist then return 200`() {
         given()
             .auth()
             .oauth2(token)
@@ -68,19 +71,21 @@ class CodelistResourceTest {
 
 
     @Test
-    fun updateCodelist() {
+    fun `update codelist then return 200`() {
         RestAssured.defaultParser = Parser.JSON
 
-        val codelist = CodelistForm()
-        codelist.title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
-        codelist.description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
-        val codelistMapper = CodelistForm().toEntity(codelist)
+        val codelist = CodelistForm().apply {
+            title = "CODELIST Oppdatert integrasjonstest - Tittel 1"
+            description = "CODELIST Oppdatert integrasjonstest - Beskrivelse 1"
+        }.run {
+            CodelistForm().toEntity(this)
+        }
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(codelistMapper)
+            .body(codelist)
             .header("Content-type", "application/json")
             .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/codelists/qqq4db69-edb2-431f-855a-4368e2bcddd1")
             .then()
