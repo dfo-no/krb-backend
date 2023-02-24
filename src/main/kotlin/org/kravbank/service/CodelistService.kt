@@ -46,7 +46,7 @@ class CodelistService(
             .onEach { form ->
                 foundCodelists.map { entity ->
                     if (entity.ref == form.ref) {
-                        form.codes = deserializeCodes(entity.serialized_codes)
+                        if (entity.serialized_codes != "") form.codes = deserializeCodes(entity.serialized_codes)
                     }
                 }
             }
