@@ -48,7 +48,7 @@ class BankResourceTest {
                 .then()
                 .statusCode(200)
                 .extract().jsonPath().getList("", Bank::class.java)
-                .let {
+                .also {
                     assertEquals(it[0].title, "ScriptProsjekt6")
                     assertEquals(it[1].title, "ScriptProsjekt5")
                 }
@@ -68,7 +68,7 @@ class BankResourceTest {
                 .then()
                 .statusCode(200)
                 .extract().jsonPath().getList("", Bank::class.java)
-                .let {
+                .also {
                     assertFalse(it[0].title == "ScriptProsjekt6")
                     assertFalse(it[1].title == "ScriptProsjekt5")
                 }
