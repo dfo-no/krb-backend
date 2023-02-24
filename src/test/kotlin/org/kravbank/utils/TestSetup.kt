@@ -16,14 +16,6 @@ class TestSetup {
     val projectRef = "ccc4db69-edb2-431f-855a-4368e2bcddd1"
 
 
-    //code
-    var code = Code()
-    var codes: MutableList<Code> = mutableListOf()
-    lateinit var newCode: Code
-    lateinit var codeForm: CodeForm
-    lateinit var updatedCodeForm: CodeForm
-
-
     //publication
     var publication = Publication()
     var publications: MutableList<Publication> = mutableListOf()
@@ -115,45 +107,22 @@ class TestSetup {
         projects.add(newProject)
 
 
-        //code
-        code = Code()
-        code.title = "Tittel kode"
-        code.description = "beskrivelse kode"
-        code.codelist = codelist
-        code.id = 506
-        code.ref = "dsafdsjkl823jhkfkjdhkjl"
-
-        newCode = Code()
-        newCode.title = "Ny kodelist tittel"
-        newCode.description = "Ny beskrivelse"
-        newCode.codelist = codelist
-        newCode.id = 507
-        code.ref = "6rtrsad5678-sadsa-34-dsfsd-sxdsf"
-
-        codeForm = CodeForm().fromEntity(newCode)
-
-        updatedCodeForm = CodeForm()
-        updatedCodeForm.title = "Endre tittel som need"
-        updatedCodeForm.description = "Endre beskrivelse som need"
-
-        codes.add(code)
-        codes.add(newCode)
-
-
         //codelist
         codelist = Codelist()
         codelist.title = "Første codelist"
         codelist.description = "første codelist beskrivelse"
         codelist.ref = "hello243567"
         codelist.project = project
-        codelist.codes = codes
+        codelist.serialized_codes =
+            "[{\"ref\":\"cf2b2950-54d7-4b4e-9691-42ada1c233ff\",\"title\":\"code1\",\"description\":\"code beskrivelse1\"},{\"ref\":\"26da61be-0967-4cbf-8204-262b4e70e2fd\",\"title\":\"code2\",\"description\":\"code beskrivelse2\"}]"
         codelist.id = (1L)
 
         newCodelist = Codelist()
         newCodelist.project = project
         newCodelist.title = "Ny kodelist tittel"
         newCodelist.description = "Ny beskrivelse"
-        newCodelist.codes = codes
+        codelist.serialized_codes =
+            "[{\"ref\":\"cf2b2950-54d7-4b4e-9691-42ada1c233ff\",\"title\":\"code1\",\"description\":\"code beskrivelse1\"},{\"ref\":\"26da61be-0967-4cbf-8204-262b4e70e2fd\",\"title\":\"code2\",\"description\":\"code beskrivelse2\"}]"
         newCodelist.id = 505
 
         codelistForm = CodelistForm().fromEntity(newCodelist)
@@ -163,12 +132,16 @@ class TestSetup {
         newCodelist_2.project = project
         newCodelist_2.title = "Ny kodelist tittel"
         newCodelist_2.description = "Ny beskrivelse"
-        newCodelist_2.codes = codes
+        codelist.serialized_codes =
+            "[{\"ref\":\"cf2b2950-54d7-4b4e-9691-42ada1c233ff\",\"title\":\"code1\",\"description\":\"code beskrivelse1\"},{\"ref\":\"26da61be-0967-4cbf-8204-262b4e70e2fd\",\"title\":\"code2\",\"description\":\"code beskrivelse2\"}]"
+
         newCodelist_2.id = 506
 
         updatedCodelistForm = CodelistForm()
         updatedCodelistForm.title = "Endre tittel som need"
         updatedCodelistForm.description = "Endre beskrivelse som need"
+        codelist.serialized_codes =
+            "[{\"ref\":\"cf2b2950-54d7-4b4e-9691-42ada1c233ff\",\"title\":\"ny tittel\",\"description\":\"code beskrivelse1\"},{\"ref\":\"26da61be-0967-4cbf-8204-262b4e70e2fd\",\"title\":\"code2\",\"description\":\"code beskrivelse2\"}]"
 
         codelists.add(codelist)
         codelists.add(newCodelist)
