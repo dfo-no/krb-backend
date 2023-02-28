@@ -1,4 +1,4 @@
-package org.kravbank.resource
+package org.kravbank.resource.real
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
