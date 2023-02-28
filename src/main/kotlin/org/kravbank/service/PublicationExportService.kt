@@ -47,7 +47,9 @@ class PublicationExportService(
     ): List<PublicationExport> {
 
         val project = projectRepository.findByRef(projectRef)
+
         val publication = publicationRepository.findByRef(project.id, publicationRef)
+
         return publicationExportRepository.list(publication.id)
     }
 
@@ -58,6 +60,7 @@ class PublicationExportService(
     ): PublicationExport {
 
         val project = projectRepository.findByRef(projectRef)
+
         val publication = publicationRepository.findByRef(project.id, publicationRef)
 
         val serializedProject = serializedProject(project)
@@ -83,13 +86,9 @@ class PublicationExportService(
 
     companion object Serialization {
 
-        private val objectMapper = jacksonObjectMapper()
+        private val objectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
-        fun serializedProject(project: Project): String {
-            objectMapper.registerModule(JavaTimeModule())
-
-            return objectMapper.writeValueAsString(project)
-        }
+        fun serializedProject(project: Project): String = objectMapper.writeValueAsString(project)
 
         fun deserializedProject(str: String): Project = objectMapper.readValue(str, Project::class.java)
 

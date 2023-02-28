@@ -1,86 +1,85 @@
-package org.kravbank.resource
+package org.kravbank.resource.real
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
 import org.junit.jupiter.api.Test
-import org.kravbank.dao.RequirementForm
+import org.kravbank.dao.NeedForm
 import org.kravbank.utils.KeycloakAccess
 
 @QuarkusTest
-class RequirementResourceTest {
+class NeedResourceTest {
 
     private val token = KeycloakAccess.getAccessToken("alice")
 
-
     @Test
-    fun getRequirement() {
+    fun getNeed() {
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
+            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
 
     @Test
-    fun listRequirements() {
+    fun listNeed() {
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/")
+            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
             .then()
             .statusCode(200)
     }
 
     @Test
-    fun createRequirement() {
+    fun createNeed() {
         RestAssured.defaultParser = Parser.JSON
-        val form = RequirementForm()
-        form.title = "Integrasjonstest requirement - tittel 1"
-        form.description = "Integrasjonstest requirement - beskrivelse 1"
-        form.needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
+        val form = NeedForm()
+        form.title = "POST Integrasjonstest need - tittel 1"
+        form.description = "POST Integrasjonstest need - beskrivelse 1"
+        val need = NeedForm().toEntity(form)
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(form)
+            .body(need)
             .header("Content-type", "application/json")
-            .post("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements")
+            .post("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
             .then()
             .statusCode(201)
     }
 
     @Test
-    fun updateRequirement() {
+    fun updateNeed() {
         RestAssured.defaultParser = Parser.JSON
-        val form = RequirementForm()
-        form.title = "Integrasjonstest requirement - tittel 1"
-        form.description = "Integrasjonstest requirement - beskrivelse 1"
-
+        val form = NeedForm()
+        form.title = "PUT Integrasjonstest need - tittel 1"
+        form.description = "PUT Integrasjonstest need - beskrivelse 1"
+        val need = NeedForm().toEntity(form)
 
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(form)
+            .body(need)
             .header("Content-type", "application/json")
-            .put("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/req1b69-edb2-431f-855a-4368e2bcddd1")
+            .put("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
 
     @Test
-    fun deleteRequirement() {
+    fun deleteNeed() {
         given()
             .auth()
             .oauth2(token)
             .`when`()
-            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/requirements/reqd2b69-edb2-431f-855a-4368e2bcddd1")
+            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need2b69-edb2-431f-855a-4368e2bcddd1")
             .then()
             .statusCode(200)
     }
