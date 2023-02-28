@@ -1,4 +1,4 @@
-package org.kravbank.resource
+package org.kravbank.resource.real
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured

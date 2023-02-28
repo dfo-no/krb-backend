@@ -1,11 +1,13 @@
 package org.kravbank.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.CodelistForm
+import org.kravbank.domain.Code
 import org.kravbank.domain.Codelist
 import org.kravbank.domain.Project
 import org.kravbank.repository.CodelistRepository
@@ -24,6 +26,8 @@ class CodelistServiceTest {
     private val codelistService = CodelistService(codelistRepository, projectRepository)
 
     private val arrangeSetup = TestSetup()
+
+    private val objectMapper = jacksonObjectMapper()
 
     private lateinit var createForm: CodelistForm
     private lateinit var updateForm: CodelistForm
@@ -50,17 +54,29 @@ class CodelistServiceTest {
     }
 
 
+    private fun deserializeCodes(serialized: String): List<Code>? =
+        objectMapper.readValue<List<Code>>(
+            serialized,
+            objectMapper.typeFactory
+                .constructCollectionType(
+                    List::class.java,
+                    Code::class.java
+                )
+        )
+
+
     @Test
     fun get() {
+
         val response = codelistService.get(project.ref, codelist.ref)
-        
+
+        val deserializedCodesToCheck = deserializeCodes(codelist.serialized_codes)
+
         assertEquals(codelist.title, response.title)
-        assertEquals(codelist.id, response.id)
-        assertEquals(codelist.project, response.project)
         assertEquals(codelist.description, response.description)
-        assertEquals(2, response.codes.size)
-        assertEquals("Tittel kode", response.codes[0].title)
-        assertEquals("Ny kodelist tittel", response.codes[1].title)
+        assertEquals(deserializedCodesToCheck, response.codes)
+
+
     }
 
     @Test
@@ -72,8 +88,11 @@ class CodelistServiceTest {
         val firstObjectInList = response[0]
         assertEquals(codelists[0].title, firstObjectInList.title)
         assertEquals(codelists[0].description, firstObjectInList.description)
-        assertEquals(codelists[0].project, firstObjectInList.project)
-        assertEquals(codelists[0].codes, firstObjectInList.codes)
+
+        val deserializedCodesToCheck = deserializeCodes(codelist.serialized_codes)
+
+        assertEquals(deserializedCodesToCheck, firstObjectInList.codes)
+
     }
 
     @Test
@@ -118,5 +137,7 @@ class CodelistServiceTest {
         assertNotNull(response)
         assertEquals(updateForm.title, response.title)
         assertEquals(updateForm.description, response.description)
+
+
     }
 }

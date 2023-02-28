@@ -19,16 +19,44 @@ insert into Project("id", title, description, ref)
 values (26, 'ScriptProsjekt6', 'Beskrivelse3', 'prosjekt6-edb2-431f-855a-4368e2bcddd1');
 
 --CODELIST
-insert into Codelist("id", title, description, ref, project_id)
-values (4, 'CodelistTittel1', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
-insert into Codelist("id", title, description, ref, project_id)
-values (5, 'CodelistTittel2', 'CodelistBeskrivelse2', 'asd4db69-edb2-431f-855a-4368e2bcddd1', 3);
-insert into Codelist("id", title, description, ref, project_id)
-values (21, 'CodelistTittel3', 'CodelistBeskrivelse2', 'newlist14db69-edb2-431f-855a-4368e2bcddd1', 22);
-insert into Codelist("id", title, description, ref, project_id)
-values (25, 'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1', 24);
-insert into Codelist("id", title, description, ref, project_id)
-values (27, 'CodelistTittel4', 'CodelistBeskrivelse2', 'newlist33333db69-edb2-431f-855a-4368e2bcddd1', 26);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (4, 'CodelistTittel1', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse1', 'qqq4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (5, 'CodelistTittel2', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'asd4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (21, 'CodelistTittel3', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'newlist14db69-edb2-431f-855a-4368e2bcddd1',
+        22);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (25, 'CodelistTittel4', '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'newlist2222db69-edb2-431f-855a-4368e2bcddd1', 24);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (46, 'CodelistTittel4',
+        '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'ref234567890', 26);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (45, 'CodelistTittel4',
+        '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'gfdgfd-edb2-431f-855a-4368e2bcddd1', 26);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (47, 'CodelistTittel4',
+        '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'sadsada-edb2-431f-855a-4368e2bcddd1', 26);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (48, 'CodelistTittel4',
+        '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'sadsad-edb2-431f-855a-4368e2bcddd1', 26);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (49, 'CodelistTittel4',
+        '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'sadfsa-edb2-431f-855a-4368e2bcddd1', 26);
+insert into Codelist("id", title, serialized_codes, description, ref, project_id)
+values (50, 'CodelistTittel4',
+        '[{"ref":"cf2b2950-54d7-4b4e-9691-42ada1c233ff","title":"code1","description":"code beskrivelse1"},{"ref":"26da61be-0967-4cbf-8204-262b4e70e2fd","title":"code2","description":"code beskrivelse2"}]
+', 'CodelistBeskrivelse2', 'edb2-431f-855a-4368e2bcddd1', 26);
+
 
 -- PUBLICATION
 insert into Publication("id", comment, version, date, ref, project_id)
@@ -72,20 +100,6 @@ values (6, 'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-436
 insert into Product("id", title, description, ref, project_id, requirementvariant_id)
 values (7, 'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', 1, 14);
 
-
--- CODE
-insert into Code("id", title, description, ref, codelist_id)
-values (17, 'code tittel fra script1', 'code beskrivelse fra script', 'script1b69-edb2-431f-855a-4368e2bcddd1', 4);
-insert into Code("id", title, description, ref, codelist_id)
-values (18, 'code tittel fra script2', 'code beskrivelse fra script', 'scrip21b69-edb2-431f-855a-4368e2bcddd1', 4);
-insert into Code("id", title, description, ref, codelist_id)
-values (19, 'code tittel fra script3', 'code beskrivelse fra script', 'script3b69-edb2-431f-855a-4368e2bcddd1', 5);
-insert into Code("id", title, description, ref, codelist_id)
-values (20, 'code tittel fra script4', 'code beskrivelse fra script', 'script4b69-edb2-431f-855a-4368e2bcddd1', 21);
-insert into Code("id", title, description, ref, codelist_id)
-values (23, 'code tittel fra script5', 'code beskrivelse fra script', 'script5b69-edb2-431f-855a-4368e2bcddd1', 21);
-insert into Code("id", title, description, ref, codelist_id)
-values (28, 'code tittel fra script6', 'code beskrivelse fra script', 'script6b69-edb2-431f-855a-4368e2bcddd1', 27);
 
 -- DELETE RECORD
 insert into DeletedRecord (id, data, deletedAt, updatedAt, tableName, objectId)

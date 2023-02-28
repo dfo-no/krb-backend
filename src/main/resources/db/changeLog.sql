@@ -196,3 +196,10 @@ CREATE TRIGGER deleted_record_insert
     ON Project
     FOR EACH ROW
 EXECUTE FUNCTION deleted_record_insert();
+
+-- changeset maestro:31
+DROP TABLE IF EXISTS Code cascade;
+
+ALTER TABLE Codelist
+    ADD COLUMN IF NOT EXISTS serialized_codes TEXT;
+

@@ -32,7 +32,7 @@
 
 ## Kravbank API database (PostreSQL)
 
-* [Postgres instance for Kravbank](krb-auth-postgres.postgres.database.azure.com)
+* [Postgres instance for Kravbank](https://krb-auth-postgres.postgres.database.azure.com)
 * The API uses a postgresql database, hosted as an Azure Database for PostgreSQL
 
 ## Keycloak server
@@ -48,7 +48,7 @@
 
 ## Keycloak database (PostgreSQL)
 
-* [Postgres instance for keycloak](krb-auth-postgres.postgres.database.azure.com)
+* [Postgres instance for keycloak](https://krb-auth-postgres.postgres.database.azure.com)
 * Keycloak uses an external database, hosted as an Azure Database for PostgreSQL
 
 ## Liquibase

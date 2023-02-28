@@ -22,7 +22,6 @@ class CodelistRepository : BackendRepository<Codelist>() {
             ).firstResult<Codelist>()
 
         return Optional.ofNullable(codelist).orElseThrow { NotFoundException(CODELIST_NOTFOUND) }
-
     }
 
     @Throws(BackendException::class)
@@ -33,9 +32,10 @@ class CodelistRepository : BackendRepository<Codelist>() {
     @Throws(BackendException::class)
     fun updateCodelist(id: Long, codelist: Codelist) {
         val updated = update(
-            "title = ?1, description = ?2 where id= ?3",
+            "title = ?1, description = ?2, serialized_codes = ?3 where id= ?4",
             codelist.title,
             codelist.description,
+            codelist.serialized_codes,
             id
         )
         Optional.of(updated).orElseThrow { BadRequestException(CODELIST_BADREQUEST_UPDATE) }
