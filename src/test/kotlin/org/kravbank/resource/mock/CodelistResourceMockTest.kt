@@ -103,7 +103,8 @@ class CodelistResourceMockTest {
 
         val response: Response = codelistResource.deleteCodelist(project.ref, codelist.ref)
 
-        assertNull(response)
+        assertNotNull(response)
+        assertEquals(204, response.status)
         verify(codelistRepository).deleteById(1L)
     }
 
