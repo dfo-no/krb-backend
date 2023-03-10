@@ -49,7 +49,7 @@ class CodelistResource(val codelistService: CodelistService) {
         @PathParam("codelistRef") codelistRef: String
     ): Response {
         codelistService.delete(projectRef, codelistRef)
-        return Response.ok(codelistRef).build()
+        return Response.noContent().build()
     }
 
     @PUT
