@@ -59,14 +59,14 @@ class CodelistResourceTest {
     }
 
     @Test
-    fun `delete codelist then return 200`() {
+    fun `delete codelist then return 204`() {
         given()
             .auth()
             .oauth2(token)
             .`when`()
             .delete("/api/v1/projects/prosjekt5-edb2-431f-855a-4368e2bcddd1/codelists/newlist2222db69-edb2-431f-855a-4368e2bcddd1")
             .then()
-            .statusCode(200)
+            .statusCode(204)
     }
 
 
