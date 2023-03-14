@@ -129,7 +129,7 @@ class PublicationResourceTest {
                 .`when`()
                 .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/")
 
-        assertEquals(204, listPublicationsResponse.statusCode())
+        assertEquals(200, listPublicationsResponse.statusCode())
 
 
         val newPublicationListLength = listPublicationsResponse.body.jsonPath().getInt("data.size()")

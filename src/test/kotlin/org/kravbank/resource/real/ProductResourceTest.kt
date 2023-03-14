@@ -127,7 +127,7 @@ class ProductResourceTest {
                 .`when`()
                 .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/")
 
-        assertEquals(204, listProductsResponse.statusCode())
+        assertEquals(200, listProductsResponse.statusCode())
 
 
         val newProductListLength = listProductsResponse.body.jsonPath().getInt("data.size()")
