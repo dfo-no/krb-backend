@@ -18,12 +18,12 @@ import javax.ws.rs.core.Response
 class ProductResource(val productService: ProductService) {
 
     @GET
-    @Path("/{productref}")
+    @Path("/{productRef}")
     fun getProduct(
         @PathParam("projectRef") projectRef: String,
-        @PathParam("productref") productref: String,
+        @PathParam("productRef") productRef: String,
     ): ProductForm {
-        val product = productService.get(projectRef, productref)
+        val product = productService.get(projectRef, productRef)
         return ProductForm().fromEntity(product)
     }
 
@@ -45,25 +45,25 @@ class ProductResource(val productService: ProductService) {
     }
 
     @DELETE
-    @Path("/{productref}")
+    @Path("/{productRef}")
     @Transactional
     fun deleteProduct(
         @PathParam("projectRef") projectRef: String,
-        @PathParam("productref") productref: String
+        @PathParam("productRef") productRef: String
     ): Response {
-        productService.delete(projectRef, productref)
-        return Response.ok(productref).build()
+        productService.delete(projectRef, productRef)
+        return Response.ok(productRef).build()
     }
 
     @PUT
-    @Path("{productref}")
+    @Path("/{productRef}")
     @Transactional
     fun updateProduct(
         @PathParam("projectRef") projectRef: String,
-        @PathParam("productref") productref: String,
+        @PathParam("productRef") productRef: String,
         updatedProduct: ProductForm
     ): ProductForm {
-        val product = productService.update(projectRef, productref, updatedProduct)
+        val product = productService.update(projectRef, productRef, updatedProduct)
         return ProductForm().fromEntity(product)
     }
 }
