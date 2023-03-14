@@ -155,7 +155,7 @@ class RequirementVariantResourceMockTest {
         )
 
         assertNotNull(response)
-        assertEquals(requirementVariant.ref, response.entity)
+        assertEquals(204, response.status)
         verify(requirementVariantRepository).deleteById(requirementVariant.id)
     }
 

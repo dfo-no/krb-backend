@@ -113,7 +113,7 @@ class PublicationResourceTest {
             .`when`()
             .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/${publicationToDelete.ref}")
 
-        assertEquals(200, delete.statusCode)
+        assertEquals(204, delete.statusCode)
 
         // Verify we have one more soft-deleted record
         val listDeletedRecordsAfterTest = deletedRecordQuery.resultList
@@ -129,7 +129,7 @@ class PublicationResourceTest {
                 .`when`()
                 .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/publications/")
 
-        assertEquals(200, listPublicationsResponse.statusCode())
+        assertEquals(204, listPublicationsResponse.statusCode())
 
 
         val newPublicationListLength = listPublicationsResponse.body.jsonPath().getInt("data.size()")
