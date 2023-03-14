@@ -93,12 +93,14 @@ values (16, 'Requirement variant beskrivelse fra script #2 ', 'instruksjon', 'rv
         'req text', true, true, true, 12);
 
 -- PRODUCT
-insert into product("id", title, description, ref, project_id, requirementvariant_id)
-values (5, 'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', 3, 14);
-insert into Product("id", title, description, ref, project_id, requirementvariant_id)
-values (6, 'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', 3, 14);
-insert into Product("id", title, description, ref, project_id, requirementvariant_id)
-values (7, 'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', 1, 14);
+insert into product("id", title, description, ref, project_id)
+values (5, 'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Product("id", title, description, ref, project_id)
+values (6, 'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Product("id", title, description, ref, project_id)
+values (7, 'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', 1);
+insert into Product("id", title, description, ref, project_id)
+values (77, 'ProduktTittel4', 'ProduktBeskrivelse4', 'nil-edb2-431f-855a-4368e2bcddd1', 2);
 
 
 -- DELETE RECORD
@@ -108,8 +110,7 @@ values (67, '{
   "ref": "ref-til-product-999",
   "title": "product-9999 tittel",
   "description": "propduct-9999-beskrivelse",
-  "project_id_fk": 3,
-  "requirementvariant_id_fk": 14
+  "project_id_fk": 3
 }', '2021-09-29 21:17:30.23195', null, 'product', 999)
 ON CONFLICT DO NOTHING;
 
@@ -119,8 +120,7 @@ values (68, '{
   "ref": "ref-til-product-998",
   "title": "product-998 tittel",
   "description": "propduct-9999-beskrivelse",
-  "project_id_fk": 3,
-  "requirementvariant_id_fk": 14
+  "project_id_fk": 3
 }', '2021-09-29 21:17:30.23195', null, 'product', 998)
 ON CONFLICT DO NOTHING;
 
