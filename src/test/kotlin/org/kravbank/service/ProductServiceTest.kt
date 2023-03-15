@@ -10,7 +10,6 @@ import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.TestSetup
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
@@ -19,13 +18,10 @@ class ProductServiceTest {
 
     private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
     private val productRepository: ProductRepository = mock(ProductRepository::class.java)
-    private val requirementVariantRepository: RequirementVariantRepository =
-        mock(RequirementVariantRepository::class.java)
 
     private val productService = ProductService(
         productRepository = productRepository,
         projectRepository = projectRepository,
-        requirementVariantRepository = requirementVariantRepository
     )
 
     private val arrangeSetup = TestSetup()
@@ -54,9 +50,6 @@ class ProductServiceTest {
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(productRepository.findByRef(project.id, product.ref)).thenReturn(product)
-        `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref)).thenReturn(
-            requirementVariant
-        )
         `when`(productRepository.listAllProducts(project.id)).thenReturn(products)
 
     }

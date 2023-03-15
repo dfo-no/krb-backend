@@ -34,7 +34,6 @@ class ProductResourceMockTest {
     private val productService = ProductService(
         productRepository = productRepository,
         projectRepository = projectRepository,
-        requirementVariantRepository = requirementVariantRepository
     )
 
     private val productResource = ProductResource(productService)
@@ -136,7 +135,6 @@ class ProductResourceMockTest {
         val response: Response = productResource.deleteProduct(project.ref, product.ref)
 
         assertNotNull(response)
-        assertEquals(product.ref, response.entity)
         verify(productRepository).deleteById(product.id)
     }
 

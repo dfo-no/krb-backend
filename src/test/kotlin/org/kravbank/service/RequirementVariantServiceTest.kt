@@ -82,7 +82,6 @@ class RequirementVariantServiceTest {
             requirementVariant.useSpecification,
             entity.useSpecification
         )
-        assertEquals(requirementVariant.product, entity.product)
         assertEquals(
             requirementVariant.useQualification,
             entity.useQualification
@@ -110,7 +109,6 @@ class RequirementVariantServiceTest {
             requirementVariant.useSpecification,
             firstObjectInList.useSpecification
         )
-        assertEquals(requirementVariant.product, firstObjectInList.product)
         assertEquals(
             requirementVariant.useQualification,
             firstObjectInList.useQualification

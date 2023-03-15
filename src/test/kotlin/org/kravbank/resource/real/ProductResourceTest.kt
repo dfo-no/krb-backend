@@ -62,10 +62,10 @@ class ProductResourceTest {
 
         RestAssured.defaultParser = Parser.JSON
 
-        val form = ProductForm()
-        form.title = "PRODUCT Integrasjonstest - Tittel 1"
-        form.description = "PRODUCT Integrasjonstest - Beskrivelse 1"
-        form.requirementVariantRef = "rvrv2b69-edb2-431f-855a-4368e2bcddd1"
+        val form = ProductForm().apply {
+            title = "PRODUCT Integrasjonstest - Tittel 1"
+            description = "PRODUCT Integrasjonstest - Beskrivelse 1"
+        }
 
         given()
             .auth()
@@ -111,7 +111,7 @@ class ProductResourceTest {
             .`when`()
             .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/${productToDelete.ref}")
 
-        assertEquals(200, delete.statusCode)
+        assertEquals(204, delete.statusCode)
 
         // Verify we have one more soft-deleted record
         val listDeletedRecordsAfterTest = deletedRecordQuery.resultList
