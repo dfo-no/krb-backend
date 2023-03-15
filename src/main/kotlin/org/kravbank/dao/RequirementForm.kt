@@ -13,11 +13,6 @@ class RequirementForm : Mapper<RequirementForm, Requirement> {
 
     lateinit var description: String
 
-    //TODO
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    //@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    var needRef: String = ""
-
     override fun toEntity(domain: RequirementForm): Requirement = Requirement().apply {
         title = domain.title
         description = domain.description
@@ -27,6 +22,5 @@ class RequirementForm : Mapper<RequirementForm, Requirement> {
         ref = entity.ref
         title = entity.title
         description = entity.description
-        needRef = entity.need?.ref ?: ""
     }
 }

@@ -39,10 +39,10 @@ class RequirementResourceTest {
     @Test
     fun createRequirement() {
         RestAssured.defaultParser = Parser.JSON
-        val form = RequirementForm()
-        form.title = "Integrasjonstest requirement - tittel 1"
-        form.description = "Integrasjonstest requirement - beskrivelse 1"
-        form.needRef = "need1b69-edb2-431f-855a-4368e2bcddd1"
+        val form = RequirementForm().apply {
+            title = "Integrasjonstest requirement - tittel 1"
+            description = "Integrasjonstest requirement - beskrivelse 1"
+        }
 
         given()
             .auth()
