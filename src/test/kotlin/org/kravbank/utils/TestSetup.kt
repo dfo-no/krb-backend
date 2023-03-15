@@ -243,7 +243,6 @@ class TestSetup {
         newRequirement.id = 1001L
 
         requirementForm = RequirementForm().fromEntity(newRequirement)
-        requirementForm.needRef = need_requirementRef
 
         updatedRequirementForm = RequirementForm()
         updatedRequirementForm.title = "Oppdatert tittel for requirement"

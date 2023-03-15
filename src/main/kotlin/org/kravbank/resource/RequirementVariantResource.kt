@@ -10,7 +10,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-@Path("/api/v1/projects/{projectRef}/requirements/{requirementRef}/requirementvariants")
+@Path("/api/v1/projects/{projectRef}/needs/{needRef}/requirements/{requirementRef}/requirementvariants")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
@@ -21,19 +21,21 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     @Path("/{requirementVariantRef}")
     fun getRequirementVariant(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): RequirementVariantForm {
-        val reqVariant = requirementVariantService.get(projectRef, requirementRef, requirementVariantRef)
+        val reqVariant = requirementVariantService.get(projectRef, needRef, requirementRef, requirementVariantRef)
         return RequirementVariantForm().fromEntity(reqVariant)
     }
 
     @GET
     fun listRequirementVariants(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String,
         @PathParam("requirementRef") requirementRef: String,
     ): List<RequirementVariantForm> {
-        return requirementVariantService.list(projectRef, requirementRef)
+        return requirementVariantService.list(projectRef, needRef, requirementRef)
             .stream()
             .map(RequirementVariantForm()::fromEntity)
             .toList()
@@ -43,10 +45,11 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     @POST
     fun createRequirementVariant(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String,
         @PathParam("requirementRef") requirementRef: String,
         newReqVariant: RequirementVariantForm
     ): Response {
-        val reqVariant = requirementVariantService.create(projectRef, requirementRef, newReqVariant)
+        val reqVariant = requirementVariantService.create(projectRef, needRef, requirementRef, newReqVariant)
 
         //returnerer ny req variant ref i response header
         return Response.created(URI.create("/api/v1/projects/$projectRef/requirements/$requirementRef/requirementvariants/" + reqVariant.ref))
@@ -58,10 +61,11 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     @Transactional
     fun deleteRequirementVariant(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response {
-        requirementVariantService.delete(projectRef, requirementRef, requirementVariantRef)
+        requirementVariantService.delete(projectRef, needRef, requirementRef, requirementVariantRef)
         return Response.ok(requirementVariantRef).build()
     }
 
@@ -70,12 +74,19 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
     @Transactional
     fun updateRequirementVariant(
         @PathParam("projectRef") projectRef: String,
+        @PathParam("needRef") needRef: String,
         @PathParam("requirementRef") requirementRef: String,
         @PathParam("requirementVariantRef") requirementVariantRef: String,
         updatedReqVariant: RequirementVariantForm
     ): RequirementVariantForm {
         val reqVariant =
-            requirementVariantService.update(projectRef, requirementRef, requirementVariantRef, updatedReqVariant)
+            requirementVariantService.update(
+                projectRef,
+                needRef,
+                requirementRef,
+                requirementVariantRef,
+                updatedReqVariant
+            )
         return RequirementVariantForm().fromEntity(reqVariant)
     }
 }

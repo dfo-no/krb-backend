@@ -12,19 +12,28 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class RequirementRepository : BackendRepository<Requirement>() {
     @Throws(BackendException::class)
-    fun findByRef(projectId: Long, ref: String): Requirement {
+    fun findByRef(
+        projectId: Long,
+        needId: Long,
+        ref: String
+    ): Requirement {
         val requirement =
             find(
-                "ref = ?1 and project_id = ?2",
+                "ref = ?1 and need_id = ?2 and project_id = ?3",
                 ref,
+                needId,
                 projectId
             ).firstResult<Requirement>()
 
         return Optional.ofNullable(requirement).orElseThrow { NotFoundException(REQUIREMENT_NOTFOUND) }
     }
 
-    fun listAllRequirements(id: Long): List<Requirement> {
-        return find("project_id", id)
+    fun listAllRequirements(projectId: Long, needId: Long): List<Requirement> {
+        return find(
+            "project_id = ?1 and need_id = ?2",
+            projectId,
+            needId
+        )
             .stream<Requirement>()
             .toList()
     }
