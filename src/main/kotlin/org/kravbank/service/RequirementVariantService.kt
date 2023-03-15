@@ -14,17 +14,16 @@ import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
 class RequirementVariantService(
     val requirementVariantRepository: RequirementVariantRepository,
     val requirementRepository: RequirementRepository,
-    val projectRepository: ProjectRepository
+    val projectRepository: ProjectRepository,
+    val productRepository: ProductRepository
+
 ) {
 
-    @Inject
-    lateinit var productRepository: ProductRepository
 
     private val objectMapper = jacksonObjectMapper()
 
