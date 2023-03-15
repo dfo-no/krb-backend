@@ -52,7 +52,7 @@ class ProductResource(val productService: ProductService) {
         @PathParam("productref") productref: String
     ): Response {
         productService.delete(projectRef, productref)
-        return Response.ok(productref).build()
+        return Response.noContent().build()
     }
 
     @PUT

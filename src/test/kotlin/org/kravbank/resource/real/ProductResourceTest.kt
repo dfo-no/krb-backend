@@ -111,7 +111,7 @@ class ProductResourceTest {
             .`when`()
             .delete("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1/products/${productToDelete.ref}")
 
-        assertEquals(200, delete.statusCode)
+        assertEquals(204, delete.statusCode)
 
         // Verify we have one more soft-deleted record
         val listDeletedRecordsAfterTest = deletedRecordQuery.resultList

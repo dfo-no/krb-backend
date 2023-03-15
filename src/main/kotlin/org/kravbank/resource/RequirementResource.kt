@@ -51,7 +51,7 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("requirementRef") requirementRef: String
     ): Response {
         requirementService.delete(projectRef, requirementRef)
-        return Response.ok(requirementRef).build()
+        return Response.noContent().build()
     }
 
     @PUT

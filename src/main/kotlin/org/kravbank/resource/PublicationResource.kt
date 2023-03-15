@@ -50,7 +50,7 @@ class PublicationResource(val publicationService: PublicationService) {
         @PathParam("projectref") projectRef: String, @PathParam("publicationref") publicationRef: String
     ): Response {
         publicationService.delete(projectRef, publicationRef)
-        return Response.ok(publicationRef).build()
+        return Response.noContent().build()
     }
 
     @PUT

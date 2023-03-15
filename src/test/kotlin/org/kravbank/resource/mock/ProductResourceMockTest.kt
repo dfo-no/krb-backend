@@ -136,7 +136,7 @@ class ProductResourceMockTest {
         val response: Response = productResource.deleteProduct(project.ref, product.ref)
 
         assertNotNull(response)
-        assertEquals(product.ref, response.entity)
+        assertEquals(204, response.status)
         verify(productRepository).deleteById(product.id)
     }
 
