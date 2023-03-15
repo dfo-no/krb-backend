@@ -111,19 +111,17 @@ class RequirementVariantService(
 
     fun delete(projectRef: String, requirementRef: String, requirementVariantRef: String): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
+
         val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+
         val foundRequirementVariant = requirementVariantRepository.findByRef(foundRequirement.id, requirementVariantRef)
 
-        //TODO variants in requirement?
-//        val productUsedInVariant =
-//            requirementVariantRepository.listAllRequirementVariants(foundProject.id)
-//                .map { p -> p.product }
-//                .any { p -> p?.any()?.equals(foundProduct) == true }
-//
-//        if (productUsedInVariant) throw BackendException("Cannot delete. It is in use elsewhere")
-
-        requirementVariantRepository.deleteById(foundRequirementVariant.id)
-        return foundRequirementVariant
+        return try {
+            requirementVariantRepository.deleteById(foundRequirementVariant.id)
+            foundRequirementVariant
+        } catch (e: Exception) {
+            throw BackendException("Failed to delete requirement variant")
+        }
     }
 
     @Throws(BackendException::class)
