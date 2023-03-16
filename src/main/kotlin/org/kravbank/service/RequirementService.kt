@@ -88,8 +88,8 @@ class RequirementService(
     @Throws(BackendException::class)
     fun update(
         projectRef: String,
-        requirementRef: String,
         needRef: String,
+        requirementRef: String,
         updatedRequirement: RequirementForm
     ): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
