@@ -69,6 +69,10 @@ insert into Need("id", title, description, ref, project_id)
 values (10, 'Need tittel fra script', 'Need beskrivelse fra script', 'need1b69-edb2-431f-855a-4368e2bcddd1', 2);
 insert into Need("id", title, description, ref, project_id)
 values (11, 'Need tittel fra script #2', 'Need beskrivelse fra script #2', 'need2b69-edb2-431f-855a-4368e2bcddd1', 2);
+insert into Need("id", title, description, ref, project_id)
+values (43, 'Stort behov', 'Dette behovet er så stort at vi ikke kan skrive mer', '32456789-sfdgfhj-34567-dfghj-dfgh',
+        3);
+
 
 -- REQUIREMENT
 insert into Requirement("id", title, description, ref, project_id, need_id)
@@ -77,6 +81,10 @@ values (12, 'Requirement tittel fra script', 'Requirement beskrivelse fra script
 insert into Requirement("id", title, description, ref, project_id, need_id)
 values (13, 'Requirement tittel fra script #2', 'Requirement beskrivelse fra script #2',
         'reqd2b69-edb2-431f-855a-4368e2bcddd1', 2, 10);
+insert into Requirement("id", title, description, ref, project_id, need_id)
+values (46, 'Krav til stort behov', 'Kravstor',
+        '34223443-fdfdsfds-3245325--dfsdsf', 3, 43);
+
 
 --REQUIREMENT VARIANT
 insert into RequirementVariant("id", description, instruction, ref, requirementtext, useproduct, usequalification,
@@ -91,12 +99,18 @@ insert into RequirementVariant("id", description, instruction, ref, requirementt
                                usespecification, requirement_id)
 values (16, 'Requirement variant beskrivelse fra script #2 ', 'instruksjon', 'rvrv3b69-edb2-431f-855a-4368e2bcddd1',
         'req text', true, true, true, 12);
+insert into RequirementVariant("id", description, instruction, ref, requirementtext, useproduct, usequalification,
+                               usespecification, requirement_id)
+values (47, 'En kravstor variant', 'ny informasjon', 'sdasdsa-34324432-fdsfdsf-43543-dddddggg',
+        'tekstet her', true, true, true, 46);
 
 -- PRODUCT
 insert into product("id", title, description, ref, project_id)
 values (5, 'ProduktTittel1', 'ProduktBeskrivelse1', 'edb4db69-edb2-431f-855a-4368e2bcddd1', 3);
 insert into Product("id", title, description, ref, project_id)
 values (6, 'ProduktTittel2', 'ProduktBeskrivelse2', 'kuk4db69-edb2-431f-855a-4368e2bcddd1', 3);
+insert into Product("id", title, description, ref, project_id)
+values (44, 'Produkt til varianten', 'Meget fint', 'dsfhfgh32432-32534ds-325fddfs-3253325', 3);
 insert into Product("id", title, description, ref, project_id)
 values (7, 'ProduktTittel3', 'ProduktBeskrivelse3', 'kua4db69-edb2-431f-855a-4368e2bcddd1', 1);
 insert into Product("id", title, description, ref, project_id)
