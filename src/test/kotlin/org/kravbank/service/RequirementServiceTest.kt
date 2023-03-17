@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementForm
+import org.kravbank.domain.Need
 import org.kravbank.domain.Project
 import org.kravbank.domain.Requirement
 import org.kravbank.repository.NeedRepository
@@ -34,6 +35,7 @@ class RequirementServiceTest {
     private lateinit var requirements: List<Requirement>
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var need: Need
     private lateinit var createForm: RequirementForm
     private lateinit var updateForm: RequirementForm
 
@@ -46,19 +48,22 @@ class RequirementServiceTest {
         requirements = arrangeSetup.requirements
         requirement = arrangeSetup.requirement
         project = arrangeSetup.project
+        need = arrangeSetup.need
         updateForm = arrangeSetup.updatedRequirementForm
         createForm = RequirementForm().fromEntity(requirement)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
-        `when`(requirementRepository.findByRef(project.id, requirement.ref)).thenReturn(requirement)
-        `when`(requirementRepository.listAllRequirements(project.id)).thenReturn(requirements)
+        `when`(requirementRepository.findByRef(project.id, need.id, requirement.ref)).thenReturn(requirement)
+        `when`(requirementRepository.listAllRequirements(project.id, need.id)).thenReturn(requirements)
+        `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+
 
     }
 
     @Test
     fun get() {
-        val response = requirementService.get(project.ref, requirement.ref)
+        val response = requirementService.get(project.ref, need.ref, requirement.ref)
 
         val entity: Requirement = response
 
@@ -72,7 +77,7 @@ class RequirementServiceTest {
 
     @Test
     fun list() {
-        val response = requirementService.list(project.ref)
+        val response = requirementService.list(project.ref, need.ref)
 
         val entity: List<Requirement> = response
 
@@ -94,7 +99,7 @@ class RequirementServiceTest {
             .thenReturn(true)
 
         val response =
-            requirementService.create(project.ref, createForm)
+            requirementService.create(project.ref, need.ref, createForm)
 
         val entity: Requirement = response
 
@@ -106,7 +111,7 @@ class RequirementServiceTest {
 
     @Test
     fun delete() {
-        requirementService.delete(project.ref, requirement.ref)
+        requirementService.delete(project.ref, need.ref, requirement.ref)
 
         verify(requirementRepository).deleteById(requirement.id)
     }
@@ -116,6 +121,7 @@ class RequirementServiceTest {
     fun update() {
         val response = requirementService.update(
             project.ref,
+            need.ref,
             requirement.ref,
             updateForm
         )
