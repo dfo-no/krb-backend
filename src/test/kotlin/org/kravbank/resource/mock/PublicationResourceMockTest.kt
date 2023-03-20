@@ -113,7 +113,7 @@ class PublicationResourceMockTest {
         val response: Response = publicationResource.deletePublication(project.ref, publication.ref)
 
         assertNotNull(response)
-        assertEquals(publication.ref, response.entity)
+        assertEquals(204, response.status)
         verify(publicationRepository).deleteById(publication.id)
 
     }

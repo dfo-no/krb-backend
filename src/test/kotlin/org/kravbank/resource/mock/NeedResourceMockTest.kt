@@ -102,7 +102,7 @@ class NeedResourceMockTest {
         val response: Response = needResource.deleteNeed(project.ref, need.ref)
 
         assertNotNull(response)
-        assertEquals(need.ref, response.entity)
+        assertEquals(204, response.status)
         verify(needRepository).deleteById(need.id)
 
     }

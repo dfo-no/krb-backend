@@ -66,7 +66,7 @@ class RequirementVariantResource(val requirementVariantService: RequirementVaria
         @PathParam("requirementVariantRef") requirementVariantRef: String
     ): Response {
         requirementVariantService.delete(projectRef, needRef, requirementRef, requirementVariantRef)
-        return Response.ok(requirementVariantRef).build()
+        return Response.noContent().build()
     }
 
     @PUT

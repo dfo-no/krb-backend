@@ -12,7 +12,6 @@ import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.resource.ProductResource
 import org.kravbank.service.ProductService
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
@@ -28,8 +27,6 @@ class ProductResourceMockTest {
 
     private val projectRepository: ProjectRepository = mock(ProjectRepository::class.java)
     private val productRepository: ProductRepository = mock(ProductRepository::class.java)
-    private val requirementVariantRepository: RequirementVariantRepository =
-        mock(RequirementVariantRepository::class.java)
 
     private val productService = ProductService(
         productRepository = productRepository,
@@ -65,9 +62,7 @@ class ProductResourceMockTest {
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(productRepository.findByRef(project.id, product.ref)).thenReturn(product)
-        `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref)).thenReturn(
-            requirementVariant
-        )
+
         `when`(productRepository.listAllProducts(project.id)).thenReturn(products)
 
     }
@@ -135,6 +130,7 @@ class ProductResourceMockTest {
         val response: Response = productResource.deleteProduct(project.ref, product.ref)
 
         assertNotNull(response)
+        assertEquals(204, response.status)
         verify(productRepository).deleteById(product.id)
     }
 
