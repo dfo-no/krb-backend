@@ -7,6 +7,7 @@ import org.kravbank.dao.RequirementVariantForm
 import org.kravbank.domain.Project
 import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
+import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
@@ -22,12 +23,15 @@ class RequirementVariantServiceTest {
     private val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
     private val requirementVariantRepository: RequirementVariantRepository =
         mock(RequirementVariantRepository::class.java)
+    private val productRepository: ProductRepository =
+        mock(ProductRepository::class.java)
 
 
     private val requirementVariantService = RequirementVariantService(
         projectRepository = projectRepository,
         requirementRepository = requirementRepository,
-        requirementVariantRepository = requirementVariantRepository
+        requirementVariantRepository = requirementVariantRepository,
+        productRepository = productRepository
     )
 
 
@@ -82,7 +86,6 @@ class RequirementVariantServiceTest {
             requirementVariant.useSpecification,
             entity.useSpecification
         )
-        assertEquals(requirementVariant.product, entity.product)
         assertEquals(
             requirementVariant.useQualification,
             entity.useQualification
@@ -110,7 +113,6 @@ class RequirementVariantServiceTest {
             requirementVariant.useSpecification,
             firstObjectInList.useSpecification
         )
-        assertEquals(requirementVariant.product, firstObjectInList.product)
         assertEquals(
             requirementVariant.useQualification,
             firstObjectInList.useQualification

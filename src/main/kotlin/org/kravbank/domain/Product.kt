@@ -11,12 +11,12 @@ import javax.persistence.*
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Product : PanacheEntity() {
 
+    @Column(unique = true)
+    var ref: String = UUID.randomUUID().toString()
+
     lateinit var title: String
 
     lateinit var description: String
-
-    @Column(unique = true)
-    var ref: String = UUID.randomUUID().toString()
 
     @ManyToOne(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
@@ -26,15 +26,12 @@ class Product : PanacheEntity() {
     @JsonIgnore
     var project: Project? = null
 
-    @ManyToOne(
+    @ManyToMany(
         cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH],
         fetch = FetchType.LAZY
     )
     @JsonManagedReference(value = "val-reqvariant-product")
     @JsonIgnore
-    var requirementvariant: RequirementVariant? = null
+    var requirementVariants: MutableList<RequirementVariant> = mutableListOf()
 
-    override fun toString(): String {
-        return "Product(title='$title', description='$description', ref='$ref', project=$project, requirementvariant=$requirementvariant)"
-    }
 }

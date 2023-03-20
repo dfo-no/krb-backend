@@ -162,7 +162,6 @@ class TestSetup {
         newProduct.description = "Ny beskrivelse av produkt"
 
         productForm = ProductForm().fromEntity(newProduct)
-        productForm.requirementVariantRef = reqVariant_productRef
 
         updatedProductForm = ProductForm()
         updatedProductForm.title = "Endre tittel som need"
@@ -263,7 +262,6 @@ class TestSetup {
         requirementVariant.useSpecification = true
         requirementVariant.useQualification = true
         requirementVariant.requirementText = "Variant tekst"
-        requirementVariant.product = products
         requirementVariant.requirement = requirement
 
         newRequirementVariant = RequirementVariant()
@@ -273,7 +271,6 @@ class TestSetup {
         newRequirementVariant.useProduct = false
         newRequirementVariant.useSpecification = false
         newRequirementVariant.useQualification = false
-        newRequirementVariant.product = products
         newRequirementVariant.requirementText = "Variant tekst"
         newRequirementVariant.requirement = requirement
 

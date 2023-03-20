@@ -9,6 +9,7 @@ import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
+import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
 import org.kravbank.repository.RequirementRepository
 import org.kravbank.repository.RequirementVariantRepository
@@ -29,12 +30,15 @@ class RequirementVariantResourceMockTest {
     private val requirementRepository: RequirementRepository = mock(RequirementRepository::class.java)
     private val requirementVariantRepository: RequirementVariantRepository =
         mock(RequirementVariantRepository::class.java)
+    private val productRepository: ProductRepository =
+        mock(ProductRepository::class.java)
 
 
     private val requirementVariantService = RequirementVariantService(
         projectRepository = projectRepository,
         requirementRepository = requirementRepository,
-        requirementVariantRepository = requirementVariantRepository
+        requirementVariantRepository = requirementVariantRepository,
+        productRepository = productRepository
     )
 
     private val requirementVariantResource = RequirementVariantResource(requirementVariantService)

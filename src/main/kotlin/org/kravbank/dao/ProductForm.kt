@@ -13,15 +13,9 @@ class ProductForm : Mapper<ProductForm, Product> {
 
     lateinit var description: String
 
-    //TODO
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    //@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    var requirementVariantRef: String = ""
-
     override fun toEntity(domain: ProductForm): Product = Product().apply {
         title = domain.title
         description = domain.description
-        requirementVariantRef = domain.requirementVariantRef
     }
 
     override fun fromEntity(entity: Product): ProductForm = ProductForm().apply {

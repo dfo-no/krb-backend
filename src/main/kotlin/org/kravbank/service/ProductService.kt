@@ -6,7 +6,6 @@ import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
 import org.kravbank.repository.ProductRepository
 import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementVariantRepository
 import org.kravbank.utils.Messages.RepoErrorMsg.PRODUCT_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
@@ -15,12 +14,11 @@ import javax.enterprise.context.ApplicationScoped
 class ProductService(
     val productRepository: ProductRepository,
     val projectRepository: ProjectRepository,
-    val requirementVariantRepository: RequirementVariantRepository,
 ) {
-
 
     fun get(projectRef: String, productRef: String): Product {
         val foundProject = projectRepository.findByRef(projectRef)
+
         return productRepository.findByRef(foundProject.id, productRef)
     }
 
@@ -29,29 +27,32 @@ class ProductService(
         return productRepository.listAllProducts(foundProject.id)
     }
 
+
     @Throws(BackendException::class)
     fun create(projectRef: String, newProduct: ProductForm): Product {
+
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundReqVariant = requirementVariantRepository.findByRefProduct(newProduct.requirementVariantRef)
 
-        val product = ProductForm().toEntity(newProduct)
-        product.project = foundProject
-        product.requirementvariant = foundReqVariant
-
-        productRepository.persistAndFlush(product)
-        if (!productRepository.isPersistent(product)) throw BadRequestException(PRODUCT_BADREQUEST_CREATE)
-
-        return product
+        return ProductForm().toEntity(newProduct).apply {
+            project = foundProject
+        }.also {
+            productRepository.persistAndFlush(it)
+            if (!productRepository.isPersistent(it)) throw BadRequestException(PRODUCT_BADREQUEST_CREATE)
+        }
     }
 
-
+    @Throws(BackendException::class)
     fun delete(projectRef: String, productRef: String): Product {
         val foundProject = projectRepository.findByRef(projectRef)
+
         val foundProduct = productRepository.findByRef(foundProject.id, productRef)
 
-        productRepository.deleteById(foundProduct.id)
-
-        return foundProduct
+        return try {
+            productRepository.deleteById(foundProduct.id)
+            foundProduct
+        } catch (ex: Exception) {
+            throw BackendException("Failed to delete product")
+        }
     }
 
     fun update(projectRef: String, productRef: String, updatedProduct: ProductForm): Product {
