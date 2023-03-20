@@ -227,7 +227,7 @@ class RequirementVariantResourceTest {
             .`when`()
             .delete("/api/v1/projects/$projectRef/needs/$needRef/requirements/$requirementRef/requirementvariants/$newReqVariantRef")
 
-        assertEquals(200, response.statusCode)
+        assertEquals(204, response.statusCode)
     }
 
 
