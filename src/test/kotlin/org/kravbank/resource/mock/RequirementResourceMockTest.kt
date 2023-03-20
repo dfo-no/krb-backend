@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementForm
+import org.kravbank.domain.Need
 import org.kravbank.domain.Project
 import org.kravbank.domain.Requirement
 import org.kravbank.lang.BadRequestException
@@ -42,6 +43,7 @@ class RequirementResourceMockTest {
     private lateinit var requirements: List<Requirement>
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var need: Need
     private lateinit var updateForm: RequirementForm
     private lateinit var createForm: RequirementForm
 
@@ -55,19 +57,21 @@ class RequirementResourceMockTest {
         requirements = arrangeSetup.requirements
         requirement = arrangeSetup.requirement
         project = arrangeSetup.project
+        need = arrangeSetup.need
         createForm = RequirementForm().fromEntity(requirement)
 
 
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
-        `when`(requirementRepository.findByRef(project.id, requirement.ref)).thenReturn(requirement)
-        `when`(requirementRepository.listAllRequirements(project.id)).thenReturn(requirements)
+        `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+        `when`(requirementRepository.findByRef(project.id, need.id, requirement.ref)).thenReturn(requirement)
+        `when`(requirementRepository.listAllRequirements(project.id, need.id)).thenReturn(requirements)
 
     }
 
 
     @Test
     fun getRequirement_OK() {
-        val response = requirementResource.getRequirement(project.ref, requirement.ref)
+        val response = requirementResource.getRequirement(project.ref, need.ref, requirement.ref)
 
         val entity: Requirement = RequirementForm().toEntity(response)
 
@@ -79,7 +83,8 @@ class RequirementResourceMockTest {
 
     @Test
     fun listRequirements_OK() {
-        val response = requirementResource.listRequirements(project.ref)
+
+        val response = requirementResource.listRequirements(project.ref, need.ref)
 
         val entity: List<RequirementForm> = response
 
@@ -99,7 +104,7 @@ class RequirementResourceMockTest {
         `when`(requirementRepository.isPersistent(ArgumentMatchers.any(Requirement::class.java)))
             .thenReturn(true)
 
-        val response = requirementResource.createRequirement(project.ref, createForm)
+        val response = requirementResource.createRequirement(project.ref, need.ref, createForm)
 
         val entity: Response = response
 
@@ -109,7 +114,7 @@ class RequirementResourceMockTest {
 
     @Test
     fun deleteRequirement_OK() {
-        val response = requirementResource.deleteRequirement(project.ref, requirement.ref)
+        val response = requirementResource.deleteRequirement(project.ref, need.ref, requirement.ref)
 
         assertNotNull(response)
         assertEquals(204, response.status)
@@ -119,7 +124,7 @@ class RequirementResourceMockTest {
 
     @Test
     fun updateRequirement_OK() {
-        val response = requirementResource.updateRequirement(project.ref, requirement.ref, updateForm)
+        val response = requirementResource.updateRequirement(project.ref, need.ref, requirement.ref, updateForm)
 
         val entity: Requirement = RequirementForm().toEntity(response)
 
@@ -138,12 +143,13 @@ class RequirementResourceMockTest {
 
     @Test
     fun getRequirement_KO() {
-        `when`(requirementRepository.findByRef(project.id, requirement.ref))
+        `when`(requirementRepository.findByRef(project.id, need.id, requirement.ref))
             .thenThrow(NotFoundException(REQUIREMENT_NOTFOUND))
 
         val exception = assertThrows(NotFoundException::class.java) {
             requirementResource.getRequirement(
                 project.ref,
+                need.ref,
                 requirement.ref
             )
         }
@@ -156,6 +162,7 @@ class RequirementResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             requirementResource.createRequirement(
                 project.ref,
+                need.ref,
                 createForm,
             )
         }
@@ -166,12 +173,13 @@ class RequirementResourceMockTest {
 
     @Test
     fun updateRequirement_KO() {
-        `when`(requirementRepository.findByRef(project.id, requirement.ref))
+        `when`(requirementRepository.findByRef(project.id, need.id, requirement.ref))
             .thenThrow(NotFoundException(REQUIREMENT_NOTFOUND))
 
         val exception = assertThrows(NotFoundException::class.java) {
             requirementResource.updateRequirement(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 updateForm
             )

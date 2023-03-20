@@ -4,13 +4,11 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementVariantForm
+import org.kravbank.domain.Need
 import org.kravbank.domain.Project
 import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
-import org.kravbank.repository.ProductRepository
-import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementRepository
-import org.kravbank.repository.RequirementVariantRepository
+import org.kravbank.repository.*
 import org.kravbank.utils.TestSetup
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
@@ -25,13 +23,16 @@ class RequirementVariantServiceTest {
         mock(RequirementVariantRepository::class.java)
     private val productRepository: ProductRepository =
         mock(ProductRepository::class.java)
+    private val needRepository: NeedRepository =
+        mock(NeedRepository::class.java)
 
 
     private val requirementVariantService = RequirementVariantService(
         projectRepository = projectRepository,
         requirementRepository = requirementRepository,
         requirementVariantRepository = requirementVariantRepository,
-        productRepository = productRepository
+        productRepository = productRepository,
+        needRepository = needRepository
     )
 
 
@@ -42,6 +43,7 @@ class RequirementVariantServiceTest {
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var need: Need
     private lateinit var createForm: RequirementVariantForm
     private lateinit var updateForm: RequirementVariantForm
 
@@ -55,6 +57,7 @@ class RequirementVariantServiceTest {
         requirementVariants = arrangeSetup.requirementVariants
         requirementVariant = arrangeSetup.requirementVariant
         project = arrangeSetup.project
+        need = arrangeSetup.need
         requirement = arrangeSetup.requirement
         updateForm = arrangeSetup.updatedRequirementVariantForm
         createForm = RequirementVariantForm().fromEntity(requirementVariant)
@@ -63,8 +66,9 @@ class RequirementVariantServiceTest {
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref))
             .thenReturn(requirementVariant)
-        `when`(requirementRepository.findByRef(project.id, requirement.ref)).thenReturn(requirement)
+        `when`(requirementRepository.findByRef(project.id, need.id, requirement.ref)).thenReturn(requirement)
         `when`(requirementVariantRepository.listAllRequirementVariants(requirement.id)).thenReturn(requirementVariants)
+        `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
 
     }
 
@@ -73,6 +77,7 @@ class RequirementVariantServiceTest {
         val response =
             requirementVariantService.get(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 requirementVariant.ref
             )
@@ -98,6 +103,7 @@ class RequirementVariantServiceTest {
         val response =
             requirementVariantService.list(
                 project.ref,
+                need.ref,
                 requirement.ref
             )
 
@@ -130,6 +136,7 @@ class RequirementVariantServiceTest {
 
         val response = requirementVariantService.create(
             project.ref,
+            need.ref,
             requirement.ref,
             createForm
         )
@@ -154,6 +161,7 @@ class RequirementVariantServiceTest {
     fun delete() {
         requirementVariantService.delete(
             project.ref,
+            need.ref,
             requirement.ref,
             requirementVariant.ref
         )
@@ -167,6 +175,7 @@ class RequirementVariantServiceTest {
         val response =
             requirementVariantService.update(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 requirementVariant.ref,
                 updateForm

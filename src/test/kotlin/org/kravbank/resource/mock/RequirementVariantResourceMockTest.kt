@@ -4,15 +4,13 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.kravbank.dao.RequirementVariantForm
+import org.kravbank.domain.Need
 import org.kravbank.domain.Project
 import org.kravbank.domain.Requirement
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BadRequestException
 import org.kravbank.lang.NotFoundException
-import org.kravbank.repository.ProductRepository
-import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementRepository
-import org.kravbank.repository.RequirementVariantRepository
+import org.kravbank.repository.*
 import org.kravbank.resource.RequirementVariantResource
 import org.kravbank.service.RequirementVariantService
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_CREATE
@@ -32,13 +30,15 @@ class RequirementVariantResourceMockTest {
         mock(RequirementVariantRepository::class.java)
     private val productRepository: ProductRepository =
         mock(ProductRepository::class.java)
-
+    private val needRepository: NeedRepository =
+        mock(NeedRepository::class.java)
 
     private val requirementVariantService = RequirementVariantService(
         projectRepository = projectRepository,
         requirementRepository = requirementRepository,
         requirementVariantRepository = requirementVariantRepository,
-        productRepository = productRepository
+        productRepository = productRepository,
+        needRepository = needRepository
     )
 
     private val requirementVariantResource = RequirementVariantResource(requirementVariantService)
@@ -50,6 +50,7 @@ class RequirementVariantResourceMockTest {
     private lateinit var requirementVariant: RequirementVariant
     private lateinit var requirement: Requirement
     private lateinit var project: Project
+    private lateinit var need: Need
     private lateinit var updateForm: RequirementVariantForm
     private lateinit var createForm: RequirementVariantForm
 
@@ -62,6 +63,7 @@ class RequirementVariantResourceMockTest {
         requirementVariants = arrangeSetup.requirementVariants
         requirementVariant = arrangeSetup.requirementVariant
         project = arrangeSetup.project
+        need = arrangeSetup.need
         requirement = arrangeSetup.requirement
         updateForm = arrangeSetup.updatedRequirementVariantForm
         createForm = RequirementVariantForm().fromEntity(requirementVariant)
@@ -71,8 +73,10 @@ class RequirementVariantResourceMockTest {
         `when`(projectRepository.findByRef(project.ref)).thenReturn(project)
         `when`(requirementVariantRepository.findByRef(requirement.id, requirementVariant.ref))
             .thenReturn(requirementVariant)
-        `when`(requirementRepository.findByRef(project.id, requirement.ref)).thenReturn(requirement)
+        `when`(requirementRepository.findByRef(project.id, need.id, requirement.ref)).thenReturn(requirement)
         `when`(requirementVariantRepository.listAllRequirementVariants(requirement.id)).thenReturn(requirementVariants)
+        `when`(needRepository.findByRef(project.id, need.ref)).thenReturn(need)
+
 
     }
 
@@ -81,6 +85,7 @@ class RequirementVariantResourceMockTest {
         val response =
             requirementVariantResource.getRequirementVariant(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 requirementVariant.ref
             )
@@ -105,6 +110,7 @@ class RequirementVariantResourceMockTest {
         val response =
             requirementVariantResource.listRequirementVariants(
                 project.ref,
+                need.ref,
                 requirement.ref
             )
 
@@ -140,6 +146,7 @@ class RequirementVariantResourceMockTest {
 
         val response = requirementVariantResource.createRequirementVariant(
             project.ref,
+            need.ref,
             requirement.ref,
             createForm
         )
@@ -154,6 +161,7 @@ class RequirementVariantResourceMockTest {
     fun deleteRequirementVariant_OK() {
         val response: Response = requirementVariantResource.deleteRequirementVariant(
             project.ref,
+            need.ref,
             requirement.ref,
             requirementVariant.ref
         )
@@ -169,6 +177,7 @@ class RequirementVariantResourceMockTest {
         val response =
             requirementVariantService.update(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 requirementVariant.ref,
                 updateForm
@@ -216,6 +225,7 @@ class RequirementVariantResourceMockTest {
         val exception = assertThrows(NotFoundException::class.java) {
             requirementVariantResource.getRequirementVariant(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 requirementVariant.ref
 
@@ -230,6 +240,7 @@ class RequirementVariantResourceMockTest {
         val exception = assertThrows(BadRequestException::class.java) {
             requirementVariantResource.createRequirementVariant(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 createForm,
             )
@@ -247,6 +258,7 @@ class RequirementVariantResourceMockTest {
         val exception = assertThrows(NotFoundException::class.java) {
             requirementVariantResource.updateRequirementVariant(
                 project.ref,
+                need.ref,
                 requirement.ref,
                 requirementVariant.ref,
                 updateForm

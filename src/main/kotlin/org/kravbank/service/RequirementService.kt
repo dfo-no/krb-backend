@@ -16,46 +16,96 @@ class RequirementService(
     val projectRepository: ProjectRepository,
     val needRepository: NeedRepository
 ) {
-    fun get(projectRef: String, requirementRef: String): Requirement {
-        val project = projectRepository.findByRef(projectRef)
-        return requirementRepository.findByRef(project.id, requirementRef)
+
+    fun get(
+        projectRef: String,
+        needRef: String,
+        requirementRef: String
+    ): Requirement {
+        val foundProject = projectRepository.findByRef(projectRef)
+
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        return requirementRepository.findByRef(foundProject.id, foundNeed.id, requirementRef)
     }
 
-    fun list(projectRef: String): List<Requirement> {
+    fun list(
+        projectRef: String,
+        needRef: String,
+    ): List<Requirement> {
         val foundProject = projectRepository.findByRef(projectRef)
-        return requirementRepository.listAllRequirements(foundProject.id)
+
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        return requirementRepository.listAllRequirements(foundProject.id, foundNeed.id)
     }
 
     @Throws(BackendException::class)
-    fun create(projectRef: String, newRequirement: RequirementForm): Requirement {
-        val project = projectRepository.findByRef(projectRef)
-        val foundNeed = needRepository.findByRefRequirement(newRequirement.needRef)
-        val requirement = RequirementForm().toEntity(newRequirement)
-        requirement.project = project
-        requirement.need = foundNeed
+    fun create(
+        projectRef: String,
+        needRef: String,
+        newRequirement: RequirementForm
+    ): Requirement {
+        val foundProject = projectRepository.findByRef(projectRef)
 
-        requirementRepository.persistAndFlush(requirement)
-        if (!requirementRepository.isPersistent(requirement)) {
-            throw BadRequestException(REQUIREMENT_BADREQUEST_CREATE)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        return RequirementForm().toEntity(newRequirement).apply {
+            project = foundProject
+            need = foundNeed
+        }.also {
+            requirementRepository.persistAndFlush(it)
+            if (!requirementRepository.isPersistent(it)) {
+                throw BadRequestException(REQUIREMENT_BADREQUEST_CREATE)
+            }
         }
-        return requirement
-    }
-
-    fun delete(projectRef: String, requirementRef: String): Requirement {
-        val foundProject = projectRepository.findByRef(projectRef)
-        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
-
-        requirementRepository.deleteById(foundRequirement.id)
-        return foundRequirement
     }
 
     @Throws(BackendException::class)
-    fun update(projectRef: String, requirementRef: String, updatedRequirement: RequirementForm): Requirement {
+    fun delete(
+        projectRef: String,
+        needRef: String,
+        requirementRef: String
+    ): Requirement {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
 
-        val update = RequirementForm().toEntity(updatedRequirement)
-        requirementRepository.updateRequirement(foundRequirement.id, update)
-        return update.apply { ref = foundRequirement.ref }
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        return try {
+            requirementRepository.findByRef(
+                foundProject.id,
+                foundNeed.id,
+                requirementRef
+            )
+                .also {
+                    requirementRepository.deleteById(it.id)
+                }
+        } catch (ex: Exception) {
+            throw BackendException("Failed to delete requirement")
+        }
+    }
+
+    @Throws(BackendException::class)
+    fun update(
+        projectRef: String,
+        needRef: String,
+        requirementRef: String,
+        updatedRequirement: RequirementForm
+    ): Requirement {
+        val foundProject = projectRepository.findByRef(projectRef)
+
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        val foundRequirement = requirementRepository.findByRef(
+            foundProject.id,
+            foundNeed.id,
+            requirementRef
+        )
+
+        return RequirementForm().toEntity(updatedRequirement).apply {
+            ref = foundRequirement.ref
+        }.also {
+            requirementRepository.updateRequirement(foundRequirement.id, it)
+        }
     }
 }

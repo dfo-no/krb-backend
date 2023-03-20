@@ -8,16 +8,14 @@ import org.kravbank.domain.Project
 import org.kravbank.domain.RequirementVariant
 import org.kravbank.lang.BackendException
 import org.kravbank.lang.BadRequestException
-import org.kravbank.repository.ProductRepository
-import org.kravbank.repository.ProjectRepository
-import org.kravbank.repository.RequirementRepository
-import org.kravbank.repository.RequirementVariantRepository
+import org.kravbank.repository.*
 import org.kravbank.utils.Messages.RepoErrorMsg.REQUIREMENTVARIANT_BADREQUEST_CREATE
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class RequirementVariantService(
     val requirementVariantRepository: RequirementVariantRepository,
+    val needRepository: NeedRepository,
     val requirementRepository: RequirementRepository,
     val projectRepository: ProjectRepository,
     val productRepository: ProductRepository
@@ -28,17 +26,31 @@ class RequirementVariantService(
     private val objectMapper = jacksonObjectMapper()
 
     @Throws(BackendException::class)
-    fun get(projectRef: String, requirementRef: String, requirementVariantRef: String): RequirementVariant {
-        val project = projectRepository.findByRef(projectRef)
+    fun get(
+        projectRef: String,
+        needRef: String,
+        requirementRef: String,
+        requirementVariantRef: String
+    ): RequirementVariant {
+        val foundProject = projectRepository.findByRef(projectRef)
 
-        val foundRequirement = requirementRepository.findByRef(project.id, requirementRef)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        val foundRequirement = requirementRepository.findByRef(foundProject.id, foundNeed.id, requirementRef)
 
         return requirementVariantRepository.findByRef(foundRequirement.id, requirementVariantRef)
     }
 
-    fun list(projectRef: String, requirementRef: String): List<RequirementVariant> {
+    fun list(
+        projectRef: String,
+        needRef: String,
+        requirementRef: String
+    ): List<RequirementVariant> {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        val foundRequirement = requirementRepository.findByRef(foundProject.id, foundNeed.id, requirementRef)
 
         return requirementVariantRepository.listAllRequirementVariants(foundRequirement.id)
     }
@@ -47,12 +59,15 @@ class RequirementVariantService(
     @Throws(BackendException::class)
     fun create(
         projectRef: String,
+        needRef: String,
         requirementRef: String,
         newRequirementVariant: RequirementVariantForm
     ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
 
-        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        val foundRequirement = requirementRepository.findByRef(foundProject.id, foundNeed.id, requirementRef)
 
         val serializedProductsFromBody = objectMapper.writeValueAsString(newRequirementVariant.products)
 
@@ -104,12 +119,20 @@ class RequirementVariantService(
         return Pair(allProductsExist, matchingProducts)
     }
 
-    fun delete(projectRef: String, requirementRef: String, requirementVariantRef: String): RequirementVariant {
+    fun delete(
+        projectRef: String,
+        needRef: String,
+        requirementRef: String,
+        requirementVariantRef: String
+    ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
 
-        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
 
-        val foundRequirementVariant = requirementVariantRepository.findByRef(foundRequirement.id, requirementVariantRef)
+        val foundRequirement = requirementRepository.findByRef(foundProject.id, foundNeed.id, requirementRef)
+
+        val foundRequirementVariant =
+            requirementVariantRepository.findByRef(foundRequirement.id, requirementVariantRef)
 
         return try {
             requirementVariantRepository.deleteById(foundRequirementVariant.id)
@@ -122,16 +145,23 @@ class RequirementVariantService(
     @Throws(BackendException::class)
     fun update(
         projectRef: String,
+        needRef: String,
         requirementRef: String,
         requirementVariantRef: String,
         updatedReqVariant: RequirementVariantForm
     ): RequirementVariant {
         val foundProject = projectRepository.findByRef(projectRef)
-        val foundRequirement = requirementRepository.findByRef(foundProject.id, requirementRef)
+
+        val foundNeed = needRepository.findByRef(foundProject.id, needRef)
+
+        val foundRequirement = requirementRepository.findByRef(foundProject.id, foundNeed.id, requirementRef)
+
         val foundReqVariant = requirementVariantRepository.findByRef(foundRequirement.id, requirementVariantRef)
 
-        val update = RequirementVariantForm().toEntity(updatedReqVariant)
-        requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, update)
-        return update.apply { ref = foundReqVariant.ref }
+        return RequirementVariantForm().toEntity(updatedReqVariant).apply {
+            ref = foundReqVariant.ref
+        }.also {
+            requirementVariantRepository.updateRequirementVariant(foundReqVariant.id, it)
+        }
     }
 }

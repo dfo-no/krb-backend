@@ -26,24 +26,28 @@ class NeedService(
 
     @Throws(BackendException::class)
     fun create(projectRef: String, newNeed: NeedForm): Need {
-        val project = projectRepository.findByRef(projectRef)
-        val need = NeedForm().toEntity(newNeed)
-        need.project = project
+        val foundProject = projectRepository.findByRef(projectRef)
 
-        needRepository.persistAndFlush(need)
+        return NeedForm().toEntity(newNeed).apply {
+            project = foundProject
 
-        if (!needRepository.isPersistent(need)) {
-            throw BadRequestException(NEED_BADREQUEST_CREATE)
+        }.also {
+            needRepository.persistAndFlush(it)
+            if (!needRepository.isPersistent(it))
+                throw BadRequestException(NEED_BADREQUEST_CREATE)
         }
-
-        return need
     }
 
     fun delete(projectRef: String, needRef: String): Boolean {
         val foundProject = projectRepository.findByRef(projectRef)
+
         val foundNeed = needRepository.findByRef(foundProject.id, needRef)
 
-        return needRepository.deleteById(foundNeed.id)
+        return try {
+            needRepository.deleteById(foundNeed.id)
+        } catch (e: Exception) {
+            throw BackendException("Failed to delete need")
+        }
     }
 
     @Throws(BackendException::class)
