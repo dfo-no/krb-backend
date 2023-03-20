@@ -85,16 +85,12 @@ class RequirementVariantService(
     fun validateAndFilterExistingProducts(project: Project, str: String):
             Pair<Boolean, MutableList<Product>> {
 
-        // Get all existing products
         val existingProducts = productRepository.listAllProducts(project.id)
 
-        // Deserialize the product list
         val deserializedProductList = deserializeProducts(str)
 
-        // Initialize a new list for matching products
         val matchingProducts = mutableListOf<Product>()
 
-        // Iterate over each deserialized product
         var allProductsExist = true
         deserializedProductList?.forEach { refForm ->
             val matchingProduct = existingProducts.find { it.ref == refForm.ref }
@@ -105,7 +101,6 @@ class RequirementVariantService(
             }
         }
 
-        // Return the list of matching products and the boolean marker
         return Pair(allProductsExist, matchingProducts)
     }
 
