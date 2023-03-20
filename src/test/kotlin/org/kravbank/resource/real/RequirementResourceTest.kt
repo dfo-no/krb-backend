@@ -193,7 +193,7 @@ class RequirementResourceTest {
             .`when`()
             .delete("/api/v1/projects/$projectRef/needs/$needRef/requirements/$newRequirementRef")
 
-        Assertions.assertEquals(200, response.statusCode)
+        Assertions.assertEquals(204, response.statusCode)
     }
 
 

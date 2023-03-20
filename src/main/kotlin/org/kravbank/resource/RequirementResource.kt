@@ -62,7 +62,7 @@ class RequirementResource(val requirementService: RequirementService) {
         @PathParam("needRef") needRef: String,
         @PathParam("requirementRef") requirementRef: String
     ): Response {
-        requirementService.delete(projectRef, requirementRef)
+        requirementService.delete(projectRef, needRef, requirementRef)
         return Response.noContent().build()
     }
 
