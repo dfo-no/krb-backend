@@ -112,7 +112,7 @@ class RequirementResourceMockTest {
         val response = requirementResource.deleteRequirement(project.ref, requirement.ref)
 
         assertNotNull(response)
-        assertEquals(requirement.ref, response.entity)
+        assertEquals(204, response.status)
         verify(requirementRepository).deleteById(requirement.id)
 
     }
