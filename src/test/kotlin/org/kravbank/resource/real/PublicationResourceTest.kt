@@ -187,12 +187,10 @@ class PublicationResourceTest {
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .get("/api/v1/projects/$projectRef/$pathToUse/$newPublicationRef")
+                .get("/api/v1/projects/$projectRef/$pathToUse")
 
         assertEquals(200, listPublicationsResponse.statusCode())
 
-
-        println(listPublicationsResponse.body.peek())
 
         val publicationList = listPublicationsResponse.body.jsonPath().getList("", classTypeToUse)
         val oldPublicationListLength = publicationList.size
@@ -228,7 +226,7 @@ class PublicationResourceTest {
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .get("/api/v1/projects/$projectRef/$pathToUse/$newPublicationRef")
+                .get("/api/v1/projects/$projectRef/$pathToUse")
 
         assertEquals(200, listPublicationsResponse.statusCode())
 

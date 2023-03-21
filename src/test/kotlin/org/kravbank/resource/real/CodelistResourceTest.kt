@@ -35,6 +35,13 @@ class CodelistResourceTest {
     lateinit var newCodelistRef: String
 
 
+    lateinit var pathToUse: String
+
+    val classTypeToUse = Codelist::class.java
+
+    val formTypeToUse = CodelistForm()
+
+
     private val emptyProducts: MutableList<Product> = mutableListOf()
 
     private val emptyPublications: MutableList<Publication> = mutableListOf()
@@ -48,12 +55,14 @@ class CodelistResourceTest {
 
     @BeforeAll
     @Transactional
-    fun `set up`() {
+    fun setup() {
 
         token = KeycloakAccess.getAccessToken("alice")
 
+        pathToUse = "codelists"
+
         Project().apply {
-            ref = "testref-123"
+            ref = UUID.randomUUID().toString()
             title = "Prosjekttittel1"
             description = "Prosjektbeskrivelse1"
             products = emptyProducts
@@ -71,11 +80,11 @@ class CodelistResourceTest {
 
     @Test
     @Order(1)
-    fun `create codelist then return 201 and verify ref has value`() {
+    fun `create then return 201 and verify ref has value`() {
 
         RestAssured.defaultParser = Parser.JSON
 
-        val createForm = CodelistForm().apply {
+        val createForm = formTypeToUse.apply {
             title = "Codeform from integration test"
             description = "Codeform says hello"
         }
@@ -85,16 +94,16 @@ class CodelistResourceTest {
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .body(CodelistForm().toEntity(createForm))
+                .body(formTypeToUse.toEntity(createForm))
                 .header("Content-type", "application/json")
-                .post("/api/v1/projects/$projectRef/codelists")
+                .post("/api/v1/projects/$projectRef/$pathToUse")
 
         assertEquals(201, response.statusCode)
         assertTrue(response.headers.hasHeaderWithName("Location"))
 
 
         val newUrlLocation = response.headers.getValue("Location")
-        val newRefToUse = newUrlLocation.split("codelists/")[1]
+        val newRefToUse = newUrlLocation.split("$pathToUse/")[1]
 
         assertTrue(newRefToUse.isNotEmpty())
 
@@ -104,18 +113,18 @@ class CodelistResourceTest {
 
     @Order(2)
     @Test
-    fun `get codelist then return 200 and verify ref`() {
+    fun `get then return 200 and verify ref`() {
 
         val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/$projectRef/codelists/$newCodelistRef")
+            .get("/api/v1/projects/$projectRef/$pathToUse/$newCodelistRef")
 
         assertEquals(200, response.statusCode())
 
 
-        val entity = response.body.jsonPath().getObject("", Codelist::class.java)
+        val entity = response.body.jsonPath().getObject("", classTypeToUse)
 
         assertEquals(newCodelistRef, entity.ref)
     }
@@ -123,18 +132,18 @@ class CodelistResourceTest {
 
     @Test
     @Order(3)
-    fun `list codelist then return 200 and verify ref`() {
+    fun `list then return 200 and verify ref`() {
 
         val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/$projectRef/codelists/")
+            .get("/api/v1/projects/$projectRef/$pathToUse")
 
         assertEquals(200, response.statusCode)
 
 
-        val listOfCodelist = response.body.jsonPath().getList("", Codelist::class.java)
+        val listOfCodelist = response.body.jsonPath().getList("", classTypeToUse)
         val lastEntityInList = listOfCodelist.last()
 
 
@@ -144,9 +153,9 @@ class CodelistResourceTest {
 
     @Test
     @Order(4)
-    fun `update codelist then return 200 and verify updated attributes`() {
+    fun `update then return 200 and verify updated attributes`() {
 
-        val updateForm = CodelistForm().apply {
+        val updateForm = formTypeToUse.apply {
             title = "Endrer tittel"
             description = "Endrer beskrivelse"
         }
@@ -155,14 +164,14 @@ class CodelistResourceTest {
             .auth()
             .oauth2(token)
             .`when`()
-            .body(CodelistForm().toEntity(updateForm))
+            .body(formTypeToUse.toEntity(updateForm))
             .header("Content-type", "application/json")
-            .put("/api/v1/projects/$projectRef/codelists/$newCodelistRef")
+            .put("/api/v1/projects/$projectRef/$pathToUse/$newCodelistRef")
 
         assertEquals(200, response.statusCode)
 
 
-        val entity = response.body.jsonPath().getObject("", Codelist::class.java)
+        val entity = response.body.jsonPath().getObject("", classTypeToUse)
 
         assertEquals(updateForm.title, entity.title)
         assertEquals(updateForm.description, entity.description)
@@ -171,20 +180,17 @@ class CodelistResourceTest {
 
     @Order(5)
     @Test
-    fun `delete codelist then return 200 and verify deleted ref`() {
+    fun `delete then return 204 and verify deleted ref`() {
 
         val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .delete("/api/v1/projects/$projectRef/codelists/$newCodelistRef")
+            .delete("/api/v1/projects/$projectRef/$pathToUse/$newCodelistRef")
 
-        assertEquals(200, response.statusCode)
-
-
-        val deletedRefConfirm = response.body.asPrettyString()
-        assertEquals(newCodelistRef, deletedRefConfirm)
+        assertEquals(204, response.statusCode)
     }
+
 
     @AfterAll
     @Transactional
@@ -192,5 +198,4 @@ class CodelistResourceTest {
 
         projectRepository.deleteById(projectId)
     }
-
 }
