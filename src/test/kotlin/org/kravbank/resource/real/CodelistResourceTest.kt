@@ -21,6 +21,11 @@ import javax.transaction.Transactional
 @QuarkusTest
 class CodelistResourceTest {
 
+
+    @Inject
+    lateinit var projectRepository: ProjectRepository
+
+
     lateinit var token: String
 
     lateinit var projectRef: String
@@ -30,18 +35,15 @@ class CodelistResourceTest {
     lateinit var newCodelistRef: String
 
 
-    @Inject
-    lateinit var projectRepository: ProjectRepository
+    private val emptyProducts: MutableList<Product> = mutableListOf()
 
-    private val mockedProducts: MutableList<Product> = mutableListOf()
+    private val emptyPublications: MutableList<Publication> = mutableListOf()
 
-    private val mockedPublications: MutableList<Publication> = mutableListOf()
+    private val emptyRequirements: MutableList<Requirement> = mutableListOf()
 
-    private val mockedRequirements: MutableList<Requirement> = mutableListOf()
+    private val emptyNeeds: MutableList<Need> = mutableListOf()
 
-    private val mockedNeeds: MutableList<Need> = mutableListOf()
-
-    private val mockedCodelists: MutableList<Codelist> = mutableListOf()
+    private val emptyCodelists: MutableList<Codelist> = mutableListOf()
 
 
     @BeforeAll
@@ -54,11 +56,11 @@ class CodelistResourceTest {
             ref = "testref-123"
             title = "Prosjekttittel1"
             description = "Prosjektbeskrivelse1"
-            products = mockedProducts
-            publications = mockedPublications
-            requirements = mockedRequirements
-            needs = mockedNeeds
-            codelist = mockedCodelists
+            products = emptyProducts
+            publications = emptyPublications
+            requirements = emptyRequirements
+            needs = emptyNeeds
+            codelist = emptyCodelists
         }.run {
             projectRepository.persistAndFlush(this)
             projectRef = ref

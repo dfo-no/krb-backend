@@ -18,6 +18,14 @@ import javax.transaction.Transactional
 @QuarkusTest
 class RequirementResourceTest {
 
+
+    @Inject
+    lateinit var projectRepository: ProjectRepository
+
+    @Inject
+    lateinit var needRepository: NeedRepository
+
+
     lateinit var token: String
 
     lateinit var projectRef: String
@@ -31,21 +39,15 @@ class RequirementResourceTest {
     lateinit var newRequirementRef: String
 
 
-    @Inject
-    lateinit var projectRepository: ProjectRepository
+    private val emptyProducts: MutableList<Product> = mutableListOf()
 
-    @Inject
-    lateinit var needRepository: NeedRepository
+    private val emptyPublications: MutableList<Publication> = mutableListOf()
 
-    private val mockedProducts: MutableList<Product> = mutableListOf()
+    private val emptyRequirements: MutableList<Requirement> = mutableListOf()
 
-    private val mockedPublications: MutableList<Publication> = mutableListOf()
+    private val emptyNeeds: MutableList<Need> = mutableListOf()
 
-    private val mockedRequirements: MutableList<Requirement> = mutableListOf()
-
-    private val mockedNeeds: MutableList<Need> = mutableListOf()
-
-    private val mockedCodelists: MutableList<Codelist> = mutableListOf()
+    private val emptyCodelists: MutableList<Codelist> = mutableListOf()
 
 
     @BeforeAll
@@ -58,11 +60,11 @@ class RequirementResourceTest {
             ref = "testref-123"
             title = "Prosjekttittel1"
             description = "Prosjektbeskrivelse1"
-            products = mockedProducts
-            publications = mockedPublications
-            requirements = mockedRequirements
-            needs = mockedNeeds
-            codelist = mockedCodelists
+            products = emptyProducts
+            publications = emptyPublications
+            requirements = emptyRequirements
+            needs = emptyNeeds
+            codelist = emptyCodelists
         }.also {
             projectRepository.persistAndFlush(it)
             projectRef = it.ref
@@ -73,7 +75,7 @@ class RequirementResourceTest {
             ref = "ytuiop-rtgsd-235235235-fdsfdsd"
             title = "Ny need tittel"
             project = useThisProject
-            requirements = mockedRequirements
+            requirements = emptyRequirements
         }.also {
             needRepository.persistAndFlush(it)
             needRef = it.ref
@@ -84,7 +86,7 @@ class RequirementResourceTest {
 
     @Test
     @Order(1)
-    fun `create requirement then return 201 and verify ref has value`() {
+    fun `create then return 201 and verify ref has value`() {
 
         RestAssured.defaultParser = Parser.JSON
 
@@ -117,7 +119,7 @@ class RequirementResourceTest {
 
     @Order(2)
     @Test
-    fun `get requirement then return 200 and verify ref`() {
+    fun `get then return 200 and verify ref`() {
 
         val response = given()
             .auth()
@@ -134,7 +136,7 @@ class RequirementResourceTest {
 
     @Test
     @Order(3)
-    fun `list requirements then return 200 and verify ref`() {
+    fun `list then return 200 and verify ref`() {
 
         val response = given()
             .auth()
@@ -143,8 +145,6 @@ class RequirementResourceTest {
             .get("/api/v1/projects/$projectRef/needs/$needRef/requirements")
 
         Assertions.assertEquals(200, response.statusCode)
-
-        println(response.body.peek())
 
         val list = response.body.jsonPath().getList("", Requirement::class.java)
 
@@ -156,7 +156,7 @@ class RequirementResourceTest {
 
     @Test
     @Order(4)
-    fun `update requirement then return 200 and verify updated attributes`() {
+    fun `update then return 200 and verify updated attributes`() {
 
         RestAssured.defaultParser = Parser.JSON
 
@@ -185,7 +185,7 @@ class RequirementResourceTest {
 
     @Order(5)
     @Test
-    fun `delete requirement then return 200 and verify deleted ref`() {
+    fun `delete then return 200 and verify deleted ref`() {
 
         val response = given()
             .auth()

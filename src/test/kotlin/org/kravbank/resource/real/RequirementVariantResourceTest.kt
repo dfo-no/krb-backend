@@ -1,9 +1,7 @@
 package org.kravbank.resource.real
 
 import io.quarkus.test.junit.QuarkusTest
-import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import io.restassured.parsing.Parser
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,6 +18,17 @@ import javax.transaction.Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @QuarkusTest
 class RequirementVariantResourceTest {
+
+
+    @Inject
+    lateinit var projectRepository: ProjectRepository
+
+    @Inject
+    lateinit var needRepository: NeedRepository
+
+    @Inject
+    lateinit var requirementRepository: RequirementRepository
+
 
     lateinit var token: String
 
@@ -38,24 +47,15 @@ class RequirementVariantResourceTest {
     lateinit var newReqVariantRef: String
 
 
-    @Inject
-    lateinit var projectRepository: ProjectRepository
+    private val emptyProducts: MutableList<Product> = mutableListOf()
 
-    @Inject
-    lateinit var needRepository: NeedRepository
+    private val emptyPublications: MutableList<Publication> = mutableListOf()
 
-    @Inject
-    lateinit var requirementRepository: RequirementRepository
+    private val emptyRequirements: MutableList<Requirement> = mutableListOf()
 
-    private val mockedProducts: MutableList<Product> = mutableListOf()
+    private val emptyNeeds: MutableList<Need> = mutableListOf()
 
-    private val mockedPublications: MutableList<Publication> = mutableListOf()
-
-    private val mockedRequirements: MutableList<Requirement> = mutableListOf()
-
-    private val mockedNeeds: MutableList<Need> = mutableListOf()
-
-    private val mockedCodelists: MutableList<Codelist> = mutableListOf()
+    private val emptyCodelists: MutableList<Codelist> = mutableListOf()
 
 
     @BeforeAll
@@ -68,11 +68,11 @@ class RequirementVariantResourceTest {
             ref = "testref-123"
             title = "Prosjekttittel1"
             description = "Prosjektbeskrivelse1"
-            products = mockedProducts
-            publications = mockedPublications
-            requirements = mockedRequirements
-            needs = mockedNeeds
-            codelist = mockedCodelists
+            products = emptyProducts
+            publications = emptyPublications
+            requirements = emptyRequirements
+            needs = emptyNeeds
+            codelist = emptyCodelists
         }.also {
             projectRepository.persistAndFlush(it)
             projectRef = it.ref
@@ -83,7 +83,7 @@ class RequirementVariantResourceTest {
             ref = "ytuiop-rtgsd-235235235-fdsfdsd"
             title = "Ny need tittel"
             project = useThisProject
-            requirements = mockedRequirements
+            requirements = emptyRequirements
         }.also {
             needRepository.persistAndFlush(it)
             needRef = it.ref
@@ -105,9 +105,7 @@ class RequirementVariantResourceTest {
 
     @Test
     @Order(1)
-    fun `create variant then return 201 and verify ref has value`() {
-
-        RestAssured.defaultParser = Parser.JSON
+    fun `create then return 201 and verify ref has value`() {
 
         val rv = RequirementVariantForm().apply {
             description = "Integrasjonstest rv desc"
@@ -142,7 +140,7 @@ class RequirementVariantResourceTest {
 
     @Order(2)
     @Test
-    fun `get variant then return 200 and verify ref`() {
+    fun `get then return 200 and verify ref`() {
 
         val response = given()
             .auth()
@@ -161,7 +159,7 @@ class RequirementVariantResourceTest {
 
     @Test
     @Order(3)
-    fun `list variant then return 200 and verify ref`() {
+    fun `list then return 200 and verify ref`() {
 
         val response = given()
             .auth()
@@ -182,9 +180,7 @@ class RequirementVariantResourceTest {
 
     @Test
     @Order(4)
-    fun `update variant then return 200 and verify updated attributes`() {
-
-        RestAssured.defaultParser = Parser.JSON
+    fun `update then return 200 and verify updated attributes`() {
 
         val update = RequirementVariantForm().apply {
             description = "Integrasjonstest rv desc"
@@ -219,7 +215,7 @@ class RequirementVariantResourceTest {
 
     @Order(5)
     @Test
-    fun `delete variant then return 200 and verify deleted ref`() {
+    fun `delete then return 200 and verify deleted ref`() {
 
         val response = given()
             .auth()
