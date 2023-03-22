@@ -59,4 +59,3 @@
   command  [Liquibase update docs](https://docs.liquibase.com/change-types/update.html).
 * The bash script liquibaseUpdate.sh is found in project root. It enables the update command, based on the local
   environment variables.
-* 

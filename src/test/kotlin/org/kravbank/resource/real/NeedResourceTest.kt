@@ -1,86 +1,191 @@
 package org.kravbank.resource.real
 
 import io.quarkus.test.junit.QuarkusTest
-import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import io.restassured.parsing.Parser
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.kravbank.dao.NeedForm
+import org.kravbank.domain.*
+import org.kravbank.repository.ProjectRepository
 import org.kravbank.utils.KeycloakAccess
+import java.util.*
+import javax.inject.Inject
+import javax.transaction.Transactional
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @QuarkusTest
 class NeedResourceTest {
 
-    private val token = KeycloakAccess.getAccessToken("alice")
 
-    @Test
-    fun getNeed() {
-        given()
-            .auth()
-            .oauth2(token)
-            .`when`()
-            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
+    @Inject
+    lateinit var projectRepository: ProjectRepository
+
+
+    lateinit var token: String
+
+    lateinit var projectRef: String
+
+    var projectId: Long? = null
+
+    lateinit var newNeedRef: String
+
+
+    lateinit var pathToUse: String
+
+    val classTypeToUse = Need::class.java
+
+    val formTypeToUse = NeedForm()
+
+
+    private val emptyProducts: MutableList<Product> = mutableListOf()
+
+    private val emptyPublications: MutableList<Publication> = mutableListOf()
+
+    private val emptyRequirements: MutableList<Requirement> = mutableListOf()
+
+    private val emptyNeeds: MutableList<Need> = mutableListOf()
+
+    private val emptyCodelists: MutableList<Codelist> = mutableListOf()
+
+
+    @BeforeAll
+    @Transactional
+    fun setUp() {
+
+        token = KeycloakAccess.getAccessToken("alice")
+
+        pathToUse = "needs"
+
+        Project().apply {
+            ref = UUID.randomUUID().toString()
+            title = "Prosjekttittel1"
+            description = "Prosjektbeskrivelse1"
+            products = emptyProducts
+            publications = emptyPublications
+            requirements = emptyRequirements
+            needs = emptyNeeds
+            codelist = emptyCodelists
+        }.also {
+            projectRepository.persistAndFlush(it)
+            projectRef = it.ref
+            projectId = it.id
+        }
     }
 
     @Test
-    fun listNeed() {
-        given()
+    @Order(1)
+    fun `create then return 201 and verify ref has value`() {
+
+        val create = formTypeToUse.apply {
+            title = "need - tittel 1"
+            description = "need - beskrivelse 1"
+        }
+
+        val response =
+            given()
+                .auth()
+                .oauth2(token)
+                .`when`()
+                .body(formTypeToUse.toEntity(create))
+                .header("Content-type", "application/json")
+                .post("/api/v1/projects/$projectRef/needs")
+
+        Assertions.assertEquals(201, response.statusCode)
+        Assertions.assertTrue(response.headers.hasHeaderWithName("Location"))
+
+
+        val newUrlLocation = response.headers.getValue("Location")
+        val newRefToUse = newUrlLocation.split("$pathToUse/")[1]
+
+        Assertions.assertTrue(newRefToUse.isNotEmpty())
+
+        newNeedRef = newRefToUse
+    }
+
+
+    @Order(2)
+    @Test
+    fun `get then return 200 and verify ref`() {
+
+        val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .get("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
-            .then()
-            .statusCode(200)
+            .get("/api/v1/projects/$projectRef/$pathToUse/$newNeedRef")
+
+        Assertions.assertEquals(200, response.statusCode())
+
+
+        val entity = response.body.jsonPath().getObject("", classTypeToUse)
+
+        Assertions.assertEquals(newNeedRef, entity.ref)
     }
 
     @Test
-    fun createNeed() {
-        RestAssured.defaultParser = Parser.JSON
-        val form = NeedForm()
-        form.title = "POST Integrasjonstest need - tittel 1"
-        form.description = "POST Integrasjonstest need - beskrivelse 1"
-        val need = NeedForm().toEntity(form)
+    @Order(3)
+    fun `list then return 200 and verify ref`() {
 
-        given()
+        val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(need)
+            .get("/api/v1/projects/$projectRef/needs")
+
+        Assertions.assertEquals(200, response.statusCode)
+
+
+        val list = response.body.jsonPath().getList("", classTypeToUse)
+        val lastEntityInList = list.last()
+
+
+        Assertions.assertEquals(newNeedRef, lastEntityInList.ref)
+    }
+
+
+    @Test
+    @Order(4)
+    fun `update then return 200 and verify updated attributes`() {
+
+        val update = formTypeToUse.apply {
+            title = "Oppdatert 123"
+            description = "Oppdatert 321"
+        }
+
+        val response = given()
+            .auth()
+            .oauth2(token)
+            .`when`()
+            .body(formTypeToUse.toEntity(update))
             .header("Content-type", "application/json")
-            .post("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/")
-            .then()
-            .statusCode(201)
+            .put("/api/v1/projects/$projectRef/needs/$newNeedRef")
+
+        Assertions.assertEquals(200, response.statusCode)
+
+
+        val entity = response.body.jsonPath().getObject("", classTypeToUse)
+
+        Assertions.assertEquals(update.title, entity.title)
+        Assertions.assertEquals(update.description, entity.description)
     }
 
-    @Test
-    fun updateNeed() {
-        RestAssured.defaultParser = Parser.JSON
-        val form = NeedForm()
-        form.title = "PUT Integrasjonstest need - tittel 1"
-        form.description = "PUT Integrasjonstest need - beskrivelse 1"
-        val need = NeedForm().toEntity(form)
 
-        given()
+    @Order(5)
+    @Test
+    fun `delete then return 200 and verify deleted ref`() {
+
+        val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(need)
-            .header("Content-type", "application/json")
-            .put("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need1b69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
+            .delete("/api/v1/projects/$projectRef/needs/$newNeedRef")
+
+        Assertions.assertEquals(204, response.statusCode)
     }
 
-    @Test
-    fun deleteNeed() {
-        given()
-            .auth()
-            .oauth2(token)
-            .`when`()
-            .delete("/api/v1/projects/aaa4db69-edb2-431f-855a-4368e2bcddd1/needs/need2b69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(204)
+    @AfterAll
+    @Transactional
+    fun `delete dependencies`() {
+
+        projectRepository.deleteById(projectId)
     }
 }

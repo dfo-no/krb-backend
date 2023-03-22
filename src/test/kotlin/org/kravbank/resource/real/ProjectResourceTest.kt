@@ -5,11 +5,9 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.parsing.Parser
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.MethodOrderer
-import org.junit.jupiter.api.Order
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.kravbank.dao.ProjectForm
 import org.kravbank.domain.DeletedRecord
 import org.kravbank.domain.Project
@@ -19,67 +17,138 @@ import javax.persistence.EntityManager
 import javax.persistence.TypedQuery
 
 
-@TestMethodOrder(
-    MethodOrderer.OrderAnnotation::class
-)
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @QuarkusTest
 class ProjectResourceTest {
 
-    private val token = KeycloakAccess.getAccessToken("alice")
 
     @Inject
     lateinit var em: EntityManager
 
 
-    @Test
-    @Order(1)
-    fun `get one project`() {
-        given()
-            .auth()
-            .oauth2(token)
-            .`when`()
-            .get("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
+    lateinit var token: String
+
+    lateinit var newProjectRef: String
+
+    lateinit var urlLocationFromHeaderToUse: String
+
+    var classTypeToUse = Project::class.java
+
+    val formTypeToUse = ProjectForm()
+
+
+    @BeforeAll
+    fun setUp() {
+
+        token = KeycloakAccess.getAccessToken("alice")
+
+        urlLocationFromHeaderToUse = "projects"
     }
 
 
     @Test
+    @Order(1)
+    fun `create then return 201 and verify ref has value`() {
+
+        val create = ProjectForm().apply {
+            title = "Nytt prosjekt"
+            description = "Beskrivelse prosjekt"
+        }
+
+        val response =
+            given()
+                .auth()
+                .oauth2(token)
+                .`when`()
+                .body(formTypeToUse.toEntity(create))
+                .header("Content-type", "application/json")
+                .post("/api/v1/projects")
+
+        assertEquals(201, response.statusCode)
+        assertTrue(response.headers.hasHeaderWithName("Location"))
+
+
+        val newUrlLocation = response.headers.getValue("Location")
+        val newRefToUse = newUrlLocation.split("$urlLocationFromHeaderToUse/")[1]
+
+        assertTrue(newRefToUse.isNotEmpty())
+
+        newProjectRef = newRefToUse
+    }
+
+
     @Order(2)
-    fun `list all projects`() {
-        given()
+    @Test
+    fun `get then return 200 and verify ref`() {
+
+        val response = given()
+            .auth()
+            .oauth2(token)
+            .`when`()
+            .get("/api/v1/projects/$newProjectRef")
+
+        assertEquals(200, response.statusCode())
+
+        val entity = response.body.jsonPath().getObject("", classTypeToUse)
+
+        assertEquals(newProjectRef, entity.ref)
+    }
+
+
+    @Test
+    @Order(3)
+    fun `list then return 200 and verify ref`() {
+
+        val response = given()
             .auth()
             .oauth2(token)
             .`when`()
             .get("/api/v1/projects")
-            .then()
-            .statusCode(200)
+
+        assertEquals(200, response.statusCode)
+
+
+        val list = response.body.jsonPath().getList("", classTypeToUse)
+
+        val lastEntityInList = list.last()
+
+
+        assertEquals(newProjectRef, lastEntityInList.ref)
     }
 
+
     @Test
-    fun createProject() {
+    @Order(4)
+    fun `update then return 200 and verify updated attributes`() {
+
         RestAssured.defaultParser = Parser.JSON
-        val form = ProjectForm()
-        form.title = "POST integrasjonstest - Tittel 1"
-        form.description = "POST integrasjonstest - Beskrivelse 1"
 
-        val project = ProjectForm().toEntity(form)
+        val update = formTypeToUse.apply {
+            title = "Oppdatere integrasjonstest project - tittel 2"
+            description = "Oppdatere integrasjonstest project - beskrivelse 2"
+        }
 
-        given()
+
+        val response = given()
             .auth()
             .oauth2(token)
             .`when`()
-            .body(project)
+            .body(formTypeToUse.toEntity(update))
             .header("Content-type", "application/json")
-            .post("/api/v1/projects")
-            .then()
-            .statusCode(201)
+            .put("/api/v1/projects/$newProjectRef")
+
+        assertEquals(200, response.statusCode)
+
+        val entity = response.body.jsonPath().getObject("", classTypeToUse)
+
+        assertEquals(update.title, entity.title)
+        assertEquals(update.description, entity.description)
     }
 
 
     @Test
-    // @TestTransaction
-    @Order(4)
+    @Order(5)
     fun `delete project and verify delete record`() {
 
         //list project
@@ -88,12 +157,12 @@ class ProjectResourceTest {
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .get("/api/v1/projects/")
+                .get("/api/v1/projects")
 
 
         assertEquals(200, listProjectResponse.statusCode())
 
-        val projectList = listProjectResponse.body.jsonPath().getList("", Project::class.java)
+        val projectList = listProjectResponse.body.jsonPath().getList("", classTypeToUse)
         val oldProjectListLength = projectList.size
 
         val projectToDelete = projectList.last()
@@ -127,7 +196,7 @@ class ProjectResourceTest {
                 .auth()
                 .oauth2(token)
                 .`when`()
-                .get("/api/v1/projects/")
+                .get("/api/v1/projects")
 
         assertEquals(200, listProjectResponse.statusCode())
 
@@ -140,31 +209,10 @@ class ProjectResourceTest {
         // Verify the deleted project can be deserialized to a representation of the orginal project
         val mapper = jacksonObjectMapper()
         val deserializeThisProject = listDeletedRecordsAfterTest.last()
-        val productEntity = mapper.readValue(deserializeThisProject.data, Project::class.java)
+        val productEntity = mapper.readValue(deserializeThisProject.data, classTypeToUse)
 
         assertEquals(projectToDelete.ref, productEntity.ref)
         assertEquals(projectToDelete.title, productEntity.title)
         assertEquals(projectToDelete.description, productEntity.description)
-    }
-
-
-    @Test
-    @Order(5)
-    fun `update existing product`() {
-        RestAssured.defaultParser = Parser.JSON
-        val form = ProjectForm()
-        form.title = "Oppdatert integrasjonstest - Tittel 1"
-        form.description = "Oppdatert integrasjonstest - Beskrivelse 1"
-        val project = ProjectForm().toEntity(form)
-
-        given()
-            .auth()
-            .oauth2(token)
-            .`when`()
-            .body(project)
-            .header("Content-type", "application/json")
-            .put("/api/v1/projects/bbb4db69-edb2-431f-855a-4368e2bcddd1")
-            .then()
-            .statusCode(200)
     }
 }
